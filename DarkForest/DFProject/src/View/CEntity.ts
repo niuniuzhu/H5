@@ -2,8 +2,8 @@
 
 namespace View {
 	export class CEntity extends Shared.GPoolObject {
-		private _position: RC.Numerics.Vec3 = RC.Numerics.Vec3.zero;
-		private _direction: RC.Numerics.Vec3 = RC.Numerics.Vec3.zero;
+		private _position: RC.Numerics.Vec3;
+		private _direction: RC.Numerics.Vec3;
 		private _battle: View.CBattle = null;
 		private _markToDestroy: boolean = false;
 		private _graphic: EntityGraphic = null;
@@ -14,18 +14,18 @@ namespace View {
 
 		public get position(): RC.Numerics.Vec3 { return this._position.Clone(); }
 		public set position(value: RC.Numerics.Vec3) {
-			if (this._position == value)
+			if (this._position.EqualsTo(value))
 				return;
-			this._position = value;
+			this._position = value.Clone();
 			if (this._graphic != null)
 				this._graphic.position = this._position;
 		}
 
 		public get direction(): RC.Numerics.Vec3 { return this._direction.Clone(); }
 		public set direction(value: RC.Numerics.Vec3) {
-			if (this._direction == value)
+			if (this._direction.EqualsTo(value))
 				return;
-			this._direction = value;
+			this._direction = value.Clone();
 			if (this._graphic != null)
 				this._graphic.rotation = RC.Numerics.Quat.LookRotation(this._direction, RC.Numerics.Vec3.up);
 		}
@@ -36,7 +36,6 @@ namespace View {
 
 		constructor() {
 			super();
-			this._graphic = new EntityGraphic();
 		}
 
 		protected InternalDispose(): void {
@@ -50,13 +49,15 @@ namespace View {
 			this._logicPos = this._position = param.position;
 			this._logicDir = this._direction = param.direction;
 
+			this._graphic = this._battle.graphicManager.CreateGraphic(EntityGraphic);
 			this._graphic.OnCreate(this, this._data.model);
 			this._graphic.position = this.position;
 			this._graphic.rotation = RC.Numerics.Quat.LookRotation(this.direction, RC.Numerics.Vec3.up);
 		}
 
 		public OnDestroy(): void {
-			this._graphic.OnDestroy();
+			this._battle.graphicManager.DestroyGraphic(this._graphic);
+			this._graphic = null;
 			this._markToDestroy = false;
 			this._battle = null;
 			this._data = null;
@@ -94,8 +95,8 @@ namespace View {
 
 		public OnUpdateState(context: Shared.UpdateContext): void {
 			let dt = context.deltaTime;
-			this.position = RC.Numerics.Vec3.Lerp(this.position, this._logicPos, dt * 10);
-			this.direction = RC.Numerics.Vec3.Slerp(this.direction, this._logicDir, dt * 8);
+			this.position = RC.Numerics.Vec3.Lerp(this._position, this._logicPos, dt * 10);
+			this.direction = RC.Numerics.Vec3.Slerp(this._direction, this._logicDir, dt * 8);
 		}
 	}
 }

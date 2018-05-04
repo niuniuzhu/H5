@@ -18,6 +18,8 @@ namespace Logic {
 			this._entities.forEach((entity) => {
 				entity.MarkToDestroy();
 			});
+			this._entities.splice(0);
+			this._idToEntity.clear();
 			this.DestroyEnties();
 			this._gPool.Dispose();
 		}

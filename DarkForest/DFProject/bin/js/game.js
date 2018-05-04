@@ -200,16 +200,16 @@ var Logic;
         }
         get position() { return this._position.Clone(); }
         set position(value) {
-            if (this._position == value)
+            if (this._position.EqualsTo(value))
                 return;
-            this._position = value;
+            this._position = value.Clone();
             this.OnPositionChanged();
         }
         get direction() { return this._direction.Clone(); }
         set direction(value) {
-            if (this._direction == value)
+            if (this._direction.EqualsTo(value))
                 return;
-            this._direction = value;
+            this._direction = value.Clone();
             this.OnDirectionChanged();
         }
         get battle() { return this._battle; }
@@ -282,6 +282,8 @@ var Logic;
             this._entities.forEach((entity) => {
                 entity.MarkToDestroy();
             });
+            this._entities.splice(0);
+            this._idToEntity.clear();
             this.DestroyEnties();
             this._gPool.Dispose();
         }
@@ -758,6 +760,35 @@ var Shared;
 })(Shared || (Shared = {}));
 var View;
 (function (View) {
+    class Camera {
+        constructor() {
+            this._localtoWorld = RC.Numerics.Mat4.FromTRS(RC.Numerics.Vec3.zero, RC.Numerics.Quat.Euler(new RC.Numerics.Vec3(90, 0, 0)), new RC.Numerics.Vec3(1, -1, 1));
+            this._worldToLocal = RC.Numerics.Mat4.NonhomogeneousInvert(this._localtoWorld);
+            console.log(this._worldToLocal.TransformPoint(new RC.Numerics.Vec3(1, 0, -1)));
+        }
+        get position() { return this._position.Clone(); }
+        set position(value) {
+            if (value.EqualsTo(this._position))
+                return;
+            this._position = value.Clone();
+            if (this.cameraTRSChangedHandler != null)
+                this.cameraTRSChangedHandler();
+        }
+        get direction() { return this._direction.Clone(); }
+        set direction(value) {
+            if (value.EqualsTo(this._direction))
+                return;
+            this._direction = value.Clone();
+            if (this.cameraTRSChangedHandler != null)
+                this.cameraTRSChangedHandler();
+        }
+        get worldToLocal() { return this._worldToLocal.Clone(); }
+        get localtoWorld() { return this._localtoWorld.Clone(); }
+    }
+    View.Camera = Camera;
+})(View || (View = {}));
+var View;
+(function (View) {
     class CBattle {
         constructor(param) {
             this._frame = 0;
@@ -766,18 +797,19 @@ var View;
             this._uid = "";
             this._uid = param.uid;
             this._context = new Shared.UpdateContext();
+            this._camera = new View.Camera();
+            this._graphicManager = new View.GraphicManager(this);
             this._entityManager = new View.CEntityManager(this);
         }
-        get frame() {
-            return this._frame;
-        }
-        get deltaTime() {
-            return this._deltaTime;
-        }
-        get time() {
-            return this._time;
-        }
+        get camera() { return this._camera; }
+        ;
+        get graphicManager() { return this._graphicManager; }
+        ;
+        get frame() { return this._frame; }
+        get deltaTime() { return this._deltaTime; }
+        get time() { return this._time; }
         Dispose() {
+            this._graphicManager.Dispose();
             this._entityManager.Dispose();
         }
         Update(deltaTime) {
@@ -797,27 +829,24 @@ var View;
     class CEntity extends Shared.GPoolObject {
         constructor() {
             super();
-            this._position = RC.Numerics.Vec3.zero;
-            this._direction = RC.Numerics.Vec3.zero;
             this._battle = null;
             this._markToDestroy = false;
             this._graphic = null;
             this._data = null;
-            this._graphic = new View.EntityGraphic();
         }
         get position() { return this._position.Clone(); }
         set position(value) {
-            if (this._position == value)
+            if (this._position.EqualsTo(value))
                 return;
-            this._position = value;
+            this._position = value.Clone();
             if (this._graphic != null)
                 this._graphic.position = this._position;
         }
         get direction() { return this._direction.Clone(); }
         set direction(value) {
-            if (this._direction == value)
+            if (this._direction.EqualsTo(value))
                 return;
-            this._direction = value;
+            this._direction = value.Clone();
             if (this._graphic != null)
                 this._graphic.rotation = RC.Numerics.Quat.LookRotation(this._direction, RC.Numerics.Vec3.up);
         }
@@ -832,12 +861,14 @@ var View;
             this._data = Shared.Model.ModelFactory.GetEntityData(Shared.Utils.GetIDFromRID(this.rid));
             this._logicPos = this._position = param.position;
             this._logicDir = this._direction = param.direction;
+            this._graphic = this._battle.graphicManager.CreateGraphic(View.EntityGraphic);
             this._graphic.OnCreate(this, this._data.model);
             this._graphic.position = this.position;
             this._graphic.rotation = RC.Numerics.Quat.LookRotation(this.direction, RC.Numerics.Vec3.up);
         }
         OnDestroy() {
-            this._graphic.OnDestroy();
+            this._battle.graphicManager.DestroyGraphic(this._graphic);
+            this._graphic = null;
             this._markToDestroy = false;
             this._battle = null;
             this._data = null;
@@ -867,8 +898,8 @@ var View;
         }
         OnUpdateState(context) {
             let dt = context.deltaTime;
-            this.position = RC.Numerics.Vec3.Lerp(this.position, this._logicPos, dt * 10);
-            this.direction = RC.Numerics.Vec3.Slerp(this.direction, this._logicDir, dt * 8);
+            this.position = RC.Numerics.Vec3.Lerp(this._position, this._logicPos, dt * 10);
+            this.direction = RC.Numerics.Vec3.Slerp(this._direction, this._logicDir, dt * 8);
         }
     }
     View.CEntity = CEntity;
@@ -889,15 +920,37 @@ var View;
 var View;
 (function (View) {
     class Graphic {
-        constructor() {
+        constructor(manager) {
+            this._manager = manager;
+            this._root = new fairygui.GLoader();
         }
-        get position() { return null; }
-        set position(value) { }
-        get rotation() { return null; }
-        set rotation(value) { }
-        OnCreateInternal(battle, id) {
+        get position() { return this._position.Clone(); }
+        set position(value) {
+            if (value.EqualsTo(this._position))
+                return;
+            this._position = value.Clone();
+            this.UpdatePosition();
         }
-        OnDestroyInternal(battle) {
+        get rotation() { return this._rotation.Clone(); }
+        set rotation(value) {
+            if (value.EqualsTo(this._rotation))
+                return;
+            this._rotation = value.Clone();
+            this.UpdateDirection();
+        }
+        OnCreateInternal(id) {
+            this._root.url = fairygui.UIPackage.getItemURL("global", id);
+        }
+        Dispose() {
+            this._root.dispose();
+        }
+        UpdatePosition() {
+            let mat = this._manager.battle.camera.worldToLocal;
+            let localPos = mat.TransformPoint(this._position);
+            this._root.x = localPos.x;
+            this._root.y = localPos.y;
+        }
+        UpdateDirection() {
         }
     }
     View.Graphic = Graphic;
@@ -905,15 +958,59 @@ var View;
 var View;
 (function (View) {
     class EntityGraphic extends View.Graphic {
-        constructor() {
-            super();
+        constructor(manager) {
+            super(manager);
         }
         OnCreate(owner, id) {
-        }
-        OnDestroy() {
+            this.OnCreateInternal(id);
         }
     }
     View.EntityGraphic = EntityGraphic;
+})(View || (View = {}));
+var View;
+(function (View) {
+    class GraphicManager {
+        constructor(battle) {
+            this._battle = battle;
+            this._battle.camera.cameraTRSChangedHandler = this.OnCameraTRSChanged;
+            this._root = new fairygui.GComponent();
+            this._root.name = "graphic_root";
+            fairygui.GRoot.inst.addChild(this._root);
+            this._graphics = [];
+        }
+        get battle() { return this._battle; }
+        Dispose() {
+            let count = this._graphics.length;
+            for (let i = 0; i < count; ++i) {
+                let graphic = this._graphics[i];
+                graphic.Dispose();
+            }
+            this._graphics.splice(0);
+            this._root.dispose();
+        }
+        OnCameraTRSChanged() {
+            let count = this._graphics.length;
+            for (let i = 0; i < count; ++i) {
+                let graphic = this._graphics[i];
+                graphic.UpdatePosition();
+                graphic.UpdateDirection();
+            }
+        }
+        CreateGraphic(c) {
+            let graphic = new c(this);
+            this._graphics.push(graphic);
+            return graphic;
+        }
+        DestroyGraphic(graphic) {
+            let pos = this._graphics.indexOf(graphic);
+            if (pos < 0)
+                return false;
+            graphic.Dispose();
+            this._graphics.splice(pos, 1);
+            return true;
+        }
+    }
+    View.GraphicManager = GraphicManager;
 })(View || (View = {}));
 var View;
 (function (View) {

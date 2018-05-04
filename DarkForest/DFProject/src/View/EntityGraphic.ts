@@ -2,14 +2,12 @@
 
 namespace View {
 	export class EntityGraphic extends Graphic {
-		constructor() {
-			super()
+		constructor(manager: GraphicManager) {
+			super(manager);
 		}
 
 		public OnCreate(owner: View.CEntity, id: string): void {
-		}
-
-		public OnDestroy(): void {
+			this.OnCreateInternal(id);
 		}
 	}
 }

@@ -11,17 +11,17 @@ namespace Logic {
 
 		public get position(): RC.Numerics.Vec3 { return this._position.Clone(); }
 		public set position(value: RC.Numerics.Vec3) {
-			if (this._position == value)
+			if (this._position.EqualsTo(value))
 				return;
-			this._position = value;
+			this._position = value.Clone();
 			this.OnPositionChanged();
 		}
 
 		public get direction(): RC.Numerics.Vec3 { return this._direction.Clone(); }
 		public set direction(value: RC.Numerics.Vec3) {
-			if (this._direction == value)
+			if (this._direction.EqualsTo(value))
 				return;
-			this._direction = value;
+			this._direction = value.Clone();
 			this.OnDirectionChanged();
 		}
 
