@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="113,59">
+  <displayList>
+    <component id="n0" name="n0" src="n9qa1e" pkg="c7x5i49r" xy="0,0" size="113,59">
+      <Button title="进入" titleColor="#ffcc33" titleFontSize="32"/>
+    </component>
+  </displayList>
+</component>

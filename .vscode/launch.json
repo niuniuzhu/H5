@@ -1,0 +1,34 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "rcframwork",
+			"type": "chrome",
+			"request": "launch",
+			"file": "${workspaceRoot}/RCFramework/bin/index.html",
+			"runtimeArgs": [
+				"--allow-file-access-from-files",
+				"--allow-file-access-frome-files",
+				"--auto-open-devtools-for-tabs"
+			],
+			"sourceMaps": true,
+			"webRoot": "${workspaceRoot}",
+			// "userDataDir": "${workspaceRoot}/.vscode/chrome",
+			"disableNetworkCache": true
+		},
+		{
+			"name": "darkforest",
+			"type": "chrome",
+			"request": "launch",
+			"file": "${workspaceRoot}/DarkForest/DFProject/bin/index.html",
+			"runtimeArgs": [
+				"--allow-file-access-from-files",
+				"--allow-file-access-frome-files",
+				"--auto-open-devtools-for-tabs"
+			],
+			"sourceMaps": true,
+			"webRoot": "${workspaceRoot}",
+			"disableNetworkCache": true,
+		}
+	]
+}

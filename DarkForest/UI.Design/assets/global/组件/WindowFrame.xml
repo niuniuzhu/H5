@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="400,400" extention="Label" initName="frame">
+  <displayList>
+    <image id="n0" name="n0" src="ky42h" xy="0,0" size="400,400">
+      <relation target="" sidePair="width-width,height-height"/>
+    </image>
+    <image id="n3_qnmf" name="icon" src="qnmf1o" xy="1,1"/>
+    <graph id="n2" name="dragArea" xy="4,9" size="391,63">
+      <relation target="" sidePair="width-width,top-top%"/>
+    </graph>
+    <text id="n1" name="title" xy="20,20" size="363,41" fontSize="32" align="center" vAlign="middle" autoSize="height" bold="true" strokeColor="#000000" text="">
+      <relation target="" sidePair="width-width,top-top"/>
+    </text>
+  </displayList>
+</component>

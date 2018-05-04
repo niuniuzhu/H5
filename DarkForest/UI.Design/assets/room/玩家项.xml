@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="383,64">
+  <controller name="c1" pages="0,,1," selected="0"/>
+  <displayList>
+    <text id="n1" name="name" xy="35,6" size="286,52" fontSize="36" color="#ffff00" vAlign="middle" autoSize="none" singleLine="true" text=""/>
+    <image id="n2" name="n2" src="ehf6b" xy="335,15" size="33,33" aspect="true">
+      <gearDisplay controller="c1" pages="1"/>
+    </image>
+  </displayList>
+</component>

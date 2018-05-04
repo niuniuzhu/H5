@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="283wc37j" jpegQuality="80" compressPNG="true">
+  <resources>
+    <component id="h54j0" name="Main.xml" path="/" exported="true"/>
+    <component id="d3n82" name="进度条.xml" path="/"/>
+    <image id="d3n83" name="右花纹.png" path="/素材/"/>
+    <image id="d3n84" name="进度条3_底_3.png" path="/素材/" scale="9grid" scale9grid="4,7,4,7"/>
+    <image id="d3n85" name="进度条2_2.png" path="/素材/" scale="9grid" scale9grid="2,7,2,5"/>
+    <image id="d3n86" name="进度条1_高光_1.png" path="/素材/" scale="9grid" scale9grid="9,4,41,8"/>
+    <image id="d3n87" name="左花纹.png" path="/素材/"/>
+    <component id="d3n88" name="Bar.xml" path="/"/>
+  </resources>
+  <publish name="cutscene"/>
+</packageDescription>

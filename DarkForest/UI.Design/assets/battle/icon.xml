@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="110,110">
+  <displayList>
+    <loader id="n0_atkr" name="loader" xy="0,0" size="110,110" aspect="true" align="center" vAlign="middle" fill="scaleFree" playing="false"/>
+  </displayList>
+</component>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="320,118" extention="Button">
+  <controller name="button" pages="0,up,1,down,2,over,3,selectedOver" selected="0"/>
+  <displayList>
+    <image id="n0" name="n0" src="n9qa7" xy="0,0" size="320,118">
+      <gearColor controller="button" pages="1,2,3" values="#999999|#ccff99|#999999" default="#ffffff"/>
+    </image>
+    <text id="n1" name="n1" xy="14,13" size="46,40" fontSize="32" color="#ffffff" text="ID:"/>
+    <text id="n2" name="n2" xy="14,65" size="78,40" fontSize="32" color="#ffffff" text="名字:"/>
+    <text id="n3" name="id" xy="81,13" size="40,39" fontSize="32" color="#ffffff" text=""/>
+    <text id="n4" name="name" xy="107,65" size="40,39" fontSize="32" color="#ffffff" text=""/>
+  </displayList>
+  <Button mode="Radio"/>
+</component>

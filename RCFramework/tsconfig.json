@@ -1,0 +1,21 @@
+{
+	"compilerOptions": {
+	  "module": "amd",
+	  "target": "es6",
+	  "inlineSourceMap": false,
+	  "inlineSources": false,
+	  "sourceMap": true,
+	  "removeComments": true,
+	  "alwaysStrict": true,
+	  "strict": true,
+	  "outFile": "./bin/js/rc.js",
+	  "noImplicitReturns": true,
+	//   "declaration": true
+	},
+    "include": [
+        "src/**/*"
+    ],
+	"exclude": [
+	  "node_modules"
+	]
+  }

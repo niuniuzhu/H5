@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="110,110">
+  <displayList>
+    <image id="n0_atkr" name="n0" src="kt6p12" xy="0,0" aspect="true"/>
+    <component id="n1_atkr" name="icon" src="atkrt" xy="0,0" size="110,110"/>
+  </displayList>
+</component>

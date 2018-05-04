@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="140,140">
+  <displayList>
+    <graph id="n1" name="n1" xy="0,0" size="140,140" type="rect" lineSize="0" fillColor="#99000000">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <movieclip id="n2_du26" name="n2" src="rpmj1r" xy="0,0">
+      <relation target="" sidePair="center-center,middle-middle"/>
+    </movieclip>
+  </displayList>
+</component>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="ytvu69qh" jpegQuality="80" compressPNG="true">
+  <resources>
+    <component id="tmok1" name="Main.xml" path="/" exported="true"/>
+    <component id="tmok9" name="Joystick.xml" path="/"/>
+    <component id="tmokc" name="Core.xml" path="/"/>
+    <component id="u4isd" name="Arrow.xml" path="/" exported="true"/>
+    <image id="u4ise" name="next24.png" path="/Materials/"/>
+    <component id="u4isf" name="HUD.xml" path="/" exported="true"/>
+    <image id="qfd6g" name="0.png" path="/Materials/number/"/>
+    <image id="qfd6h" name="1.png" path="/Materials/number/"/>
+    <image id="qfd6i" name="2.png" path="/Materials/number/"/>
+    <image id="qfd6j" name="3.png" path="/Materials/number/"/>
+    <image id="qfd6k" name="4.png" path="/Materials/number/"/>
+    <image id="qfd6l" name="5.png" path="/Materials/number/"/>
+    <image id="qfd6m" name="6.png" path="/Materials/number/"/>
+    <image id="qfd6n" name="7.png" path="/Materials/number/"/>
+    <image id="qfd6o" name="8.png" path="/Materials/number/"/>
+    <image id="qfd6p" name="9.png" path="/Materials/number/"/>
+    <font id="qfd6q" name="开始倒数数字.fnt" path="/"/>
+    <image id="atkrr" name="item_btn_bg.png" path="/Materials/"/>
+    <component id="atkrs" name="使用物品按钮.xml" path="/"/>
+    <component id="atkrt" name="icon.xml" path="/"/>
+    <image id="j72gu" name="item_btn_mask.png" path="/Materials/" exported="true"/>
+    <component id="qhscz" name="胜利.xml" path="/"/>
+    <image id="kt6p10" name="yaogan02.png" path="/Materials/"/>
+    <image id="kt6p11" name="yaogan01.png" path="/Materials/"/>
+    <image id="kt6p12" name="daojukuang.png" path="/Materials/"/>
+    <image id="b1f613" name="i1.png" path="/Materials/items/" exported="true"/>
+    <image id="b1f614" name="i0.png" path="/Materials/items/" exported="true"/>
+    <image id="b1f615" name="i2.png" path="/Materials/items/" exported="true"/>
+    <image id="b1f616" name="i3.png" path="/Materials/items/" exported="true"/>
+  </resources>
+  <publish name="battle"/>
+</packageDescription>

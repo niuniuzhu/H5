@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="482,297">
+  <controller name="c1" pages="0,,1," selected="0"/>
+  <displayList>
+    <component id="n0" name="frame" src="n9ol13" pkg="c7x5i49r" xy="0,-1" size="482,298">
+      <gearColor controller="c1" pages="0" values="#ffff00" default="#33ff00"/>
+      <Label title="创建房间" titleColor="#ffff00"/>
+    </component>
+    <image id="n1" name="n1" src="gp246" xy="95,84" size="375,58"/>
+    <image id="n2" name="n2" src="gp246" xy="94,145" size="375,58"/>
+    <text id="n3" name="n3" xy="11,94" size="78,40" fontSize="32" color="#66ccff" strokeColor="#000000" text="名字:"/>
+    <text id="n4" name="n4" xy="11,154" size="78,40" fontSize="32" color="#66ccff" strokeColor="#000000" text="密码:"/>
+    <text id="n5" name="name" xy="108,94" size="10,40" input="true" prompt="输入名字" fontSize="32" singleLine="true" text=""/>
+    <text id="n6" name="password" xy="108,154" size="10,40" input="true" password="true" fontSize="32" singleLine="true" text=""/>
+    <component id="n7" name="create" src="ky4211" pkg="c7x5i49r" xy="175,217" size="130,69">
+      <Button title="创建" titleFontSize="32"/>
+    </component>
+  </displayList>
+</component>

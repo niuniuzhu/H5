@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="225,226">
+  <displayList>
+    <image id="n8_tmok" name="n8" src="kt6p11" xy="0,0"/>
+    <component id="n7_tmok" name="core" src="tmokc" xy="112,112" touchable="false"/>
+  </displayList>
+</component>

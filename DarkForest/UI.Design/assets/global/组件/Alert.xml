@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="640,137">
+  <displayList>
+    <component id="n0" name="frame" src="n9ol13" xy="0,0" size="640,138">
+      <relation target="n1" sidePair="bottomext-bottom"/>
+    </component>
+    <text id="n1" name="message" xy="17,91" size="605,31" fontSize="24" autoSize="height" text=""/>
+  </displayList>
+  <relation target="n0" sidePair="width-width,height-height"/>
+</component>

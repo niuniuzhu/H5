@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="l9tm5sxt" jpegQuality="80" compressPNG="true">
+  <resources>
+    <component id="fp620" name="Main.xml" path="/" exported="true"/>
+    <image id="cpx02" name="开战.png" path="/素材/"/>
+    <image id="cpx03" name="列表底图未获得.png" path="/素材/" scale="9grid" scale9grid="24,25,24,25"/>
+    <component id="cpx04" name="Component1.xml" path="/"/>
+    <component id="cpx05" name="玩家项.xml" path="/"/>
+    <image id="cpx06" name="技能条紫01.png" path="/素材/" scale="9grid" scale9grid="28,13,56,26"/>
+    <image id="cpx07" name="列表底图获得.png" path="/素材/" scale="9grid" scale9grid="18,19,36,38"/>
+    <image id="n9qa9" name="窗体_布局.png" path="/素材/" scale="9grid" scale9grid="70,41,140,82"/>
+    <image id="n9qaa" name="背景_tips.png" path="/素材/" scale="9grid" scale9grid="56,40,112,80"/>
+    <image id="ehf6b" name="复选_2_选中.png" path="/素材/"/>
+    <image id="ehf6c" name="框_名字输入框.png" path="/素材/" scale9grid="61,14,122,13"/>
+    <component id="sjswd" name="聊天项.xml" path="/"/>
+  </resources>
+  <publish name="room"/>
+</packageDescription>
