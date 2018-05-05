@@ -1,9 +1,7 @@
 namespace Logic {
 	export class EntityManager {
 		private readonly _battle: Battle;
-
 		private readonly _gPool: Shared.GPool;
-
 		private readonly _entities: Entity[];
 		private readonly _idToEntity: RC.Collections.Dictionary<string, Entity>;
 
@@ -18,8 +16,6 @@ namespace Logic {
 			this._entities.forEach((entity) => {
 				entity.MarkToDestroy();
 			});
-			this._entities.splice(0);
-			this._idToEntity.clear();
 			this.DestroyEnties();
 			this._gPool.Dispose();
 		}
@@ -40,7 +36,7 @@ namespace Logic {
 		}
 
 		public Create<T extends Shared.GPoolObject>(param: Shared.Model.EntityParam): Shared.GPoolObject {
-			let entity = <Logic.Entity>this._gPool.Pop(Logic.Entity);
+			let entity = <Entity>this._gPool.Pop(Entity);
 			this._idToEntity.setValue(param.rid, entity);
 			this._entities.push(entity);
 

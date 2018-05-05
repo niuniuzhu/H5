@@ -2088,8 +2088,13 @@ var RC;
                 }
                 return tEnter;
             }
-            EqualsTo(other) {
-                return (this.center.EqualsTo(other.center) && this.extents.EqualsTo(other.extents));
+            static Equals(b1, b2) {
+                if (b1 == null || b2 == null)
+                    return false;
+                return (b1.center.EqualsTo(b2.center) && b1.extents.EqualsTo(b2.extents));
+            }
+            EqualsTo(b) {
+                return Bounds.Equals(this, b);
             }
             ToString() {
                 return "(extents:" + this._extents.ToString() + "center:" + this._center.ToString() + ")";
@@ -2139,6 +2144,14 @@ var RC;
                 let mul1 = (dot1 * dot2 - dot3 * dot4) / (dot5 * dot4 - dot2 * dot2);
                 let mul2 = (dot1 + dot2 * mul1) / dot4;
                 return new Line3(Numerics.Vec3.Add(this.point1, Numerics.Vec3.MulN(vector3, mul1)), Numerics.Vec3.Add(line.point1, Numerics.Vec3.MulN(vector2, mul2)));
+            }
+            static Equals(l1, l2) {
+                if (l1 == null || l2 == null)
+                    return false;
+                return (l1.point1.EqualsTo(l2.point1) && l1.point2.EqualsTo(l2.point2));
+            }
+            EqualsTo(l) {
+                return Line3.Equals(this, l);
             }
         }
         Numerics.Line3 = Line3;
@@ -2232,10 +2245,12 @@ var RC;
                 return m;
             }
             static Equals(m1, m2) {
+                if (m1 == null || m2 == null)
+                    return false;
                 return m1.x.EqualsTo(m2.x) && m1.y.EqualsTo(m2.y);
             }
             EqualsTo(m) {
-                return this.x.EqualsTo(m.x) && this.y.EqualsTo(m.y);
+                return Mat2.Equals(this, m);
             }
             ToString() {
                 return "(" + this.x.ToString() + "," + this.y.ToString() + ")";
@@ -2438,10 +2453,12 @@ var RC;
                 return m;
             }
             static Equals(m1, m2) {
+                if (m1 == null || m2 == null)
+                    return false;
                 return m1.x.EqualsTo(m2.x) && m1.y.EqualsTo(m2.y) && m1.z.EqualsTo(m2.z);
             }
             EqualsTo(m) {
-                return this.x.EqualsTo(m.x) && this.y.EqualsTo(m.y) && this.z.EqualsTo(m.z);
+                return Mat3.Equals(this, m);
             }
             ToString() {
                 return "(" + this.x.ToString() + "," + this.y.ToString() + "," + this.z.ToString() + ")";
@@ -2774,10 +2791,12 @@ var RC;
                 return new Mat4(new Numerics.Vec4(m.x.x, m.y.x, m.z.x, m.w.x), new Numerics.Vec4(m.x.y, m.y.y, m.z.y, m.w.y), new Numerics.Vec4(m.x.z, m.y.z, m.z.z, m.w.z), new Numerics.Vec4(m.x.w, m.y.w, m.z.w, m.w.w));
             }
             static Equals(m1, m2) {
+                if (m1 == null || m2 == null)
+                    return false;
                 return m1.x.EqualsTo(m2.x) && m1.y.EqualsTo(m2.y) && m1.z.EqualsTo(m2.z) && m1.w.EqualsTo(m2.w);
             }
             EqualsTo(m) {
-                return this.x.EqualsTo(m.x) && this.y.EqualsTo(m.y) && this.z.EqualsTo(m.z) && this.w.EqualsTo(m.w);
+                return Mat4.Equals(this, m);
             }
             ToString() {
                 return "(" + this.x.ToString() + "," + this.y.ToString() + "," + this.z.ToString() + "," + this.w.ToString() + ")";
@@ -3768,10 +3787,12 @@ var RC;
                 return [angle, axis];
             }
             static Equals(q1, q2) {
+                if (q1 == null || q2 == null)
+                    return false;
                 return q1.x == q2.x && q1.y == q2.y && q1.z == q2.z && q1.w == q2.w;
             }
             EqualsTo(q) {
-                return this.x == q.x && this.y == q.y && this.z == q.z && this.w == q.w;
+                return Quat.Equals(this, q);
             }
             static Mul(lhs, rhs) {
                 return new Quat(lhs.w * rhs.x + lhs.x * rhs.w + lhs.y * rhs.z - lhs.z * rhs.y, lhs.w * rhs.y + lhs.y * rhs.w + lhs.z * rhs.x - lhs.x * rhs.z, lhs.w * rhs.z + lhs.z * rhs.w + lhs.x * rhs.y - lhs.y * rhs.x, lhs.w * rhs.w - lhs.x * rhs.x - lhs.y * rhs.y - lhs.z * rhs.z);
@@ -3888,11 +3909,13 @@ var RC;
                 v.y = n / v.y;
                 return v;
             }
-            static Equals(p1, p2) {
-                return p1.x == p2.x && p1.y == p2.y;
+            static Equals(v1, v2) {
+                if (v1 == null || v2 == null)
+                    return false;
+                return v1.x == v2.x && v1.y == v2.y;
             }
             EqualsTo(v) {
-                return this.x == v.x && this.y == v.y;
+                return Vec2.Equals(this, v);
             }
             ToString() {
                 return "(" + this.x + "," + this.y + ")";
@@ -4155,11 +4178,13 @@ var RC;
                 v.z = n / v.z;
                 return v;
             }
-            static Equals(p1, p2) {
-                return p1.x == p2.x && p1.y == p2.y && p1.z == p2.z;
+            static Equals(v1, v2) {
+                if (v1 == null || v2 == null)
+                    return false;
+                return v1.x == v2.x && v1.y == v2.y && v1.z == v2.z;
             }
             EqualsTo(v) {
-                return this.x == v.x && this.y == v.y && this.z == v.z;
+                return Vec3.Equals(this, v);
             }
             ToString() {
                 return "(" + this.x + "," + this.y + "," + this.z + ")";
@@ -4643,10 +4668,12 @@ var RC;
                 return v;
             }
             static Equals(v1, v2) {
+                if (v1 == null || v2 == null)
+                    return false;
                 return v1.x == v2.x && v1.y == v2.y && v1.z == v2.z && v1.w == v2.w;
             }
             EqualsTo(v) {
-                return this.x == v.x && this.y == v.y && this.z == v.z && this.w == v.w;
+                return Vec4.Equals(this, v);
             }
             ToString() {
                 return "(" + this.x + "," + this.y + "," + this.z + "," + this.w + ")";

@@ -143,11 +143,13 @@ namespace RC.Numerics {
 		}
 
 		public static Equals(v1: Vec4, v2: Vec4): boolean {
+			if (v1 == null || v2 == null)
+				return false;
 			return v1.x == v2.x && v1.y == v2.y && v1.z == v2.z && v1.w == v2.w;
 		}
 
 		public EqualsTo(v: Vec4): boolean {
-			return this.x == v.x && this.y == v.y && this.z == v.z && this.w == v.w;
+			return Vec4.Equals(this, v);
 		}
 
 		public ToString(): string {

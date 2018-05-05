@@ -35,9 +35,10 @@ namespace View {
 		}
 
 		public CreateGraphic<T extends Graphic>(c: new (manager: GraphicManager) => T): T {
-			let graphic = new c(this);
+			let graphic: Graphic = new c(this);
+			this._root.addChild(graphic.root);
 			this._graphics.push(graphic);
-			return graphic;
+			return <T>graphic;
 		}
 
 		public DestroyGraphic(graphic: Graphic): boolean {

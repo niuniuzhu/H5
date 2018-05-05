@@ -252,11 +252,13 @@ namespace RC.Numerics {
 		}
 
 		public static Equals(m1: Mat3, m2: Mat3): boolean {
+			if (m1 == null || m2 == null)
+				return false;
 			return m1.x.EqualsTo(m2.x) && m1.y.EqualsTo(m2.y) && m1.z.EqualsTo(m2.z);
 		}
 
 		public EqualsTo(m: Mat3): boolean {
-			return this.x.EqualsTo(m.x) && this.y.EqualsTo(m.y) && this.z.EqualsTo(m.z);
+			return Mat3.Equals(this, m);
 		}
 
 		public ToString(): string {

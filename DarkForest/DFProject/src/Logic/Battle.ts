@@ -19,7 +19,7 @@ namespace Logic {
 		private _frame: number = 0;
 		private _deltaTime: number = 0;
 		private _time: number = 0;
-
+		private readonly _data: Shared.Model.MapData;
 		private readonly _random: Shared.ConsistentRandom;
 		private readonly _context: Shared.UpdateContext;
 		private readonly _entityManager: EntityManager;
@@ -37,14 +37,20 @@ namespace Logic {
 		}
 
 		constructor(param: BattleParams) {
+			this._data = Shared.Model.ModelFactory.GetMapData(Shared.Utils.GetIDFromRID(param.id));
 			this._random = new Shared.ConsistentRandom(param.rndSeed);
 			this._context = new Shared.UpdateContext();
 			this._entityManager = new EntityManager(this);
+
+			Shared.Event.SyncEvent.CreateBattle(param.id);
+
 			this.CreatePlayers(param.players);
 		}
 
 		public Dispose(): void {
 			this._entityManager.Dispose();
+
+			Shared.Event.SyncEvent.DestroyBattle();
 		}
 
 		public Update(deltaTime: number): void {

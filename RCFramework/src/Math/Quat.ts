@@ -503,11 +503,13 @@ namespace RC.Numerics {
 		}
 
 		public static Equals(q1: Quat, q2: Quat): boolean {
+			if (q1 == null || q2 == null)
+				return false;
 			return q1.x == q2.x && q1.y == q2.y && q1.z == q2.z && q1.w == q2.w;
 		}
 
 		public EqualsTo(q: Quat): boolean {
-			return this.x == q.x && this.y == q.y && this.z == q.z && this.w == q.w;
+			return Quat.Equals(this, q);
 		}
 
 		public static Mul(lhs: Quat, rhs: Quat): Quat {

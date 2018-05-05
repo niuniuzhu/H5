@@ -305,8 +305,15 @@ namespace RC.Numerics {
 			return tEnter;
 		}
 
-		public EqualsTo(other: Bounds): boolean {
-			return (this.center.EqualsTo(other.center) && this.extents.EqualsTo(other.extents));
+		public static Equals(b1: Bounds, b2: Bounds): boolean {
+			if (b1 == null || b2 == null)
+				return false;
+			return (b1.center.EqualsTo(b2.center) && b1.extents.EqualsTo(b2.extents));
+
+		}
+
+		public EqualsTo(b: Bounds): boolean {
+			return Bounds.Equals(this, b);
 		}
 
 		/// <summary>

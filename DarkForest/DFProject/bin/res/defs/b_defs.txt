@@ -1,4 +1,10 @@
 {
+	"maps":{
+		"m0":{
+			"name":"test",
+			"model":"m0"
+		}
+	},
     "entities": {
         "default": {
             "size": [

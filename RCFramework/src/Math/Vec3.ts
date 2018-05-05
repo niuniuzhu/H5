@@ -134,12 +134,14 @@ namespace RC.Numerics {
 			return v;
 		}
 
-		public static Equals(p1: Vec3, p2: Vec3): boolean {
-			return p1.x == p2.x && p1.y == p2.y && p1.z == p2.z;
+		public static Equals(v1: Vec3, v2: Vec3): boolean {
+			if (v1 == null || v2 == null)
+				return false;
+			return v1.x == v2.x && v1.y == v2.y && v1.z == v2.z;
 		}
 
 		public EqualsTo(v: Vec3): boolean {
-			return this.x == v.x && this.y == v.y && this.z == v.z;
+			return Vec3.Equals(this, v);
 		}
 
 		public ToString(): string {

@@ -136,9 +136,11 @@ var Logic;
             this._frame = 0;
             this._deltaTime = 0;
             this._time = 0;
+            this._data = Shared.Model.ModelFactory.GetMapData(Shared.Utils.GetIDFromRID(param.id));
             this._random = new Shared.ConsistentRandom(param.rndSeed);
             this._context = new Shared.UpdateContext();
             this._entityManager = new Logic.EntityManager(this);
+            Shared.Event.SyncEvent.CreateBattle(param.id);
             this.CreatePlayers(param.players);
         }
         get frame() {
@@ -152,6 +154,7 @@ var Logic;
         }
         Dispose() {
             this._entityManager.Dispose();
+            Shared.Event.SyncEvent.DestroyBattle();
         }
         Update(deltaTime) {
             ++this._frame;
@@ -282,8 +285,6 @@ var Logic;
             this._entities.forEach((entity) => {
                 entity.MarkToDestroy();
             });
-            this._entities.splice(0);
-            this._idToEntity.clear();
             this.DestroyEnties();
             this._gPool.Dispose();
         }
@@ -388,11 +389,20 @@ var Shared;
         static Init(json) {
             Defs._defs = json;
         }
+        static GetMap(id) {
+            let ht = Shared.Hashtable.GetMap(Defs._defs, "maps");
+            let defaultHt = Shared.Hashtable.GetMap(ht, "default");
+            let result = Shared.Hashtable.GetMap(ht, id);
+            if (result == null)
+                result = {};
+            Shared.Hashtable.Concat(result, defaultHt);
+            return result;
+        }
         static GetEntity(id) {
             let ht = Shared.Hashtable.GetMap(Defs._defs, "entities");
             let defaultHt = Shared.Hashtable.GetMap(ht, "default");
             let result = Shared.Hashtable.GetMap(ht, id);
-            if (result == undefined)
+            if (result == null)
                 result = {};
             Shared.Hashtable.Concat(result, defaultHt);
             return result;
@@ -611,6 +621,17 @@ var Shared;
             Release() {
                 SyncEvent.Release(this);
             }
+            static CreateBattle(id) {
+                let e = this.Get();
+                e._type = SyncEvent.BATTLE_CREATED;
+                e.genericId = id;
+                e.BeginInvoke();
+            }
+            static DestroyBattle() {
+                let e = this.Get();
+                e._type = SyncEvent.BATTLE_DESTROIED;
+                e.BeginInvoke();
+            }
             static CreateEntity(type, param) {
                 let e = this.Get();
                 e._type = SyncEvent.ENTITY_CREATED;
@@ -650,15 +671,14 @@ var Shared;
                 e.BeginInvoke();
             }
         }
-        SyncEvent.CREATE_BATTLE = 10;
-        SyncEvent.DESTROY_BATTLE = 11;
+        SyncEvent.BATTLE_CREATED = 10;
+        SyncEvent.BATTLE_DESTROIED = 11;
         SyncEvent.WIN = 13;
         SyncEvent.ENTITY_CREATED = 20;
         SyncEvent.ENTITY_ADDED_TO_BATTLE = 21;
         SyncEvent.ENTITY_REMOVE_FROM_BATTLE = 22;
         SyncEvent.ENTITY_STATE_CHANGED = 23;
         SyncEvent.ENTITY_SYNC_PROPS = 24;
-        SyncEvent.USE_SKILL = 31;
         SyncEvent.SET_FRAME_ACTION = 99;
         SyncEvent.POOL = new RC.Collections.Stack();
         Event.SyncEvent = SyncEvent;
@@ -724,8 +744,8 @@ var Shared;
             constructor(id) {
                 this.id = id;
                 let def = Shared.Defs.GetEntity(this.id);
-                this.name = def["name"];
-                this.model = def["model"];
+                this.name = Shared.Hashtable.GetString(def, "name");
+                this.model = Shared.Hashtable.GetString(def, "model");
             }
         }
         Model.EntityData = EntityData;
@@ -744,7 +764,30 @@ var Shared;
 (function (Shared) {
     var Model;
     (function (Model) {
+        class MapData {
+            constructor(id) {
+                this.id = id;
+                let def = Shared.Defs.GetMap(this.id);
+                this.name = Shared.Hashtable.GetString(def, "name");
+                this.model = Shared.Hashtable.GetString(def, "model");
+            }
+        }
+        Model.MapData = MapData;
+    })(Model = Shared.Model || (Shared.Model = {}));
+})(Shared || (Shared = {}));
+var Shared;
+(function (Shared) {
+    var Model;
+    (function (Model) {
         class ModelFactory {
+            static GetMapData(id) {
+                let data = this.MAP_DATA.getValue(id);
+                if (data != null && data != undefined)
+                    return data;
+                data = new Model.MapData(id);
+                this.MAP_DATA.setValue(id, data);
+                return data;
+            }
             static GetEntityData(id) {
                 let data = this.ENTITY_DATA.getValue(id);
                 if (data != null && data != undefined)
@@ -754,6 +797,7 @@ var Shared;
                 return data;
             }
         }
+        ModelFactory.MAP_DATA = new RC.Collections.Dictionary();
         ModelFactory.ENTITY_DATA = new RC.Collections.Dictionary();
         Model.ModelFactory = ModelFactory;
     })(Model = Shared.Model || (Shared.Model = {}));
@@ -800,6 +844,14 @@ var View;
             this._camera = new View.Camera();
             this._graphicManager = new View.GraphicManager(this);
             this._entityManager = new View.CEntityManager(this);
+            Shared.Event.EventCenter.AddListener(Shared.Event.SyncEvent.BATTLE_CREATED, this.HandleCreateBattle.bind(this));
+            Shared.Event.EventCenter.AddListener(Shared.Event.SyncEvent.BATTLE_DESTROIED, this.HandleDestroyBattle.bind(this));
+            Shared.Event.EventCenter.AddListener(Shared.Event.SyncEvent.ENTITY_CREATED, this.HandleEntityCreate.bind(this));
+            Shared.Event.EventCenter.AddListener(Shared.Event.SyncEvent.ENTITY_ADDED_TO_BATTLE, this.HandleEntityAddedToBattle.bind(this));
+            Shared.Event.EventCenter.AddListener(Shared.Event.SyncEvent.ENTITY_REMOVE_FROM_BATTLE, this.HandleEntityRemoveFromBattle.bind(this));
+            Shared.Event.EventCenter.AddListener(Shared.Event.SyncEvent.ENTITY_STATE_CHANGED, this.HandleEntityStateChanged.bind(this));
+            Shared.Event.EventCenter.AddListener(Shared.Event.SyncEvent.ENTITY_SYNC_PROPS, this.HandleEntitySyncProps.bind(this));
+            Shared.Event.EventCenter.AddListener(Shared.Event.SyncEvent.WIN, this.HandleWin.bind(this));
         }
         get camera() { return this._camera; }
         ;
@@ -809,6 +861,14 @@ var View;
         get deltaTime() { return this._deltaTime; }
         get time() { return this._time; }
         Dispose() {
+            Shared.Event.EventCenter.RemoveListener(Shared.Event.SyncEvent.BATTLE_CREATED, this.HandleCreateBattle.bind(this));
+            Shared.Event.EventCenter.RemoveListener(Shared.Event.SyncEvent.BATTLE_DESTROIED, this.HandleDestroyBattle.bind(this));
+            Shared.Event.EventCenter.RemoveListener(Shared.Event.SyncEvent.ENTITY_CREATED, this.HandleEntityCreate.bind(this));
+            Shared.Event.EventCenter.RemoveListener(Shared.Event.SyncEvent.ENTITY_ADDED_TO_BATTLE, this.HandleEntityAddedToBattle.bind(this));
+            Shared.Event.EventCenter.RemoveListener(Shared.Event.SyncEvent.ENTITY_REMOVE_FROM_BATTLE, this.HandleEntityRemoveFromBattle.bind(this));
+            Shared.Event.EventCenter.RemoveListener(Shared.Event.SyncEvent.ENTITY_STATE_CHANGED, this.HandleEntityStateChanged.bind(this));
+            Shared.Event.EventCenter.RemoveListener(Shared.Event.SyncEvent.ENTITY_SYNC_PROPS, this.HandleEntitySyncProps.bind(this));
+            Shared.Event.EventCenter.RemoveListener(Shared.Event.SyncEvent.WIN, this.HandleWin.bind(this));
             this._graphicManager.Dispose();
             this._entityManager.Dispose();
         }
@@ -820,6 +880,41 @@ var View;
             this._context.time = this.time;
             this._context.frame = this.frame;
             this._entityManager.Update(this._context);
+        }
+        HandleCreateBattle(baseEvent) {
+            let e = baseEvent;
+            this._data = Shared.Model.ModelFactory.GetMapData(Shared.Utils.GetIDFromRID(e.genericId));
+            this._graphic = this._graphicManager.CreateGraphic(View.Graphic);
+            this._graphic.Load(this._data.model);
+        }
+        HandleDestroyBattle(baseEvent) {
+            this._graphicManager.DestroyGraphic(this._graphic);
+            this._data = null;
+        }
+        HandleEntityCreate(baseEvent) {
+            let e = baseEvent;
+            let type = e.entityType;
+            let param = e.param;
+            switch (type) {
+                case "Entity":
+                    this._entityManager.Create(param);
+                    break;
+            }
+        }
+        HandleEntityAddedToBattle(baseEvent) {
+            let e = baseEvent;
+        }
+        HandleEntityRemoveFromBattle(baseEvent) {
+            let e = baseEvent;
+        }
+        HandleEntityStateChanged(baseEvent) {
+            let e = baseEvent;
+        }
+        HandleEntitySyncProps(baseEvent) {
+            let e = baseEvent;
+        }
+        HandleWin(baseEvent) {
+            let e = baseEvent;
         }
     }
     View.CBattle = CBattle;
@@ -909,10 +1004,56 @@ var View;
     class CEntityManager {
         constructor(battle) {
             this._battle = battle;
+            this._gPool = new Shared.GPool();
+            this._entities = [];
+            this._idToEntity = new RC.Collections.Dictionary();
         }
         Dispose() {
+            this._entities.forEach((entity) => {
+                entity.MarkToDestroy();
+            });
+            this.DestroyEnties();
+            this._gPool.Dispose();
+        }
+        DestroyEnties() {
+            let count = this._entities.length;
+            for (let i = 0; i < count; i++) {
+                let entity = this._entities[i];
+                if (!entity.markToDestroy)
+                    continue;
+                entity.OnRemoveFromBattle();
+                this._entities.splice(i, 1);
+                this._idToEntity.remove(entity.rid);
+                this._gPool.Push(entity);
+                --i;
+                --count;
+            }
+        }
+        Create(param) {
+            let entity = this._gPool.Pop(View.CEntity);
+            this._idToEntity.setValue(param.rid, entity);
+            this._entities.push(entity);
+            Shared.Event.SyncEvent.CreateEntity(entity.constructor.name, param);
+            entity.OnCreated(this._battle, param);
+            return entity;
+        }
+        GetEntity(rid) {
+            if (rid == null || rid == undefined)
+                return null;
+            let entity = this._idToEntity.getValue(rid);
+            return entity;
+        }
+        GetEntityAt(index) {
+            if (index < 0 ||
+                index > this._entities.length - 1)
+                return null;
+            return this._entities[index];
         }
         Update(context) {
+            this.UpdateState(context);
+            this.DestroyEnties();
+        }
+        UpdateState(context) {
         }
     }
     View.CEntityManager = CEntityManager;
@@ -924,6 +1065,7 @@ var View;
             this._manager = manager;
             this._root = new fairygui.GLoader();
         }
+        get root() { return this._root; }
         get position() { return this._position.Clone(); }
         set position(value) {
             if (value.EqualsTo(this._position))
@@ -938,7 +1080,7 @@ var View;
             this._rotation = value.Clone();
             this.UpdateDirection();
         }
-        OnCreateInternal(id) {
+        Load(id) {
             this._root.url = fairygui.UIPackage.getItemURL("global", id);
         }
         Dispose() {
@@ -962,7 +1104,7 @@ var View;
             super(manager);
         }
         OnCreate(owner, id) {
-            this.OnCreateInternal(id);
+            this.Load(id);
         }
     }
     View.EntityGraphic = EntityGraphic;
@@ -998,6 +1140,7 @@ var View;
         }
         CreateGraphic(c) {
             let graphic = new c(this);
+            this._root.addChild(graphic.root);
             this._graphics.push(graphic);
             return graphic;
         }
@@ -1100,6 +1243,7 @@ var View;
             static get battle() { return this._battle; }
             static Init(resolution) {
                 Laya.stage.addChild(fairygui.GRoot.inst.displayObject);
+                fairygui.UIPackage.addPackage("res/ui/global");
                 fairygui.UIConfig.globalModalWaiting = fairygui.UIPackage.getItemURL("global", "ModalWaiting");
                 fairygui.UIConfig.windowModalWaiting = fairygui.UIPackage.getItemURL("global", "ModalWaiting");
                 fairygui.UIConfig.buttonSound = fairygui.UIPackage.getItemURL("global", "click");

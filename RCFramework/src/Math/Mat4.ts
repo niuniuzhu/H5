@@ -168,11 +168,13 @@ namespace RC.Numerics {
 		}
 
 		public static Equals(m1: Mat4, m2: Mat4): boolean {
+			if (m1 == null || m2 == null)
+				return false;
 			return m1.x.EqualsTo(m2.x) && m1.y.EqualsTo(m2.y) && m1.z.EqualsTo(m2.z) && m1.w.EqualsTo(m2.w);
 		}
 
 		public EqualsTo(m: Mat4): boolean {
-			return this.x.EqualsTo(m.x) && this.y.EqualsTo(m.y) && this.z.EqualsTo(m.z) && this.w.EqualsTo(m.w);
+			return Mat4.Equals(this, m);
 		}
 
 		public ToString(): string {

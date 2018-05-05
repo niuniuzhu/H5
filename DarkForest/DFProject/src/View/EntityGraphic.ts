@@ -7,7 +7,7 @@ namespace View {
 		}
 
 		public OnCreate(owner: View.CEntity, id: string): void {
-			this.OnCreateInternal(id);
+			this.Load(id);
 		}
 	}
 }

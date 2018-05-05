@@ -5,6 +5,8 @@ namespace View {
 		private _time: number = 0;
 		private _uid: string = "";
 
+		private _data: Shared.Model.MapData;
+		private _graphic: Graphic;
 		private readonly _context: Shared.UpdateContext;
 		private readonly _camera: Camera;
 		private readonly _graphicManager: GraphicManager;
@@ -22,9 +24,27 @@ namespace View {
 			this._camera = new Camera();
 			this._graphicManager = new GraphicManager(this);
 			this._entityManager = new CEntityManager(this);
+
+			Shared.Event.EventCenter.AddListener(Shared.Event.SyncEvent.BATTLE_CREATED, this.HandleCreateBattle.bind(this));
+			Shared.Event.EventCenter.AddListener(Shared.Event.SyncEvent.BATTLE_DESTROIED, this.HandleDestroyBattle.bind(this));
+			Shared.Event.EventCenter.AddListener(Shared.Event.SyncEvent.ENTITY_CREATED, this.HandleEntityCreate.bind(this));
+			Shared.Event.EventCenter.AddListener(Shared.Event.SyncEvent.ENTITY_ADDED_TO_BATTLE, this.HandleEntityAddedToBattle.bind(this));
+			Shared.Event.EventCenter.AddListener(Shared.Event.SyncEvent.ENTITY_REMOVE_FROM_BATTLE, this.HandleEntityRemoveFromBattle.bind(this));
+			Shared.Event.EventCenter.AddListener(Shared.Event.SyncEvent.ENTITY_STATE_CHANGED, this.HandleEntityStateChanged.bind(this));
+			Shared.Event.EventCenter.AddListener(Shared.Event.SyncEvent.ENTITY_SYNC_PROPS, this.HandleEntitySyncProps.bind(this));
+			Shared.Event.EventCenter.AddListener(Shared.Event.SyncEvent.WIN, this.HandleWin.bind(this));
 		}
 
 		public Dispose(): void {
+			Shared.Event.EventCenter.RemoveListener(Shared.Event.SyncEvent.BATTLE_CREATED, this.HandleCreateBattle.bind(this));
+			Shared.Event.EventCenter.RemoveListener(Shared.Event.SyncEvent.BATTLE_DESTROIED, this.HandleDestroyBattle.bind(this));
+			Shared.Event.EventCenter.RemoveListener(Shared.Event.SyncEvent.ENTITY_CREATED, this.HandleEntityCreate.bind(this));
+			Shared.Event.EventCenter.RemoveListener(Shared.Event.SyncEvent.ENTITY_ADDED_TO_BATTLE, this.HandleEntityAddedToBattle.bind(this));
+			Shared.Event.EventCenter.RemoveListener(Shared.Event.SyncEvent.ENTITY_REMOVE_FROM_BATTLE, this.HandleEntityRemoveFromBattle.bind(this));
+			Shared.Event.EventCenter.RemoveListener(Shared.Event.SyncEvent.ENTITY_STATE_CHANGED, this.HandleEntityStateChanged.bind(this));
+			Shared.Event.EventCenter.RemoveListener(Shared.Event.SyncEvent.ENTITY_SYNC_PROPS, this.HandleEntitySyncProps.bind(this));
+			Shared.Event.EventCenter.RemoveListener(Shared.Event.SyncEvent.WIN, this.HandleWin.bind(this));
+
 			this._graphicManager.Dispose();
 			this._entityManager.Dispose();
 		}
@@ -39,6 +59,49 @@ namespace View {
 			this._context.frame = this.frame;
 
 			this._entityManager.Update(this._context);
+		}
+
+		private HandleCreateBattle(baseEvent: Shared.Event.BaseEvent): void {
+			let e = <Shared.Event.SyncEvent>baseEvent;
+			this._data = Shared.Model.ModelFactory.GetMapData(Shared.Utils.GetIDFromRID(e.genericId));
+			this._graphic = this._graphicManager.CreateGraphic(Graphic);
+			this._graphic.Load(this._data.model);
+		}
+
+		private HandleDestroyBattle(baseEvent: Shared.Event.BaseEvent): void {
+			this._graphicManager.DestroyGraphic(this._graphic);
+			this._data = null;
+		}
+
+		private HandleEntityCreate(baseEvent: Shared.Event.BaseEvent): void {
+			let e = <Shared.Event.SyncEvent>baseEvent;
+			let type = e.entityType;
+			let param = e.param;
+			switch (type) {
+				case "Entity":
+					this._entityManager.Create<CEntity>(param)
+					break;
+			}
+		}
+
+		private HandleEntityAddedToBattle(baseEvent: Shared.Event.BaseEvent): void {
+			let e = <Shared.Event.SyncEvent>baseEvent;
+		}
+
+		private HandleEntityRemoveFromBattle(baseEvent: Shared.Event.BaseEvent): void {
+			let e = <Shared.Event.SyncEvent>baseEvent;
+		}
+
+		private HandleEntityStateChanged(baseEvent: Shared.Event.BaseEvent): void {
+			let e = <Shared.Event.SyncEvent>baseEvent;
+		}
+
+		private HandleEntitySyncProps(baseEvent: Shared.Event.BaseEvent): void {
+			let e = <Shared.Event.SyncEvent>baseEvent;
+		}
+
+		private HandleWin(baseEvent: Shared.Event.BaseEvent): void {
+			let e = <Shared.Event.SyncEvent>baseEvent;
 		}
 	}
 }

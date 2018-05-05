@@ -1,2951 +1,11 @@
 "use strict";
 var RC;
 (function (RC) {
-    var Numerics;
-    (function (Numerics) {
-        class Test {
-            constructor() {
-            }
+    class Test {
+        constructor() {
         }
-        Numerics.Test = Test;
-    })(Numerics = RC.Numerics || (RC.Numerics = {}));
-})(RC || (RC = {}));
-var RC;
-(function (RC) {
-    var Numerics;
-    (function (Numerics) {
-        let Axis;
-        (function (Axis) {
-            Axis[Axis["X"] = 0] = "X";
-            Axis[Axis["Y"] = 1] = "Y";
-            Axis[Axis["Z"] = 2] = "Z";
-        })(Axis = Numerics.Axis || (Numerics.Axis = {}));
-        class Bounds {
-            constructor(center, size) {
-                this._center = center;
-                this._extents = Numerics.Vec3.MulN(size, 0.5);
-            }
-            get center() { return this._center.Clone(); }
-            set center(value) { this._center = value.Clone(); }
-            get size() { return Numerics.Vec3.MulN(this._extents, 2); }
-            set size(value) { this._extents = Numerics.Vec3.MulN(value, 0.5); }
-            get extents() { return this._extents.Clone(); }
-            set extents(value) { this._extents = value.Clone(); }
-            get min() { return Numerics.Vec3.Sub(this.center, this.extents); }
-            set min(value) { this.SetMinMax(value, this.max); }
-            get max() { return Numerics.Vec3.Add(this.center, this.extents); }
-            set max(value) { this.SetMinMax(this.min, value); }
-            Contains(ponumber) {
-                if (ponumber.x < this.min.x ||
-                    ponumber.y < this.min.y ||
-                    ponumber.z < this.min.z ||
-                    ponumber.x > this.max.x ||
-                    ponumber.y > this.max.y ||
-                    ponumber.z > this.max.z)
-                    return false;
-                return true;
-            }
-            ClosestPonumber(point, outDistance) {
-                let distance = 0;
-                let t = Numerics.Vec3.Sub(point, this.center);
-                let closest = [t.x, t.y, t.z];
-                let et = [this._extents.x, this._extents.y, this._extents.z];
-                for (let i = 0; i < 3; i++) {
-                    let delta;
-                    let f = et[i];
-                    if (closest[i] < -f) {
-                        delta = closest[i] + f;
-                        distance = distance + delta * delta;
-                        closest[i] = -f;
-                    }
-                    else if (closest[i] > f) {
-                        delta = closest[i] - f;
-                        distance = distance + delta * delta;
-                        closest[i] = f;
-                    }
-                }
-                if (distance == 0)
-                    return point;
-                let v = this.center.Clone();
-                v.x += closest[0];
-                v.y += closest[1];
-                v.z += closest[2];
-                return v;
-            }
-            SetMinMax(min, max) {
-                this._extents = Numerics.Vec3.MulN(Numerics.Vec3.Sub(max, min), 0.5);
-                this._center = Numerics.Vec3.Add(min, this.extents);
-            }
-            Encapsulate(point) {
-                this.SetMinMax(Numerics.Vec3.Min(this.min, point), Numerics.Vec3.Max(this.max, point));
-            }
-            EncapsulateBounds(bounds) {
-                this.Encapsulate(Numerics.Vec3.Sub(bounds.center, bounds.extents));
-                this.Encapsulate(Numerics.Vec3.Add(bounds.center, bounds.extents));
-            }
-            Expand(amount) {
-                this._extents = Numerics.Vec3.Add(this._extents, Numerics.Vec3.MulN(amount, 0.5));
-            }
-            Intersect(bounds, boundsIntersect) {
-                if (this.min.x > bounds.max.x)
-                    return false;
-                if (this.max.x < bounds.min.x)
-                    return false;
-                if (this.min.y > bounds.max.y)
-                    return false;
-                if (this.max.y < bounds.min.y)
-                    return false;
-                if (this.min.z > bounds.max.z)
-                    return false;
-                if (this.max.z < bounds.min.z)
-                    return false;
-                boundsIntersect[0].min = Numerics.Vec3.Max(this.min, bounds.min);
-                boundsIntersect[0].max = Numerics.Vec3.Max(this.max, bounds.max);
-                return true;
-            }
-            IntersectMovingBoundsByAxis(bounds, d, axis, outT) {
-                if (Numerics.MathUtils.Approximately(d, 0.0)) {
-                    outT[0] = Numerics.MathUtils.MAX_VALUE;
-                    return false;
-                }
-                let min00;
-                let max00;
-                let min01;
-                let max01;
-                let min10;
-                let max10;
-                let min11;
-                let max11;
-                let min20;
-                let max20;
-                let min21;
-                let max21;
-                switch (axis) {
-                    case Axis.X:
-                        min10 = this.min.y;
-                        max10 = this.max.y;
-                        min11 = bounds.min.y;
-                        max11 = bounds.max.y;
-                        min20 = this.min.z;
-                        max20 = this.max.z;
-                        min21 = bounds.min.z;
-                        max21 = bounds.max.z;
-                        break;
-                    case Axis.Y:
-                        min10 = this.min.z;
-                        max10 = this.max.z;
-                        min11 = bounds.min.z;
-                        max11 = bounds.max.z;
-                        min20 = this.min.x;
-                        max20 = this.max.x;
-                        min21 = bounds.min.x;
-                        max21 = bounds.max.x;
-                        break;
-                    default:
-                        min10 = this.min.x;
-                        max10 = this.max.x;
-                        min11 = bounds.min.x;
-                        max11 = bounds.max.x;
-                        min20 = this.min.y;
-                        max20 = this.max.y;
-                        min21 = bounds.min.y;
-                        max21 = bounds.max.y;
-                        break;
-                }
-                if (min10 >= max11 ||
-                    max10 <= min11 ||
-                    min20 >= max21 ||
-                    max20 <= min21) {
-                    outT[0] = Numerics.MathUtils.MAX_VALUE;
-                    return false;
-                }
-                switch (axis) {
-                    case Axis.X:
-                        min00 = this.min.x;
-                        max00 = this.max.x;
-                        min01 = bounds.min.x;
-                        max01 = bounds.max.x;
-                        break;
-                    case Axis.Y:
-                        min00 = this.min.y;
-                        max00 = this.max.y;
-                        min01 = bounds.min.y;
-                        max01 = bounds.max.y;
-                        break;
-                    default:
-                        min00 = this.min.z;
-                        max00 = this.max.z;
-                        min01 = bounds.min.z;
-                        max01 = bounds.max.z;
-                        break;
-                }
-                let oneOverD = 1.0 / d;
-                let enter = (min00 - max01) * oneOverD;
-                let leave = (max00 - min01) * oneOverD;
-                if (enter > leave) {
-                    let t = enter;
-                    enter = leave;
-                    leave = t;
-                }
-                outT[0] = enter;
-                return enter < 1.0 && enter >= 0;
-            }
-            IntersectMovingBounds(bounds, d) {
-                let tEnter = -Numerics.MathUtils.MAX_VALUE;
-                let tLeave = Numerics.MathUtils.MAX_VALUE;
-                if (Numerics.MathUtils.Approximately(d.x, 0.0)) {
-                    if (this.min.x >= bounds.max.x ||
-                        this.max.x <= bounds.min.x)
-                        return Numerics.MathUtils.MAX_VALUE;
-                }
-                else {
-                    let oneOverD = 1.0 / d.x;
-                    let xEnter = (this.min.x - bounds.max.x) * oneOverD;
-                    let xLeave = (this.max.x - bounds.min.x) * oneOverD;
-                    if (xEnter > xLeave) {
-                        let t = xEnter;
-                        xEnter = xLeave;
-                        xLeave = t;
-                    }
-                    if (xEnter > tEnter)
-                        tEnter = xEnter;
-                    if (xLeave < tLeave)
-                        tLeave = xLeave;
-                    if (tEnter > tLeave)
-                        return Numerics.MathUtils.MAX_VALUE;
-                }
-                if (Numerics.MathUtils.Approximately(d.y, 0.0)) {
-                    if (this.min.y >= bounds.max.y ||
-                        this.max.y <= bounds.min.y)
-                        return Numerics.MathUtils.MAX_VALUE;
-                }
-                else {
-                    let oneOverD = 1.0 / d.y;
-                    let yEnter = (this.min.y - bounds.max.y) * oneOverD;
-                    let yLeave = (this.max.y - bounds.min.y) * oneOverD;
-                    if (yEnter > yLeave) {
-                        let t = yEnter;
-                        yEnter = yLeave;
-                        yLeave = t;
-                    }
-                    if (yEnter > tEnter)
-                        tEnter = yEnter;
-                    if (yLeave < tLeave)
-                        tLeave = yLeave;
-                    if (tEnter > tLeave)
-                        return Numerics.MathUtils.MAX_VALUE;
-                }
-                if (Numerics.MathUtils.Approximately(d.z, 0.0)) {
-                    if (this.min.z >= bounds.max.z ||
-                        this.max.z <= bounds.min.z)
-                        return Numerics.MathUtils.MAX_VALUE;
-                }
-                else {
-                    let oneOverD = 1.0 / d.z;
-                    let zEnter = (this.min.z - bounds.max.z) * oneOverD;
-                    let zLeave = (this.max.z - bounds.min.z) * oneOverD;
-                    if (zEnter > zLeave) {
-                        let t = zEnter;
-                        zEnter = zLeave;
-                        zLeave = t;
-                    }
-                    if (zEnter > tEnter)
-                        tEnter = zEnter;
-                    if (zLeave < tLeave)
-                        tLeave = zLeave;
-                    if (tEnter > tLeave)
-                        return Numerics.MathUtils.MAX_VALUE;
-                }
-                return tEnter;
-            }
-            EqualsTo(other) {
-                return (this.center.EqualsTo(other.center) && this.extents.EqualsTo(other.extents));
-            }
-            ToString() {
-                return "(extents:" + this._extents.ToString() + "center:" + this._center.ToString() + ")";
-            }
-        }
-        Numerics.Bounds = Bounds;
-    })(Numerics = RC.Numerics || (RC.Numerics = {}));
-})(RC || (RC = {}));
-var RC;
-(function (RC) {
-    var Numerics;
-    (function (Numerics) {
-        class Line3 {
-            constructor(point1 = Numerics.Vec3.zero, point2 = Numerics.Vec3.zero) {
-                this.point1 = point1;
-                this.point2 = point2;
-            }
-            Transform(matrix) {
-                return new Line3(matrix.Transform(this.point1), matrix.Transform(this.point2));
-            }
-            Length() {
-                return Numerics.Vec3.Sub(this.point1, this.point2).Magnitude();
-            }
-            InersectPlane(planeNormal, planeLocation) {
-                let dot = -(planeNormal.x * planeLocation.x) - planeNormal.y * planeLocation.y - planeNormal.z * planeLocation.z;
-                let dot3 = planeNormal.x * (this.point2.x - this.point1.x) + planeNormal.y * (this.point2.y - this.point1.y) +
-                    planeNormal.z * (this.point2.z - this.point1.z);
-                let dot2 = -((dot + planeNormal.x * this.point1.x + planeNormal.y * this.point1.y + planeNormal.z * this.point1.z) / dot3);
-                return Numerics.Vec3.Add(this.point1, Numerics.Vec3.MulN(Numerics.Vec3.Sub(this.point2, this.point1), dot2));
-            }
-            static InersectPlane(line, planeNormal, planeLocation) {
-                let dot = -(planeNormal.x * planeLocation.x) - planeNormal.y * planeLocation.y - planeNormal.z * planeLocation.z;
-                let dot3 = planeNormal.x * (line.point2.x - line.point1.x) + planeNormal.y * (line.point2.y - line.point1.y) +
-                    planeNormal.z * (line.point2.z - line.point1.z);
-                let dot2 = -((dot + planeNormal.x * line.point1.x + planeNormal.y * line.point1.y + planeNormal.z * line.point1.z) / dot3);
-                return Numerics.Vec3.Add(line.point1, Numerics.Vec3.MulN(Numerics.Vec3.Sub(line.point2, line.point1), dot2));
-            }
-            Inersect(line) {
-                let vector = Numerics.Vec3.Sub(this.point1, line.point1);
-                let vector2 = Numerics.Vec3.Sub(line.point2, line.point1);
-                let vector3 = Numerics.Vec3.Sub(this.point2, this.point1);
-                let dot1 = vector.Dot(vector2);
-                let dot2 = vector2.Dot(vector3);
-                let dot3 = vector.Dot(vector3);
-                let dot4 = vector2.SqrMagnitude();
-                let dot5 = vector3.SqrMagnitude();
-                let mul1 = (dot1 * dot2 - dot3 * dot4) / (dot5 * dot4 - dot2 * dot2);
-                let mul2 = (dot1 + dot2 * mul1) / dot4;
-                return new Line3(Numerics.Vec3.Add(this.point1, Numerics.Vec3.MulN(vector3, mul1)), Numerics.Vec3.Add(line.point1, Numerics.Vec3.MulN(vector2, mul2)));
-            }
-        }
-        Numerics.Line3 = Line3;
-    })(Numerics = RC.Numerics || (RC.Numerics = {}));
-})(RC || (RC = {}));
-var RC;
-(function (RC) {
-    var Numerics;
-    (function (Numerics) {
-        class Mat2 {
-            constructor(x = Numerics.Vec2.zero, y = Numerics.Vec2.zero) {
-                this.x = x;
-                this.y = y;
-            }
-            static get identity() {
-                return new Mat2(new Numerics.Vec2(1, 0), new Numerics.Vec2(0, 1));
-            }
-            static FromCross(xVector) {
-                return new Mat2(xVector, new Numerics.Vec2(-xVector.y, xVector.x));
-            }
-            static Abs(m) {
-                return new Mat2(Numerics.Vec2.Abs(m.x), Numerics.Vec2.Abs(m.y));
-            }
-            static Transpose(m) {
-                return new Mat2(new Numerics.Vec2(m.x.x, m.y.x), new Numerics.Vec2(m.x.y, m.y.y));
-            }
-            static Invert(m) {
-                let determinant = 1 / (m.x.x * m.y.y - m.x.y * m.y.x);
-                let result = new Mat2();
-                result.x.x = m.y.y * determinant;
-                result.x.y = -m.x.y * determinant;
-                result.y.x = -m.y.x * determinant;
-                result.y.y = m.x.x * determinant;
-                return result;
-            }
-            static Add(p1, p2) {
-                let m = new Mat2();
-                m.x = Numerics.Vec2.Add(p1.x, p2.x);
-                m.y = Numerics.Vec2.Add(p1.y, p2.y);
-                return m;
-            }
-            static AddN(p1, p2) {
-                let m = new Mat2();
-                m.x = Numerics.Vec2.AddN(p1.x, p2);
-                m.y = Numerics.Vec2.AddN(p1.y, p2);
-                return m;
-            }
-            static Sub(p1, p2) {
-                let m = new Mat2();
-                m.x = Numerics.Vec2.Sub(p1.x, p2.x);
-                m.y = Numerics.Vec2.Sub(p1.y, p2.y);
-                return m;
-            }
-            static SubN(p1, p2) {
-                let m = new Mat2();
-                m.x = Numerics.Vec2.SubN(p1.x, p2);
-                m.y = Numerics.Vec2.SubN(p1.y, p2);
-                return m;
-            }
-            static SubN2(p1, p2) {
-                let m = new Mat2();
-                m.x = Numerics.Vec2.SubN2(p1, p2.x);
-                m.y = Numerics.Vec2.SubN2(p1, p2.y);
-                return m;
-            }
-            static Mul(m1, m2) {
-                return new Mat2(new Numerics.Vec2(m2.x.x * m1.x.x + m2.x.y * m1.y.x, m2.x.x * m1.x.y + m2.x.y * m1.y.y), new Numerics.Vec2(m2.y.x * m1.x.x + m2.y.y * m1.y.x, m2.y.x * m1.x.y + m2.y.y * m1.y.y));
-            }
-            static MulN(p1, p2) {
-                let m = new Mat2();
-                m.x = Numerics.Vec2.MulN(p1.x, p2);
-                m.y = Numerics.Vec2.MulN(p1.y, p2);
-                return m;
-            }
-            static Div(p1, p2) {
-                let m = new Mat2();
-                m.x = Numerics.Vec2.Div(p1.x, p2.x);
-                m.y = Numerics.Vec2.Div(p1.y, p2.y);
-                return m;
-            }
-            static DivN(p1, p2) {
-                let m = new Mat2();
-                m.x = Numerics.Vec2.DivN(p1.x, p2);
-                m.y = Numerics.Vec2.DivN(p1.y, p2);
-                return m;
-            }
-            static DivN2(p1, p2) {
-                let m = new Mat2();
-                m.x = Numerics.Vec2.DivN2(p1, p2.x);
-                m.y = Numerics.Vec2.DivN2(p1, p2.y);
-                return m;
-            }
-            static Equals(m1, m2) {
-                return m1.x.EqualsTo(m2.x) && m1.y.EqualsTo(m2.y);
-            }
-            EqualsTo(m) {
-                return this.x.EqualsTo(m.x) && this.y.EqualsTo(m.y);
-            }
-            ToString() {
-                return "(" + this.x.ToString() + "," + this.y.ToString() + ")";
-            }
-            Clone() {
-                let m = new Mat2();
-                m.x = this.x.Clone();
-                m.y = this.y.Clone();
-                return m;
-            }
-            Identity() {
-                this.x.x = 1;
-                this.x.y = 0;
-                this.y.x = 0;
-                this.y.y = 1;
-            }
-            Transform(v) {
-                return new Numerics.Vec2(v.x * this.x.x + v.y * this.y.x, v.x * this.x.y + v.y * this.y.y);
-            }
-            Transpose() {
-                let m00 = this.x.x;
-                let m01 = this.y.x;
-                let m10 = this.x.y;
-                let m11 = this.y.y;
-                this.x.x = m00;
-                this.x.y = m01;
-                this.y.x = m10;
-                this.y.y = m11;
-            }
-            Determinant() {
-                return this.x.x * this.y.y - this.x.y * this.y.x;
-            }
-            Invert() {
-                let determinant = 1 / (this.x.x * this.y.y - this.x.y * this.y.x);
-                let m00 = this.y.y * determinant;
-                let m01 = -this.x.y * determinant;
-                let m10 = -this.y.x * determinant;
-                let m11 = this.x.x * determinant;
-                this.x.x = m00;
-                this.x.y = m01;
-                this.y.x = m10;
-                this.y.y = m11;
-            }
-        }
-        Numerics.Mat2 = Mat2;
-    })(Numerics = RC.Numerics || (RC.Numerics = {}));
-})(RC || (RC = {}));
-var RC;
-(function (RC) {
-    var Numerics;
-    (function (Numerics) {
-        class Mat3 {
-            constructor(x = Numerics.Vec3.zero, y = Numerics.Vec3.zero, z = Numerics.Vec3.zero) {
-                this.x = x;
-                this.y = y;
-                this.z = z;
-            }
-            static get identity() {
-                return new Mat3(new Numerics.Vec3(1, 0, 0), new Numerics.Vec3(0, 1, 0), new Numerics.Vec3(0, 0, 1));
-            }
-            ;
-            Clone() {
-                let m = new Mat3();
-                m.x = this.x.Clone();
-                m.y = this.y.Clone();
-                m.z = this.z.Clone();
-                return m;
-            }
-            static FromScale(scale) {
-                return new Mat3(new Numerics.Vec3(scale.x, 0, 0), new Numerics.Vec3(0, scale.y, 0), new Numerics.Vec3(0, 0, scale.z));
-            }
-            static FromOuterProduct(vector1, vector2) {
-                return new Mat3(new Numerics.Vec3(vector1.x * vector2.x, vector1.x * vector2.y, vector1.x * vector2.z), new Numerics.Vec3(vector1.y * vector2.x, vector1.y * vector2.y, vector1.y * vector2.z), new Numerics.Vec3(vector1.z * vector2.x, vector1.z * vector2.y, vector1.z * vector2.z));
-            }
-            static FromEuler(euler) {
-                let x = Numerics.MathUtils.DegToRad(euler.x);
-                let y = Numerics.MathUtils.DegToRad(euler.y);
-                let z = Numerics.MathUtils.DegToRad(euler.z);
-                let cx = Numerics.MathUtils.Cos(x);
-                let sx = Numerics.MathUtils.Sin(x);
-                let cy = Numerics.MathUtils.Cos(y);
-                let sy = Numerics.MathUtils.Sin(y);
-                let cz = Numerics.MathUtils.Cos(z);
-                let sz = Numerics.MathUtils.Sin(z);
-                return new Mat3(new Numerics.Vec3(cy * cz, cy * sz, -sy), new Numerics.Vec3(cz * sx * sy - cx * sz, cx * cz + sx * sy * sz, cy * sx), new Numerics.Vec3(cx * cz * sy + sx * sz, -cz * sx + cx * sy * sz, cx * cy));
-            }
-            static FromQuaternion(quaternion) {
-                let squared = new Numerics.Vec4(quaternion.x * quaternion.x, quaternion.y * quaternion.y, quaternion.z * quaternion.z, quaternion.w * quaternion.w);
-                let invSqLength = 1 / (squared.x + squared.y + squared.z + squared.w);
-                let temp1 = quaternion.x * quaternion.y;
-                let temp2 = quaternion.z * quaternion.w;
-                let temp3 = quaternion.x * quaternion.z;
-                let temp4 = quaternion.y * quaternion.w;
-                let temp5 = quaternion.y * quaternion.z;
-                let temp6 = quaternion.x * quaternion.w;
-                return new Mat3(new Numerics.Vec3((squared.x - squared.y - squared.z + squared.w) * invSqLength, 2 * (temp1 + temp2) * invSqLength, 2 * (temp3 - temp4) * invSqLength), new Numerics.Vec3(2 * (temp1 - temp2) * invSqLength, (-squared.x + squared.y - squared.z + squared.w) * invSqLength, 2 * (temp5 + temp6) * invSqLength), new Numerics.Vec3(2 * (temp3 + temp4) * invSqLength, 2 * (temp5 - temp6) * invSqLength, (-squared.x - squared.y + squared.z + squared.w) * invSqLength));
-            }
-            static FromRotationAxis(angle, axis) {
-                let quaternion = Numerics.Quat.AngleAxis(angle, axis);
-                return Mat3.FromQuaternion(quaternion);
-            }
-            static LookAt(forward, up) {
-                let z = Numerics.Vec3.Normalize(forward);
-                let x = Numerics.Vec3.Normalize(up.Cross(z));
-                let y = z.Cross(x);
-                return new Mat3(x, y, z);
-            }
-            static FromCross(vector) {
-                let result = new Mat3();
-                result.x.x = 0;
-                result.x.y = -vector.z;
-                result.x.z = vector.y;
-                result.y.x = vector.z;
-                result.y.y = 0;
-                result.y.z = -vector.x;
-                result.z.x = -vector.y;
-                result.z.y = vector.x;
-                result.z.z = 0;
-                return result;
-            }
-            static NonhomogeneousInvert(m) {
-                let m1 = m.Clone();
-                m1.NonhomogeneousInvert();
-                return m1;
-            }
-            static Invert(m) {
-                let determinant = 1 / m.Determinant();
-                return new Mat3(new Numerics.Vec3((m.y.y * m.z.z - m.y.z * m.z.y) * determinant, (m.x.z * m.z.y - m.z.z * m.x.y) * determinant, (m.x.y * m.y.z - m.y.y * m.x.z) * determinant), new Numerics.Vec3((m.y.z * m.z.x - m.y.x * m.z.z) * determinant, (m.x.x * m.z.z - m.x.z * m.z.x) * determinant, (m.x.z * m.y.x - m.x.x * m.y.z) * determinant), new Numerics.Vec3((m.y.x * m.z.y - m.y.y * m.z.x) * determinant, (m.x.y * m.z.x - m.x.x * m.z.y) * determinant, (m.x.x * m.y.y - m.x.y * m.y.x) * determinant));
-            }
-            static Transpose(m) {
-                return new Mat3(new Numerics.Vec3(m.x.x, m.y.x, m.z.x), new Numerics.Vec3(m.x.y, m.y.y, m.z.y), new Numerics.Vec3(m.x.z, m.y.z, m.z.z));
-            }
-            static Abs(m) {
-                return new Mat3(Numerics.Vec3.Abs(m.x), Numerics.Vec3.Abs(m.y), Numerics.Vec3.Abs(m.z));
-            }
-            static Add(p1, p2) {
-                let m = new Mat3();
-                m.x = Numerics.Vec3.Add(p1.x, p2.x);
-                m.y = Numerics.Vec3.Add(p1.y, p2.y);
-                m.z = Numerics.Vec3.Add(p1.z, p2.z);
-                return m;
-            }
-            static AddN(p1, p2) {
-                let m = new Mat3();
-                m.x = Numerics.Vec3.AddN(p1.x, p2);
-                m.y = Numerics.Vec3.AddN(p1.y, p2);
-                m.z = Numerics.Vec3.AddN(p1.z, p2);
-                return m;
-            }
-            static Sub(p1, p2) {
-                let m = new Mat3();
-                m.x = Numerics.Vec3.Sub(p1.x, p2.x);
-                m.y = Numerics.Vec3.Sub(p1.y, p2.y);
-                m.z = Numerics.Vec3.Sub(p1.z, p2.z);
-                return m;
-            }
-            static SubN(p1, p2) {
-                let m = new Mat3();
-                m.x = Numerics.Vec3.SubN(p1.x, p2);
-                m.y = Numerics.Vec3.SubN(p1.y, p2);
-                m.z = Numerics.Vec3.SubN(p1.z, p2);
-                return m;
-            }
-            static SubN2(p1, p2) {
-                let m = new Mat3();
-                m.x = Numerics.Vec3.SubN2(p1, p2.x);
-                m.y = Numerics.Vec3.SubN2(p1, p2.y);
-                m.z = Numerics.Vec3.SubN2(p1, p2.z);
-                return m;
-            }
-            static Mul(m1, m2) {
-                return new Mat3(new Numerics.Vec3(m2.x.x * m1.x.x + m2.x.y * m1.y.x + m2.x.z * m1.z.x, m2.x.x * m1.x.y + m2.x.y * m1.y.y + m2.x.z * m1.z.y, m2.x.x * m1.x.z + m2.x.y * m1.y.z + m2.x.z * m1.z.z), new Numerics.Vec3(m2.y.x * m1.x.x + m2.y.y * m1.y.x + m2.y.z * m1.z.x, m2.y.x * m1.x.y + m2.y.y * m1.y.y + m2.y.z * m1.z.y, m2.y.x * m1.x.z + m2.y.y * m1.y.z + m2.y.z * m1.z.z), new Numerics.Vec3(m2.z.x * m1.x.x + m2.z.y * m1.y.x + m2.z.z * m1.z.x, m2.z.x * m1.x.y + m2.z.y * m1.y.y + m2.z.z * m1.z.y, m2.z.x * m1.x.z + m2.z.y * m1.y.z + m2.z.z * m1.z.z));
-            }
-            static MulN(p1, p2) {
-                let m = new Mat3();
-                m.x = Numerics.Vec3.MulN(p1.x, p2);
-                m.y = Numerics.Vec3.MulN(p1.y, p2);
-                m.z = Numerics.Vec3.MulN(p1.z, p2);
-                return m;
-            }
-            static Div(p1, p2) {
-                let m = new Mat3();
-                m.x = Numerics.Vec3.Div(p1.x, p2.x);
-                m.y = Numerics.Vec3.Div(p1.y, p2.y);
-                m.z = Numerics.Vec3.Div(p1.z, p2.z);
-                return m;
-            }
-            static DivN(p1, p2) {
-                let m = new Mat3();
-                m.x = Numerics.Vec3.DivN(p1.x, p2);
-                m.y = Numerics.Vec3.DivN(p1.y, p2);
-                m.z = Numerics.Vec3.DivN(p1.z, p2);
-                return m;
-            }
-            static DivN2(p1, p2) {
-                let m = new Mat3();
-                m.x = Numerics.Vec3.DivN2(p1, p2.x);
-                m.y = Numerics.Vec3.DivN2(p1, p2.y);
-                m.z = Numerics.Vec3.DivN2(p1, p2.z);
-                return m;
-            }
-            static Equals(m1, m2) {
-                return m1.x.EqualsTo(m2.x) && m1.y.EqualsTo(m2.y) && m1.z.EqualsTo(m2.z);
-            }
-            EqualsTo(m) {
-                return this.x.EqualsTo(m.x) && this.y.EqualsTo(m.y) && this.z.EqualsTo(m.z);
-            }
-            ToString() {
-                return "(" + this.x.ToString() + "," + this.y.ToString() + "," + this.z.ToString() + ")";
-            }
-            Transform(v) {
-                return new Numerics.Vec3(v.x * this.x.x + v.y * this.y.x + v.z * this.z.x, v.x * this.x.y + v.y * this.y.y + v.z * this.z.y, v.x * this.x.z + v.y * this.y.z + v.z * this.z.z);
-            }
-            TransformPoint(v) {
-                return new Numerics.Vec2(v.x * this.x.x + v.y * this.y.x + this.z.x, v.x * this.x.y + v.y * this.y.y + this.z.y);
-            }
-            TransformVector(v) {
-                return new Numerics.Vec2(v.x * this.x.x + v.y * this.y.x, v.x * this.x.y + v.y * this.y.y);
-            }
-            Identity() {
-                this.x.x = 1;
-                this.x.y = 0;
-                this.x.z = 0;
-                this.y.x = 0;
-                this.y.y = 1;
-                this.y.z = 0;
-                this.z.x = 0;
-                this.z.y = 0;
-                this.z.z = 1;
-            }
-            Euler() {
-                if (this.z.x < 1) {
-                    if (this.z.x > -1) {
-                        return new Numerics.Vec3(Numerics.MathUtils.Atan2(this.z.y, this.z.z), Numerics.MathUtils.Asin(-this.z.x), Numerics.MathUtils.Atan2(this.y.x, this.x.x));
-                    }
-                    return new Numerics.Vec3(0, Numerics.MathUtils.PI_HALF, -Numerics.MathUtils.Atan2(this.y.z, this.y.y));
-                }
-                return new Numerics.Vec3(0, -Numerics.MathUtils.PI_HALF, Numerics.MathUtils.Atan2(-this.y.z, this.y.y));
-            }
-            Transpose() {
-                let m00 = this.x.x;
-                let m01 = this.y.x;
-                let m02 = this.z.x;
-                let m10 = this.x.y;
-                let m11 = this.y.y;
-                let m12 = this.z.y;
-                let m20 = this.x.z;
-                let m21 = this.y.z;
-                let m22 = this.z.z;
-                this.x.x = m00;
-                this.x.y = m01;
-                this.x.z = m02;
-                this.y.x = m10;
-                this.y.y = m11;
-                this.y.z = m12;
-                this.z.x = m20;
-                this.z.y = m21;
-                this.z.z = m22;
-            }
-            MultiplyTransposed(matrix) {
-                return new Mat3(new Numerics.Vec3(this.x.x * matrix.x.x + this.y.x * matrix.y.x + this.z.x * matrix.z.x, this.x.x * matrix.x.y + this.y.x * matrix.y.y + this.z.x * matrix.z.y, this.x.x * matrix.x.z + this.y.x * matrix.y.z + this.z.x * matrix.z.z), new Numerics.Vec3(this.x.y * matrix.x.x + this.y.y * matrix.y.x + this.z.y * matrix.z.x, this.x.y * matrix.x.y + this.y.y * matrix.y.y + this.z.y * matrix.z.y, this.x.y * matrix.x.z + this.y.y * matrix.y.z + this.z.y * matrix.z.z), new Numerics.Vec3(this.x.z * matrix.x.x + this.y.z * matrix.y.x + this.z.z * matrix.z.x, this.x.z * matrix.x.y + this.y.z * matrix.y.y + this.z.z * matrix.z.y, this.x.z * matrix.x.z + this.y.z * matrix.y.z + this.z.z * matrix.z.z));
-            }
-            Determinant() {
-                return this.x.x * this.y.y * this.z.z + this.x.y * this.y.z * this.z.x + this.x.z * this.y.x * this.z.y -
-                    this.z.x * this.y.y * this.x.z - this.z.y * this.y.z * this.x.x - this.z.z * this.y.x * this.x.y;
-            }
-            NonhomogeneousInvert() {
-                let m2 = new Numerics.Mat2();
-                m2.x.x = this.x.x;
-                m2.x.y = this.x.y;
-                m2.y.x = this.y.x;
-                m2.y.y = this.y.y;
-                m2.Invert();
-                let o = Mat3.identity;
-                this.x.x = m2.x.x;
-                this.x.y = m2.x.y;
-                this.y.x = m2.y.x;
-                this.y.y = m2.y.y;
-                let v = m2.Transform(new Numerics.Vec2(this.z.x, this.z.y));
-                this.z.x = -v.x;
-                this.z.y = -v.y;
-            }
-            Invert() {
-                let determinant = 1 / this.Determinant();
-                let m00 = (this.y.y * this.z.z - this.y.z * this.z.y) * determinant;
-                let m01 = (this.x.z * this.z.y - this.z.z * this.x.y) * determinant;
-                let m02 = (this.x.y * this.y.z - this.y.y * this.x.z) * determinant;
-                let m10 = (this.y.z * this.z.x - this.y.x * this.z.z) * determinant;
-                let m11 = (this.x.x * this.z.z - this.x.z * this.z.x) * determinant;
-                let m12 = (this.x.z * this.y.x - this.x.x * this.y.z) * determinant;
-                let m20 = (this.y.x * this.z.y - this.y.y * this.z.x) * determinant;
-                let m21 = (this.x.y * this.z.x - this.x.x * this.z.y) * determinant;
-                let m22 = (this.x.x * this.y.y - this.x.y * this.y.x) * determinant;
-                this.x.x = m00;
-                this.x.y = m01;
-                this.x.z = m02;
-                this.y.x = m10;
-                this.y.y = m11;
-                this.y.z = m12;
-                this.z.x = m20;
-                this.z.y = m21;
-                this.z.z = m22;
-            }
-            RotateAroundAxisX(angle) {
-                angle = Numerics.MathUtils.DegToRad(angle);
-                let tCos = Numerics.MathUtils.Cos(angle);
-                let tSin = Numerics.MathUtils.Sin(angle);
-                let m00 = this.x.x;
-                let m01 = this.y.x * tCos - this.z.x * tSin;
-                let m02 = this.y.x * tSin + this.z.x * tCos;
-                let m10 = this.x.y;
-                let m11 = this.y.y * tCos - this.z.y * tSin;
-                let m12 = this.y.y * tSin + this.z.y * tCos;
-                let m20 = this.x.z;
-                let m21 = this.y.z * tCos - this.z.z * tSin;
-                let m22 = this.y.z * tSin + this.z.z * tCos;
-                this.x.x = m00;
-                this.x.y = m01;
-                this.x.z = m02;
-                this.y.x = m10;
-                this.y.y = m11;
-                this.y.z = m12;
-                this.z.x = m20;
-                this.z.y = m21;
-                this.z.z = m22;
-            }
-            RotateAroundAxisY(angle) {
-                angle = Numerics.MathUtils.DegToRad(angle);
-                let tCos = Numerics.MathUtils.Cos(angle);
-                let tSin = Numerics.MathUtils.Sin(angle);
-                let m00 = this.z.x * tSin + this.x.x * tCos;
-                let m01 = this.y.x;
-                let m02 = this.z.x * tCos - this.x.x * tSin;
-                let m10 = this.z.y * tSin + this.x.y * tCos;
-                let m11 = this.y.y;
-                let m12 = this.z.y * tCos - this.x.y * tSin;
-                let m20 = this.z.z * tSin + this.x.z * tCos;
-                let m21 = this.y.z;
-                let m22 = this.z.z * tCos - this.x.z * tSin;
-                this.x.x = m00;
-                this.x.y = m01;
-                this.x.z = m02;
-                this.y.x = m10;
-                this.y.y = m11;
-                this.y.z = m12;
-                this.z.x = m20;
-                this.z.y = m21;
-                this.z.z = m22;
-            }
-            RotateAroundAxisZ(angle) {
-                angle = Numerics.MathUtils.DegToRad(angle);
-                let tCos = Numerics.MathUtils.Cos(angle);
-                let tSin = Numerics.MathUtils.Sin(angle);
-                let m00 = this.x.x * tCos - this.y.x * tSin;
-                let m01 = this.x.x * tSin + this.y.x * tCos;
-                let m02 = this.z.x;
-                let m10 = this.x.y * tCos - this.y.y * tSin;
-                let m11 = this.x.y * tSin + this.y.y * tCos;
-                let m12 = this.z.y;
-                let m20 = this.x.z * tCos - this.y.z * tSin;
-                let m21 = this.x.z * tSin + this.y.z * tCos;
-                let m22 = this.z.z;
-                this.x.x = m00;
-                this.x.y = m01;
-                this.x.z = m02;
-                this.y.x = m10;
-                this.y.y = m11;
-                this.y.z = m12;
-                this.z.x = m20;
-                this.z.y = m21;
-                this.z.z = m22;
-            }
-            RotateAroundWorldAxisX(angle) {
-                angle = Numerics.MathUtils.DegToRad(angle);
-                angle = -angle;
-                let tCos = Numerics.MathUtils.Cos(angle);
-                let tSin = Numerics.MathUtils.Sin(angle);
-                let m00 = this.x.x;
-                let m01 = this.y.x;
-                let m02 = this.z.x;
-                let m10 = this.x.y * tCos - this.x.z * tSin;
-                let m11 = this.y.y * tCos - this.y.z * tSin;
-                let m12 = this.z.y * tCos - this.z.z * tSin;
-                let m20 = this.x.y * tSin + this.x.z * tCos;
-                let m21 = this.y.y * tSin + this.y.z * tCos;
-                let m22 = this.z.y * tSin + this.z.z * tCos;
-                this.x.x = m00;
-                this.x.y = m01;
-                this.x.z = m02;
-                this.y.x = m10;
-                this.y.y = m11;
-                this.y.z = m12;
-                this.z.x = m20;
-                this.z.y = m21;
-                this.z.z = m22;
-            }
-            RotateAroundWorldAxisY(angle) {
-                angle = Numerics.MathUtils.DegToRad(angle);
-                angle = -angle;
-                let tCos = Numerics.MathUtils.Cos(angle);
-                let tSin = Numerics.MathUtils.Sin(angle);
-                let m00 = this.x.z * tSin + this.x.x * tCos;
-                let m01 = this.y.z * tSin + this.y.x * tCos;
-                let m02 = this.z.z * tSin + this.z.x * tCos;
-                let m10 = this.x.y;
-                let m11 = this.y.y;
-                let m12 = this.z.y;
-                let m20 = this.x.z * tCos - this.x.x * tSin;
-                let m21 = this.y.z * tCos - this.y.x * tSin;
-                let m22 = this.z.z * tCos - this.z.x * tSin;
-                this.x.x = m00;
-                this.x.y = m01;
-                this.x.z = m02;
-                this.y.x = m10;
-                this.y.y = m11;
-                this.y.z = m12;
-                this.z.x = m20;
-                this.z.y = m21;
-                this.z.z = m22;
-            }
-            RotateAroundWorldAxisZ(angle) {
-                angle = Numerics.MathUtils.DegToRad(angle);
-                angle = -angle;
-                let tCos = Numerics.MathUtils.Cos(angle);
-                let tSin = Numerics.MathUtils.Sin(angle);
-                let m00 = this.x.x * tCos - this.x.y * tSin;
-                let m01 = this.y.x * tCos - this.y.y * tSin;
-                let m02 = this.z.x * tCos - this.z.y * tSin;
-                let m10 = this.x.x * tSin + this.x.y * tCos;
-                let m11 = this.y.x * tSin + this.y.y * tCos;
-                let m12 = this.z.x * tSin + this.z.y * tCos;
-                let m20 = this.x.z;
-                let m21 = this.y.z;
-                let m22 = this.z.z;
-                this.x.x = m00;
-                this.x.y = m01;
-                this.x.z = m02;
-                this.y.x = m10;
-                this.y.y = m11;
-                this.y.z = m12;
-                this.z.x = m20;
-                this.z.y = m21;
-                this.z.z = m22;
-            }
-            RotateAround(angle, axis) {
-                let quaternion = Numerics.Quat.AngleAxis(0, axis).Conjugate();
-                let worldSpaceMatrix = Mat3.Mul(this, Mat3.FromQuaternion(quaternion));
-                quaternion = Numerics.Quat.AngleAxis(angle, axis);
-                let qMat = Mat3.FromQuaternion(quaternion);
-                worldSpaceMatrix = Mat3.Mul(worldSpaceMatrix, qMat);
-                return worldSpaceMatrix;
-            }
-        }
-        Numerics.Mat3 = Mat3;
-    })(Numerics = RC.Numerics || (RC.Numerics = {}));
-})(RC || (RC = {}));
-var RC;
-(function (RC) {
-    var Numerics;
-    (function (Numerics) {
-        class Mat4 {
-            constructor(x = Numerics.Vec4.zero, y = Numerics.Vec4.zero, z = Numerics.Vec4.zero, w = Numerics.Vec4.zero) {
-                this.x = x;
-                this.y = y;
-                this.z = z;
-                this.w = w;
-            }
-            static get identity() {
-                return new Mat4(new Numerics.Vec4(1, 0, 0, 0), new Numerics.Vec4(0, 1, 0, 0), new Numerics.Vec4(0, 0, 1, 0), new Numerics.Vec4(0, 0, 0, 1));
-            }
-            ;
-            static FromScale(scale) {
-                return new Mat4(new Numerics.Vec4(scale.x, 0, 0, 0), new Numerics.Vec4(0, scale.y, 0, 0), new Numerics.Vec4(0, 0, scale.z, 0), new Numerics.Vec4(0, 0, 0, 1));
-            }
-            static FromEuler(euler) {
-                let eulerX = Numerics.MathUtils.DegToRad(euler.x);
-                let eulerY = Numerics.MathUtils.DegToRad(euler.y);
-                let eulerZ = Numerics.MathUtils.DegToRad(euler.z);
-                let cx = Numerics.MathUtils.Cos(eulerX);
-                let sx = Numerics.MathUtils.Sin(eulerX);
-                let cy = Numerics.MathUtils.Cos(eulerY);
-                let sy = Numerics.MathUtils.Sin(eulerY);
-                let cz = Numerics.MathUtils.Cos(eulerZ);
-                let sz = Numerics.MathUtils.Sin(eulerZ);
-                return new Mat4(new Numerics.Vec4(cy * cz, cy * sz, -sy, 0), new Numerics.Vec4(cz * sx * sy - cx * sz, cx * cz + sx * sy * sz, cy * sx, 0), new Numerics.Vec4(cx * cz * sy + sx * sz, -cz * sx + cx * sy * sz, cx * cy, 0), new Numerics.Vec4(0, 0, 0, 1));
-            }
-            static FromQuaternion(quaternion) {
-                let squared = new Numerics.Vec4(quaternion.x * quaternion.x, quaternion.y * quaternion.y, quaternion.z * quaternion.z, quaternion.w * quaternion.w);
-                let invSqLength = 1 / (squared.x + squared.y + squared.z + squared.w);
-                let temp1 = quaternion.x * quaternion.y;
-                let temp2 = quaternion.z * quaternion.w;
-                let temp3 = quaternion.x * quaternion.z;
-                let temp4 = quaternion.y * quaternion.w;
-                let temp5 = quaternion.y * quaternion.z;
-                let temp6 = quaternion.x * quaternion.w;
-                return new Mat4(new Numerics.Vec4((squared.x - squared.y - squared.z + squared.w) * invSqLength, 2 * (temp1 + temp2) * invSqLength, 2 * (temp3 - temp4) * invSqLength, 0), new Numerics.Vec4(2 * (temp1 - temp2) * invSqLength, (-squared.x + squared.y - squared.z + squared.w) * invSqLength, 2 * (temp5 + temp6) * invSqLength, 0), new Numerics.Vec4(2 * (temp3 + temp4) * invSqLength, 2 * (temp5 - temp6) * invSqLength, (-squared.x - squared.y + squared.z + squared.w) * invSqLength, 0), new Numerics.Vec4(0, 0, 0, 1));
-            }
-            static FromRotationAxis(angle, axis) {
-                let quaternion = Numerics.Quat.AngleAxis(angle, axis);
-                return Mat4.FromQuaternion(quaternion);
-            }
-            static FromTRS(pos, q, scale) {
-                let m = Mat4.Mul(Mat4.FromQuaternion(q), Mat4.FromScale(scale));
-                m.w.x = pos.x;
-                m.w.y = pos.y;
-                m.w.z = pos.z;
-                return m;
-            }
-            static NonhomogeneousInvert(m) {
-                let m1 = m.Clone();
-                m1.NonhomogeneousInvert();
-                return m1;
-            }
-            static Invert(m) {
-                let determinant = 1 / m.Determinant();
-                let mat = new Mat4(new Numerics.Vec4((m.y.y * m.z.z * m.w.w + m.y.z * m.z.w * m.w.y + m.y.w * m.z.y * m.w.z -
-                    m.y.y * m.z.w * m.w.z - m.y.z * m.z.y * m.w.w - m.y.w * m.z.z * m.w.y) * determinant, (m.x.y * m.z.w * m.w.z + m.x.z * m.z.y * m.w.w + m.x.w * m.z.z * m.w.y -
-                    m.x.y * m.z.z * m.w.w - m.x.z * m.z.w * m.w.y - m.x.w * m.z.y * m.w.z) * determinant, (m.x.y * m.y.z * m.w.w + m.x.z * m.y.w * m.w.y + m.x.w * m.y.y * m.w.z -
-                    m.x.y * m.y.w * m.w.z - m.x.z * m.y.y * m.w.w - m.x.w * m.y.z * m.w.y) * determinant, (m.x.y * m.y.w * m.z.z + m.x.z * m.y.y * m.z.w + m.x.w * m.y.z * m.z.y -
-                    m.x.y * m.y.z * m.z.w - m.x.z * m.y.w * m.z.y - m.x.w * m.y.y * m.z.z) * determinant), new Numerics.Vec4((m.y.x * m.z.w * m.w.z + m.y.z * m.z.x * m.w.w + m.y.w * m.z.z * m.w.x -
-                    m.y.x * m.z.z * m.w.w - m.y.z * m.z.w * m.w.x - m.y.w * m.z.x * m.w.z) * determinant, (m.x.x * m.z.z * m.w.w + m.x.z * m.z.w * m.w.x + m.x.w * m.z.x * m.w.z -
-                    m.x.x * m.z.w * m.w.z - m.x.z * m.z.x * m.w.w - m.x.w * m.z.z * m.w.x) * determinant, (m.x.x * m.y.w * m.w.z + m.x.z * m.y.x * m.w.w + m.x.w * m.y.z * m.w.x -
-                    m.x.x * m.y.z * m.w.w - m.x.z * m.y.w * m.w.x - m.x.w * m.y.x * m.w.z) * determinant, (m.x.x * m.y.z * m.z.w + m.x.z * m.y.w * m.z.x + m.x.w * m.y.x * m.z.z -
-                    m.x.x * m.y.w * m.z.z - m.x.z * m.y.x * m.z.w - m.x.w * m.y.z * m.z.x) * determinant), new Numerics.Vec4((m.y.x * m.z.y * m.w.w + m.y.y * m.z.w * m.w.x + m.y.w * m.z.x * m.w.y -
-                    m.y.x * m.z.w * m.w.y - m.y.y * m.z.x * m.w.w - m.y.w * m.z.y * m.w.x) * determinant, (m.x.x * m.z.w * m.w.y + m.x.y * m.z.x * m.w.w + m.x.w * m.z.y * m.w.x -
-                    m.x.x * m.z.y * m.w.w - m.x.y * m.z.w * m.w.x - m.x.w * m.z.x * m.w.y) * determinant, (m.x.x * m.y.y * m.w.w + m.x.y * m.y.w * m.w.x + m.x.w * m.y.x * m.w.y -
-                    m.x.x * m.y.w * m.w.y - m.x.y * m.y.x * m.w.w - m.x.w * m.y.y * m.w.x) * determinant, (m.x.x * m.y.w * m.z.y + m.x.y * m.y.x * m.z.w + m.x.w * m.y.y * m.z.x -
-                    m.x.x * m.y.y * m.z.w - m.x.y * m.y.w * m.z.x - m.x.w * m.y.x * m.z.y) * determinant), new Numerics.Vec4((m.y.x * m.z.z * m.w.y + m.y.y * m.z.x * m.w.z + m.y.z * m.z.y * m.w.x -
-                    m.y.x * m.z.y * m.w.z - m.y.y * m.z.z * m.w.x - m.y.z * m.z.x * m.w.y) * determinant, (m.x.x * m.z.y * m.w.z + m.x.y * m.z.z * m.w.x + m.x.z * m.z.x * m.w.y -
-                    m.x.x * m.z.z * m.w.y - m.x.y * m.z.x * m.w.z - m.x.z * m.z.y * m.w.x) * determinant, (m.x.x * m.y.z * m.w.y + m.x.y * m.y.x * m.w.z + m.x.z * m.y.y * m.w.x -
-                    m.x.x * m.y.y * m.w.z - m.x.y * m.y.z * m.w.x - m.x.z * m.y.x * m.w.y) * determinant, (m.x.x * m.y.y * m.z.z + m.x.y * m.y.z * m.z.x + m.x.z * m.y.x * m.z.y -
-                    m.x.x * m.y.z * m.z.y - m.x.y * m.y.x * m.z.z - m.x.z * m.y.y * m.z.x) * determinant));
-                return mat;
-            }
-            static Transpose(m) {
-                return new Mat4(new Numerics.Vec4(m.x.x, m.y.x, m.z.x, m.w.x), new Numerics.Vec4(m.x.y, m.y.y, m.z.y, m.w.y), new Numerics.Vec4(m.x.z, m.y.z, m.z.z, m.w.z), new Numerics.Vec4(m.x.w, m.y.w, m.z.w, m.w.w));
-            }
-            static Equals(m1, m2) {
-                return m1.x.EqualsTo(m2.x) && m1.y.EqualsTo(m2.y) && m1.z.EqualsTo(m2.z) && m1.w.EqualsTo(m2.w);
-            }
-            EqualsTo(m) {
-                return this.x.EqualsTo(m.x) && this.y.EqualsTo(m.y) && this.z.EqualsTo(m.z) && this.w.EqualsTo(m.w);
-            }
-            ToString() {
-                return "(" + this.x.ToString() + "," + this.y.ToString() + "," + this.z.ToString() + "," + this.w.ToString() + ")";
-            }
-            static Abs(m) {
-                return new Mat4(Numerics.Vec4.Abs(m.x), Numerics.Vec4.Abs(m.y), Numerics.Vec4.Abs(m.z), Numerics.Vec4.Abs(m.w));
-            }
-            static Add(p1, p2) {
-                let m = new Mat4();
-                m.x = Numerics.Vec4.Add(p1.x, p2.x);
-                m.y = Numerics.Vec4.Add(p1.y, p2.y);
-                m.z = Numerics.Vec4.Add(p1.z, p2.z);
-                m.w = Numerics.Vec4.Add(p1.w, p2.w);
-                return m;
-            }
-            static AddN(p1, p2) {
-                let m = new Mat4();
-                m.x = Numerics.Vec4.AddN(p1.x, p2);
-                m.y = Numerics.Vec4.AddN(p1.y, p2);
-                m.z = Numerics.Vec4.AddN(p1.z, p2);
-                m.w = Numerics.Vec4.AddN(p1.w, p2);
-                return m;
-            }
-            static Sub(p1, p2) {
-                let m = new Mat4();
-                m.x = Numerics.Vec4.Sub(p1.x, p2.x);
-                m.y = Numerics.Vec4.Sub(p1.y, p2.y);
-                m.z = Numerics.Vec4.Sub(p1.z, p2.z);
-                m.w = Numerics.Vec4.Sub(p1.w, p2.w);
-                return m;
-            }
-            static SubN(p1, p2) {
-                let m = new Mat4();
-                m.x = Numerics.Vec4.SubN(p1.x, p2);
-                m.y = Numerics.Vec4.SubN(p1.y, p2);
-                m.z = Numerics.Vec4.SubN(p1.z, p2);
-                m.w = Numerics.Vec4.SubN(p1.w, p2);
-                return m;
-            }
-            static SubN2(p1, p2) {
-                let m = new Mat4();
-                m.x = Numerics.Vec4.SubN2(p1, p2.x);
-                m.y = Numerics.Vec4.SubN2(p1, p2.y);
-                m.z = Numerics.Vec4.SubN2(p1, p2.z);
-                m.w = Numerics.Vec4.SubN2(p1, p2.w);
-                return m;
-            }
-            static Mul(m1, m2) {
-                return new Mat4(new Numerics.Vec4(m2.x.x * m1.x.x + m2.x.y * m1.y.x + m2.x.z * m1.z.x + m2.x.w * m1.w.x, m2.x.x * m1.x.y + m2.x.y * m1.y.y + m2.x.z * m1.z.y + m2.x.w * m1.w.y, m2.x.x * m1.x.z + m2.x.y * m1.y.z + m2.x.z * m1.z.z + m2.x.w * m1.w.z, m2.x.x * m1.x.w + m2.x.y * m1.y.w + m2.x.z * m1.z.w + m2.x.w * m1.w.w), new Numerics.Vec4(m2.y.x * m1.x.x + m2.y.y * m1.y.x + m2.y.z * m1.z.x + m2.y.w * m1.w.x, m2.y.x * m1.x.y + m2.y.y * m1.y.y + m2.y.z * m1.z.y + m2.y.w * m1.w.y, m2.y.x * m1.x.z + m2.y.y * m1.y.z + m2.y.z * m1.z.z + m2.y.w * m1.w.z, m2.y.x * m1.x.w + m2.y.y * m1.y.w + m2.y.z * m1.z.w + m2.y.w * m1.w.w), new Numerics.Vec4(m2.z.x * m1.x.x + m2.z.y * m1.y.x + m2.z.z * m1.z.x + m2.z.w * m1.w.x, m2.z.x * m1.x.y + m2.z.y * m1.y.y + m2.z.z * m1.z.y + m2.z.w * m1.w.y, m2.z.x * m1.x.z + m2.z.y * m1.y.z + m2.z.z * m1.z.z + m2.z.w * m1.w.z, m2.z.x * m1.x.w + m2.z.y * m1.y.w + m2.z.z * m1.z.w + m2.z.w * m1.w.w), new Numerics.Vec4(m2.w.x * m1.x.x + m2.w.y * m1.y.x + m2.w.z * m1.z.x + m2.w.w * m1.w.x, m2.w.x * m1.x.y + m2.w.y * m1.y.y + m2.w.z * m1.z.y + m2.w.w * m1.w.y, m2.w.x * m1.x.z + m2.w.y * m1.y.z + m2.w.z * m1.z.z + m2.w.w * m1.w.z, m2.w.x * m1.x.w + m2.w.y * m1.y.w + m2.w.z * m1.z.w + m2.w.w * m1.w.w));
-            }
-            static MulN(p1, p2) {
-                let m = new Mat4();
-                m.x = Numerics.Vec4.MulN(p1.x, p2);
-                m.y = Numerics.Vec4.MulN(p1.y, p2);
-                m.z = Numerics.Vec4.MulN(p1.z, p2);
-                m.w = Numerics.Vec4.MulN(p1.w, p2);
-                return m;
-            }
-            static Div(p1, p2) {
-                let m = new Mat4();
-                m.x = Numerics.Vec4.Div(p1.x, p2.x);
-                m.y = Numerics.Vec4.Div(p1.y, p2.y);
-                m.z = Numerics.Vec4.Div(p1.z, p2.z);
-                m.w = Numerics.Vec4.Div(p1.w, p2.w);
-                return m;
-            }
-            static DivN(p1, p2) {
-                let m = new Mat4();
-                m.x = Numerics.Vec4.DivN(p1.x, p2);
-                m.y = Numerics.Vec4.DivN(p1.y, p2);
-                m.z = Numerics.Vec4.DivN(p1.z, p2);
-                m.w = Numerics.Vec4.DivN(p1.w, p2);
-                return m;
-            }
-            static DivN2(p1, p2) {
-                let m = new Mat4();
-                m.x = Numerics.Vec4.DivN2(p1, p2.x);
-                m.y = Numerics.Vec4.DivN2(p1, p2.y);
-                m.z = Numerics.Vec4.DivN2(p1, p2.z);
-                m.w = Numerics.Vec4.DivN2(p1, p2.w);
-                return m;
-            }
-            Clone() {
-                let m = new Mat4();
-                m.x = this.x.Clone();
-                m.y = this.y.Clone();
-                m.z = this.z.Clone();
-                m.w = this.w.Clone();
-                return m;
-            }
-            Transform(v) {
-                return new Numerics.Vec4(v.x * this.x.x + v.y * this.y.x + v.z * this.z.x + v.w * this.w.x, v.x * this.x.y + v.y * this.y.y + v.z * this.z.y + v.w * this.w.y, v.x * this.x.z + v.y * this.y.z + v.z * this.z.z + v.w * this.w.z, v.x * this.x.w + v.y * this.y.w + v.z * this.z.w + v.w * this.w.w);
-            }
-            TransformPoint(v) {
-                return new Numerics.Vec3(v.x * this.x.x + v.y * this.y.x + v.z * this.z.x + this.w.x, v.x * this.x.y + v.y * this.y.y + v.z * this.z.y + this.w.y, v.x * this.x.z + v.y * this.y.z + v.z * this.z.z + this.w.z);
-            }
-            TransformVector(v) {
-                return new Numerics.Vec3(v.x * this.x.x + v.y * this.y.x + v.z * this.z.x, v.x * this.x.y + v.y * this.y.y + v.z * this.z.y, v.x * this.x.z + v.y * this.y.z + v.z * this.z.z);
-            }
-            Identity() {
-                this.x.x = 1;
-                this.x.y = 0;
-                this.x.z = 0;
-                this.x.w = 0;
-                this.y.x = 0;
-                this.y.y = 1;
-                this.y.z = 0;
-                this.y.w = 0;
-                this.z.x = 0;
-                this.z.y = 0;
-                this.z.z = 1;
-                this.z.w = 0;
-                this.w.x = 0;
-                this.w.y = 0;
-                this.w.z = 0;
-                this.w.w = 1;
-            }
-            Transpose() {
-                let m00 = this.x.x;
-                let m01 = this.y.x;
-                let m02 = this.z.x;
-                let m03 = this.w.x;
-                let m10 = this.x.y;
-                let m11 = this.y.y;
-                let m12 = this.z.y;
-                let m13 = this.w.y;
-                let m20 = this.x.z;
-                let m21 = this.y.z;
-                let m22 = this.z.z;
-                let m23 = this.w.z;
-                let m30 = this.x.w;
-                let m31 = this.y.w;
-                let m32 = this.z.w;
-                let m33 = this.w.w;
-                this.x.x = m00;
-                this.x.y = m01;
-                this.x.z = m02;
-                this.x.w = m03;
-                this.y.x = m10;
-                this.y.y = m11;
-                this.y.z = m12;
-                this.y.w = m13;
-                this.z.x = m20;
-                this.z.y = m21;
-                this.z.z = m22;
-                this.z.w = m23;
-                this.w.x = m30;
-                this.w.y = m31;
-                this.w.z = m32;
-                this.w.w = m33;
-            }
-            Determinant() {
-                let det1 = this.z.z * this.w.w - this.z.w * this.w.z;
-                let det2 = this.z.y * this.w.w - this.z.w * this.w.y;
-                let det3 = this.z.y * this.w.z - this.z.z * this.w.y;
-                let det4 = this.z.x * this.w.w - this.z.w * this.w.x;
-                let det5 = this.z.x * this.w.z - this.z.z * this.w.x;
-                let det6 = this.z.x * this.w.y - this.z.y * this.w.x;
-                return this.x.x * (this.y.y * det1 - this.y.z * det2 + this.y.w * det3) -
-                    this.x.y * (this.y.x * det1 - this.y.z * det4 + this.y.w * det5) +
-                    this.x.z * (this.y.x * det2 - this.y.y * det4 + this.y.w * det6) -
-                    this.x.w * (this.y.x * det3 - this.y.y * det5 + this.y.z * det6);
-            }
-            NonhomogeneousInvert() {
-                let m3 = new Numerics.Mat3();
-                m3.x.x = this.x.x;
-                m3.x.y = this.x.y;
-                m3.x.z = this.x.z;
-                m3.y.x = this.y.x;
-                m3.y.y = this.y.y;
-                m3.y.z = this.y.z;
-                m3.z.x = this.z.x;
-                m3.z.y = this.z.y;
-                m3.z.z = this.z.z;
-                m3.Invert();
-                let o = Mat4.identity;
-                this.x.x = m3.x.x;
-                this.x.y = m3.x.y;
-                this.x.z = m3.x.z;
-                this.y.x = m3.y.x;
-                this.y.y = m3.y.y;
-                this.y.z = m3.y.z;
-                this.z.x = m3.z.x;
-                this.z.y = m3.z.y;
-                this.z.z = m3.z.z;
-                let v = m3.Transform(new Numerics.Vec3(this.w.x, this.w.y, this.w.z));
-                this.w.x = -v.x;
-                this.w.y = -v.y;
-                this.w.z = -v.z;
-            }
-            Invert() {
-                let determinant = 1 / this.Determinant();
-                let m00 = (this.y.y * this.z.z * this.w.w + this.y.z * this.z.w * this.w.y + this.y.w * this.z.y * this.w.z -
-                    this.y.y * this.z.w * this.w.z - this.y.z * this.z.y * this.w.w - this.y.w * this.z.z * this.w.y) * determinant;
-                let m01 = (this.x.y * this.z.w * this.w.z + this.x.z * this.z.y * this.w.w + this.x.w * this.z.z * this.w.y -
-                    this.x.y * this.z.z * this.w.w - this.x.z * this.z.w * this.w.y - this.x.w * this.z.y * this.w.z) * determinant;
-                let m02 = (this.x.y * this.y.z * this.w.w + this.x.z * this.y.w * this.w.y + this.x.w * this.y.y * this.w.z -
-                    this.x.y * this.y.w * this.w.z - this.x.z * this.y.y * this.w.w - this.x.w * this.y.z * this.w.y) * determinant;
-                let m03 = (this.x.y * this.y.w * this.z.z + this.x.z * this.y.y * this.z.w + this.x.w * this.y.z * this.z.y -
-                    this.x.y * this.y.z * this.z.w - this.x.z * this.y.w * this.z.y - this.x.w * this.y.y * this.z.z) * determinant;
-                let m10 = (this.y.x * this.z.w * this.w.z + this.y.z * this.z.x * this.w.w + this.y.w * this.z.z * this.w.x -
-                    this.y.x * this.z.z * this.w.w - this.y.z * this.z.w * this.w.x - this.y.w * this.z.x * this.w.z) * determinant;
-                let m11 = (this.x.x * this.z.z * this.w.w + this.x.z * this.z.w * this.w.x + this.x.w * this.z.x * this.w.z -
-                    this.x.x * this.z.w * this.w.z - this.x.z * this.z.x * this.w.w - this.x.w * this.z.z * this.w.x) * determinant;
-                let m12 = (this.x.x * this.y.w * this.w.z + this.x.z * this.y.x * this.w.w + this.x.w * this.y.z * this.w.x -
-                    this.x.x * this.y.z * this.w.w - this.x.z * this.y.w * this.w.x - this.x.w * this.y.x * this.w.z) * determinant;
-                let m13 = (this.x.x * this.y.z * this.z.w + this.x.z * this.y.w * this.z.x + this.x.w * this.y.x * this.z.z -
-                    this.x.x * this.y.w * this.z.z - this.x.z * this.y.x * this.z.w - this.x.w * this.y.z * this.z.x) * determinant;
-                let m20 = (this.y.x * this.z.y * this.w.w + this.y.y * this.z.w * this.w.x + this.y.w * this.z.x * this.w.y -
-                    this.y.x * this.z.w * this.w.y - this.y.y * this.z.x * this.w.w - this.y.w * this.z.y * this.w.x) * determinant;
-                let m21 = (this.x.x * this.z.w * this.w.y + this.x.y * this.z.x * this.w.w + this.x.w * this.z.y * this.w.x -
-                    this.x.x * this.z.y * this.w.w - this.x.y * this.z.w * this.w.x - this.x.w * this.z.x * this.w.y) * determinant;
-                let m22 = (this.x.x * this.y.y * this.w.w + this.x.y * this.y.w * this.w.x + this.x.w * this.y.x * this.w.y -
-                    this.x.x * this.y.w * this.w.y - this.x.y * this.y.x * this.w.w - this.x.w * this.y.y * this.w.x) * determinant;
-                let m23 = (this.x.x * this.y.w * this.z.y + this.x.y * this.y.x * this.z.w + this.x.w * this.y.y * this.z.x -
-                    this.x.x * this.y.y * this.z.w - this.x.y * this.y.w * this.z.x - this.x.w * this.y.x * this.z.y) * determinant;
-                let m30 = (this.y.x * this.z.z * this.w.y + this.y.y * this.z.x * this.w.z + this.y.z * this.z.y * this.w.x -
-                    this.y.x * this.z.y * this.w.z - this.y.y * this.z.z * this.w.x - this.y.z * this.z.x * this.w.y) * determinant;
-                let m31 = (this.x.x * this.z.y * this.w.z + this.x.y * this.z.z * this.w.x + this.x.z * this.z.x * this.w.y -
-                    this.x.x * this.z.z * this.w.y - this.x.y * this.z.x * this.w.z - this.x.z * this.z.y * this.w.x) * determinant;
-                let m32 = (this.x.x * this.y.z * this.w.y + this.x.y * this.y.x * this.w.z + this.x.z * this.y.y * this.w.x -
-                    this.x.x * this.y.y * this.w.z - this.x.y * this.y.z * this.w.x - this.x.z * this.y.x * this.w.y) * determinant;
-                let m33 = (this.x.x * this.y.y * this.z.z + this.x.y * this.y.z * this.z.x + this.x.z * this.y.x * this.z.y -
-                    this.x.x * this.y.z * this.z.y - this.x.y * this.y.x * this.z.z - this.x.z * this.y.y * this.z.x) * determinant;
-                this.x.x = m00;
-                this.x.y = m01;
-                this.x.z = m02;
-                this.x.w = m03;
-                this.y.x = m10;
-                this.y.y = m11;
-                this.y.z = m12;
-                this.y.w = m13;
-                this.z.x = m20;
-                this.z.y = m21;
-                this.z.z = m22;
-                this.z.w = m23;
-                this.w.x = m30;
-                this.w.y = m31;
-                this.w.z = m32;
-                this.w.w = m33;
-            }
-            static View(position, lookAt, upVector) {
-                let forward = Numerics.Vec3.Normalize(Numerics.Vec3.Sub(lookAt, position));
-                let xVec = Numerics.Vec3.Normalize(forward.Cross(upVector));
-                let up = xVec.Cross(forward);
-                let result = new Mat4();
-                result.x.x = xVec.x;
-                result.x.y = xVec.y;
-                result.x.z = xVec.z;
-                result.x.w = Numerics.Vec3.Dot(position, Numerics.Vec3.Negate(xVec));
-                result.y.x = up.x;
-                result.y.y = up.y;
-                result.y.z = up.z;
-                result.y.w = Numerics.Vec3.Dot(position, Numerics.Vec3.Negate(up));
-                result.z.x = -forward.x;
-                result.z.y = -forward.y;
-                result.z.z = -forward.z;
-                result.z.w = Numerics.Vec3.Dot(position, forward);
-                result.w.x = 0;
-                result.w.y = 0;
-                result.w.z = 0;
-                result.w.w = 1;
-                return result;
-            }
-            static Perspective(fov, aspect, near, far) {
-                let top = near * Numerics.MathUtils.Tan(fov * .5);
-                let bottom = -top;
-                let right = top * aspect;
-                let left = -right;
-                return Mat4.Frustum(left, right, bottom, top, near, far);
-            }
-            static Frustum(left, right, bottom, top, near, far) {
-                let width = right - left;
-                let height = top - bottom;
-                let depth = far - near;
-                let n = near * 2;
-                let result = new Mat4();
-                result.x.x = n / width;
-                result.x.y = 0;
-                result.x.z = (right + left) / width;
-                result.x.w = 0;
-                result.y.x = 0;
-                result.y.y = n / height;
-                result.y.z = (top + bottom) / height;
-                result.y.w = 0;
-                result.z.x = 0;
-                result.z.y = 0;
-                result.z.z = -(far + near) / depth;
-                result.z.w = -(n * far) / depth;
-                result.w.x = 0;
-                result.w.y = 0;
-                result.w.z = -1;
-                result.w.w = 0;
-                return result;
-            }
-            static Orthographic(left, right, bottom, top, near, far) {
-                let width = right - left;
-                let height = top - bottom;
-                let depth = far - near;
-                let result = new Mat4();
-                ;
-                result.x.x = 2 / width;
-                result.x.y = 0;
-                result.x.z = 0;
-                result.x.w = -(right + left) / width;
-                result.y.x = 0;
-                result.y.y = 2 / height;
-                result.y.z = 0;
-                result.y.w = -(top + bottom) / height;
-                result.z.x = 0;
-                result.z.y = 0;
-                result.z.z = -2 / depth;
-                result.z.w = -(far + near) / depth;
-                result.w.x = 0;
-                result.w.y = 0;
-                result.w.z = 0;
-                result.w.w = 1;
-                return result;
-            }
-            static OrthographicCentered(left, right, bottom, top, near, far) {
-                let width = right - left;
-                let height = top - bottom;
-                let depth = far - near;
-                let result = new Mat4();
-                ;
-                result.x.x = 2 / width;
-                result.x.y = 0;
-                result.x.z = 0;
-                result.x.w = 0;
-                result.y.x = 0;
-                result.y.y = 2 / height;
-                result.y.z = 0;
-                result.y.w = 0;
-                result.z.x = 0;
-                result.z.y = 0;
-                result.z.z = -2 / depth;
-                result.z.w = -((far + near) / depth);
-                result.w.x = 0;
-                result.w.y = 0;
-                result.w.z = 0;
-                result.w.w = 1;
-                return result;
-            }
-        }
-        Numerics.Mat4 = Mat4;
-    })(Numerics = RC.Numerics || (RC.Numerics = {}));
-})(RC || (RC = {}));
-var RC;
-(function (RC) {
-    var Numerics;
-    (function (Numerics) {
-        class MathUtils {
-            static Sin(f) {
-                return Math.sin(f);
-            }
-            static Cos(f) {
-                return Math.cos(f);
-            }
-            static Tan(f) {
-                return Math.tan(f);
-            }
-            static Asin(f) {
-                return Math.asin(f);
-            }
-            static Acos(f) {
-                return Math.acos(f);
-            }
-            static Atan(f) {
-                return Math.atan(f);
-            }
-            static Atan2(y, x) {
-                return Math.atan2(y, x);
-            }
-            static Sqrt(f) {
-                return Math.sqrt(f);
-            }
-            static Abs(f) {
-                return Math.abs(f);
-            }
-            static Min(a, b) {
-                return (a >= b) ? b : a;
-            }
-            static Min2(...values) {
-                if (values.length == 0)
-                    return 0;
-                let num2 = values[0];
-                for (let i = 1; i < values.length; i++) {
-                    if (values[i] < num2) {
-                        num2 = values[i];
-                    }
-                }
-                return num2;
-            }
-            static Max(a, b) {
-                return (a <= b) ? b : a;
-            }
-            static Max2(...values) {
-                if (values.length == 0)
-                    return 0;
-                let num2 = values[0];
-                for (let i = 1; i < values.length; i++) {
-                    if (values[i] > num2) {
-                        num2 = values[i];
-                    }
-                }
-                return num2;
-            }
-            static Pow(f, p) {
-                return Math.pow(f, p);
-            }
-            static Exp(power) {
-                return Math.exp(power);
-            }
-            static Log(f) {
-                return Math.log(f);
-            }
-            static Ceil(f) {
-                return Math.ceil(f);
-            }
-            static Floor(f) {
-                return Math.floor(f);
-            }
-            static Round(f) {
-                return Math.round(f);
-            }
-            static Sign(f) {
-                return (f < 0) ? -1 : 1;
-            }
-            static Clamp(value, min, max) {
-                if (value < min) {
-                    value = min;
-                }
-                else if (value > max) {
-                    value = max;
-                }
-                return value;
-            }
-            static Clamp01(value) {
-                let result;
-                if (value < 0) {
-                    result = 0;
-                }
-                else if (value > 1) {
-                    result = 1;
-                }
-                else {
-                    result = value;
-                }
-                return result;
-            }
-            static Lerp(a, b, t) {
-                return a + (b - a) * MathUtils.Clamp01(t);
-            }
-            static LerpUnclamped(a, b, t) {
-                return a + (b - a) * t;
-            }
-            static LerpAngle(a, b, t) {
-                let num = MathUtils.Repeat(b - a, 360);
-                if (num > 180) {
-                    num -= 360;
-                }
-                return a + num * MathUtils.Clamp01(t);
-            }
-            static MoveTowards(current, target, maxDelta) {
-                let result;
-                if (MathUtils.Abs(target - current) <= maxDelta) {
-                    result = target;
-                }
-                else {
-                    result = current + MathUtils.Sign(target - current) * maxDelta;
-                }
-                return result;
-            }
-            static MoveTowardsAngle(current, target, maxDelta) {
-                let num = MathUtils.DeltaAngle(current, target);
-                let result;
-                if (-maxDelta < num && num < maxDelta) {
-                    result = target;
-                }
-                else {
-                    target = current + num;
-                    result = MathUtils.MoveTowards(current, target, maxDelta);
-                }
-                return result;
-            }
-            static FromToDirection(from, to, t, forward) {
-                let q1 = Numerics.Quat.FromToRotation(forward, from);
-                let q2 = Numerics.Quat.FromToRotation(forward, to);
-                let q3 = Numerics.Quat.Lerp(q1, q2, t);
-                return q3.Transform(forward);
-            }
-            static SmoothStep(from, to, t) {
-                t = MathUtils.Clamp01(t);
-                t = -2 * t * t * t + 3 * t * t;
-                return to * t + from * (1 - t);
-            }
-            static Gamma(value, absmax, gamma) {
-                let flag = value < 0;
-                let num = MathUtils.Abs(value);
-                let result;
-                if (num > absmax)
-                    result = ((!flag) ? num : (-num));
-                else {
-                    let num2 = MathUtils.Pow(num / absmax, gamma) * absmax;
-                    result = ((!flag) ? num2 : (-num2));
-                }
-                return result;
-            }
-            static Approximately(a, b) {
-                return MathUtils.Abs(b - a) < MathUtils.Max(1E-06 * MathUtils.Max(MathUtils.Abs(a), MathUtils.Abs(b)), MathUtils.EPSILON * 8);
-            }
-            static SmoothDamp(current, target, currentVelocity, smoothTime, maxSpeed, deltaTime) {
-                smoothTime = MathUtils.Max(0.0001, smoothTime);
-                let num = 2 / smoothTime;
-                let num2 = num * deltaTime;
-                let num3 = 1 / (1 + num2 + 0.48 * num2 * num2 + 0.235 * num2 * num2 * num2);
-                let num4 = current - target;
-                let num5 = target;
-                let num6 = maxSpeed * smoothTime;
-                num4 = MathUtils.Clamp(num4, -num6, num6);
-                target = current - num4;
-                let num7 = (currentVelocity[0] + num * num4) * deltaTime;
-                currentVelocity[0] = (currentVelocity[0] - num * num7) * num3;
-                let num8 = target + (num4 + num7) * num3;
-                if (num5 - current > 0 == num8 > num5) {
-                    num8 = num5;
-                    currentVelocity[0] = (num8 - num5) / deltaTime;
-                }
-                return num8;
-            }
-            static SmoothDampAngle(current, target, currentVelocity, smoothTime, maxSpeed, deltaTime) {
-                target = current + MathUtils.DeltaAngle(current, target);
-                return MathUtils.SmoothDamp(current, target, currentVelocity, smoothTime, maxSpeed, deltaTime);
-            }
-            static Repeat(t, length) {
-                return MathUtils.Clamp(t - MathUtils.Floor(t / length) * length, 0, length);
-            }
-            static PingPong(t, length) {
-                t = MathUtils.Repeat(t, length * 2);
-                return length - MathUtils.Abs(t - length);
-            }
-            static InverseLerp(a, b, value) {
-                return a != b ? MathUtils.Clamp01((value - a) / (b - a)) : 0;
-            }
-            static DeltaAngle(current, target) {
-                let num = MathUtils.Repeat(target - current, 360);
-                if (num > 180) {
-                    num -= 360;
-                }
-                return num;
-            }
-            static LineIntersection(p1, p2, p3, p4, result) {
-                let num = p2.x - p1.x;
-                let num2 = p2.y - p1.y;
-                let num3 = p4.x - p3.x;
-                let num4 = p4.y - p3.y;
-                let num5 = num * num4 - num2 * num3;
-                let result2;
-                if (num5 == 0) {
-                    result2 = false;
-                }
-                else {
-                    let num6 = p3.x - p1.x;
-                    let num7 = p3.y - p1.y;
-                    let num8 = (num6 * num4 - num7 * num3) / num5;
-                    result[0] = new Numerics.Vec2(p1.x + num8 * num, p1.y + num8 * num2);
-                    result2 = true;
-                }
-                return result2;
-            }
-            static LineSegmentIntersection(p1, p2, p3, p4, result) {
-                let num = p2.x - p1.x;
-                let num2 = p2.y - p1.y;
-                let num3 = p4.x - p3.x;
-                let num4 = p4.y - p3.y;
-                let num5 = num * num4 - num2 * num3;
-                let result2;
-                if (num5 == 0) {
-                    result2 = false;
-                }
-                else {
-                    let num6 = p3.x - p1.x;
-                    let num7 = p3.y - p1.y;
-                    let num8 = (num6 * num4 - num7 * num3) / num5;
-                    if (num8 < 0 || num8 > 1) {
-                        result2 = false;
-                    }
-                    else {
-                        let num9 = (num6 * num2 - num7 * num) / num5;
-                        if (num9 < 0 || num9 > 1) {
-                            result2 = false;
-                        }
-                        else {
-                            result[0] = new Numerics.Vec2(p1.x + num8 * num, p1.y + num8 * num2);
-                            result2 = true;
-                        }
-                    }
-                }
-                return result2;
-            }
-            static DegToRad(deg) {
-                return deg * MathUtils.DEG_TO_RAD;
-            }
-            static RadToDeg(rad) {
-                return rad * MathUtils.RAD_TO_DEG;
-            }
-            static LinearToGammaSpace(value) {
-                return MathUtils.Pow(value, 1 / 2.2);
-            }
-            static GammaToLinearSpace(value) {
-                return MathUtils.Pow(value, 2.2);
-            }
-        }
-        MathUtils.EPSILON = 0.0001;
-        MathUtils.MAX_VALUE = Number.MAX_VALUE;
-        MathUtils.MIN_VALUE = Number.MIN_VALUE;
-        MathUtils.PI = Math.PI;
-        MathUtils.PI2 = MathUtils.PI * 2;
-        MathUtils.PI4 = MathUtils.PI * 4;
-        MathUtils.PI_HALF = MathUtils.PI * 0.5;
-        MathUtils.PI_QUARTER = MathUtils.PI * 0.25;
-        MathUtils.PI_DELTA = 1 / MathUtils.PI;
-        MathUtils.PI_HALF_DELTA = MathUtils.PI_DELTA * 2;
-        MathUtils.PI_QUARTER_DELTA = MathUtils.PI_DELTA * 4;
-        MathUtils.DEG_TO_RAD = MathUtils.PI / 180;
-        MathUtils.RAD_TO_DEG = 180 / MathUtils.PI;
-        MathUtils.INFINITY = Number.POSITIVE_INFINITY;
-        MathUtils.NEGATIVE_INFINITY = Number.NEGATIVE_INFINITY;
-        Numerics.MathUtils = MathUtils;
-    })(Numerics = RC.Numerics || (RC.Numerics = {}));
-})(RC || (RC = {}));
-var RC;
-(function (RC) {
-    var Numerics;
-    (function (Numerics) {
-        class Quat {
-            constructor(x = 0, y = 0, z = 0, w = 0) {
-                this.x = x;
-                this.y = y;
-                this.z = z;
-                this.w = w;
-            }
-            static get identity() {
-                return new Quat(0, 0, 0, 1);
-            }
-            get xyz() {
-                return new Numerics.Vec3(this.x, this.y, this.z);
-            }
-            set xyz(v) {
-                this.x = v.x;
-                this.y = v.y;
-                this.z = v.z;
-            }
-            set eulerAngles(value) {
-                let q = Quat.FromEulerRad(Numerics.Vec3.MulN(value, Numerics.MathUtils.DEG_TO_RAD));
-                this.x = q.x;
-                this.y = q.y;
-                this.z = q.z;
-                this.w = q.w;
-            }
-            get eulerAngles() {
-                return Numerics.Vec3.MulN(Quat.ToEulerRad(this), Numerics.MathUtils.RAD_TO_DEG);
-            }
-            get length() {
-                return Numerics.MathUtils.Sqrt(this.lengthSquared);
-            }
-            get lengthSquared() {
-                return this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w;
-            }
-            Clone() {
-                let q = new Quat();
-                q.x = this.x;
-                q.y = this.y;
-                q.z = this.z;
-                q.w = this.w;
-                return q;
-            }
-            CopyFrom(q) {
-                this.x = q.x;
-                this.y = q.y;
-                this.z = q.z;
-                this.w = q.w;
-            }
-            Set(newX, newY, newZ, newW) {
-                this.x = newX;
-                this.y = newY;
-                this.z = newZ;
-                this.w = newW;
-            }
-            Normalize() {
-                let l = this.length;
-                if (l == 0) {
-                    this.x = 0;
-                    this.y = 0;
-                    this.z = 0;
-                    this.w = 0;
-                    return;
-                }
-                let scale = 1.0 / l;
-                this.x *= scale;
-                this.y *= scale;
-                this.z *= scale;
-                this.w *= scale;
-            }
-            static Normalize(q) {
-                let scale = 1.0 / q.length;
-                let result = new Quat(q.x * scale, q.y * scale, q.z * scale, q.w * scale);
-                return result;
-            }
-            static Dot(a, b) {
-                return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
-            }
-            Transform(v) {
-                let x2 = this.x + this.x;
-                let y2 = this.y + this.y;
-                let z2 = this.z + this.z;
-                let xx2 = this.x * x2;
-                let xy2 = this.x * y2;
-                let xz2 = this.x * z2;
-                let yy2 = this.y * y2;
-                let yz2 = this.y * z2;
-                let zz2 = this.z * z2;
-                let wx2 = this.w * x2;
-                let wy2 = this.w * y2;
-                let wz2 = this.w * z2;
-                return new Numerics.Vec3(v.x * (1 - yy2 - zz2) + v.y * (xy2 - wz2) + v.z * (xz2 + wy2), v.x * (xy2 + wz2) + v.y * (1 - xx2 - zz2) + v.z * (yz2 - wx2), v.x * (xz2 - wy2) + v.y * (yz2 + wx2) + v.z * (1 - xx2 - yy2));
-            }
-            static AngleAxis(angle, axis) {
-                let result = Quat.identity;
-                let thetaOver2 = angle * Numerics.MathUtils.DEG_TO_RAD * 0.5;
-                let sinThetaOver2 = Numerics.MathUtils.Sin(thetaOver2);
-                result.x = axis.x * sinThetaOver2;
-                result.y = axis.y * sinThetaOver2;
-                result.z = axis.z * sinThetaOver2;
-                result.w = Numerics.MathUtils.Cos(thetaOver2);
-                return result;
-            }
-            ToAngleAxis() {
-                let result = Quat.ToAxisAngleRad(this);
-                Numerics.Vec3.MulN(result[1], Numerics.MathUtils.RAD_TO_DEG);
-                return result;
-            }
-            static FromToRotation(from, to) {
-                let result = Quat.identity;
-                let dot = from.Dot(to);
-                if (dot < -1 + 1e-6) {
-                    let v = Numerics.Vec3.Normalize(Quat.Orthogonal(from));
-                    result.Set(v.x, v.y, v.z, 0);
-                }
-                else if (dot > 1 - 1e-6) {
-                    result.Set(0, 0, 0, 1);
-                }
-                else {
-                    let angle = Numerics.MathUtils.Acos(dot);
-                    let axis = Numerics.Vec3.Normalize(from.Cross(to));
-                    let thetaOver2 = angle * 0.5;
-                    let sinThetaOver2 = Numerics.MathUtils.Sin(thetaOver2);
-                    result.x = axis.x * sinThetaOver2;
-                    result.y = axis.y * sinThetaOver2;
-                    result.z = axis.z * sinThetaOver2;
-                    result.w = Numerics.MathUtils.Cos(thetaOver2);
-                }
-                return result;
-            }
-            static Orthogonal(v) {
-                let x = Numerics.MathUtils.Abs(v.x);
-                let y = Numerics.MathUtils.Abs(v.y);
-                let z = Numerics.MathUtils.Abs(v.z);
-                let other = x < y ? (x < z ? Numerics.Vec3.right : Numerics.Vec3.forward) : (y < z ? Numerics.Vec3.up : Numerics.Vec3.forward);
-                return Numerics.Vec3.Cross(v, other);
-            }
-            static LookRotation(forward, upwards) {
-                forward = Numerics.Vec3.Normalize(forward);
-                let right = Numerics.Vec3.Normalize(upwards.Cross(forward));
-                upwards = forward.Cross(right);
-                let m00 = right.x;
-                let m01 = right.y;
-                let m02 = right.z;
-                let m10 = upwards.x;
-                let m11 = upwards.y;
-                let m12 = upwards.z;
-                let m20 = forward.x;
-                let m21 = forward.y;
-                let m22 = forward.z;
-                let num8 = m00 + m11 + m22;
-                let quaternion = new Quat();
-                if (num8 > 0) {
-                    let num = Numerics.MathUtils.Sqrt(num8 + 1);
-                    quaternion.w = num * 0.5;
-                    num = 0.5 / num;
-                    quaternion.x = (m12 - m21) * num;
-                    quaternion.y = (m20 - m02) * num;
-                    quaternion.z = (m01 - m10) * num;
-                    return quaternion;
-                }
-                if ((m00 >= m11) &&
-                    (m00 >= m22)) {
-                    let num7 = Numerics.MathUtils.Sqrt(1 + m00 - m11 - m22);
-                    let num4 = 0.5 / num7;
-                    quaternion.x = 0.5 * num7;
-                    quaternion.y = (m01 + m10) * num4;
-                    quaternion.z = (m02 + m20) * num4;
-                    quaternion.w = (m12 - m21) * num4;
-                    return quaternion;
-                }
-                if (m11 > m22) {
-                    let num6 = Numerics.MathUtils.Sqrt(1 + m11 - m00 - m22);
-                    let num3 = 0.5 / num6;
-                    quaternion.x = (m10 + m01) * num3;
-                    quaternion.y = 0.5 * num6;
-                    quaternion.z = (m21 + m12) * num3;
-                    quaternion.w = (m20 - m02) * num3;
-                    return quaternion;
-                }
-                let num5 = Numerics.MathUtils.Sqrt(1 + m22 - m00 - m11);
-                let num2 = 0.5 / num5;
-                quaternion.x = (m20 + m02) * num2;
-                quaternion.y = (m21 + m12) * num2;
-                quaternion.z = 0.5 * num5;
-                quaternion.w = (m01 - m10) * num2;
-                return quaternion;
-            }
-            SetLookRotation(view, up) {
-                let rot = Quat.LookRotation(view, up);
-                this.Set(rot.x, rot.y, rot.z, rot.w);
-            }
-            Conjugate() {
-                return new Quat(-this.x, -this.y, -this.z, this.w);
-            }
-            static Slerp(a, b, t) {
-                t = Numerics.MathUtils.Clamp(t, 0, 1);
-                return Quat.SlerpUnclamped(a, b, t);
-            }
-            static SlerpUnclamped(a, b, t) {
-                if (a.lengthSquared == 0.0) {
-                    if (b.lengthSquared == 0.0)
-                        return Quat.identity;
-                    return b;
-                }
-                if (b.lengthSquared == 0.0)
-                    return a;
-                let cosHalfAngle = a.w * b.w + a.xyz.Dot(b.xyz);
-                if (cosHalfAngle >= 1.0 ||
-                    cosHalfAngle <= -1.0) {
-                    return a;
-                }
-                if (cosHalfAngle < 0.0) {
-                    b.xyz = Numerics.Vec3.Negate(b.xyz);
-                    b.w = -b.w;
-                    cosHalfAngle = -cosHalfAngle;
-                }
-                let blendA;
-                let blendB;
-                if (cosHalfAngle < 0.99) {
-                    let halfAngle = Numerics.MathUtils.Acos(cosHalfAngle);
-                    let sinHalfAngle = Numerics.MathUtils.Sin(halfAngle);
-                    let oneOverSinHalfAngle = 1.0 / sinHalfAngle;
-                    blendA = Numerics.MathUtils.Sin(halfAngle * (1.0 - t)) * oneOverSinHalfAngle;
-                    blendB = Numerics.MathUtils.Sin(halfAngle * t) * oneOverSinHalfAngle;
-                }
-                else {
-                    blendA = 1.0 - t;
-                    blendB = t;
-                }
-                let v = Numerics.Vec3.Add(Numerics.Vec3.MulN(a.xyz, blendA), Numerics.Vec3.MulN(b.xyz, blendB));
-                let result = new Quat(v.x, v.y, v.z, blendA * a.w + blendB * b.w);
-                if (result.lengthSquared > 0.0)
-                    return Quat.Normalize(result);
-                return Quat.identity;
-            }
-            static Lerp(q1, q2, t) {
-                t = Numerics.MathUtils.Clamp(t, 0, 1);
-                return Quat.LerpUnclamped(q1, q2, t);
-            }
-            static LerpUnclamped(q1, q2, t) {
-                let q = Quat.identity;
-                if (Quat.Dot(q1, q2) < 0) {
-                    q.x = q1.x + t * (-q2.x - q1.x);
-                    q.y = q1.y + t * (-q2.y - q1.y);
-                    q.z = q1.z + t * (-q2.z - q1.z);
-                    q.w = q1.w + t * (-q2.w - q1.w);
-                }
-                else {
-                    q.x = q1.x + (q2.x - q1.x) * t;
-                    q.y = q1.y + (q2.y - q1.y) * t;
-                    q.z = q1.z + (q2.z - q1.z) * t;
-                    q.w = q1.w + (q2.w - q1.w) * t;
-                }
-                q.Normalize();
-                return q;
-            }
-            static RotateTowards(from, to, maxDegreesDelta) {
-                let num = Quat.Angle(from, to);
-                if (num == 0)
-                    return to;
-                let t = Numerics.MathUtils.Min(1, maxDegreesDelta / num);
-                return Quat.SlerpUnclamped(from, to, t);
-            }
-            static Invert(rotation) {
-                let lengthSq = rotation.lengthSquared;
-                if (lengthSq != 0.0) {
-                    let i = 1.0 / lengthSq;
-                    let v = Numerics.Vec3.MulN(rotation.xyz, -i);
-                    return new Quat(v.x, v.y, v.z, rotation.w * i);
-                }
-                return rotation;
-            }
-            ToString() {
-                return "(" + this.x + "," + this.y + "," + this.z + "," + this.w + ")";
-            }
-            static Angle(a, b) {
-                let f = Quat.Dot(a, b);
-                return Numerics.MathUtils.Acos(Numerics.MathUtils.Min(Numerics.MathUtils.Abs(f), 1)) * 2 * Numerics.MathUtils.RAD_TO_DEG;
-            }
-            static Euler(euler) {
-                return Quat.FromEulerRad(Numerics.Vec3.MulN(euler, Numerics.MathUtils.DEG_TO_RAD));
-            }
-            static ToEulerRad(rotation) {
-                let sqw = rotation.w * rotation.w;
-                let sqx = rotation.x * rotation.x;
-                let sqy = rotation.y * rotation.y;
-                let sqz = rotation.z * rotation.z;
-                let unit = sqx + sqy + sqz + sqw;
-                let test = rotation.x * rotation.w - rotation.y * rotation.z;
-                let v = new Numerics.Vec3();
-                if (test > 0.4995 * unit) {
-                    v.y = 2 * Numerics.MathUtils.Atan2(rotation.y, rotation.x);
-                    v.x = Numerics.MathUtils.PI / 2;
-                    v.z = 0;
-                    return Quat.NormalizeAngles(Numerics.Vec3.MulN(v, Numerics.MathUtils.RAD_TO_DEG));
-                }
-                if (test < -0.4995 * unit) {
-                    v.y = -2 * Numerics.MathUtils.Atan2(rotation.y, rotation.x);
-                    v.x = -Numerics.MathUtils.PI / 2;
-                    v.z = 0;
-                    return Quat.NormalizeAngles(Numerics.Vec3.MulN(v, Numerics.MathUtils.RAD_TO_DEG));
-                }
-                let q = new Quat(rotation.w, rotation.z, rotation.x, rotation.y);
-                v.y = Numerics.MathUtils.Atan2(2 * q.x * q.w + 2 * q.y * q.z, 1 - 2 * (q.z * q.z + q.w * q.w));
-                v.x = Numerics.MathUtils.Asin(2 * (q.x * q.z - q.w * q.y));
-                v.z = Numerics.MathUtils.Atan2(2 * q.x * q.y + 2 * q.z * q.w, 1 - 2 * (q.y * q.y + q.z * q.z));
-                return Quat.NormalizeAngles(Numerics.Vec3.MulN(v, Numerics.MathUtils.RAD_TO_DEG));
-            }
-            static NormalizeAngles(angles) {
-                angles.x = Quat.NormalizeAngle(angles.x);
-                angles.y = Quat.NormalizeAngle(angles.y);
-                angles.z = Quat.NormalizeAngle(angles.z);
-                return angles;
-            }
-            static NormalizeAngle(angle) {
-                while (angle > 360)
-                    angle -= 360;
-                while (angle < 0)
-                    angle += 360;
-                return angle;
-            }
-            static FromEulerRad(euler) {
-                let yaw = euler.x;
-                let pitch = euler.y;
-                let roll = euler.z;
-                let yawOver2 = yaw * 0.5;
-                let cosYawOver2 = Numerics.MathUtils.Cos(yawOver2);
-                let sinYawOver2 = Numerics.MathUtils.Sin(yawOver2);
-                let pitchOver2 = pitch * 0.5;
-                let cosPitchOver2 = Numerics.MathUtils.Cos(pitchOver2);
-                let sinPitchOver2 = Numerics.MathUtils.Sin(pitchOver2);
-                let rollOver2 = roll * 0.5;
-                let cosRollOver2 = Numerics.MathUtils.Cos(rollOver2);
-                let sinRollOver2 = Numerics.MathUtils.Sin(rollOver2);
-                let result = new Quat();
-                result.w = cosYawOver2 * cosPitchOver2 * cosRollOver2 + sinYawOver2 * sinPitchOver2 * sinRollOver2;
-                result.x = sinYawOver2 * cosPitchOver2 * cosRollOver2 + cosYawOver2 * sinPitchOver2 * sinRollOver2;
-                result.y = cosYawOver2 * sinPitchOver2 * cosRollOver2 - sinYawOver2 * cosPitchOver2 * sinRollOver2;
-                result.z = cosYawOver2 * cosPitchOver2 * sinRollOver2 - sinYawOver2 * sinPitchOver2 * cosRollOver2;
-                return result;
-            }
-            static ToAxisAngleRad(q) {
-                if (Numerics.MathUtils.Abs(q.w) > 1.0)
-                    q = Quat.Normalize(q);
-                let angle = 2.0 * Numerics.MathUtils.Acos(q.w);
-                let den = Numerics.MathUtils.Sqrt(1.0 - q.w * q.w);
-                let axis;
-                if (den > 0.0001)
-                    axis = Numerics.Vec3.DivN(q.xyz, den);
-                else {
-                    axis = new Numerics.Vec3(1, 0, 0);
-                }
-                return [angle, axis];
-            }
-            static Equals(q1, q2) {
-                return q1.x == q2.x && q1.y == q2.y && q1.z == q2.z && q1.w == q2.w;
-            }
-            EqualsTo(q) {
-                return this.x == q.x && this.y == q.y && this.z == q.z && this.w == q.w;
-            }
-            static Mul(lhs, rhs) {
-                return new Quat(lhs.w * rhs.x + lhs.x * rhs.w + lhs.y * rhs.z - lhs.z * rhs.y, lhs.w * rhs.y + lhs.y * rhs.w + lhs.z * rhs.x - lhs.x * rhs.z, lhs.w * rhs.z + lhs.z * rhs.w + lhs.x * rhs.y - lhs.y * rhs.x, lhs.w * rhs.w - lhs.x * rhs.x - lhs.y * rhs.y - lhs.z * rhs.z);
-            }
-        }
-        Numerics.Quat = Quat;
-    })(Numerics = RC.Numerics || (RC.Numerics = {}));
-})(RC || (RC = {}));
-var RC;
-(function (RC) {
-    var Numerics;
-    (function (Numerics) {
-        class Vec2 {
-            constructor(x = 0, y = 0) {
-                this.x = x;
-                this.y = y;
-            }
-            static get one() {
-                return new Vec2(1, 1);
-            }
-            static get minusOne() {
-                return new Vec2(-1, -1);
-            }
-            static get zero() {
-                return new Vec2(0, 0);
-            }
-            static get right() {
-                return new Vec2(1, 0);
-            }
-            ;
-            static get left() {
-                return new Vec2(-1, 0);
-            }
-            ;
-            static get up() {
-                return new Vec2(0, 1);
-            }
-            ;
-            static get down() {
-                return new Vec2(0, -1);
-            }
-            ;
-            static get positiveInfinityVector() {
-                return new Vec2(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
-            }
-            ;
-            static get negativeInfinityVector() {
-                return new Vec2(Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY);
-            }
-            ;
-            static Add(v1, v2) {
-                v1 = v1.Clone();
-                v1.x += v2.x;
-                v1.y += v2.y;
-                return v1;
-            }
-            static AddN(v, n) {
-                v = v.Clone();
-                v.x += n;
-                v.y += n;
-                return v;
-            }
-            static Sub(v1, v2) {
-                v1 = v1.Clone();
-                v1.x -= v2.x;
-                v1.y -= v2.y;
-                return v1;
-            }
-            static SubN(v, n) {
-                v = v.Clone();
-                v.x -= n;
-                v.y -= n;
-                return v;
-            }
-            static SubN2(n, v) {
-                v = v.Clone();
-                v.x = n - v.x;
-                v.y = n - v.y;
-                return v;
-            }
-            static Negate(v) {
-                v = v.Clone();
-                v.x = -v.x;
-                v.y = -v.y;
-                return v;
-            }
-            static Mul(v1, v2) {
-                v1 = v1.Clone();
-                v1.x *= v2.x;
-                v1.y *= v2.y;
-                return v1;
-            }
-            static MulN(v, n) {
-                v = v.Clone();
-                v.x *= n;
-                v.y *= n;
-                return v;
-            }
-            static Div(v1, v2) {
-                v1 = v1.Clone();
-                v1.x /= v2.x;
-                v1.y /= v2.y;
-                return v1;
-            }
-            static DivN(v, n) {
-                v = v.Clone();
-                v.x /= n;
-                v.y /= n;
-                return v;
-            }
-            static DivN2(n, v) {
-                v = v.Clone();
-                v.x = n / v.x;
-                v.y = n / v.y;
-                return v;
-            }
-            static Equals(p1, p2) {
-                return p1.x == p2.x && p1.y == p2.y;
-            }
-            EqualsTo(v) {
-                return this.x == v.x && this.y == v.y;
-            }
-            ToString() {
-                return "(" + this.x + "," + this.y + ")";
-            }
-            Clone() {
-                let v = new Vec2();
-                v.x = this.x;
-                v.y = this.y;
-                return v;
-            }
-            CopyFrom(v) {
-                this.x = v.x;
-                this.y = v.y;
-            }
-            Set(x, y) {
-                this.x = x;
-                this.y = y;
-            }
-            ClampMagnitude(maxLength) {
-                let sqrMagnitude = this.SqrMagnitude();
-                if (sqrMagnitude > (maxLength * maxLength)) {
-                    let f = maxLength / Numerics.MathUtils.Sqrt(sqrMagnitude);
-                    this.x *= f;
-                    this.y *= f;
-                }
-            }
-            Magnitude() {
-                return Numerics.MathUtils.Sqrt(this.x * this.x + this.y * this.y);
-            }
-            SqrMagnitude() {
-                return this.x * this.x + this.y * this.y;
-            }
-            Distance(vector) {
-                return Vec2.Sub(vector, this).Magnitude();
-            }
-            DistanceSquared(vector) {
-                return Vec2.Sub(vector, this).SqrMagnitude();
-            }
-            Negate() {
-                this.x = -this.x;
-                this.y = -this.y;
-            }
-            Scale(scale) {
-                this.x *= scale.x;
-                this.y *= scale.y;
-            }
-            Dot(vector) {
-                return this.x * vector.x + this.y * vector.y;
-            }
-            Normalize() {
-                let f = 1 / this.Magnitude();
-                this.x *= f;
-                this.y *= f;
-            }
-            NormalizeSafe() {
-                let f = this.Magnitude();
-                if (f == 0)
-                    return;
-                this.x *= f;
-                this.y *= f;
-            }
-            AproxEqualsBox(vector, tolerance) {
-                return (Numerics.MathUtils.Abs(this.x - vector.x) <= tolerance) &&
-                    (Numerics.MathUtils.Abs(this.y - vector.y) <= tolerance);
-            }
-            ApproxEquals(vector, tolerance) {
-                return this.Distance(vector) <= tolerance;
-            }
-            Angle(vector) {
-                let vec = Vec2.Normalize(this);
-                let val = vec.Dot(Vec2.Normalize(vector));
-                val = val > 1 ? 1 : val;
-                val = val < -1 ? -1 : val;
-                return Numerics.MathUtils.Acos(val);
-            }
-            static Distance(v0, v1) {
-                return Vec2.Sub(v1, v0).Magnitude();
-            }
-            static DistanceSquared(v0, v1) {
-                return Vec2.Sub(v1, v0).SqrMagnitude();
-            }
-            static ClampMagnitude(v, maxLength) {
-                let nor = v.Clone();
-                let sqrMagnitude = nor.SqrMagnitude();
-                if (sqrMagnitude > (maxLength * maxLength))
-                    nor = Vec2.MulN(nor, (maxLength / Numerics.MathUtils.Sqrt(sqrMagnitude)));
-                return nor;
-            }
-            static Normalize(v) {
-                return Vec2.MulN(v, (1 / v.Magnitude()));
-            }
-            static NormalizeSafe(v) {
-                let dis = v.Magnitude();
-                if (dis == 0)
-                    return new Vec2();
-                return Vec2.MulN(v, (1 / dis));
-            }
-            static Dot(v0, v1) {
-                return v0.x * v1.x + v0.y * v1.y;
-            }
-            static LerpUnclamped(from, to, t) {
-                return new Vec2(from.x + (to.x - from.x) * t, from.y + (to.y - from.y) * t);
-            }
-            static Lerp(from, to, t) {
-                return t <= 0 ? from.Clone() : (t >= 1 ? to.Clone() : Vec2.LerpUnclamped(from, to, t));
-            }
-            static SlopeXy(v) {
-                return v.x / v.y;
-            }
-            static SlopeYx(v) {
-                return v.y / v.x;
-            }
-            static DegToRad(v) {
-                return new Vec2(Numerics.MathUtils.DegToRad(v.x), Numerics.MathUtils.DegToRad(v.y));
-            }
-            static RadToDeg(v) {
-                return new Vec2(Numerics.MathUtils.RadToDeg(v.x), Numerics.MathUtils.RadToDeg(v.y));
-            }
-            static Abs(v) {
-                return new Vec2(Numerics.MathUtils.Abs(v.x), Numerics.MathUtils.Abs(v.y));
-            }
-            static Pow(v, value) {
-                return new Vec2(Numerics.MathUtils.Pow(v.x, value), Numerics.MathUtils.Pow(v.y, value));
-            }
-            static Floor(v) {
-                return new Vec2(Numerics.MathUtils.Floor(v.x), Numerics.MathUtils.Floor(v.y));
-            }
-            static Round(v) {
-                return new Vec2(Numerics.MathUtils.Round(v.x), Numerics.MathUtils.Round(v.y));
-            }
-        }
-        Numerics.Vec2 = Vec2;
-    })(Numerics = RC.Numerics || (RC.Numerics = {}));
-})(RC || (RC = {}));
-var RC;
-(function (RC) {
-    var Numerics;
-    (function (Numerics) {
-        class Vec3 {
-            constructor(x = 0, y = 0, z = 0) {
-                this.x = x;
-                this.y = y;
-                this.z = z;
-            }
-            static get one() {
-                return new Vec3(1, 1, 1);
-            }
-            static get minusOne() {
-                return new Vec3(-1, -1, -1);
-            }
-            static get zero() {
-                return new Vec3(0, 0, 0);
-            }
-            static get right() {
-                return new Vec3(1, 0, 0);
-            }
-            ;
-            static get left() {
-                return new Vec3(-1, 0, 0);
-            }
-            ;
-            static get up() {
-                return new Vec3(0, 1, 0);
-            }
-            ;
-            static get down() {
-                return new Vec3(0, -1, 0);
-            }
-            ;
-            static get forward() {
-                return new Vec3(0, 0, 1);
-            }
-            ;
-            static get backward() {
-                return new Vec3(0, 0, -1);
-            }
-            ;
-            static get positiveInfinityVector() {
-                return new Vec3(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
-            }
-            ;
-            static get negativeInfinityVector() {
-                return new Vec3(Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY);
-            }
-            ;
-            static Add(v1, v2) {
-                v1 = v1.Clone();
-                v1.x += v2.x;
-                v1.y += v2.y;
-                v1.z += v2.z;
-                return v1;
-            }
-            static AddN(v, n) {
-                v = v.Clone();
-                v.x += n;
-                v.y += n;
-                v.z += n;
-                return v;
-            }
-            static Sub(v1, v2) {
-                v1 = v1.Clone();
-                v1.x -= v2.x;
-                v1.y -= v2.y;
-                v1.z -= v2.z;
-                return v1;
-            }
-            static SubN(v, n) {
-                v = v.Clone();
-                v.x -= n;
-                v.y -= n;
-                v.z -= n;
-                return v;
-            }
-            static SubN2(n, v) {
-                v = v.Clone();
-                v.x = n - v.x;
-                v.y = n - v.y;
-                v.z = n - v.z;
-                return v;
-            }
-            static Negate(v) {
-                v = v.Clone();
-                v.x = -v.x;
-                v.y = -v.y;
-                v.z = -v.z;
-                return v;
-            }
-            static Mul(v1, v2) {
-                v1 = v1.Clone();
-                v1.x *= v2.x;
-                v1.y *= v2.y;
-                v1.z *= v2.z;
-                return v1;
-            }
-            static MulN(v, n) {
-                v = v.Clone();
-                v.x *= n;
-                v.y *= n;
-                v.z *= n;
-                return v;
-            }
-            static Div(v1, v2) {
-                v1 = v1.Clone();
-                v1.x /= v2.x;
-                v1.y /= v2.y;
-                v1.z /= v2.z;
-                return v1;
-            }
-            static DivN(v, n) {
-                v = v.Clone();
-                v.x /= n;
-                v.y /= n;
-                v.z /= n;
-                return v;
-            }
-            static DivN2(n, v) {
-                v = v.Clone();
-                v.x = n / v.x;
-                v.y = n / v.y;
-                v.z = n / v.z;
-                return v;
-            }
-            static Equals(p1, p2) {
-                return p1.x == p2.x && p1.y == p2.y && p1.z == p2.z;
-            }
-            EqualsTo(v) {
-                return this.x == v.x && this.y == v.y && this.z == v.z;
-            }
-            ToString() {
-                return "(" + this.x + "," + this.y + "," + this.z + ")";
-            }
-            Clone() {
-                let v = new Vec3();
-                v.x = this.x;
-                v.y = this.y;
-                v.z = this.z;
-                return v;
-            }
-            CopyFrom(v) {
-                this.x = v.x;
-                this.y = v.y;
-                this.z = v.z;
-            }
-            Set(x, y, z) {
-                this.x = x;
-                this.y = y;
-                this.z = z;
-            }
-            ClampMagnitude(maxLength) {
-                let sqrMagnitude = this.SqrMagnitude();
-                if (sqrMagnitude > maxLength * maxLength) {
-                    let f = maxLength / Numerics.MathUtils.Sqrt(sqrMagnitude);
-                    this.x *= f;
-                    this.y *= f;
-                    this.z *= f;
-                }
-            }
-            Magnitude() {
-                return Numerics.MathUtils.Sqrt(this.SqrMagnitude());
-            }
-            SqrMagnitude() {
-                return this.x * this.x + this.y * this.y + this.z * this.z;
-            }
-            Distance(vector) {
-                return Vec3.Sub(vector, this).Magnitude();
-            }
-            DistanceSquared(vector) {
-                return Vec3.Sub(vector, this).SqrMagnitude();
-            }
-            Negate() {
-                this.x = -this.x;
-                this.y = -this.y;
-                this.z = -this.z;
-            }
-            Scale(scale) {
-                this.x *= scale.x;
-                this.y *= scale.y;
-                this.z *= scale.z;
-            }
-            Dot(v) {
-                return this.x * v.x + this.y * v.y + this.z * v.z;
-            }
-            Normalize() {
-                let f = 1 / this.Magnitude();
-                this.x *= f;
-                this.y *= f;
-                this.z *= f;
-            }
-            NormalizeSafe() {
-                let f = this.Magnitude();
-                if (f == 0)
-                    return;
-                this.x *= f;
-                this.y *= f;
-                this.z *= f;
-            }
-            Cross(v) {
-                return new Vec3(this.y * v.z - this.z * v.y, this.z * v.x - this.x * v.z, this.x * v.y - this.y * v.x);
-            }
-            AproxEqualsBox(vector, tolerance) {
-                return (Numerics.MathUtils.Abs(this.x - vector.x) <= tolerance) && (Numerics.MathUtils.Abs(this.y - vector.y) <= tolerance) && (Numerics.MathUtils.Abs(this.z - vector.z) <= tolerance);
-            }
-            ApproxEquals(vector, tolerance) {
-                return this.Distance(vector) <= tolerance;
-            }
-            RotateAround(angle, axis) {
-                let quaternion = Numerics.Quat.AngleAxis(0, axis);
-                quaternion = quaternion.Conjugate();
-                let worldSpaceVector = quaternion.Transform(this);
-                quaternion = Numerics.Quat.AngleAxis(angle, axis);
-                worldSpaceVector = quaternion.Transform(worldSpaceVector);
-                return worldSpaceVector;
-            }
-            IntersectsTriangle(p0, p1, p2) {
-                let v0 = Vec3.Sub(p1, p0);
-                let v1 = Vec3.Sub(p2, p0);
-                let v2 = Vec3.Sub(this, p0);
-                let dot00 = v0.SqrMagnitude();
-                let dot01 = v0.Dot(v1);
-                let dot02 = v0.Dot(v2);
-                let dot11 = v1.SqrMagnitude();
-                let dot12 = v1.Dot(v2);
-                let invDenom = 1 / (dot00 * dot11 - dot01 * dot01);
-                let u = (dot11 * dot02 - dot01 * dot12) * invDenom;
-                let v = (dot00 * dot12 - dot01 * dot02) * invDenom;
-                return (u > 0) && (v > 0) && (u + v < 1);
-            }
-            Reflect(planeNormal) {
-                return Vec3.Sub(this, Vec3.MulN(planeNormal, this.Dot(planeNormal) * 2));
-            }
-            Refract(normal, refractionIndex) {
-                let cosI = -normal.Dot(this);
-                let sinT2 = refractionIndex * refractionIndex * (1.0 - cosI * cosI);
-                if (sinT2 > 1.0)
-                    return this;
-                let cosT = Numerics.MathUtils.Sqrt(1.0 - sinT2);
-                return Vec3.Add(Vec3.MulN(this, refractionIndex), Vec3.MulN(normal, (refractionIndex * cosI - cosT)));
-            }
-            InersectNormal(normal) {
-                return Vec3.MulN(normal, this.Dot(normal));
-            }
-            InersectRay(rayOrigin, rayDirection) {
-                let v = Vec3.Sub(this, rayOrigin);
-                return Vec3.Add(Vec3.MulN(rayDirection, v.Dot(rayDirection)), rayOrigin);
-            }
-            InersectLine(line) {
-                let pointOffset = Vec3.Sub(this, line.point1);
-                let vector = Vec3.Normalize(Vec3.Sub(line.point2, line.point1));
-                return Vec3.Add(Vec3.MulN(vector, pointOffset.Dot(vector)), line.point1);
-            }
-            InersectPlane(planeNormal, planeLocation) {
-                let v = Vec3.Sub(this, planeLocation);
-                return Vec3.Sub(this, Vec3.MulN(planeNormal, v.Dot(planeNormal)));
-            }
-            static Distance(v0, v1) {
-                return Vec3.Sub(v1, v0).Magnitude();
-            }
-            static DistanceSquared(v0, v1) {
-                return Vec3.Sub(v1, v0).SqrMagnitude();
-            }
-            static Angle(from, to) {
-                let v = Vec3.Dot(Vec3.Normalize(from), Vec3.Normalize(to));
-                return Numerics.MathUtils.Acos(Numerics.MathUtils.Clamp(v, -1, 1)) * Numerics.MathUtils.RAD_TO_DEG;
-            }
-            static ClampMagnitude(v, maxLength) {
-                let nor = v.Clone();
-                let sqrMagnitude = nor.SqrMagnitude();
-                if (sqrMagnitude > (maxLength * maxLength))
-                    nor = Vec3.MulN(nor, (maxLength / Numerics.MathUtils.Sqrt(sqrMagnitude)));
-                return nor;
-            }
-            static Normalize(v) {
-                return Vec3.MulN(v, (1 / v.Magnitude()));
-            }
-            static NormalizeSafe(v) {
-                let dis = v.Magnitude();
-                if (dis == 0)
-                    return Vec3.zero;
-                return Vec3.MulN(v, 1 / dis);
-            }
-            static Dot(v0, v1) {
-                return v0.Dot(v1);
-            }
-            static Cross(v0, v1) {
-                return v0.Cross(v1);
-            }
-            static OrthoNormalVector(v) {
-                let res = new Vec3();
-                if (Numerics.MathUtils.Abs(v.z) > Vec3.OVER_SQRT2) {
-                    let a = v.y * v.y + v.z * v.z;
-                    let k = 1 / Numerics.MathUtils.Sqrt(a);
-                    res.x = 0;
-                    res.y = -v.z * k;
-                    res.z = v.y * k;
-                }
-                else {
-                    let a = v.x * v.x + v.y * v.y;
-                    let k = 1 / Numerics.MathUtils.Sqrt(a);
-                    res.x = -v.y * k;
-                    res.y = v.x * k;
-                    res.z = 0;
-                }
-                return res;
-            }
-            static SlerpUnclamped(from, to, t) {
-                let scale0;
-                let scale1;
-                let len2 = to.Magnitude();
-                let len1 = from.Magnitude();
-                let v2 = Vec3.DivN(to, len2);
-                let v1 = Vec3.DivN(from, len1);
-                let len = (len2 - len1) * t + len1;
-                let cosom = Vec3.Dot(v1, v2);
-                if (cosom > 1 - 1e-6) {
-                    scale0 = 1 - t;
-                    scale1 = t;
-                }
-                else if (cosom < -1 + 1e-6) {
-                    let axis = Vec3.OrthoNormalVector(from);
-                    let q = Numerics.Quat.AngleAxis(180.0 * t, axis);
-                    let v = Vec3.MulN(q.Transform(from), len);
-                    return v;
-                }
-                else {
-                    let omega = Numerics.MathUtils.Acos(cosom);
-                    let sinom = Numerics.MathUtils.Sin(omega);
-                    scale0 = Numerics.MathUtils.Sin((1 - t) * omega) / sinom;
-                    scale1 = Numerics.MathUtils.Sin(t * omega) / sinom;
-                }
-                v2 = Vec3.MulN(Vec3.Add(Vec3.MulN(v2, scale1), Vec3.MulN(v1, scale0)), len);
-                return v2;
-            }
-            static Slerp(from, to, t) {
-                return t <= 0 ? from.Clone() : (t >= 1 ? to.Clone() : Vec3.SlerpUnclamped(from, to, t));
-            }
-            static LerpUnclamped(from, to, t) {
-                return new Vec3(from.x + (to.x - from.x) * t, from.y + (to.y - from.y) * t, from.z + (to.z - from.z) * t);
-            }
-            static Lerp(from, to, t) {
-                return t <= 0 ? from.Clone() : (t >= 1 ? to.Clone() : Vec3.LerpUnclamped(from, to, t));
-            }
-            static SmoothDamp(current, target, currentVelocity, smoothTime, maxSpeed, deltaTime) {
-                smoothTime = Numerics.MathUtils.Max(0.0001, smoothTime);
-                let num = 2 / smoothTime;
-                let num2 = num * deltaTime;
-                let num3 = 1 / (1 + num2 + 0.48 * num2 * num2 + 0.235 * num2 * num2 * num2);
-                let maxLength = maxSpeed * smoothTime;
-                let vector = Vec3.Sub(current, target);
-                vector.ClampMagnitude(maxLength);
-                target = Vec3.Sub(current, vector);
-                let v = Vec3.MulN(Vec3.Add(currentVelocity[0], Vec3.MulN(vector, num)), deltaTime);
-                currentVelocity[0] = Vec3.MulN(Vec3.Sub(currentVelocity[0], Vec3.MulN(v, num)), num3);
-                let v2 = Vec3.Add(target, Vec3.MulN(Vec3.Add(vector, v), num3));
-                if (Vec3.Dot(Vec3.Sub(target, current), Vec3.Sub(v2, target)) > 0) {
-                    v2 = target;
-                    currentVelocity[0].Set(0, 0, 0);
-                }
-                return v2;
-            }
-            static MoveTowards(current, target, maxDistanceDelta) {
-                let delta = Vec3.Sub(target, current);
-                let sqrDelta = delta.SqrMagnitude();
-                let sqrDistance = maxDistanceDelta * maxDistanceDelta;
-                if (sqrDelta > sqrDistance) {
-                    let magnitude = Numerics.MathUtils.Sqrt(sqrDelta);
-                    if (magnitude > 1e-6) {
-                        delta = Vec3.Add(Vec3.DivN(Vec3.MulN(delta, maxDistanceDelta), magnitude), current);
-                        return delta;
-                    }
-                    return current.Clone();
-                }
-                return target.Clone();
-            }
-            static ClampedMove(lhs, rhs, clampedDelta) {
-                let delta = rhs - lhs;
-                if (delta > 0)
-                    return lhs + Numerics.MathUtils.Min(delta, clampedDelta);
-                return lhs - Numerics.MathUtils.Min(-delta, clampedDelta);
-            }
-            static RotateTowards(current, target, maxRadiansDelta, maxMagnitudeDelta) {
-                let len1 = current.Magnitude();
-                let len2 = target.Magnitude();
-                if (len1 > 1e-6 && len2 > 1e-6) {
-                    let from = Vec3.DivN(current, len1);
-                    let to = Vec3.DivN(target, len2);
-                    let cosom = Vec3.Dot(from, to);
-                    if (cosom > 1 - 1e-6)
-                        return Vec3.MoveTowards(current, target, maxMagnitudeDelta);
-                    if (cosom < -1 + 1e-6) {
-                        let q = Numerics.Quat.AngleAxis(maxRadiansDelta * Numerics.MathUtils.RAD_TO_DEG, Vec3.OrthoNormalVector(from));
-                        return Vec3.MulN(q.Transform(from), Vec3.ClampedMove(len1, len2, maxMagnitudeDelta));
-                    }
-                    else {
-                        let angle = Numerics.MathUtils.Acos(cosom);
-                        let q = Numerics.Quat.AngleAxis(Numerics.MathUtils.Min(maxRadiansDelta, angle) * Numerics.MathUtils.RAD_TO_DEG, Vec3.Normalize(Vec3.Cross(from, to)));
-                        return Vec3.MulN(q.Transform(from), Vec3.ClampedMove(len1, len2, maxMagnitudeDelta));
-                    }
-                }
-                return Vec3.MoveTowards(current, target, maxMagnitudeDelta);
-            }
-            static OrthoNormalize(va, vb, vc) {
-                va[0].Normalize();
-                vb[0] = Vec3.Sub(vb[0], Vec3.Project(vb[0], va[0]));
-                vb[0].Normalize();
-                vc[0] = Vec3.Sub(vc[0], Vec3.Project(vc[0], va[0]));
-                vc[0] = Vec3.Sub(vc[0], Vec3.Project(vc[0], vb[0]));
-                vc[0].Normalize();
-            }
-            static Project(vector, onNormal) {
-                let num = onNormal.SqrMagnitude();
-                if (num < 1.175494e-38)
-                    return Vec3.zero;
-                let num2 = Vec3.Dot(vector, onNormal);
-                let v3 = Vec3.MulN(onNormal, (num2 / num));
-                return v3;
-            }
-            static ProjectOnPlane(vector, planeNormal) {
-                return Vec3.Add(Vec3.Negate(Vec3.Project(vector, planeNormal)), vector);
-            }
-            static Reflect(inDirection, inNormal) {
-                let num = -2 * Vec3.Dot(inNormal, inDirection);
-                inNormal = Vec3.MulN(inNormal, num);
-                inNormal = Vec3.Add(inNormal, inDirection);
-                return inNormal;
-            }
-            static Hermite(value1, tangent1, value2, tangent2, t) {
-                let weightSquared = t * t;
-                let weightCubed = t * weightSquared;
-                let value1Blend = 2 * weightCubed - 3 * weightSquared + 1;
-                let tangent1Blend = weightCubed - 2 * weightSquared + t;
-                let value2Blend = -2 * weightCubed + 3 * weightSquared;
-                let tangent2Blend = weightCubed - weightSquared;
-                return new Vec3(value1.x * value1Blend + value2.x * value2Blend + tangent1.x * tangent1Blend + tangent2.x * tangent2Blend, value1.y * value1Blend + value2.y * value2Blend + tangent1.y * tangent1Blend + tangent2.y * tangent2Blend, value1.z * value1Blend + value2.z * value2Blend + tangent1.z * tangent1Blend + tangent2.z * tangent2Blend);
-            }
-            static DegToRad(v) {
-                return new Vec3(Numerics.MathUtils.DegToRad(v.x), Numerics.MathUtils.DegToRad(v.y), Numerics.MathUtils.DegToRad(v.z));
-            }
-            static RadToDeg(v) {
-                return new Vec3(Numerics.MathUtils.RadToDeg(v.x), Numerics.MathUtils.RadToDeg(v.y), Numerics.MathUtils.RadToDeg(v.z));
-            }
-            static MaxN(v, value) {
-                return new Vec3(Numerics.MathUtils.Max(v.x, value), Numerics.MathUtils.Max(v.y, value), Numerics.MathUtils.Max(v.z, value));
-            }
-            static Max(v, v1) {
-                return new Vec3(Numerics.MathUtils.Max(v.x, v1.x), Numerics.MathUtils.Max(v.y, v1.y), Numerics.MathUtils.Max(v.z, v1.z));
-            }
-            static MinN(v, v1) {
-                return new Vec3(Numerics.MathUtils.Min(v.x, v1), Numerics.MathUtils.Min(v.y, v1), Numerics.MathUtils.Min(v.z, v1));
-            }
-            static Min(v, v1) {
-                return new Vec3(Numerics.MathUtils.Min(v.x, v1.x), Numerics.MathUtils.Min(v.y, v1.y), Numerics.MathUtils.Min(v.z, v1.z));
-            }
-            static Abs(v) {
-                return new Vec3(Numerics.MathUtils.Abs(v.x), Numerics.MathUtils.Abs(v.y), Numerics.MathUtils.Abs(v.z));
-            }
-            static Pow(v, value) {
-                return new Vec3(Numerics.MathUtils.Pow(v.x, value), Numerics.MathUtils.Pow(v.y, value), Numerics.MathUtils.Pow(v.z, value));
-            }
-            static Floor(v) {
-                return new Vec3(Numerics.MathUtils.Floor(v.x), Numerics.MathUtils.Floor(v.y), Numerics.MathUtils.Floor(v.z));
-            }
-            static Round(v) {
-                return new Vec3(Numerics.MathUtils.Round(v.x), Numerics.MathUtils.Round(v.y), Numerics.MathUtils.Round(v.z));
-            }
-        }
-        Vec3.OVER_SQRT2 = 0.7071067811865475244008443621048490;
-        Numerics.Vec3 = Vec3;
-    })(Numerics = RC.Numerics || (RC.Numerics = {}));
-})(RC || (RC = {}));
-var RC;
-(function (RC) {
-    var Numerics;
-    (function (Numerics) {
-        class Vec4 {
-            constructor(x = 0, y = 0, z = 0, w = 0) {
-                this.x = x;
-                this.y = y;
-                this.z = z;
-                this.w = w;
-            }
-            static get one() {
-                return new Vec4(1, 1, 1, 1);
-            }
-            static get minusOne() {
-                return new Vec4(-1, -1, -1, -1);
-            }
-            static get zero() {
-                return new Vec4(0, 0, 0, 0);
-            }
-            static get right() {
-                return new Vec4(1, 0, 0, 0);
-            }
-            ;
-            static get left() {
-                return new Vec4(-1, 0, 0, 0);
-            }
-            ;
-            static get up() {
-                return new Vec4(0, 1, 0, 0);
-            }
-            ;
-            static get down() {
-                return new Vec4(0, -1, 0, 0);
-            }
-            ;
-            static get forward() {
-                return new Vec4(0, 0, 1, 0);
-            }
-            ;
-            static get height() {
-                return new Vec4(0, 0, 0, 1);
-            }
-            ;
-            static get low() {
-                return new Vec4(0, 0, 0, -1);
-            }
-            ;
-            static get backward() {
-                return new Vec4(0, 0, -1, 0);
-            }
-            ;
-            static get positiveInfinityVector() {
-                return new Vec4(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
-            }
-            ;
-            static get negativeInfinityVector() {
-                return new Vec4(Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY);
-            }
-            ;
-            static Add(v1, v2) {
-                v1 = v1.Clone();
-                v1.x += v2.x;
-                v1.y += v2.y;
-                v1.z += v2.z;
-                v1.w += v2.w;
-                return v1;
-            }
-            static AddN(v, n) {
-                v = v.Clone();
-                v.x += n;
-                v.y += n;
-                v.z += n;
-                v.w += n;
-                return v;
-            }
-            static Sub(v1, v2) {
-                v1 = v1.Clone();
-                v1.x -= v2.x;
-                v1.y -= v2.y;
-                v1.z -= v2.z;
-                v1.w -= v2.w;
-                return v1;
-            }
-            static SubN(v, n) {
-                v = v.Clone();
-                v.x -= n;
-                v.y -= n;
-                v.z -= n;
-                v.w -= n;
-                return v;
-            }
-            static SubN2(n, v) {
-                v = v.Clone();
-                v.x = n - v.x;
-                v.y = n - v.y;
-                v.z = n - v.z;
-                v.w = n - v.w;
-                return v;
-            }
-            static Mul(v1, v2) {
-                v1 = v1.Clone();
-                v1.x *= v2.x;
-                v1.y *= v2.y;
-                v1.z *= v2.z;
-                v1.w *= v2.w;
-                return v1;
-            }
-            static MulN(v, n) {
-                v = v.Clone();
-                v.x *= n;
-                v.y *= n;
-                v.z *= n;
-                v.w *= n;
-                return v;
-            }
-            static Div(v1, v2) {
-                v1 = v1.Clone();
-                v1.x /= v2.x;
-                v1.y /= v2.y;
-                v1.z /= v2.z;
-                v1.w /= v2.w;
-                return v1;
-            }
-            static DivN(v, n) {
-                v = v.Clone();
-                v.x /= n;
-                v.y /= n;
-                v.z /= n;
-                v.w /= n;
-                return v;
-            }
-            static DivN2(n, v) {
-                v = v.Clone();
-                v.x = n / v.x;
-                v.y = n / v.y;
-                v.z = n / v.z;
-                v.w = n / v.w;
-                return v;
-            }
-            static Equals(v1, v2) {
-                return v1.x == v2.x && v1.y == v2.y && v1.z == v2.z && v1.w == v2.w;
-            }
-            EqualsTo(v) {
-                return this.x == v.x && this.y == v.y && this.z == v.z && this.w == v.w;
-            }
-            ToString() {
-                return "(" + this.x + "," + this.y + "," + this.z + "," + this.w + ")";
-            }
-            Clone() {
-                let v = new Vec4();
-                v.x = this.x;
-                v.y = this.y;
-                v.z = this.z;
-                v.w = this.w;
-                return v;
-            }
-            CopyFrom(v) {
-                this.x = v.x;
-                this.y = v.y;
-                this.z = v.z;
-                this.w = v.w;
-            }
-            Set(x, y, z, w) {
-                this.x = x;
-                this.y = y;
-                this.z = z;
-                this.w = w;
-            }
-            ClampMagnitude(maxLength) {
-                let sqrMagnitude = this.SqrMagnitude();
-                if (sqrMagnitude > (maxLength * maxLength)) {
-                    let f = maxLength / Numerics.MathUtils.Sqrt(sqrMagnitude);
-                    this.x *= f;
-                    this.y *= f;
-                    this.z *= f;
-                    this.w *= f;
-                }
-            }
-            Magnitude() {
-                return Numerics.MathUtils.Sqrt(this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w);
-            }
-            SqrMagnitude() {
-                return this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w;
-            }
-            Distance(vector) {
-                return Vec4.Sub(vector, this).Magnitude();
-            }
-            DistanceSquared(vector) {
-                return Vec4.Sub(vector, this).SqrMagnitude();
-            }
-            Negate() {
-                this.x = -this.x;
-                this.y = -this.y;
-                this.z = -this.z;
-                this.w = -this.w;
-            }
-            Scale(scale) {
-                this.x *= scale.x;
-                this.y *= scale.y;
-                this.z *= scale.z;
-                this.w *= scale.w;
-            }
-            Dot(vector) {
-                return this.x * vector.x + this.y * vector.y + this.z * vector.z + this.w * vector.w;
-            }
-            Normalize() {
-                let f = 1 / this.Magnitude();
-                this.x *= f;
-                this.y *= f;
-                this.z *= f;
-                this.w *= f;
-            }
-            NormalizeSafe() {
-                let f = this.Magnitude();
-                if (f == 0)
-                    return;
-                this.x *= f;
-                this.y *= f;
-                this.z *= f;
-                this.w *= f;
-            }
-            AproxEqualsBox(vector, tolerance) {
-                return (Numerics.MathUtils.Abs(this.x - vector.x) <= tolerance) &&
-                    (Numerics.MathUtils.Abs(this.y - vector.y) <= tolerance) &&
-                    (Numerics.MathUtils.Abs(this.z - vector.z) <= tolerance) &&
-                    (Numerics.MathUtils.Abs(this.w - vector.w) <= tolerance);
-            }
-            ApproxEquals(vector, tolerance) {
-                return this.Distance(vector) <= tolerance;
-            }
-            static Distance(v0, v1) {
-                return Vec4.Sub(v1, v0).Magnitude();
-            }
-            static DistanceSquared(v0, v1) {
-                return Vec4.Sub(v1, v0).SqrMagnitude();
-            }
-            static ClampMagnitude(v, maxLength) {
-                let nor = v.Clone();
-                let sqrMagnitude = nor.SqrMagnitude();
-                if (sqrMagnitude > (maxLength * maxLength))
-                    nor = Vec4.MulN(nor, (maxLength / Numerics.MathUtils.Sqrt(sqrMagnitude)));
-                return nor;
-            }
-            static Normalize(v) {
-                return Vec4.MulN(v, (1 / v.Magnitude()));
-            }
-            static NormalizeSafe(v) {
-                let f = v.Magnitude();
-                if (f == 0)
-                    return new Vec4();
-                return Vec4.MulN(v, (1 / f));
-            }
-            static LerpUnclamped(from, to, t) {
-                return new Vec4(from.x + (to.x - from.x) * t, from.y + (to.y - from.y) * t, from.z + (to.z - from.z) * t, from.w + (to.w - from.w) * t);
-            }
-            static Lerp(from, to, t) {
-                return t <= 0 ? from.Clone() : (t >= 1 ? to.Clone() : Vec4.LerpUnclamped(from, to, t));
-            }
-            static Abs(v) {
-                return new Vec4(Numerics.MathUtils.Abs(v.x), Numerics.MathUtils.Abs(v.y), Numerics.MathUtils.Abs(v.z), Numerics.MathUtils.Abs(v.w));
-            }
-            static Pow(v, power) {
-                return new Vec4(Numerics.MathUtils.Pow(v.x, power), Numerics.MathUtils.Pow(v.y, power), Numerics.MathUtils.Pow(v.z, power), Numerics.MathUtils.Pow(v.w, power));
-            }
-            static Floor(v) {
-                return new Vec4(Numerics.MathUtils.Floor(v.x), Numerics.MathUtils.Floor(v.y), Numerics.MathUtils.Floor(v.z), Numerics.MathUtils.Floor(v.w));
-            }
-            static Round(v) {
-                return new Vec4(Numerics.MathUtils.Round(v.x), Numerics.MathUtils.Round(v.y), Numerics.MathUtils.Round(v.z), Numerics.MathUtils.Round(v.w));
-            }
-        }
-        Numerics.Vec4 = Vec4;
-    })(Numerics = RC.Numerics || (RC.Numerics = {}));
+    }
+    RC.Test = Test;
 })(RC || (RC = {}));
 var RC;
 (function (RC) {
@@ -4779,5 +1839,2969 @@ var RC;
         }
         Collections.Utils = Utils;
     })(Collections = RC.Collections || (RC.Collections = {}));
+})(RC || (RC = {}));
+var RC;
+(function (RC) {
+    var Numerics;
+    (function (Numerics) {
+        let Axis;
+        (function (Axis) {
+            Axis[Axis["X"] = 0] = "X";
+            Axis[Axis["Y"] = 1] = "Y";
+            Axis[Axis["Z"] = 2] = "Z";
+        })(Axis = Numerics.Axis || (Numerics.Axis = {}));
+        class Bounds {
+            constructor(center, size) {
+                this._center = center;
+                this._extents = Numerics.Vec3.MulN(size, 0.5);
+            }
+            get center() { return this._center.Clone(); }
+            set center(value) { this._center = value.Clone(); }
+            get size() { return Numerics.Vec3.MulN(this._extents, 2); }
+            set size(value) { this._extents = Numerics.Vec3.MulN(value, 0.5); }
+            get extents() { return this._extents.Clone(); }
+            set extents(value) { this._extents = value.Clone(); }
+            get min() { return Numerics.Vec3.Sub(this.center, this.extents); }
+            set min(value) { this.SetMinMax(value, this.max); }
+            get max() { return Numerics.Vec3.Add(this.center, this.extents); }
+            set max(value) { this.SetMinMax(this.min, value); }
+            Contains(ponumber) {
+                if (ponumber.x < this.min.x ||
+                    ponumber.y < this.min.y ||
+                    ponumber.z < this.min.z ||
+                    ponumber.x > this.max.x ||
+                    ponumber.y > this.max.y ||
+                    ponumber.z > this.max.z)
+                    return false;
+                return true;
+            }
+            ClosestPonumber(point, outDistance) {
+                let distance = 0;
+                let t = Numerics.Vec3.Sub(point, this.center);
+                let closest = [t.x, t.y, t.z];
+                let et = [this._extents.x, this._extents.y, this._extents.z];
+                for (let i = 0; i < 3; i++) {
+                    let delta;
+                    let f = et[i];
+                    if (closest[i] < -f) {
+                        delta = closest[i] + f;
+                        distance = distance + delta * delta;
+                        closest[i] = -f;
+                    }
+                    else if (closest[i] > f) {
+                        delta = closest[i] - f;
+                        distance = distance + delta * delta;
+                        closest[i] = f;
+                    }
+                }
+                if (distance == 0)
+                    return point;
+                let v = this.center.Clone();
+                v.x += closest[0];
+                v.y += closest[1];
+                v.z += closest[2];
+                return v;
+            }
+            SetMinMax(min, max) {
+                this._extents = Numerics.Vec3.MulN(Numerics.Vec3.Sub(max, min), 0.5);
+                this._center = Numerics.Vec3.Add(min, this.extents);
+            }
+            Encapsulate(point) {
+                this.SetMinMax(Numerics.Vec3.Min(this.min, point), Numerics.Vec3.Max(this.max, point));
+            }
+            EncapsulateBounds(bounds) {
+                this.Encapsulate(Numerics.Vec3.Sub(bounds.center, bounds.extents));
+                this.Encapsulate(Numerics.Vec3.Add(bounds.center, bounds.extents));
+            }
+            Expand(amount) {
+                this._extents = Numerics.Vec3.Add(this._extents, Numerics.Vec3.MulN(amount, 0.5));
+            }
+            Intersect(bounds, boundsIntersect) {
+                if (this.min.x > bounds.max.x)
+                    return false;
+                if (this.max.x < bounds.min.x)
+                    return false;
+                if (this.min.y > bounds.max.y)
+                    return false;
+                if (this.max.y < bounds.min.y)
+                    return false;
+                if (this.min.z > bounds.max.z)
+                    return false;
+                if (this.max.z < bounds.min.z)
+                    return false;
+                boundsIntersect[0].min = Numerics.Vec3.Max(this.min, bounds.min);
+                boundsIntersect[0].max = Numerics.Vec3.Max(this.max, bounds.max);
+                return true;
+            }
+            IntersectMovingBoundsByAxis(bounds, d, axis, outT) {
+                if (Numerics.MathUtils.Approximately(d, 0.0)) {
+                    outT[0] = Numerics.MathUtils.MAX_VALUE;
+                    return false;
+                }
+                let min00;
+                let max00;
+                let min01;
+                let max01;
+                let min10;
+                let max10;
+                let min11;
+                let max11;
+                let min20;
+                let max20;
+                let min21;
+                let max21;
+                switch (axis) {
+                    case Axis.X:
+                        min10 = this.min.y;
+                        max10 = this.max.y;
+                        min11 = bounds.min.y;
+                        max11 = bounds.max.y;
+                        min20 = this.min.z;
+                        max20 = this.max.z;
+                        min21 = bounds.min.z;
+                        max21 = bounds.max.z;
+                        break;
+                    case Axis.Y:
+                        min10 = this.min.z;
+                        max10 = this.max.z;
+                        min11 = bounds.min.z;
+                        max11 = bounds.max.z;
+                        min20 = this.min.x;
+                        max20 = this.max.x;
+                        min21 = bounds.min.x;
+                        max21 = bounds.max.x;
+                        break;
+                    default:
+                        min10 = this.min.x;
+                        max10 = this.max.x;
+                        min11 = bounds.min.x;
+                        max11 = bounds.max.x;
+                        min20 = this.min.y;
+                        max20 = this.max.y;
+                        min21 = bounds.min.y;
+                        max21 = bounds.max.y;
+                        break;
+                }
+                if (min10 >= max11 ||
+                    max10 <= min11 ||
+                    min20 >= max21 ||
+                    max20 <= min21) {
+                    outT[0] = Numerics.MathUtils.MAX_VALUE;
+                    return false;
+                }
+                switch (axis) {
+                    case Axis.X:
+                        min00 = this.min.x;
+                        max00 = this.max.x;
+                        min01 = bounds.min.x;
+                        max01 = bounds.max.x;
+                        break;
+                    case Axis.Y:
+                        min00 = this.min.y;
+                        max00 = this.max.y;
+                        min01 = bounds.min.y;
+                        max01 = bounds.max.y;
+                        break;
+                    default:
+                        min00 = this.min.z;
+                        max00 = this.max.z;
+                        min01 = bounds.min.z;
+                        max01 = bounds.max.z;
+                        break;
+                }
+                let oneOverD = 1.0 / d;
+                let enter = (min00 - max01) * oneOverD;
+                let leave = (max00 - min01) * oneOverD;
+                if (enter > leave) {
+                    let t = enter;
+                    enter = leave;
+                    leave = t;
+                }
+                outT[0] = enter;
+                return enter < 1.0 && enter >= 0;
+            }
+            IntersectMovingBounds(bounds, d) {
+                let tEnter = -Numerics.MathUtils.MAX_VALUE;
+                let tLeave = Numerics.MathUtils.MAX_VALUE;
+                if (Numerics.MathUtils.Approximately(d.x, 0.0)) {
+                    if (this.min.x >= bounds.max.x ||
+                        this.max.x <= bounds.min.x)
+                        return Numerics.MathUtils.MAX_VALUE;
+                }
+                else {
+                    let oneOverD = 1.0 / d.x;
+                    let xEnter = (this.min.x - bounds.max.x) * oneOverD;
+                    let xLeave = (this.max.x - bounds.min.x) * oneOverD;
+                    if (xEnter > xLeave) {
+                        let t = xEnter;
+                        xEnter = xLeave;
+                        xLeave = t;
+                    }
+                    if (xEnter > tEnter)
+                        tEnter = xEnter;
+                    if (xLeave < tLeave)
+                        tLeave = xLeave;
+                    if (tEnter > tLeave)
+                        return Numerics.MathUtils.MAX_VALUE;
+                }
+                if (Numerics.MathUtils.Approximately(d.y, 0.0)) {
+                    if (this.min.y >= bounds.max.y ||
+                        this.max.y <= bounds.min.y)
+                        return Numerics.MathUtils.MAX_VALUE;
+                }
+                else {
+                    let oneOverD = 1.0 / d.y;
+                    let yEnter = (this.min.y - bounds.max.y) * oneOverD;
+                    let yLeave = (this.max.y - bounds.min.y) * oneOverD;
+                    if (yEnter > yLeave) {
+                        let t = yEnter;
+                        yEnter = yLeave;
+                        yLeave = t;
+                    }
+                    if (yEnter > tEnter)
+                        tEnter = yEnter;
+                    if (yLeave < tLeave)
+                        tLeave = yLeave;
+                    if (tEnter > tLeave)
+                        return Numerics.MathUtils.MAX_VALUE;
+                }
+                if (Numerics.MathUtils.Approximately(d.z, 0.0)) {
+                    if (this.min.z >= bounds.max.z ||
+                        this.max.z <= bounds.min.z)
+                        return Numerics.MathUtils.MAX_VALUE;
+                }
+                else {
+                    let oneOverD = 1.0 / d.z;
+                    let zEnter = (this.min.z - bounds.max.z) * oneOverD;
+                    let zLeave = (this.max.z - bounds.min.z) * oneOverD;
+                    if (zEnter > zLeave) {
+                        let t = zEnter;
+                        zEnter = zLeave;
+                        zLeave = t;
+                    }
+                    if (zEnter > tEnter)
+                        tEnter = zEnter;
+                    if (zLeave < tLeave)
+                        tLeave = zLeave;
+                    if (tEnter > tLeave)
+                        return Numerics.MathUtils.MAX_VALUE;
+                }
+                return tEnter;
+            }
+            static Equals(b1, b2) {
+                if (b1 == null || b2 == null)
+                    return false;
+                return (b1.center.EqualsTo(b2.center) && b1.extents.EqualsTo(b2.extents));
+            }
+            EqualsTo(b) {
+                return Bounds.Equals(this, b);
+            }
+            ToString() {
+                return "(extents:" + this._extents.ToString() + "center:" + this._center.ToString() + ")";
+            }
+        }
+        Numerics.Bounds = Bounds;
+    })(Numerics = RC.Numerics || (RC.Numerics = {}));
+})(RC || (RC = {}));
+var RC;
+(function (RC) {
+    var Numerics;
+    (function (Numerics) {
+        class Line3 {
+            constructor(point1 = Numerics.Vec3.zero, point2 = Numerics.Vec3.zero) {
+                this.point1 = point1;
+                this.point2 = point2;
+            }
+            Transform(matrix) {
+                return new Line3(matrix.Transform(this.point1), matrix.Transform(this.point2));
+            }
+            Length() {
+                return Numerics.Vec3.Sub(this.point1, this.point2).Magnitude();
+            }
+            InersectPlane(planeNormal, planeLocation) {
+                let dot = -(planeNormal.x * planeLocation.x) - planeNormal.y * planeLocation.y - planeNormal.z * planeLocation.z;
+                let dot3 = planeNormal.x * (this.point2.x - this.point1.x) + planeNormal.y * (this.point2.y - this.point1.y) +
+                    planeNormal.z * (this.point2.z - this.point1.z);
+                let dot2 = -((dot + planeNormal.x * this.point1.x + planeNormal.y * this.point1.y + planeNormal.z * this.point1.z) / dot3);
+                return Numerics.Vec3.Add(this.point1, Numerics.Vec3.MulN(Numerics.Vec3.Sub(this.point2, this.point1), dot2));
+            }
+            static InersectPlane(line, planeNormal, planeLocation) {
+                let dot = -(planeNormal.x * planeLocation.x) - planeNormal.y * planeLocation.y - planeNormal.z * planeLocation.z;
+                let dot3 = planeNormal.x * (line.point2.x - line.point1.x) + planeNormal.y * (line.point2.y - line.point1.y) +
+                    planeNormal.z * (line.point2.z - line.point1.z);
+                let dot2 = -((dot + planeNormal.x * line.point1.x + planeNormal.y * line.point1.y + planeNormal.z * line.point1.z) / dot3);
+                return Numerics.Vec3.Add(line.point1, Numerics.Vec3.MulN(Numerics.Vec3.Sub(line.point2, line.point1), dot2));
+            }
+            Inersect(line) {
+                let vector = Numerics.Vec3.Sub(this.point1, line.point1);
+                let vector2 = Numerics.Vec3.Sub(line.point2, line.point1);
+                let vector3 = Numerics.Vec3.Sub(this.point2, this.point1);
+                let dot1 = vector.Dot(vector2);
+                let dot2 = vector2.Dot(vector3);
+                let dot3 = vector.Dot(vector3);
+                let dot4 = vector2.SqrMagnitude();
+                let dot5 = vector3.SqrMagnitude();
+                let mul1 = (dot1 * dot2 - dot3 * dot4) / (dot5 * dot4 - dot2 * dot2);
+                let mul2 = (dot1 + dot2 * mul1) / dot4;
+                return new Line3(Numerics.Vec3.Add(this.point1, Numerics.Vec3.MulN(vector3, mul1)), Numerics.Vec3.Add(line.point1, Numerics.Vec3.MulN(vector2, mul2)));
+            }
+            static Equals(l1, l2) {
+                if (l1 == null || l2 == null)
+                    return false;
+                return (l1.point1.EqualsTo(l2.point1) && l1.point2.EqualsTo(l2.point2));
+            }
+            EqualsTo(l) {
+                return Line3.Equals(this, l);
+            }
+        }
+        Numerics.Line3 = Line3;
+    })(Numerics = RC.Numerics || (RC.Numerics = {}));
+})(RC || (RC = {}));
+var RC;
+(function (RC) {
+    var Numerics;
+    (function (Numerics) {
+        class Mat2 {
+            constructor(x = Numerics.Vec2.zero, y = Numerics.Vec2.zero) {
+                this.x = x;
+                this.y = y;
+            }
+            static get identity() {
+                return new Mat2(new Numerics.Vec2(1, 0), new Numerics.Vec2(0, 1));
+            }
+            static FromCross(xVector) {
+                return new Mat2(xVector, new Numerics.Vec2(-xVector.y, xVector.x));
+            }
+            static Abs(m) {
+                return new Mat2(Numerics.Vec2.Abs(m.x), Numerics.Vec2.Abs(m.y));
+            }
+            static Transpose(m) {
+                return new Mat2(new Numerics.Vec2(m.x.x, m.y.x), new Numerics.Vec2(m.x.y, m.y.y));
+            }
+            static Invert(m) {
+                let determinant = 1 / (m.x.x * m.y.y - m.x.y * m.y.x);
+                let result = new Mat2();
+                result.x.x = m.y.y * determinant;
+                result.x.y = -m.x.y * determinant;
+                result.y.x = -m.y.x * determinant;
+                result.y.y = m.x.x * determinant;
+                return result;
+            }
+            static Add(p1, p2) {
+                let m = new Mat2();
+                m.x = Numerics.Vec2.Add(p1.x, p2.x);
+                m.y = Numerics.Vec2.Add(p1.y, p2.y);
+                return m;
+            }
+            static AddN(p1, p2) {
+                let m = new Mat2();
+                m.x = Numerics.Vec2.AddN(p1.x, p2);
+                m.y = Numerics.Vec2.AddN(p1.y, p2);
+                return m;
+            }
+            static Sub(p1, p2) {
+                let m = new Mat2();
+                m.x = Numerics.Vec2.Sub(p1.x, p2.x);
+                m.y = Numerics.Vec2.Sub(p1.y, p2.y);
+                return m;
+            }
+            static SubN(p1, p2) {
+                let m = new Mat2();
+                m.x = Numerics.Vec2.SubN(p1.x, p2);
+                m.y = Numerics.Vec2.SubN(p1.y, p2);
+                return m;
+            }
+            static SubN2(p1, p2) {
+                let m = new Mat2();
+                m.x = Numerics.Vec2.SubN2(p1, p2.x);
+                m.y = Numerics.Vec2.SubN2(p1, p2.y);
+                return m;
+            }
+            static Mul(m1, m2) {
+                return new Mat2(new Numerics.Vec2(m2.x.x * m1.x.x + m2.x.y * m1.y.x, m2.x.x * m1.x.y + m2.x.y * m1.y.y), new Numerics.Vec2(m2.y.x * m1.x.x + m2.y.y * m1.y.x, m2.y.x * m1.x.y + m2.y.y * m1.y.y));
+            }
+            static MulN(p1, p2) {
+                let m = new Mat2();
+                m.x = Numerics.Vec2.MulN(p1.x, p2);
+                m.y = Numerics.Vec2.MulN(p1.y, p2);
+                return m;
+            }
+            static Div(p1, p2) {
+                let m = new Mat2();
+                m.x = Numerics.Vec2.Div(p1.x, p2.x);
+                m.y = Numerics.Vec2.Div(p1.y, p2.y);
+                return m;
+            }
+            static DivN(p1, p2) {
+                let m = new Mat2();
+                m.x = Numerics.Vec2.DivN(p1.x, p2);
+                m.y = Numerics.Vec2.DivN(p1.y, p2);
+                return m;
+            }
+            static DivN2(p1, p2) {
+                let m = new Mat2();
+                m.x = Numerics.Vec2.DivN2(p1, p2.x);
+                m.y = Numerics.Vec2.DivN2(p1, p2.y);
+                return m;
+            }
+            static Equals(m1, m2) {
+                if (m1 == null || m2 == null)
+                    return false;
+                return m1.x.EqualsTo(m2.x) && m1.y.EqualsTo(m2.y);
+            }
+            EqualsTo(m) {
+                return Mat2.Equals(this, m);
+            }
+            ToString() {
+                return "(" + this.x.ToString() + "," + this.y.ToString() + ")";
+            }
+            Clone() {
+                let m = new Mat2();
+                m.x = this.x.Clone();
+                m.y = this.y.Clone();
+                return m;
+            }
+            Identity() {
+                this.x.x = 1;
+                this.x.y = 0;
+                this.y.x = 0;
+                this.y.y = 1;
+            }
+            Transform(v) {
+                return new Numerics.Vec2(v.x * this.x.x + v.y * this.y.x, v.x * this.x.y + v.y * this.y.y);
+            }
+            Transpose() {
+                let m00 = this.x.x;
+                let m01 = this.y.x;
+                let m10 = this.x.y;
+                let m11 = this.y.y;
+                this.x.x = m00;
+                this.x.y = m01;
+                this.y.x = m10;
+                this.y.y = m11;
+            }
+            Determinant() {
+                return this.x.x * this.y.y - this.x.y * this.y.x;
+            }
+            Invert() {
+                let determinant = 1 / (this.x.x * this.y.y - this.x.y * this.y.x);
+                let m00 = this.y.y * determinant;
+                let m01 = -this.x.y * determinant;
+                let m10 = -this.y.x * determinant;
+                let m11 = this.x.x * determinant;
+                this.x.x = m00;
+                this.x.y = m01;
+                this.y.x = m10;
+                this.y.y = m11;
+            }
+        }
+        Numerics.Mat2 = Mat2;
+    })(Numerics = RC.Numerics || (RC.Numerics = {}));
+})(RC || (RC = {}));
+var RC;
+(function (RC) {
+    var Numerics;
+    (function (Numerics) {
+        class Mat3 {
+            constructor(x = Numerics.Vec3.zero, y = Numerics.Vec3.zero, z = Numerics.Vec3.zero) {
+                this.x = x;
+                this.y = y;
+                this.z = z;
+            }
+            static get identity() {
+                return new Mat3(new Numerics.Vec3(1, 0, 0), new Numerics.Vec3(0, 1, 0), new Numerics.Vec3(0, 0, 1));
+            }
+            ;
+            Clone() {
+                let m = new Mat3();
+                m.x = this.x.Clone();
+                m.y = this.y.Clone();
+                m.z = this.z.Clone();
+                return m;
+            }
+            static FromScale(scale) {
+                return new Mat3(new Numerics.Vec3(scale.x, 0, 0), new Numerics.Vec3(0, scale.y, 0), new Numerics.Vec3(0, 0, scale.z));
+            }
+            static FromOuterProduct(vector1, vector2) {
+                return new Mat3(new Numerics.Vec3(vector1.x * vector2.x, vector1.x * vector2.y, vector1.x * vector2.z), new Numerics.Vec3(vector1.y * vector2.x, vector1.y * vector2.y, vector1.y * vector2.z), new Numerics.Vec3(vector1.z * vector2.x, vector1.z * vector2.y, vector1.z * vector2.z));
+            }
+            static FromEuler(euler) {
+                let x = Numerics.MathUtils.DegToRad(euler.x);
+                let y = Numerics.MathUtils.DegToRad(euler.y);
+                let z = Numerics.MathUtils.DegToRad(euler.z);
+                let cx = Numerics.MathUtils.Cos(x);
+                let sx = Numerics.MathUtils.Sin(x);
+                let cy = Numerics.MathUtils.Cos(y);
+                let sy = Numerics.MathUtils.Sin(y);
+                let cz = Numerics.MathUtils.Cos(z);
+                let sz = Numerics.MathUtils.Sin(z);
+                return new Mat3(new Numerics.Vec3(cy * cz, cy * sz, -sy), new Numerics.Vec3(cz * sx * sy - cx * sz, cx * cz + sx * sy * sz, cy * sx), new Numerics.Vec3(cx * cz * sy + sx * sz, -cz * sx + cx * sy * sz, cx * cy));
+            }
+            static FromQuaternion(quaternion) {
+                let squared = new Numerics.Vec4(quaternion.x * quaternion.x, quaternion.y * quaternion.y, quaternion.z * quaternion.z, quaternion.w * quaternion.w);
+                let invSqLength = 1 / (squared.x + squared.y + squared.z + squared.w);
+                let temp1 = quaternion.x * quaternion.y;
+                let temp2 = quaternion.z * quaternion.w;
+                let temp3 = quaternion.x * quaternion.z;
+                let temp4 = quaternion.y * quaternion.w;
+                let temp5 = quaternion.y * quaternion.z;
+                let temp6 = quaternion.x * quaternion.w;
+                return new Mat3(new Numerics.Vec3((squared.x - squared.y - squared.z + squared.w) * invSqLength, 2 * (temp1 + temp2) * invSqLength, 2 * (temp3 - temp4) * invSqLength), new Numerics.Vec3(2 * (temp1 - temp2) * invSqLength, (-squared.x + squared.y - squared.z + squared.w) * invSqLength, 2 * (temp5 + temp6) * invSqLength), new Numerics.Vec3(2 * (temp3 + temp4) * invSqLength, 2 * (temp5 - temp6) * invSqLength, (-squared.x - squared.y + squared.z + squared.w) * invSqLength));
+            }
+            static FromRotationAxis(angle, axis) {
+                let quaternion = Numerics.Quat.AngleAxis(angle, axis);
+                return Mat3.FromQuaternion(quaternion);
+            }
+            static LookAt(forward, up) {
+                let z = Numerics.Vec3.Normalize(forward);
+                let x = Numerics.Vec3.Normalize(up.Cross(z));
+                let y = z.Cross(x);
+                return new Mat3(x, y, z);
+            }
+            static FromCross(vector) {
+                let result = new Mat3();
+                result.x.x = 0;
+                result.x.y = -vector.z;
+                result.x.z = vector.y;
+                result.y.x = vector.z;
+                result.y.y = 0;
+                result.y.z = -vector.x;
+                result.z.x = -vector.y;
+                result.z.y = vector.x;
+                result.z.z = 0;
+                return result;
+            }
+            static NonhomogeneousInvert(m) {
+                let m1 = m.Clone();
+                m1.NonhomogeneousInvert();
+                return m1;
+            }
+            static Invert(m) {
+                let determinant = 1 / m.Determinant();
+                return new Mat3(new Numerics.Vec3((m.y.y * m.z.z - m.y.z * m.z.y) * determinant, (m.x.z * m.z.y - m.z.z * m.x.y) * determinant, (m.x.y * m.y.z - m.y.y * m.x.z) * determinant), new Numerics.Vec3((m.y.z * m.z.x - m.y.x * m.z.z) * determinant, (m.x.x * m.z.z - m.x.z * m.z.x) * determinant, (m.x.z * m.y.x - m.x.x * m.y.z) * determinant), new Numerics.Vec3((m.y.x * m.z.y - m.y.y * m.z.x) * determinant, (m.x.y * m.z.x - m.x.x * m.z.y) * determinant, (m.x.x * m.y.y - m.x.y * m.y.x) * determinant));
+            }
+            static Transpose(m) {
+                return new Mat3(new Numerics.Vec3(m.x.x, m.y.x, m.z.x), new Numerics.Vec3(m.x.y, m.y.y, m.z.y), new Numerics.Vec3(m.x.z, m.y.z, m.z.z));
+            }
+            static Abs(m) {
+                return new Mat3(Numerics.Vec3.Abs(m.x), Numerics.Vec3.Abs(m.y), Numerics.Vec3.Abs(m.z));
+            }
+            static Add(p1, p2) {
+                let m = new Mat3();
+                m.x = Numerics.Vec3.Add(p1.x, p2.x);
+                m.y = Numerics.Vec3.Add(p1.y, p2.y);
+                m.z = Numerics.Vec3.Add(p1.z, p2.z);
+                return m;
+            }
+            static AddN(p1, p2) {
+                let m = new Mat3();
+                m.x = Numerics.Vec3.AddN(p1.x, p2);
+                m.y = Numerics.Vec3.AddN(p1.y, p2);
+                m.z = Numerics.Vec3.AddN(p1.z, p2);
+                return m;
+            }
+            static Sub(p1, p2) {
+                let m = new Mat3();
+                m.x = Numerics.Vec3.Sub(p1.x, p2.x);
+                m.y = Numerics.Vec3.Sub(p1.y, p2.y);
+                m.z = Numerics.Vec3.Sub(p1.z, p2.z);
+                return m;
+            }
+            static SubN(p1, p2) {
+                let m = new Mat3();
+                m.x = Numerics.Vec3.SubN(p1.x, p2);
+                m.y = Numerics.Vec3.SubN(p1.y, p2);
+                m.z = Numerics.Vec3.SubN(p1.z, p2);
+                return m;
+            }
+            static SubN2(p1, p2) {
+                let m = new Mat3();
+                m.x = Numerics.Vec3.SubN2(p1, p2.x);
+                m.y = Numerics.Vec3.SubN2(p1, p2.y);
+                m.z = Numerics.Vec3.SubN2(p1, p2.z);
+                return m;
+            }
+            static Mul(m1, m2) {
+                return new Mat3(new Numerics.Vec3(m2.x.x * m1.x.x + m2.x.y * m1.y.x + m2.x.z * m1.z.x, m2.x.x * m1.x.y + m2.x.y * m1.y.y + m2.x.z * m1.z.y, m2.x.x * m1.x.z + m2.x.y * m1.y.z + m2.x.z * m1.z.z), new Numerics.Vec3(m2.y.x * m1.x.x + m2.y.y * m1.y.x + m2.y.z * m1.z.x, m2.y.x * m1.x.y + m2.y.y * m1.y.y + m2.y.z * m1.z.y, m2.y.x * m1.x.z + m2.y.y * m1.y.z + m2.y.z * m1.z.z), new Numerics.Vec3(m2.z.x * m1.x.x + m2.z.y * m1.y.x + m2.z.z * m1.z.x, m2.z.x * m1.x.y + m2.z.y * m1.y.y + m2.z.z * m1.z.y, m2.z.x * m1.x.z + m2.z.y * m1.y.z + m2.z.z * m1.z.z));
+            }
+            static MulN(p1, p2) {
+                let m = new Mat3();
+                m.x = Numerics.Vec3.MulN(p1.x, p2);
+                m.y = Numerics.Vec3.MulN(p1.y, p2);
+                m.z = Numerics.Vec3.MulN(p1.z, p2);
+                return m;
+            }
+            static Div(p1, p2) {
+                let m = new Mat3();
+                m.x = Numerics.Vec3.Div(p1.x, p2.x);
+                m.y = Numerics.Vec3.Div(p1.y, p2.y);
+                m.z = Numerics.Vec3.Div(p1.z, p2.z);
+                return m;
+            }
+            static DivN(p1, p2) {
+                let m = new Mat3();
+                m.x = Numerics.Vec3.DivN(p1.x, p2);
+                m.y = Numerics.Vec3.DivN(p1.y, p2);
+                m.z = Numerics.Vec3.DivN(p1.z, p2);
+                return m;
+            }
+            static DivN2(p1, p2) {
+                let m = new Mat3();
+                m.x = Numerics.Vec3.DivN2(p1, p2.x);
+                m.y = Numerics.Vec3.DivN2(p1, p2.y);
+                m.z = Numerics.Vec3.DivN2(p1, p2.z);
+                return m;
+            }
+            static Equals(m1, m2) {
+                if (m1 == null || m2 == null)
+                    return false;
+                return m1.x.EqualsTo(m2.x) && m1.y.EqualsTo(m2.y) && m1.z.EqualsTo(m2.z);
+            }
+            EqualsTo(m) {
+                return Mat3.Equals(this, m);
+            }
+            ToString() {
+                return "(" + this.x.ToString() + "," + this.y.ToString() + "," + this.z.ToString() + ")";
+            }
+            Transform(v) {
+                return new Numerics.Vec3(v.x * this.x.x + v.y * this.y.x + v.z * this.z.x, v.x * this.x.y + v.y * this.y.y + v.z * this.z.y, v.x * this.x.z + v.y * this.y.z + v.z * this.z.z);
+            }
+            TransformPoint(v) {
+                return new Numerics.Vec2(v.x * this.x.x + v.y * this.y.x + this.z.x, v.x * this.x.y + v.y * this.y.y + this.z.y);
+            }
+            TransformVector(v) {
+                return new Numerics.Vec2(v.x * this.x.x + v.y * this.y.x, v.x * this.x.y + v.y * this.y.y);
+            }
+            Identity() {
+                this.x.x = 1;
+                this.x.y = 0;
+                this.x.z = 0;
+                this.y.x = 0;
+                this.y.y = 1;
+                this.y.z = 0;
+                this.z.x = 0;
+                this.z.y = 0;
+                this.z.z = 1;
+            }
+            Euler() {
+                if (this.z.x < 1) {
+                    if (this.z.x > -1) {
+                        return new Numerics.Vec3(Numerics.MathUtils.Atan2(this.z.y, this.z.z), Numerics.MathUtils.Asin(-this.z.x), Numerics.MathUtils.Atan2(this.y.x, this.x.x));
+                    }
+                    return new Numerics.Vec3(0, Numerics.MathUtils.PI_HALF, -Numerics.MathUtils.Atan2(this.y.z, this.y.y));
+                }
+                return new Numerics.Vec3(0, -Numerics.MathUtils.PI_HALF, Numerics.MathUtils.Atan2(-this.y.z, this.y.y));
+            }
+            Transpose() {
+                let m00 = this.x.x;
+                let m01 = this.y.x;
+                let m02 = this.z.x;
+                let m10 = this.x.y;
+                let m11 = this.y.y;
+                let m12 = this.z.y;
+                let m20 = this.x.z;
+                let m21 = this.y.z;
+                let m22 = this.z.z;
+                this.x.x = m00;
+                this.x.y = m01;
+                this.x.z = m02;
+                this.y.x = m10;
+                this.y.y = m11;
+                this.y.z = m12;
+                this.z.x = m20;
+                this.z.y = m21;
+                this.z.z = m22;
+            }
+            MultiplyTransposed(matrix) {
+                return new Mat3(new Numerics.Vec3(this.x.x * matrix.x.x + this.y.x * matrix.y.x + this.z.x * matrix.z.x, this.x.x * matrix.x.y + this.y.x * matrix.y.y + this.z.x * matrix.z.y, this.x.x * matrix.x.z + this.y.x * matrix.y.z + this.z.x * matrix.z.z), new Numerics.Vec3(this.x.y * matrix.x.x + this.y.y * matrix.y.x + this.z.y * matrix.z.x, this.x.y * matrix.x.y + this.y.y * matrix.y.y + this.z.y * matrix.z.y, this.x.y * matrix.x.z + this.y.y * matrix.y.z + this.z.y * matrix.z.z), new Numerics.Vec3(this.x.z * matrix.x.x + this.y.z * matrix.y.x + this.z.z * matrix.z.x, this.x.z * matrix.x.y + this.y.z * matrix.y.y + this.z.z * matrix.z.y, this.x.z * matrix.x.z + this.y.z * matrix.y.z + this.z.z * matrix.z.z));
+            }
+            Determinant() {
+                return this.x.x * this.y.y * this.z.z + this.x.y * this.y.z * this.z.x + this.x.z * this.y.x * this.z.y -
+                    this.z.x * this.y.y * this.x.z - this.z.y * this.y.z * this.x.x - this.z.z * this.y.x * this.x.y;
+            }
+            NonhomogeneousInvert() {
+                let m2 = new Numerics.Mat2();
+                m2.x.x = this.x.x;
+                m2.x.y = this.x.y;
+                m2.y.x = this.y.x;
+                m2.y.y = this.y.y;
+                m2.Invert();
+                let o = Mat3.identity;
+                this.x.x = m2.x.x;
+                this.x.y = m2.x.y;
+                this.y.x = m2.y.x;
+                this.y.y = m2.y.y;
+                let v = m2.Transform(new Numerics.Vec2(this.z.x, this.z.y));
+                this.z.x = -v.x;
+                this.z.y = -v.y;
+            }
+            Invert() {
+                let determinant = 1 / this.Determinant();
+                let m00 = (this.y.y * this.z.z - this.y.z * this.z.y) * determinant;
+                let m01 = (this.x.z * this.z.y - this.z.z * this.x.y) * determinant;
+                let m02 = (this.x.y * this.y.z - this.y.y * this.x.z) * determinant;
+                let m10 = (this.y.z * this.z.x - this.y.x * this.z.z) * determinant;
+                let m11 = (this.x.x * this.z.z - this.x.z * this.z.x) * determinant;
+                let m12 = (this.x.z * this.y.x - this.x.x * this.y.z) * determinant;
+                let m20 = (this.y.x * this.z.y - this.y.y * this.z.x) * determinant;
+                let m21 = (this.x.y * this.z.x - this.x.x * this.z.y) * determinant;
+                let m22 = (this.x.x * this.y.y - this.x.y * this.y.x) * determinant;
+                this.x.x = m00;
+                this.x.y = m01;
+                this.x.z = m02;
+                this.y.x = m10;
+                this.y.y = m11;
+                this.y.z = m12;
+                this.z.x = m20;
+                this.z.y = m21;
+                this.z.z = m22;
+            }
+            RotateAroundAxisX(angle) {
+                angle = Numerics.MathUtils.DegToRad(angle);
+                let tCos = Numerics.MathUtils.Cos(angle);
+                let tSin = Numerics.MathUtils.Sin(angle);
+                let m00 = this.x.x;
+                let m01 = this.y.x * tCos - this.z.x * tSin;
+                let m02 = this.y.x * tSin + this.z.x * tCos;
+                let m10 = this.x.y;
+                let m11 = this.y.y * tCos - this.z.y * tSin;
+                let m12 = this.y.y * tSin + this.z.y * tCos;
+                let m20 = this.x.z;
+                let m21 = this.y.z * tCos - this.z.z * tSin;
+                let m22 = this.y.z * tSin + this.z.z * tCos;
+                this.x.x = m00;
+                this.x.y = m01;
+                this.x.z = m02;
+                this.y.x = m10;
+                this.y.y = m11;
+                this.y.z = m12;
+                this.z.x = m20;
+                this.z.y = m21;
+                this.z.z = m22;
+            }
+            RotateAroundAxisY(angle) {
+                angle = Numerics.MathUtils.DegToRad(angle);
+                let tCos = Numerics.MathUtils.Cos(angle);
+                let tSin = Numerics.MathUtils.Sin(angle);
+                let m00 = this.z.x * tSin + this.x.x * tCos;
+                let m01 = this.y.x;
+                let m02 = this.z.x * tCos - this.x.x * tSin;
+                let m10 = this.z.y * tSin + this.x.y * tCos;
+                let m11 = this.y.y;
+                let m12 = this.z.y * tCos - this.x.y * tSin;
+                let m20 = this.z.z * tSin + this.x.z * tCos;
+                let m21 = this.y.z;
+                let m22 = this.z.z * tCos - this.x.z * tSin;
+                this.x.x = m00;
+                this.x.y = m01;
+                this.x.z = m02;
+                this.y.x = m10;
+                this.y.y = m11;
+                this.y.z = m12;
+                this.z.x = m20;
+                this.z.y = m21;
+                this.z.z = m22;
+            }
+            RotateAroundAxisZ(angle) {
+                angle = Numerics.MathUtils.DegToRad(angle);
+                let tCos = Numerics.MathUtils.Cos(angle);
+                let tSin = Numerics.MathUtils.Sin(angle);
+                let m00 = this.x.x * tCos - this.y.x * tSin;
+                let m01 = this.x.x * tSin + this.y.x * tCos;
+                let m02 = this.z.x;
+                let m10 = this.x.y * tCos - this.y.y * tSin;
+                let m11 = this.x.y * tSin + this.y.y * tCos;
+                let m12 = this.z.y;
+                let m20 = this.x.z * tCos - this.y.z * tSin;
+                let m21 = this.x.z * tSin + this.y.z * tCos;
+                let m22 = this.z.z;
+                this.x.x = m00;
+                this.x.y = m01;
+                this.x.z = m02;
+                this.y.x = m10;
+                this.y.y = m11;
+                this.y.z = m12;
+                this.z.x = m20;
+                this.z.y = m21;
+                this.z.z = m22;
+            }
+            RotateAroundWorldAxisX(angle) {
+                angle = Numerics.MathUtils.DegToRad(angle);
+                angle = -angle;
+                let tCos = Numerics.MathUtils.Cos(angle);
+                let tSin = Numerics.MathUtils.Sin(angle);
+                let m00 = this.x.x;
+                let m01 = this.y.x;
+                let m02 = this.z.x;
+                let m10 = this.x.y * tCos - this.x.z * tSin;
+                let m11 = this.y.y * tCos - this.y.z * tSin;
+                let m12 = this.z.y * tCos - this.z.z * tSin;
+                let m20 = this.x.y * tSin + this.x.z * tCos;
+                let m21 = this.y.y * tSin + this.y.z * tCos;
+                let m22 = this.z.y * tSin + this.z.z * tCos;
+                this.x.x = m00;
+                this.x.y = m01;
+                this.x.z = m02;
+                this.y.x = m10;
+                this.y.y = m11;
+                this.y.z = m12;
+                this.z.x = m20;
+                this.z.y = m21;
+                this.z.z = m22;
+            }
+            RotateAroundWorldAxisY(angle) {
+                angle = Numerics.MathUtils.DegToRad(angle);
+                angle = -angle;
+                let tCos = Numerics.MathUtils.Cos(angle);
+                let tSin = Numerics.MathUtils.Sin(angle);
+                let m00 = this.x.z * tSin + this.x.x * tCos;
+                let m01 = this.y.z * tSin + this.y.x * tCos;
+                let m02 = this.z.z * tSin + this.z.x * tCos;
+                let m10 = this.x.y;
+                let m11 = this.y.y;
+                let m12 = this.z.y;
+                let m20 = this.x.z * tCos - this.x.x * tSin;
+                let m21 = this.y.z * tCos - this.y.x * tSin;
+                let m22 = this.z.z * tCos - this.z.x * tSin;
+                this.x.x = m00;
+                this.x.y = m01;
+                this.x.z = m02;
+                this.y.x = m10;
+                this.y.y = m11;
+                this.y.z = m12;
+                this.z.x = m20;
+                this.z.y = m21;
+                this.z.z = m22;
+            }
+            RotateAroundWorldAxisZ(angle) {
+                angle = Numerics.MathUtils.DegToRad(angle);
+                angle = -angle;
+                let tCos = Numerics.MathUtils.Cos(angle);
+                let tSin = Numerics.MathUtils.Sin(angle);
+                let m00 = this.x.x * tCos - this.x.y * tSin;
+                let m01 = this.y.x * tCos - this.y.y * tSin;
+                let m02 = this.z.x * tCos - this.z.y * tSin;
+                let m10 = this.x.x * tSin + this.x.y * tCos;
+                let m11 = this.y.x * tSin + this.y.y * tCos;
+                let m12 = this.z.x * tSin + this.z.y * tCos;
+                let m20 = this.x.z;
+                let m21 = this.y.z;
+                let m22 = this.z.z;
+                this.x.x = m00;
+                this.x.y = m01;
+                this.x.z = m02;
+                this.y.x = m10;
+                this.y.y = m11;
+                this.y.z = m12;
+                this.z.x = m20;
+                this.z.y = m21;
+                this.z.z = m22;
+            }
+            RotateAround(angle, axis) {
+                let quaternion = Numerics.Quat.AngleAxis(0, axis).Conjugate();
+                let worldSpaceMatrix = Mat3.Mul(this, Mat3.FromQuaternion(quaternion));
+                quaternion = Numerics.Quat.AngleAxis(angle, axis);
+                let qMat = Mat3.FromQuaternion(quaternion);
+                worldSpaceMatrix = Mat3.Mul(worldSpaceMatrix, qMat);
+                return worldSpaceMatrix;
+            }
+        }
+        Numerics.Mat3 = Mat3;
+    })(Numerics = RC.Numerics || (RC.Numerics = {}));
+})(RC || (RC = {}));
+var RC;
+(function (RC) {
+    var Numerics;
+    (function (Numerics) {
+        class Mat4 {
+            constructor(x = Numerics.Vec4.zero, y = Numerics.Vec4.zero, z = Numerics.Vec4.zero, w = Numerics.Vec4.zero) {
+                this.x = x;
+                this.y = y;
+                this.z = z;
+                this.w = w;
+            }
+            static get identity() {
+                return new Mat4(new Numerics.Vec4(1, 0, 0, 0), new Numerics.Vec4(0, 1, 0, 0), new Numerics.Vec4(0, 0, 1, 0), new Numerics.Vec4(0, 0, 0, 1));
+            }
+            ;
+            static FromScale(scale) {
+                return new Mat4(new Numerics.Vec4(scale.x, 0, 0, 0), new Numerics.Vec4(0, scale.y, 0, 0), new Numerics.Vec4(0, 0, scale.z, 0), new Numerics.Vec4(0, 0, 0, 1));
+            }
+            static FromEuler(euler) {
+                let eulerX = Numerics.MathUtils.DegToRad(euler.x);
+                let eulerY = Numerics.MathUtils.DegToRad(euler.y);
+                let eulerZ = Numerics.MathUtils.DegToRad(euler.z);
+                let cx = Numerics.MathUtils.Cos(eulerX);
+                let sx = Numerics.MathUtils.Sin(eulerX);
+                let cy = Numerics.MathUtils.Cos(eulerY);
+                let sy = Numerics.MathUtils.Sin(eulerY);
+                let cz = Numerics.MathUtils.Cos(eulerZ);
+                let sz = Numerics.MathUtils.Sin(eulerZ);
+                return new Mat4(new Numerics.Vec4(cy * cz, cy * sz, -sy, 0), new Numerics.Vec4(cz * sx * sy - cx * sz, cx * cz + sx * sy * sz, cy * sx, 0), new Numerics.Vec4(cx * cz * sy + sx * sz, -cz * sx + cx * sy * sz, cx * cy, 0), new Numerics.Vec4(0, 0, 0, 1));
+            }
+            static FromQuaternion(quaternion) {
+                let squared = new Numerics.Vec4(quaternion.x * quaternion.x, quaternion.y * quaternion.y, quaternion.z * quaternion.z, quaternion.w * quaternion.w);
+                let invSqLength = 1 / (squared.x + squared.y + squared.z + squared.w);
+                let temp1 = quaternion.x * quaternion.y;
+                let temp2 = quaternion.z * quaternion.w;
+                let temp3 = quaternion.x * quaternion.z;
+                let temp4 = quaternion.y * quaternion.w;
+                let temp5 = quaternion.y * quaternion.z;
+                let temp6 = quaternion.x * quaternion.w;
+                return new Mat4(new Numerics.Vec4((squared.x - squared.y - squared.z + squared.w) * invSqLength, 2 * (temp1 + temp2) * invSqLength, 2 * (temp3 - temp4) * invSqLength, 0), new Numerics.Vec4(2 * (temp1 - temp2) * invSqLength, (-squared.x + squared.y - squared.z + squared.w) * invSqLength, 2 * (temp5 + temp6) * invSqLength, 0), new Numerics.Vec4(2 * (temp3 + temp4) * invSqLength, 2 * (temp5 - temp6) * invSqLength, (-squared.x - squared.y + squared.z + squared.w) * invSqLength, 0), new Numerics.Vec4(0, 0, 0, 1));
+            }
+            static FromRotationAxis(angle, axis) {
+                let quaternion = Numerics.Quat.AngleAxis(angle, axis);
+                return Mat4.FromQuaternion(quaternion);
+            }
+            static FromTRS(pos, q, scale) {
+                let m = Mat4.Mul(Mat4.FromQuaternion(q), Mat4.FromScale(scale));
+                m.w.x = pos.x;
+                m.w.y = pos.y;
+                m.w.z = pos.z;
+                return m;
+            }
+            static NonhomogeneousInvert(m) {
+                let m1 = m.Clone();
+                m1.NonhomogeneousInvert();
+                return m1;
+            }
+            static Invert(m) {
+                let determinant = 1 / m.Determinant();
+                let mat = new Mat4(new Numerics.Vec4((m.y.y * m.z.z * m.w.w + m.y.z * m.z.w * m.w.y + m.y.w * m.z.y * m.w.z -
+                    m.y.y * m.z.w * m.w.z - m.y.z * m.z.y * m.w.w - m.y.w * m.z.z * m.w.y) * determinant, (m.x.y * m.z.w * m.w.z + m.x.z * m.z.y * m.w.w + m.x.w * m.z.z * m.w.y -
+                    m.x.y * m.z.z * m.w.w - m.x.z * m.z.w * m.w.y - m.x.w * m.z.y * m.w.z) * determinant, (m.x.y * m.y.z * m.w.w + m.x.z * m.y.w * m.w.y + m.x.w * m.y.y * m.w.z -
+                    m.x.y * m.y.w * m.w.z - m.x.z * m.y.y * m.w.w - m.x.w * m.y.z * m.w.y) * determinant, (m.x.y * m.y.w * m.z.z + m.x.z * m.y.y * m.z.w + m.x.w * m.y.z * m.z.y -
+                    m.x.y * m.y.z * m.z.w - m.x.z * m.y.w * m.z.y - m.x.w * m.y.y * m.z.z) * determinant), new Numerics.Vec4((m.y.x * m.z.w * m.w.z + m.y.z * m.z.x * m.w.w + m.y.w * m.z.z * m.w.x -
+                    m.y.x * m.z.z * m.w.w - m.y.z * m.z.w * m.w.x - m.y.w * m.z.x * m.w.z) * determinant, (m.x.x * m.z.z * m.w.w + m.x.z * m.z.w * m.w.x + m.x.w * m.z.x * m.w.z -
+                    m.x.x * m.z.w * m.w.z - m.x.z * m.z.x * m.w.w - m.x.w * m.z.z * m.w.x) * determinant, (m.x.x * m.y.w * m.w.z + m.x.z * m.y.x * m.w.w + m.x.w * m.y.z * m.w.x -
+                    m.x.x * m.y.z * m.w.w - m.x.z * m.y.w * m.w.x - m.x.w * m.y.x * m.w.z) * determinant, (m.x.x * m.y.z * m.z.w + m.x.z * m.y.w * m.z.x + m.x.w * m.y.x * m.z.z -
+                    m.x.x * m.y.w * m.z.z - m.x.z * m.y.x * m.z.w - m.x.w * m.y.z * m.z.x) * determinant), new Numerics.Vec4((m.y.x * m.z.y * m.w.w + m.y.y * m.z.w * m.w.x + m.y.w * m.z.x * m.w.y -
+                    m.y.x * m.z.w * m.w.y - m.y.y * m.z.x * m.w.w - m.y.w * m.z.y * m.w.x) * determinant, (m.x.x * m.z.w * m.w.y + m.x.y * m.z.x * m.w.w + m.x.w * m.z.y * m.w.x -
+                    m.x.x * m.z.y * m.w.w - m.x.y * m.z.w * m.w.x - m.x.w * m.z.x * m.w.y) * determinant, (m.x.x * m.y.y * m.w.w + m.x.y * m.y.w * m.w.x + m.x.w * m.y.x * m.w.y -
+                    m.x.x * m.y.w * m.w.y - m.x.y * m.y.x * m.w.w - m.x.w * m.y.y * m.w.x) * determinant, (m.x.x * m.y.w * m.z.y + m.x.y * m.y.x * m.z.w + m.x.w * m.y.y * m.z.x -
+                    m.x.x * m.y.y * m.z.w - m.x.y * m.y.w * m.z.x - m.x.w * m.y.x * m.z.y) * determinant), new Numerics.Vec4((m.y.x * m.z.z * m.w.y + m.y.y * m.z.x * m.w.z + m.y.z * m.z.y * m.w.x -
+                    m.y.x * m.z.y * m.w.z - m.y.y * m.z.z * m.w.x - m.y.z * m.z.x * m.w.y) * determinant, (m.x.x * m.z.y * m.w.z + m.x.y * m.z.z * m.w.x + m.x.z * m.z.x * m.w.y -
+                    m.x.x * m.z.z * m.w.y - m.x.y * m.z.x * m.w.z - m.x.z * m.z.y * m.w.x) * determinant, (m.x.x * m.y.z * m.w.y + m.x.y * m.y.x * m.w.z + m.x.z * m.y.y * m.w.x -
+                    m.x.x * m.y.y * m.w.z - m.x.y * m.y.z * m.w.x - m.x.z * m.y.x * m.w.y) * determinant, (m.x.x * m.y.y * m.z.z + m.x.y * m.y.z * m.z.x + m.x.z * m.y.x * m.z.y -
+                    m.x.x * m.y.z * m.z.y - m.x.y * m.y.x * m.z.z - m.x.z * m.y.y * m.z.x) * determinant));
+                return mat;
+            }
+            static Transpose(m) {
+                return new Mat4(new Numerics.Vec4(m.x.x, m.y.x, m.z.x, m.w.x), new Numerics.Vec4(m.x.y, m.y.y, m.z.y, m.w.y), new Numerics.Vec4(m.x.z, m.y.z, m.z.z, m.w.z), new Numerics.Vec4(m.x.w, m.y.w, m.z.w, m.w.w));
+            }
+            static Equals(m1, m2) {
+                if (m1 == null || m2 == null)
+                    return false;
+                return m1.x.EqualsTo(m2.x) && m1.y.EqualsTo(m2.y) && m1.z.EqualsTo(m2.z) && m1.w.EqualsTo(m2.w);
+            }
+            EqualsTo(m) {
+                return Mat4.Equals(this, m);
+            }
+            ToString() {
+                return "(" + this.x.ToString() + "," + this.y.ToString() + "," + this.z.ToString() + "," + this.w.ToString() + ")";
+            }
+            static Abs(m) {
+                return new Mat4(Numerics.Vec4.Abs(m.x), Numerics.Vec4.Abs(m.y), Numerics.Vec4.Abs(m.z), Numerics.Vec4.Abs(m.w));
+            }
+            static Add(p1, p2) {
+                let m = new Mat4();
+                m.x = Numerics.Vec4.Add(p1.x, p2.x);
+                m.y = Numerics.Vec4.Add(p1.y, p2.y);
+                m.z = Numerics.Vec4.Add(p1.z, p2.z);
+                m.w = Numerics.Vec4.Add(p1.w, p2.w);
+                return m;
+            }
+            static AddN(p1, p2) {
+                let m = new Mat4();
+                m.x = Numerics.Vec4.AddN(p1.x, p2);
+                m.y = Numerics.Vec4.AddN(p1.y, p2);
+                m.z = Numerics.Vec4.AddN(p1.z, p2);
+                m.w = Numerics.Vec4.AddN(p1.w, p2);
+                return m;
+            }
+            static Sub(p1, p2) {
+                let m = new Mat4();
+                m.x = Numerics.Vec4.Sub(p1.x, p2.x);
+                m.y = Numerics.Vec4.Sub(p1.y, p2.y);
+                m.z = Numerics.Vec4.Sub(p1.z, p2.z);
+                m.w = Numerics.Vec4.Sub(p1.w, p2.w);
+                return m;
+            }
+            static SubN(p1, p2) {
+                let m = new Mat4();
+                m.x = Numerics.Vec4.SubN(p1.x, p2);
+                m.y = Numerics.Vec4.SubN(p1.y, p2);
+                m.z = Numerics.Vec4.SubN(p1.z, p2);
+                m.w = Numerics.Vec4.SubN(p1.w, p2);
+                return m;
+            }
+            static SubN2(p1, p2) {
+                let m = new Mat4();
+                m.x = Numerics.Vec4.SubN2(p1, p2.x);
+                m.y = Numerics.Vec4.SubN2(p1, p2.y);
+                m.z = Numerics.Vec4.SubN2(p1, p2.z);
+                m.w = Numerics.Vec4.SubN2(p1, p2.w);
+                return m;
+            }
+            static Mul(m1, m2) {
+                return new Mat4(new Numerics.Vec4(m2.x.x * m1.x.x + m2.x.y * m1.y.x + m2.x.z * m1.z.x + m2.x.w * m1.w.x, m2.x.x * m1.x.y + m2.x.y * m1.y.y + m2.x.z * m1.z.y + m2.x.w * m1.w.y, m2.x.x * m1.x.z + m2.x.y * m1.y.z + m2.x.z * m1.z.z + m2.x.w * m1.w.z, m2.x.x * m1.x.w + m2.x.y * m1.y.w + m2.x.z * m1.z.w + m2.x.w * m1.w.w), new Numerics.Vec4(m2.y.x * m1.x.x + m2.y.y * m1.y.x + m2.y.z * m1.z.x + m2.y.w * m1.w.x, m2.y.x * m1.x.y + m2.y.y * m1.y.y + m2.y.z * m1.z.y + m2.y.w * m1.w.y, m2.y.x * m1.x.z + m2.y.y * m1.y.z + m2.y.z * m1.z.z + m2.y.w * m1.w.z, m2.y.x * m1.x.w + m2.y.y * m1.y.w + m2.y.z * m1.z.w + m2.y.w * m1.w.w), new Numerics.Vec4(m2.z.x * m1.x.x + m2.z.y * m1.y.x + m2.z.z * m1.z.x + m2.z.w * m1.w.x, m2.z.x * m1.x.y + m2.z.y * m1.y.y + m2.z.z * m1.z.y + m2.z.w * m1.w.y, m2.z.x * m1.x.z + m2.z.y * m1.y.z + m2.z.z * m1.z.z + m2.z.w * m1.w.z, m2.z.x * m1.x.w + m2.z.y * m1.y.w + m2.z.z * m1.z.w + m2.z.w * m1.w.w), new Numerics.Vec4(m2.w.x * m1.x.x + m2.w.y * m1.y.x + m2.w.z * m1.z.x + m2.w.w * m1.w.x, m2.w.x * m1.x.y + m2.w.y * m1.y.y + m2.w.z * m1.z.y + m2.w.w * m1.w.y, m2.w.x * m1.x.z + m2.w.y * m1.y.z + m2.w.z * m1.z.z + m2.w.w * m1.w.z, m2.w.x * m1.x.w + m2.w.y * m1.y.w + m2.w.z * m1.z.w + m2.w.w * m1.w.w));
+            }
+            static MulN(p1, p2) {
+                let m = new Mat4();
+                m.x = Numerics.Vec4.MulN(p1.x, p2);
+                m.y = Numerics.Vec4.MulN(p1.y, p2);
+                m.z = Numerics.Vec4.MulN(p1.z, p2);
+                m.w = Numerics.Vec4.MulN(p1.w, p2);
+                return m;
+            }
+            static Div(p1, p2) {
+                let m = new Mat4();
+                m.x = Numerics.Vec4.Div(p1.x, p2.x);
+                m.y = Numerics.Vec4.Div(p1.y, p2.y);
+                m.z = Numerics.Vec4.Div(p1.z, p2.z);
+                m.w = Numerics.Vec4.Div(p1.w, p2.w);
+                return m;
+            }
+            static DivN(p1, p2) {
+                let m = new Mat4();
+                m.x = Numerics.Vec4.DivN(p1.x, p2);
+                m.y = Numerics.Vec4.DivN(p1.y, p2);
+                m.z = Numerics.Vec4.DivN(p1.z, p2);
+                m.w = Numerics.Vec4.DivN(p1.w, p2);
+                return m;
+            }
+            static DivN2(p1, p2) {
+                let m = new Mat4();
+                m.x = Numerics.Vec4.DivN2(p1, p2.x);
+                m.y = Numerics.Vec4.DivN2(p1, p2.y);
+                m.z = Numerics.Vec4.DivN2(p1, p2.z);
+                m.w = Numerics.Vec4.DivN2(p1, p2.w);
+                return m;
+            }
+            Clone() {
+                let m = new Mat4();
+                m.x = this.x.Clone();
+                m.y = this.y.Clone();
+                m.z = this.z.Clone();
+                m.w = this.w.Clone();
+                return m;
+            }
+            Transform(v) {
+                return new Numerics.Vec4(v.x * this.x.x + v.y * this.y.x + v.z * this.z.x + v.w * this.w.x, v.x * this.x.y + v.y * this.y.y + v.z * this.z.y + v.w * this.w.y, v.x * this.x.z + v.y * this.y.z + v.z * this.z.z + v.w * this.w.z, v.x * this.x.w + v.y * this.y.w + v.z * this.z.w + v.w * this.w.w);
+            }
+            TransformPoint(v) {
+                return new Numerics.Vec3(v.x * this.x.x + v.y * this.y.x + v.z * this.z.x + this.w.x, v.x * this.x.y + v.y * this.y.y + v.z * this.z.y + this.w.y, v.x * this.x.z + v.y * this.y.z + v.z * this.z.z + this.w.z);
+            }
+            TransformVector(v) {
+                return new Numerics.Vec3(v.x * this.x.x + v.y * this.y.x + v.z * this.z.x, v.x * this.x.y + v.y * this.y.y + v.z * this.z.y, v.x * this.x.z + v.y * this.y.z + v.z * this.z.z);
+            }
+            Identity() {
+                this.x.x = 1;
+                this.x.y = 0;
+                this.x.z = 0;
+                this.x.w = 0;
+                this.y.x = 0;
+                this.y.y = 1;
+                this.y.z = 0;
+                this.y.w = 0;
+                this.z.x = 0;
+                this.z.y = 0;
+                this.z.z = 1;
+                this.z.w = 0;
+                this.w.x = 0;
+                this.w.y = 0;
+                this.w.z = 0;
+                this.w.w = 1;
+            }
+            Transpose() {
+                let m00 = this.x.x;
+                let m01 = this.y.x;
+                let m02 = this.z.x;
+                let m03 = this.w.x;
+                let m10 = this.x.y;
+                let m11 = this.y.y;
+                let m12 = this.z.y;
+                let m13 = this.w.y;
+                let m20 = this.x.z;
+                let m21 = this.y.z;
+                let m22 = this.z.z;
+                let m23 = this.w.z;
+                let m30 = this.x.w;
+                let m31 = this.y.w;
+                let m32 = this.z.w;
+                let m33 = this.w.w;
+                this.x.x = m00;
+                this.x.y = m01;
+                this.x.z = m02;
+                this.x.w = m03;
+                this.y.x = m10;
+                this.y.y = m11;
+                this.y.z = m12;
+                this.y.w = m13;
+                this.z.x = m20;
+                this.z.y = m21;
+                this.z.z = m22;
+                this.z.w = m23;
+                this.w.x = m30;
+                this.w.y = m31;
+                this.w.z = m32;
+                this.w.w = m33;
+            }
+            Determinant() {
+                let det1 = this.z.z * this.w.w - this.z.w * this.w.z;
+                let det2 = this.z.y * this.w.w - this.z.w * this.w.y;
+                let det3 = this.z.y * this.w.z - this.z.z * this.w.y;
+                let det4 = this.z.x * this.w.w - this.z.w * this.w.x;
+                let det5 = this.z.x * this.w.z - this.z.z * this.w.x;
+                let det6 = this.z.x * this.w.y - this.z.y * this.w.x;
+                return this.x.x * (this.y.y * det1 - this.y.z * det2 + this.y.w * det3) -
+                    this.x.y * (this.y.x * det1 - this.y.z * det4 + this.y.w * det5) +
+                    this.x.z * (this.y.x * det2 - this.y.y * det4 + this.y.w * det6) -
+                    this.x.w * (this.y.x * det3 - this.y.y * det5 + this.y.z * det6);
+            }
+            NonhomogeneousInvert() {
+                let m3 = new Numerics.Mat3();
+                m3.x.x = this.x.x;
+                m3.x.y = this.x.y;
+                m3.x.z = this.x.z;
+                m3.y.x = this.y.x;
+                m3.y.y = this.y.y;
+                m3.y.z = this.y.z;
+                m3.z.x = this.z.x;
+                m3.z.y = this.z.y;
+                m3.z.z = this.z.z;
+                m3.Invert();
+                let o = Mat4.identity;
+                this.x.x = m3.x.x;
+                this.x.y = m3.x.y;
+                this.x.z = m3.x.z;
+                this.y.x = m3.y.x;
+                this.y.y = m3.y.y;
+                this.y.z = m3.y.z;
+                this.z.x = m3.z.x;
+                this.z.y = m3.z.y;
+                this.z.z = m3.z.z;
+                let v = m3.Transform(new Numerics.Vec3(this.w.x, this.w.y, this.w.z));
+                this.w.x = -v.x;
+                this.w.y = -v.y;
+                this.w.z = -v.z;
+            }
+            Invert() {
+                let determinant = 1 / this.Determinant();
+                let m00 = (this.y.y * this.z.z * this.w.w + this.y.z * this.z.w * this.w.y + this.y.w * this.z.y * this.w.z -
+                    this.y.y * this.z.w * this.w.z - this.y.z * this.z.y * this.w.w - this.y.w * this.z.z * this.w.y) * determinant;
+                let m01 = (this.x.y * this.z.w * this.w.z + this.x.z * this.z.y * this.w.w + this.x.w * this.z.z * this.w.y -
+                    this.x.y * this.z.z * this.w.w - this.x.z * this.z.w * this.w.y - this.x.w * this.z.y * this.w.z) * determinant;
+                let m02 = (this.x.y * this.y.z * this.w.w + this.x.z * this.y.w * this.w.y + this.x.w * this.y.y * this.w.z -
+                    this.x.y * this.y.w * this.w.z - this.x.z * this.y.y * this.w.w - this.x.w * this.y.z * this.w.y) * determinant;
+                let m03 = (this.x.y * this.y.w * this.z.z + this.x.z * this.y.y * this.z.w + this.x.w * this.y.z * this.z.y -
+                    this.x.y * this.y.z * this.z.w - this.x.z * this.y.w * this.z.y - this.x.w * this.y.y * this.z.z) * determinant;
+                let m10 = (this.y.x * this.z.w * this.w.z + this.y.z * this.z.x * this.w.w + this.y.w * this.z.z * this.w.x -
+                    this.y.x * this.z.z * this.w.w - this.y.z * this.z.w * this.w.x - this.y.w * this.z.x * this.w.z) * determinant;
+                let m11 = (this.x.x * this.z.z * this.w.w + this.x.z * this.z.w * this.w.x + this.x.w * this.z.x * this.w.z -
+                    this.x.x * this.z.w * this.w.z - this.x.z * this.z.x * this.w.w - this.x.w * this.z.z * this.w.x) * determinant;
+                let m12 = (this.x.x * this.y.w * this.w.z + this.x.z * this.y.x * this.w.w + this.x.w * this.y.z * this.w.x -
+                    this.x.x * this.y.z * this.w.w - this.x.z * this.y.w * this.w.x - this.x.w * this.y.x * this.w.z) * determinant;
+                let m13 = (this.x.x * this.y.z * this.z.w + this.x.z * this.y.w * this.z.x + this.x.w * this.y.x * this.z.z -
+                    this.x.x * this.y.w * this.z.z - this.x.z * this.y.x * this.z.w - this.x.w * this.y.z * this.z.x) * determinant;
+                let m20 = (this.y.x * this.z.y * this.w.w + this.y.y * this.z.w * this.w.x + this.y.w * this.z.x * this.w.y -
+                    this.y.x * this.z.w * this.w.y - this.y.y * this.z.x * this.w.w - this.y.w * this.z.y * this.w.x) * determinant;
+                let m21 = (this.x.x * this.z.w * this.w.y + this.x.y * this.z.x * this.w.w + this.x.w * this.z.y * this.w.x -
+                    this.x.x * this.z.y * this.w.w - this.x.y * this.z.w * this.w.x - this.x.w * this.z.x * this.w.y) * determinant;
+                let m22 = (this.x.x * this.y.y * this.w.w + this.x.y * this.y.w * this.w.x + this.x.w * this.y.x * this.w.y -
+                    this.x.x * this.y.w * this.w.y - this.x.y * this.y.x * this.w.w - this.x.w * this.y.y * this.w.x) * determinant;
+                let m23 = (this.x.x * this.y.w * this.z.y + this.x.y * this.y.x * this.z.w + this.x.w * this.y.y * this.z.x -
+                    this.x.x * this.y.y * this.z.w - this.x.y * this.y.w * this.z.x - this.x.w * this.y.x * this.z.y) * determinant;
+                let m30 = (this.y.x * this.z.z * this.w.y + this.y.y * this.z.x * this.w.z + this.y.z * this.z.y * this.w.x -
+                    this.y.x * this.z.y * this.w.z - this.y.y * this.z.z * this.w.x - this.y.z * this.z.x * this.w.y) * determinant;
+                let m31 = (this.x.x * this.z.y * this.w.z + this.x.y * this.z.z * this.w.x + this.x.z * this.z.x * this.w.y -
+                    this.x.x * this.z.z * this.w.y - this.x.y * this.z.x * this.w.z - this.x.z * this.z.y * this.w.x) * determinant;
+                let m32 = (this.x.x * this.y.z * this.w.y + this.x.y * this.y.x * this.w.z + this.x.z * this.y.y * this.w.x -
+                    this.x.x * this.y.y * this.w.z - this.x.y * this.y.z * this.w.x - this.x.z * this.y.x * this.w.y) * determinant;
+                let m33 = (this.x.x * this.y.y * this.z.z + this.x.y * this.y.z * this.z.x + this.x.z * this.y.x * this.z.y -
+                    this.x.x * this.y.z * this.z.y - this.x.y * this.y.x * this.z.z - this.x.z * this.y.y * this.z.x) * determinant;
+                this.x.x = m00;
+                this.x.y = m01;
+                this.x.z = m02;
+                this.x.w = m03;
+                this.y.x = m10;
+                this.y.y = m11;
+                this.y.z = m12;
+                this.y.w = m13;
+                this.z.x = m20;
+                this.z.y = m21;
+                this.z.z = m22;
+                this.z.w = m23;
+                this.w.x = m30;
+                this.w.y = m31;
+                this.w.z = m32;
+                this.w.w = m33;
+            }
+            static View(position, lookAt, upVector) {
+                let forward = Numerics.Vec3.Normalize(Numerics.Vec3.Sub(lookAt, position));
+                let xVec = Numerics.Vec3.Normalize(forward.Cross(upVector));
+                let up = xVec.Cross(forward);
+                let result = new Mat4();
+                result.x.x = xVec.x;
+                result.x.y = xVec.y;
+                result.x.z = xVec.z;
+                result.x.w = Numerics.Vec3.Dot(position, Numerics.Vec3.Negate(xVec));
+                result.y.x = up.x;
+                result.y.y = up.y;
+                result.y.z = up.z;
+                result.y.w = Numerics.Vec3.Dot(position, Numerics.Vec3.Negate(up));
+                result.z.x = -forward.x;
+                result.z.y = -forward.y;
+                result.z.z = -forward.z;
+                result.z.w = Numerics.Vec3.Dot(position, forward);
+                result.w.x = 0;
+                result.w.y = 0;
+                result.w.z = 0;
+                result.w.w = 1;
+                return result;
+            }
+            static Perspective(fov, aspect, near, far) {
+                let top = near * Numerics.MathUtils.Tan(fov * .5);
+                let bottom = -top;
+                let right = top * aspect;
+                let left = -right;
+                return Mat4.Frustum(left, right, bottom, top, near, far);
+            }
+            static Frustum(left, right, bottom, top, near, far) {
+                let width = right - left;
+                let height = top - bottom;
+                let depth = far - near;
+                let n = near * 2;
+                let result = new Mat4();
+                result.x.x = n / width;
+                result.x.y = 0;
+                result.x.z = (right + left) / width;
+                result.x.w = 0;
+                result.y.x = 0;
+                result.y.y = n / height;
+                result.y.z = (top + bottom) / height;
+                result.y.w = 0;
+                result.z.x = 0;
+                result.z.y = 0;
+                result.z.z = -(far + near) / depth;
+                result.z.w = -(n * far) / depth;
+                result.w.x = 0;
+                result.w.y = 0;
+                result.w.z = -1;
+                result.w.w = 0;
+                return result;
+            }
+            static Orthographic(left, right, bottom, top, near, far) {
+                let width = right - left;
+                let height = top - bottom;
+                let depth = far - near;
+                let result = new Mat4();
+                ;
+                result.x.x = 2 / width;
+                result.x.y = 0;
+                result.x.z = 0;
+                result.x.w = -(right + left) / width;
+                result.y.x = 0;
+                result.y.y = 2 / height;
+                result.y.z = 0;
+                result.y.w = -(top + bottom) / height;
+                result.z.x = 0;
+                result.z.y = 0;
+                result.z.z = -2 / depth;
+                result.z.w = -(far + near) / depth;
+                result.w.x = 0;
+                result.w.y = 0;
+                result.w.z = 0;
+                result.w.w = 1;
+                return result;
+            }
+            static OrthographicCentered(left, right, bottom, top, near, far) {
+                let width = right - left;
+                let height = top - bottom;
+                let depth = far - near;
+                let result = new Mat4();
+                ;
+                result.x.x = 2 / width;
+                result.x.y = 0;
+                result.x.z = 0;
+                result.x.w = 0;
+                result.y.x = 0;
+                result.y.y = 2 / height;
+                result.y.z = 0;
+                result.y.w = 0;
+                result.z.x = 0;
+                result.z.y = 0;
+                result.z.z = -2 / depth;
+                result.z.w = -((far + near) / depth);
+                result.w.x = 0;
+                result.w.y = 0;
+                result.w.z = 0;
+                result.w.w = 1;
+                return result;
+            }
+        }
+        Numerics.Mat4 = Mat4;
+    })(Numerics = RC.Numerics || (RC.Numerics = {}));
+})(RC || (RC = {}));
+var RC;
+(function (RC) {
+    var Numerics;
+    (function (Numerics) {
+        class MathUtils {
+            static Sin(f) {
+                return Math.sin(f);
+            }
+            static Cos(f) {
+                return Math.cos(f);
+            }
+            static Tan(f) {
+                return Math.tan(f);
+            }
+            static Asin(f) {
+                return Math.asin(f);
+            }
+            static Acos(f) {
+                return Math.acos(f);
+            }
+            static Atan(f) {
+                return Math.atan(f);
+            }
+            static Atan2(y, x) {
+                return Math.atan2(y, x);
+            }
+            static Sqrt(f) {
+                return Math.sqrt(f);
+            }
+            static Abs(f) {
+                return Math.abs(f);
+            }
+            static Min(a, b) {
+                return (a >= b) ? b : a;
+            }
+            static Min2(...values) {
+                if (values.length == 0)
+                    return 0;
+                let num2 = values[0];
+                for (let i = 1; i < values.length; i++) {
+                    if (values[i] < num2) {
+                        num2 = values[i];
+                    }
+                }
+                return num2;
+            }
+            static Max(a, b) {
+                return (a <= b) ? b : a;
+            }
+            static Max2(...values) {
+                if (values.length == 0)
+                    return 0;
+                let num2 = values[0];
+                for (let i = 1; i < values.length; i++) {
+                    if (values[i] > num2) {
+                        num2 = values[i];
+                    }
+                }
+                return num2;
+            }
+            static Pow(f, p) {
+                return Math.pow(f, p);
+            }
+            static Exp(power) {
+                return Math.exp(power);
+            }
+            static Log(f) {
+                return Math.log(f);
+            }
+            static Ceil(f) {
+                return Math.ceil(f);
+            }
+            static Floor(f) {
+                return Math.floor(f);
+            }
+            static Round(f) {
+                return Math.round(f);
+            }
+            static Sign(f) {
+                return (f < 0) ? -1 : 1;
+            }
+            static Clamp(value, min, max) {
+                if (value < min) {
+                    value = min;
+                }
+                else if (value > max) {
+                    value = max;
+                }
+                return value;
+            }
+            static Clamp01(value) {
+                let result;
+                if (value < 0) {
+                    result = 0;
+                }
+                else if (value > 1) {
+                    result = 1;
+                }
+                else {
+                    result = value;
+                }
+                return result;
+            }
+            static Lerp(a, b, t) {
+                return a + (b - a) * MathUtils.Clamp01(t);
+            }
+            static LerpUnclamped(a, b, t) {
+                return a + (b - a) * t;
+            }
+            static LerpAngle(a, b, t) {
+                let num = MathUtils.Repeat(b - a, 360);
+                if (num > 180) {
+                    num -= 360;
+                }
+                return a + num * MathUtils.Clamp01(t);
+            }
+            static MoveTowards(current, target, maxDelta) {
+                let result;
+                if (MathUtils.Abs(target - current) <= maxDelta) {
+                    result = target;
+                }
+                else {
+                    result = current + MathUtils.Sign(target - current) * maxDelta;
+                }
+                return result;
+            }
+            static MoveTowardsAngle(current, target, maxDelta) {
+                let num = MathUtils.DeltaAngle(current, target);
+                let result;
+                if (-maxDelta < num && num < maxDelta) {
+                    result = target;
+                }
+                else {
+                    target = current + num;
+                    result = MathUtils.MoveTowards(current, target, maxDelta);
+                }
+                return result;
+            }
+            static FromToDirection(from, to, t, forward) {
+                let q1 = Numerics.Quat.FromToRotation(forward, from);
+                let q2 = Numerics.Quat.FromToRotation(forward, to);
+                let q3 = Numerics.Quat.Lerp(q1, q2, t);
+                return q3.Transform(forward);
+            }
+            static SmoothStep(from, to, t) {
+                t = MathUtils.Clamp01(t);
+                t = -2 * t * t * t + 3 * t * t;
+                return to * t + from * (1 - t);
+            }
+            static Gamma(value, absmax, gamma) {
+                let flag = value < 0;
+                let num = MathUtils.Abs(value);
+                let result;
+                if (num > absmax)
+                    result = ((!flag) ? num : (-num));
+                else {
+                    let num2 = MathUtils.Pow(num / absmax, gamma) * absmax;
+                    result = ((!flag) ? num2 : (-num2));
+                }
+                return result;
+            }
+            static Approximately(a, b) {
+                return MathUtils.Abs(b - a) < MathUtils.Max(1E-06 * MathUtils.Max(MathUtils.Abs(a), MathUtils.Abs(b)), MathUtils.EPSILON * 8);
+            }
+            static SmoothDamp(current, target, currentVelocity, smoothTime, maxSpeed, deltaTime) {
+                smoothTime = MathUtils.Max(0.0001, smoothTime);
+                let num = 2 / smoothTime;
+                let num2 = num * deltaTime;
+                let num3 = 1 / (1 + num2 + 0.48 * num2 * num2 + 0.235 * num2 * num2 * num2);
+                let num4 = current - target;
+                let num5 = target;
+                let num6 = maxSpeed * smoothTime;
+                num4 = MathUtils.Clamp(num4, -num6, num6);
+                target = current - num4;
+                let num7 = (currentVelocity[0] + num * num4) * deltaTime;
+                currentVelocity[0] = (currentVelocity[0] - num * num7) * num3;
+                let num8 = target + (num4 + num7) * num3;
+                if (num5 - current > 0 == num8 > num5) {
+                    num8 = num5;
+                    currentVelocity[0] = (num8 - num5) / deltaTime;
+                }
+                return num8;
+            }
+            static SmoothDampAngle(current, target, currentVelocity, smoothTime, maxSpeed, deltaTime) {
+                target = current + MathUtils.DeltaAngle(current, target);
+                return MathUtils.SmoothDamp(current, target, currentVelocity, smoothTime, maxSpeed, deltaTime);
+            }
+            static Repeat(t, length) {
+                return MathUtils.Clamp(t - MathUtils.Floor(t / length) * length, 0, length);
+            }
+            static PingPong(t, length) {
+                t = MathUtils.Repeat(t, length * 2);
+                return length - MathUtils.Abs(t - length);
+            }
+            static InverseLerp(a, b, value) {
+                return a != b ? MathUtils.Clamp01((value - a) / (b - a)) : 0;
+            }
+            static DeltaAngle(current, target) {
+                let num = MathUtils.Repeat(target - current, 360);
+                if (num > 180) {
+                    num -= 360;
+                }
+                return num;
+            }
+            static LineIntersection(p1, p2, p3, p4, result) {
+                let num = p2.x - p1.x;
+                let num2 = p2.y - p1.y;
+                let num3 = p4.x - p3.x;
+                let num4 = p4.y - p3.y;
+                let num5 = num * num4 - num2 * num3;
+                let result2;
+                if (num5 == 0) {
+                    result2 = false;
+                }
+                else {
+                    let num6 = p3.x - p1.x;
+                    let num7 = p3.y - p1.y;
+                    let num8 = (num6 * num4 - num7 * num3) / num5;
+                    result[0] = new Numerics.Vec2(p1.x + num8 * num, p1.y + num8 * num2);
+                    result2 = true;
+                }
+                return result2;
+            }
+            static LineSegmentIntersection(p1, p2, p3, p4, result) {
+                let num = p2.x - p1.x;
+                let num2 = p2.y - p1.y;
+                let num3 = p4.x - p3.x;
+                let num4 = p4.y - p3.y;
+                let num5 = num * num4 - num2 * num3;
+                let result2;
+                if (num5 == 0) {
+                    result2 = false;
+                }
+                else {
+                    let num6 = p3.x - p1.x;
+                    let num7 = p3.y - p1.y;
+                    let num8 = (num6 * num4 - num7 * num3) / num5;
+                    if (num8 < 0 || num8 > 1) {
+                        result2 = false;
+                    }
+                    else {
+                        let num9 = (num6 * num2 - num7 * num) / num5;
+                        if (num9 < 0 || num9 > 1) {
+                            result2 = false;
+                        }
+                        else {
+                            result[0] = new Numerics.Vec2(p1.x + num8 * num, p1.y + num8 * num2);
+                            result2 = true;
+                        }
+                    }
+                }
+                return result2;
+            }
+            static DegToRad(deg) {
+                return deg * MathUtils.DEG_TO_RAD;
+            }
+            static RadToDeg(rad) {
+                return rad * MathUtils.RAD_TO_DEG;
+            }
+            static LinearToGammaSpace(value) {
+                return MathUtils.Pow(value, 1 / 2.2);
+            }
+            static GammaToLinearSpace(value) {
+                return MathUtils.Pow(value, 2.2);
+            }
+        }
+        MathUtils.EPSILON = 0.0001;
+        MathUtils.MAX_VALUE = Number.MAX_VALUE;
+        MathUtils.MIN_VALUE = Number.MIN_VALUE;
+        MathUtils.PI = Math.PI;
+        MathUtils.PI2 = MathUtils.PI * 2;
+        MathUtils.PI4 = MathUtils.PI * 4;
+        MathUtils.PI_HALF = MathUtils.PI * 0.5;
+        MathUtils.PI_QUARTER = MathUtils.PI * 0.25;
+        MathUtils.PI_DELTA = 1 / MathUtils.PI;
+        MathUtils.PI_HALF_DELTA = MathUtils.PI_DELTA * 2;
+        MathUtils.PI_QUARTER_DELTA = MathUtils.PI_DELTA * 4;
+        MathUtils.DEG_TO_RAD = MathUtils.PI / 180;
+        MathUtils.RAD_TO_DEG = 180 / MathUtils.PI;
+        MathUtils.INFINITY = Number.POSITIVE_INFINITY;
+        MathUtils.NEGATIVE_INFINITY = Number.NEGATIVE_INFINITY;
+        Numerics.MathUtils = MathUtils;
+    })(Numerics = RC.Numerics || (RC.Numerics = {}));
+})(RC || (RC = {}));
+var RC;
+(function (RC) {
+    var Numerics;
+    (function (Numerics) {
+        class Quat {
+            constructor(x = 0, y = 0, z = 0, w = 0) {
+                this.x = x;
+                this.y = y;
+                this.z = z;
+                this.w = w;
+            }
+            static get identity() {
+                return new Quat(0, 0, 0, 1);
+            }
+            get xyz() {
+                return new Numerics.Vec3(this.x, this.y, this.z);
+            }
+            set xyz(v) {
+                this.x = v.x;
+                this.y = v.y;
+                this.z = v.z;
+            }
+            set eulerAngles(value) {
+                let q = Quat.FromEulerRad(Numerics.Vec3.MulN(value, Numerics.MathUtils.DEG_TO_RAD));
+                this.x = q.x;
+                this.y = q.y;
+                this.z = q.z;
+                this.w = q.w;
+            }
+            get eulerAngles() {
+                return Numerics.Vec3.MulN(Quat.ToEulerRad(this), Numerics.MathUtils.RAD_TO_DEG);
+            }
+            get length() {
+                return Numerics.MathUtils.Sqrt(this.lengthSquared);
+            }
+            get lengthSquared() {
+                return this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w;
+            }
+            Clone() {
+                let q = new Quat();
+                q.x = this.x;
+                q.y = this.y;
+                q.z = this.z;
+                q.w = this.w;
+                return q;
+            }
+            CopyFrom(q) {
+                this.x = q.x;
+                this.y = q.y;
+                this.z = q.z;
+                this.w = q.w;
+            }
+            Set(newX, newY, newZ, newW) {
+                this.x = newX;
+                this.y = newY;
+                this.z = newZ;
+                this.w = newW;
+            }
+            Normalize() {
+                let l = this.length;
+                if (l == 0) {
+                    this.x = 0;
+                    this.y = 0;
+                    this.z = 0;
+                    this.w = 0;
+                    return;
+                }
+                let scale = 1.0 / l;
+                this.x *= scale;
+                this.y *= scale;
+                this.z *= scale;
+                this.w *= scale;
+            }
+            static Normalize(q) {
+                let scale = 1.0 / q.length;
+                let result = new Quat(q.x * scale, q.y * scale, q.z * scale, q.w * scale);
+                return result;
+            }
+            static Dot(a, b) {
+                return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
+            }
+            Transform(v) {
+                let x2 = this.x + this.x;
+                let y2 = this.y + this.y;
+                let z2 = this.z + this.z;
+                let xx2 = this.x * x2;
+                let xy2 = this.x * y2;
+                let xz2 = this.x * z2;
+                let yy2 = this.y * y2;
+                let yz2 = this.y * z2;
+                let zz2 = this.z * z2;
+                let wx2 = this.w * x2;
+                let wy2 = this.w * y2;
+                let wz2 = this.w * z2;
+                return new Numerics.Vec3(v.x * (1 - yy2 - zz2) + v.y * (xy2 - wz2) + v.z * (xz2 + wy2), v.x * (xy2 + wz2) + v.y * (1 - xx2 - zz2) + v.z * (yz2 - wx2), v.x * (xz2 - wy2) + v.y * (yz2 + wx2) + v.z * (1 - xx2 - yy2));
+            }
+            static AngleAxis(angle, axis) {
+                let result = Quat.identity;
+                let thetaOver2 = angle * Numerics.MathUtils.DEG_TO_RAD * 0.5;
+                let sinThetaOver2 = Numerics.MathUtils.Sin(thetaOver2);
+                result.x = axis.x * sinThetaOver2;
+                result.y = axis.y * sinThetaOver2;
+                result.z = axis.z * sinThetaOver2;
+                result.w = Numerics.MathUtils.Cos(thetaOver2);
+                return result;
+            }
+            ToAngleAxis() {
+                let result = Quat.ToAxisAngleRad(this);
+                Numerics.Vec3.MulN(result[1], Numerics.MathUtils.RAD_TO_DEG);
+                return result;
+            }
+            static FromToRotation(from, to) {
+                let result = Quat.identity;
+                let dot = from.Dot(to);
+                if (dot < -1 + 1e-6) {
+                    let v = Numerics.Vec3.Normalize(Quat.Orthogonal(from));
+                    result.Set(v.x, v.y, v.z, 0);
+                }
+                else if (dot > 1 - 1e-6) {
+                    result.Set(0, 0, 0, 1);
+                }
+                else {
+                    let angle = Numerics.MathUtils.Acos(dot);
+                    let axis = Numerics.Vec3.Normalize(from.Cross(to));
+                    let thetaOver2 = angle * 0.5;
+                    let sinThetaOver2 = Numerics.MathUtils.Sin(thetaOver2);
+                    result.x = axis.x * sinThetaOver2;
+                    result.y = axis.y * sinThetaOver2;
+                    result.z = axis.z * sinThetaOver2;
+                    result.w = Numerics.MathUtils.Cos(thetaOver2);
+                }
+                return result;
+            }
+            static Orthogonal(v) {
+                let x = Numerics.MathUtils.Abs(v.x);
+                let y = Numerics.MathUtils.Abs(v.y);
+                let z = Numerics.MathUtils.Abs(v.z);
+                let other = x < y ? (x < z ? Numerics.Vec3.right : Numerics.Vec3.forward) : (y < z ? Numerics.Vec3.up : Numerics.Vec3.forward);
+                return Numerics.Vec3.Cross(v, other);
+            }
+            static LookRotation(forward, upwards) {
+                forward = Numerics.Vec3.Normalize(forward);
+                let right = Numerics.Vec3.Normalize(upwards.Cross(forward));
+                upwards = forward.Cross(right);
+                let m00 = right.x;
+                let m01 = right.y;
+                let m02 = right.z;
+                let m10 = upwards.x;
+                let m11 = upwards.y;
+                let m12 = upwards.z;
+                let m20 = forward.x;
+                let m21 = forward.y;
+                let m22 = forward.z;
+                let num8 = m00 + m11 + m22;
+                let quaternion = new Quat();
+                if (num8 > 0) {
+                    let num = Numerics.MathUtils.Sqrt(num8 + 1);
+                    quaternion.w = num * 0.5;
+                    num = 0.5 / num;
+                    quaternion.x = (m12 - m21) * num;
+                    quaternion.y = (m20 - m02) * num;
+                    quaternion.z = (m01 - m10) * num;
+                    return quaternion;
+                }
+                if ((m00 >= m11) &&
+                    (m00 >= m22)) {
+                    let num7 = Numerics.MathUtils.Sqrt(1 + m00 - m11 - m22);
+                    let num4 = 0.5 / num7;
+                    quaternion.x = 0.5 * num7;
+                    quaternion.y = (m01 + m10) * num4;
+                    quaternion.z = (m02 + m20) * num4;
+                    quaternion.w = (m12 - m21) * num4;
+                    return quaternion;
+                }
+                if (m11 > m22) {
+                    let num6 = Numerics.MathUtils.Sqrt(1 + m11 - m00 - m22);
+                    let num3 = 0.5 / num6;
+                    quaternion.x = (m10 + m01) * num3;
+                    quaternion.y = 0.5 * num6;
+                    quaternion.z = (m21 + m12) * num3;
+                    quaternion.w = (m20 - m02) * num3;
+                    return quaternion;
+                }
+                let num5 = Numerics.MathUtils.Sqrt(1 + m22 - m00 - m11);
+                let num2 = 0.5 / num5;
+                quaternion.x = (m20 + m02) * num2;
+                quaternion.y = (m21 + m12) * num2;
+                quaternion.z = 0.5 * num5;
+                quaternion.w = (m01 - m10) * num2;
+                return quaternion;
+            }
+            SetLookRotation(view, up) {
+                let rot = Quat.LookRotation(view, up);
+                this.Set(rot.x, rot.y, rot.z, rot.w);
+            }
+            Conjugate() {
+                return new Quat(-this.x, -this.y, -this.z, this.w);
+            }
+            static Slerp(a, b, t) {
+                t = Numerics.MathUtils.Clamp(t, 0, 1);
+                return Quat.SlerpUnclamped(a, b, t);
+            }
+            static SlerpUnclamped(a, b, t) {
+                if (a.lengthSquared == 0.0) {
+                    if (b.lengthSquared == 0.0)
+                        return Quat.identity;
+                    return b;
+                }
+                if (b.lengthSquared == 0.0)
+                    return a;
+                let cosHalfAngle = a.w * b.w + a.xyz.Dot(b.xyz);
+                if (cosHalfAngle >= 1.0 ||
+                    cosHalfAngle <= -1.0) {
+                    return a;
+                }
+                if (cosHalfAngle < 0.0) {
+                    b.xyz = Numerics.Vec3.Negate(b.xyz);
+                    b.w = -b.w;
+                    cosHalfAngle = -cosHalfAngle;
+                }
+                let blendA;
+                let blendB;
+                if (cosHalfAngle < 0.99) {
+                    let halfAngle = Numerics.MathUtils.Acos(cosHalfAngle);
+                    let sinHalfAngle = Numerics.MathUtils.Sin(halfAngle);
+                    let oneOverSinHalfAngle = 1.0 / sinHalfAngle;
+                    blendA = Numerics.MathUtils.Sin(halfAngle * (1.0 - t)) * oneOverSinHalfAngle;
+                    blendB = Numerics.MathUtils.Sin(halfAngle * t) * oneOverSinHalfAngle;
+                }
+                else {
+                    blendA = 1.0 - t;
+                    blendB = t;
+                }
+                let v = Numerics.Vec3.Add(Numerics.Vec3.MulN(a.xyz, blendA), Numerics.Vec3.MulN(b.xyz, blendB));
+                let result = new Quat(v.x, v.y, v.z, blendA * a.w + blendB * b.w);
+                if (result.lengthSquared > 0.0)
+                    return Quat.Normalize(result);
+                return Quat.identity;
+            }
+            static Lerp(q1, q2, t) {
+                t = Numerics.MathUtils.Clamp(t, 0, 1);
+                return Quat.LerpUnclamped(q1, q2, t);
+            }
+            static LerpUnclamped(q1, q2, t) {
+                let q = Quat.identity;
+                if (Quat.Dot(q1, q2) < 0) {
+                    q.x = q1.x + t * (-q2.x - q1.x);
+                    q.y = q1.y + t * (-q2.y - q1.y);
+                    q.z = q1.z + t * (-q2.z - q1.z);
+                    q.w = q1.w + t * (-q2.w - q1.w);
+                }
+                else {
+                    q.x = q1.x + (q2.x - q1.x) * t;
+                    q.y = q1.y + (q2.y - q1.y) * t;
+                    q.z = q1.z + (q2.z - q1.z) * t;
+                    q.w = q1.w + (q2.w - q1.w) * t;
+                }
+                q.Normalize();
+                return q;
+            }
+            static RotateTowards(from, to, maxDegreesDelta) {
+                let num = Quat.Angle(from, to);
+                if (num == 0)
+                    return to;
+                let t = Numerics.MathUtils.Min(1, maxDegreesDelta / num);
+                return Quat.SlerpUnclamped(from, to, t);
+            }
+            static Invert(rotation) {
+                let lengthSq = rotation.lengthSquared;
+                if (lengthSq != 0.0) {
+                    let i = 1.0 / lengthSq;
+                    let v = Numerics.Vec3.MulN(rotation.xyz, -i);
+                    return new Quat(v.x, v.y, v.z, rotation.w * i);
+                }
+                return rotation;
+            }
+            ToString() {
+                return "(" + this.x + "," + this.y + "," + this.z + "," + this.w + ")";
+            }
+            static Angle(a, b) {
+                let f = Quat.Dot(a, b);
+                return Numerics.MathUtils.Acos(Numerics.MathUtils.Min(Numerics.MathUtils.Abs(f), 1)) * 2 * Numerics.MathUtils.RAD_TO_DEG;
+            }
+            static Euler(euler) {
+                return Quat.FromEulerRad(Numerics.Vec3.MulN(euler, Numerics.MathUtils.DEG_TO_RAD));
+            }
+            static ToEulerRad(rotation) {
+                let sqw = rotation.w * rotation.w;
+                let sqx = rotation.x * rotation.x;
+                let sqy = rotation.y * rotation.y;
+                let sqz = rotation.z * rotation.z;
+                let unit = sqx + sqy + sqz + sqw;
+                let test = rotation.x * rotation.w - rotation.y * rotation.z;
+                let v = new Numerics.Vec3();
+                if (test > 0.4995 * unit) {
+                    v.y = 2 * Numerics.MathUtils.Atan2(rotation.y, rotation.x);
+                    v.x = Numerics.MathUtils.PI / 2;
+                    v.z = 0;
+                    return Quat.NormalizeAngles(Numerics.Vec3.MulN(v, Numerics.MathUtils.RAD_TO_DEG));
+                }
+                if (test < -0.4995 * unit) {
+                    v.y = -2 * Numerics.MathUtils.Atan2(rotation.y, rotation.x);
+                    v.x = -Numerics.MathUtils.PI / 2;
+                    v.z = 0;
+                    return Quat.NormalizeAngles(Numerics.Vec3.MulN(v, Numerics.MathUtils.RAD_TO_DEG));
+                }
+                let q = new Quat(rotation.w, rotation.z, rotation.x, rotation.y);
+                v.y = Numerics.MathUtils.Atan2(2 * q.x * q.w + 2 * q.y * q.z, 1 - 2 * (q.z * q.z + q.w * q.w));
+                v.x = Numerics.MathUtils.Asin(2 * (q.x * q.z - q.w * q.y));
+                v.z = Numerics.MathUtils.Atan2(2 * q.x * q.y + 2 * q.z * q.w, 1 - 2 * (q.y * q.y + q.z * q.z));
+                return Quat.NormalizeAngles(Numerics.Vec3.MulN(v, Numerics.MathUtils.RAD_TO_DEG));
+            }
+            static NormalizeAngles(angles) {
+                angles.x = Quat.NormalizeAngle(angles.x);
+                angles.y = Quat.NormalizeAngle(angles.y);
+                angles.z = Quat.NormalizeAngle(angles.z);
+                return angles;
+            }
+            static NormalizeAngle(angle) {
+                while (angle > 360)
+                    angle -= 360;
+                while (angle < 0)
+                    angle += 360;
+                return angle;
+            }
+            static FromEulerRad(euler) {
+                let yaw = euler.x;
+                let pitch = euler.y;
+                let roll = euler.z;
+                let yawOver2 = yaw * 0.5;
+                let cosYawOver2 = Numerics.MathUtils.Cos(yawOver2);
+                let sinYawOver2 = Numerics.MathUtils.Sin(yawOver2);
+                let pitchOver2 = pitch * 0.5;
+                let cosPitchOver2 = Numerics.MathUtils.Cos(pitchOver2);
+                let sinPitchOver2 = Numerics.MathUtils.Sin(pitchOver2);
+                let rollOver2 = roll * 0.5;
+                let cosRollOver2 = Numerics.MathUtils.Cos(rollOver2);
+                let sinRollOver2 = Numerics.MathUtils.Sin(rollOver2);
+                let result = new Quat();
+                result.w = cosYawOver2 * cosPitchOver2 * cosRollOver2 + sinYawOver2 * sinPitchOver2 * sinRollOver2;
+                result.x = sinYawOver2 * cosPitchOver2 * cosRollOver2 + cosYawOver2 * sinPitchOver2 * sinRollOver2;
+                result.y = cosYawOver2 * sinPitchOver2 * cosRollOver2 - sinYawOver2 * cosPitchOver2 * sinRollOver2;
+                result.z = cosYawOver2 * cosPitchOver2 * sinRollOver2 - sinYawOver2 * sinPitchOver2 * cosRollOver2;
+                return result;
+            }
+            static ToAxisAngleRad(q) {
+                if (Numerics.MathUtils.Abs(q.w) > 1.0)
+                    q = Quat.Normalize(q);
+                let angle = 2.0 * Numerics.MathUtils.Acos(q.w);
+                let den = Numerics.MathUtils.Sqrt(1.0 - q.w * q.w);
+                let axis;
+                if (den > 0.0001)
+                    axis = Numerics.Vec3.DivN(q.xyz, den);
+                else {
+                    axis = new Numerics.Vec3(1, 0, 0);
+                }
+                return [angle, axis];
+            }
+            static Equals(q1, q2) {
+                if (q1 == null || q2 == null)
+                    return false;
+                return q1.x == q2.x && q1.y == q2.y && q1.z == q2.z && q1.w == q2.w;
+            }
+            EqualsTo(q) {
+                return Quat.Equals(this, q);
+            }
+            static Mul(lhs, rhs) {
+                return new Quat(lhs.w * rhs.x + lhs.x * rhs.w + lhs.y * rhs.z - lhs.z * rhs.y, lhs.w * rhs.y + lhs.y * rhs.w + lhs.z * rhs.x - lhs.x * rhs.z, lhs.w * rhs.z + lhs.z * rhs.w + lhs.x * rhs.y - lhs.y * rhs.x, lhs.w * rhs.w - lhs.x * rhs.x - lhs.y * rhs.y - lhs.z * rhs.z);
+            }
+        }
+        Numerics.Quat = Quat;
+    })(Numerics = RC.Numerics || (RC.Numerics = {}));
+})(RC || (RC = {}));
+var RC;
+(function (RC) {
+    var Numerics;
+    (function (Numerics) {
+        class Vec2 {
+            constructor(x = 0, y = 0) {
+                this.x = x;
+                this.y = y;
+            }
+            static get one() {
+                return new Vec2(1, 1);
+            }
+            static get minusOne() {
+                return new Vec2(-1, -1);
+            }
+            static get zero() {
+                return new Vec2(0, 0);
+            }
+            static get right() {
+                return new Vec2(1, 0);
+            }
+            ;
+            static get left() {
+                return new Vec2(-1, 0);
+            }
+            ;
+            static get up() {
+                return new Vec2(0, 1);
+            }
+            ;
+            static get down() {
+                return new Vec2(0, -1);
+            }
+            ;
+            static get positiveInfinityVector() {
+                return new Vec2(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
+            }
+            ;
+            static get negativeInfinityVector() {
+                return new Vec2(Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY);
+            }
+            ;
+            static Add(v1, v2) {
+                v1 = v1.Clone();
+                v1.x += v2.x;
+                v1.y += v2.y;
+                return v1;
+            }
+            static AddN(v, n) {
+                v = v.Clone();
+                v.x += n;
+                v.y += n;
+                return v;
+            }
+            static Sub(v1, v2) {
+                v1 = v1.Clone();
+                v1.x -= v2.x;
+                v1.y -= v2.y;
+                return v1;
+            }
+            static SubN(v, n) {
+                v = v.Clone();
+                v.x -= n;
+                v.y -= n;
+                return v;
+            }
+            static SubN2(n, v) {
+                v = v.Clone();
+                v.x = n - v.x;
+                v.y = n - v.y;
+                return v;
+            }
+            static Negate(v) {
+                v = v.Clone();
+                v.x = -v.x;
+                v.y = -v.y;
+                return v;
+            }
+            static Mul(v1, v2) {
+                v1 = v1.Clone();
+                v1.x *= v2.x;
+                v1.y *= v2.y;
+                return v1;
+            }
+            static MulN(v, n) {
+                v = v.Clone();
+                v.x *= n;
+                v.y *= n;
+                return v;
+            }
+            static Div(v1, v2) {
+                v1 = v1.Clone();
+                v1.x /= v2.x;
+                v1.y /= v2.y;
+                return v1;
+            }
+            static DivN(v, n) {
+                v = v.Clone();
+                v.x /= n;
+                v.y /= n;
+                return v;
+            }
+            static DivN2(n, v) {
+                v = v.Clone();
+                v.x = n / v.x;
+                v.y = n / v.y;
+                return v;
+            }
+            static Equals(v1, v2) {
+                if (v1 == null || v2 == null)
+                    return false;
+                return v1.x == v2.x && v1.y == v2.y;
+            }
+            EqualsTo(v) {
+                return Vec2.Equals(this, v);
+            }
+            ToString() {
+                return "(" + this.x + "," + this.y + ")";
+            }
+            Clone() {
+                let v = new Vec2();
+                v.x = this.x;
+                v.y = this.y;
+                return v;
+            }
+            CopyFrom(v) {
+                this.x = v.x;
+                this.y = v.y;
+            }
+            Set(x, y) {
+                this.x = x;
+                this.y = y;
+            }
+            ClampMagnitude(maxLength) {
+                let sqrMagnitude = this.SqrMagnitude();
+                if (sqrMagnitude > (maxLength * maxLength)) {
+                    let f = maxLength / Numerics.MathUtils.Sqrt(sqrMagnitude);
+                    this.x *= f;
+                    this.y *= f;
+                }
+            }
+            Magnitude() {
+                return Numerics.MathUtils.Sqrt(this.x * this.x + this.y * this.y);
+            }
+            SqrMagnitude() {
+                return this.x * this.x + this.y * this.y;
+            }
+            Distance(vector) {
+                return Vec2.Sub(vector, this).Magnitude();
+            }
+            DistanceSquared(vector) {
+                return Vec2.Sub(vector, this).SqrMagnitude();
+            }
+            Negate() {
+                this.x = -this.x;
+                this.y = -this.y;
+            }
+            Scale(scale) {
+                this.x *= scale.x;
+                this.y *= scale.y;
+            }
+            Dot(vector) {
+                return this.x * vector.x + this.y * vector.y;
+            }
+            Normalize() {
+                let f = 1 / this.Magnitude();
+                this.x *= f;
+                this.y *= f;
+            }
+            NormalizeSafe() {
+                let f = this.Magnitude();
+                if (f == 0)
+                    return;
+                this.x *= f;
+                this.y *= f;
+            }
+            AproxEqualsBox(vector, tolerance) {
+                return (Numerics.MathUtils.Abs(this.x - vector.x) <= tolerance) &&
+                    (Numerics.MathUtils.Abs(this.y - vector.y) <= tolerance);
+            }
+            ApproxEquals(vector, tolerance) {
+                return this.Distance(vector) <= tolerance;
+            }
+            Angle(vector) {
+                let vec = Vec2.Normalize(this);
+                let val = vec.Dot(Vec2.Normalize(vector));
+                val = val > 1 ? 1 : val;
+                val = val < -1 ? -1 : val;
+                return Numerics.MathUtils.Acos(val);
+            }
+            static Distance(v0, v1) {
+                return Vec2.Sub(v1, v0).Magnitude();
+            }
+            static DistanceSquared(v0, v1) {
+                return Vec2.Sub(v1, v0).SqrMagnitude();
+            }
+            static ClampMagnitude(v, maxLength) {
+                let nor = v.Clone();
+                let sqrMagnitude = nor.SqrMagnitude();
+                if (sqrMagnitude > (maxLength * maxLength))
+                    nor = Vec2.MulN(nor, (maxLength / Numerics.MathUtils.Sqrt(sqrMagnitude)));
+                return nor;
+            }
+            static Normalize(v) {
+                return Vec2.MulN(v, (1 / v.Magnitude()));
+            }
+            static NormalizeSafe(v) {
+                let dis = v.Magnitude();
+                if (dis == 0)
+                    return new Vec2();
+                return Vec2.MulN(v, (1 / dis));
+            }
+            static Dot(v0, v1) {
+                return v0.x * v1.x + v0.y * v1.y;
+            }
+            static LerpUnclamped(from, to, t) {
+                return new Vec2(from.x + (to.x - from.x) * t, from.y + (to.y - from.y) * t);
+            }
+            static Lerp(from, to, t) {
+                return t <= 0 ? from.Clone() : (t >= 1 ? to.Clone() : Vec2.LerpUnclamped(from, to, t));
+            }
+            static SlopeXy(v) {
+                return v.x / v.y;
+            }
+            static SlopeYx(v) {
+                return v.y / v.x;
+            }
+            static DegToRad(v) {
+                return new Vec2(Numerics.MathUtils.DegToRad(v.x), Numerics.MathUtils.DegToRad(v.y));
+            }
+            static RadToDeg(v) {
+                return new Vec2(Numerics.MathUtils.RadToDeg(v.x), Numerics.MathUtils.RadToDeg(v.y));
+            }
+            static Abs(v) {
+                return new Vec2(Numerics.MathUtils.Abs(v.x), Numerics.MathUtils.Abs(v.y));
+            }
+            static Pow(v, value) {
+                return new Vec2(Numerics.MathUtils.Pow(v.x, value), Numerics.MathUtils.Pow(v.y, value));
+            }
+            static Floor(v) {
+                return new Vec2(Numerics.MathUtils.Floor(v.x), Numerics.MathUtils.Floor(v.y));
+            }
+            static Round(v) {
+                return new Vec2(Numerics.MathUtils.Round(v.x), Numerics.MathUtils.Round(v.y));
+            }
+        }
+        Numerics.Vec2 = Vec2;
+    })(Numerics = RC.Numerics || (RC.Numerics = {}));
+})(RC || (RC = {}));
+var RC;
+(function (RC) {
+    var Numerics;
+    (function (Numerics) {
+        class Vec3 {
+            constructor(x = 0, y = 0, z = 0) {
+                this.x = x;
+                this.y = y;
+                this.z = z;
+            }
+            static get one() {
+                return new Vec3(1, 1, 1);
+            }
+            static get minusOne() {
+                return new Vec3(-1, -1, -1);
+            }
+            static get zero() {
+                return new Vec3(0, 0, 0);
+            }
+            static get right() {
+                return new Vec3(1, 0, 0);
+            }
+            ;
+            static get left() {
+                return new Vec3(-1, 0, 0);
+            }
+            ;
+            static get up() {
+                return new Vec3(0, 1, 0);
+            }
+            ;
+            static get down() {
+                return new Vec3(0, -1, 0);
+            }
+            ;
+            static get forward() {
+                return new Vec3(0, 0, 1);
+            }
+            ;
+            static get backward() {
+                return new Vec3(0, 0, -1);
+            }
+            ;
+            static get positiveInfinityVector() {
+                return new Vec3(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
+            }
+            ;
+            static get negativeInfinityVector() {
+                return new Vec3(Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY);
+            }
+            ;
+            static Add(v1, v2) {
+                v1 = v1.Clone();
+                v1.x += v2.x;
+                v1.y += v2.y;
+                v1.z += v2.z;
+                return v1;
+            }
+            static AddN(v, n) {
+                v = v.Clone();
+                v.x += n;
+                v.y += n;
+                v.z += n;
+                return v;
+            }
+            static Sub(v1, v2) {
+                v1 = v1.Clone();
+                v1.x -= v2.x;
+                v1.y -= v2.y;
+                v1.z -= v2.z;
+                return v1;
+            }
+            static SubN(v, n) {
+                v = v.Clone();
+                v.x -= n;
+                v.y -= n;
+                v.z -= n;
+                return v;
+            }
+            static SubN2(n, v) {
+                v = v.Clone();
+                v.x = n - v.x;
+                v.y = n - v.y;
+                v.z = n - v.z;
+                return v;
+            }
+            static Negate(v) {
+                v = v.Clone();
+                v.x = -v.x;
+                v.y = -v.y;
+                v.z = -v.z;
+                return v;
+            }
+            static Mul(v1, v2) {
+                v1 = v1.Clone();
+                v1.x *= v2.x;
+                v1.y *= v2.y;
+                v1.z *= v2.z;
+                return v1;
+            }
+            static MulN(v, n) {
+                v = v.Clone();
+                v.x *= n;
+                v.y *= n;
+                v.z *= n;
+                return v;
+            }
+            static Div(v1, v2) {
+                v1 = v1.Clone();
+                v1.x /= v2.x;
+                v1.y /= v2.y;
+                v1.z /= v2.z;
+                return v1;
+            }
+            static DivN(v, n) {
+                v = v.Clone();
+                v.x /= n;
+                v.y /= n;
+                v.z /= n;
+                return v;
+            }
+            static DivN2(n, v) {
+                v = v.Clone();
+                v.x = n / v.x;
+                v.y = n / v.y;
+                v.z = n / v.z;
+                return v;
+            }
+            static Equals(v1, v2) {
+                if (v1 == null || v2 == null)
+                    return false;
+                return v1.x == v2.x && v1.y == v2.y && v1.z == v2.z;
+            }
+            EqualsTo(v) {
+                return Vec3.Equals(this, v);
+            }
+            ToString() {
+                return "(" + this.x + "," + this.y + "," + this.z + ")";
+            }
+            Clone() {
+                let v = new Vec3();
+                v.x = this.x;
+                v.y = this.y;
+                v.z = this.z;
+                return v;
+            }
+            CopyFrom(v) {
+                this.x = v.x;
+                this.y = v.y;
+                this.z = v.z;
+            }
+            Set(x, y, z) {
+                this.x = x;
+                this.y = y;
+                this.z = z;
+            }
+            ClampMagnitude(maxLength) {
+                let sqrMagnitude = this.SqrMagnitude();
+                if (sqrMagnitude > maxLength * maxLength) {
+                    let f = maxLength / Numerics.MathUtils.Sqrt(sqrMagnitude);
+                    this.x *= f;
+                    this.y *= f;
+                    this.z *= f;
+                }
+            }
+            Magnitude() {
+                return Numerics.MathUtils.Sqrt(this.SqrMagnitude());
+            }
+            SqrMagnitude() {
+                return this.x * this.x + this.y * this.y + this.z * this.z;
+            }
+            Distance(vector) {
+                return Vec3.Sub(vector, this).Magnitude();
+            }
+            DistanceSquared(vector) {
+                return Vec3.Sub(vector, this).SqrMagnitude();
+            }
+            Negate() {
+                this.x = -this.x;
+                this.y = -this.y;
+                this.z = -this.z;
+            }
+            Scale(scale) {
+                this.x *= scale.x;
+                this.y *= scale.y;
+                this.z *= scale.z;
+            }
+            Dot(v) {
+                return this.x * v.x + this.y * v.y + this.z * v.z;
+            }
+            Normalize() {
+                let f = 1 / this.Magnitude();
+                this.x *= f;
+                this.y *= f;
+                this.z *= f;
+            }
+            NormalizeSafe() {
+                let f = this.Magnitude();
+                if (f == 0)
+                    return;
+                this.x *= f;
+                this.y *= f;
+                this.z *= f;
+            }
+            Cross(v) {
+                return new Vec3(this.y * v.z - this.z * v.y, this.z * v.x - this.x * v.z, this.x * v.y - this.y * v.x);
+            }
+            AproxEqualsBox(vector, tolerance) {
+                return (Numerics.MathUtils.Abs(this.x - vector.x) <= tolerance) && (Numerics.MathUtils.Abs(this.y - vector.y) <= tolerance) && (Numerics.MathUtils.Abs(this.z - vector.z) <= tolerance);
+            }
+            ApproxEquals(vector, tolerance) {
+                return this.Distance(vector) <= tolerance;
+            }
+            RotateAround(angle, axis) {
+                let quaternion = Numerics.Quat.AngleAxis(0, axis);
+                quaternion = quaternion.Conjugate();
+                let worldSpaceVector = quaternion.Transform(this);
+                quaternion = Numerics.Quat.AngleAxis(angle, axis);
+                worldSpaceVector = quaternion.Transform(worldSpaceVector);
+                return worldSpaceVector;
+            }
+            IntersectsTriangle(p0, p1, p2) {
+                let v0 = Vec3.Sub(p1, p0);
+                let v1 = Vec3.Sub(p2, p0);
+                let v2 = Vec3.Sub(this, p0);
+                let dot00 = v0.SqrMagnitude();
+                let dot01 = v0.Dot(v1);
+                let dot02 = v0.Dot(v2);
+                let dot11 = v1.SqrMagnitude();
+                let dot12 = v1.Dot(v2);
+                let invDenom = 1 / (dot00 * dot11 - dot01 * dot01);
+                let u = (dot11 * dot02 - dot01 * dot12) * invDenom;
+                let v = (dot00 * dot12 - dot01 * dot02) * invDenom;
+                return (u > 0) && (v > 0) && (u + v < 1);
+            }
+            Reflect(planeNormal) {
+                return Vec3.Sub(this, Vec3.MulN(planeNormal, this.Dot(planeNormal) * 2));
+            }
+            Refract(normal, refractionIndex) {
+                let cosI = -normal.Dot(this);
+                let sinT2 = refractionIndex * refractionIndex * (1.0 - cosI * cosI);
+                if (sinT2 > 1.0)
+                    return this;
+                let cosT = Numerics.MathUtils.Sqrt(1.0 - sinT2);
+                return Vec3.Add(Vec3.MulN(this, refractionIndex), Vec3.MulN(normal, (refractionIndex * cosI - cosT)));
+            }
+            InersectNormal(normal) {
+                return Vec3.MulN(normal, this.Dot(normal));
+            }
+            InersectRay(rayOrigin, rayDirection) {
+                let v = Vec3.Sub(this, rayOrigin);
+                return Vec3.Add(Vec3.MulN(rayDirection, v.Dot(rayDirection)), rayOrigin);
+            }
+            InersectLine(line) {
+                let pointOffset = Vec3.Sub(this, line.point1);
+                let vector = Vec3.Normalize(Vec3.Sub(line.point2, line.point1));
+                return Vec3.Add(Vec3.MulN(vector, pointOffset.Dot(vector)), line.point1);
+            }
+            InersectPlane(planeNormal, planeLocation) {
+                let v = Vec3.Sub(this, planeLocation);
+                return Vec3.Sub(this, Vec3.MulN(planeNormal, v.Dot(planeNormal)));
+            }
+            static Distance(v0, v1) {
+                return Vec3.Sub(v1, v0).Magnitude();
+            }
+            static DistanceSquared(v0, v1) {
+                return Vec3.Sub(v1, v0).SqrMagnitude();
+            }
+            static Angle(from, to) {
+                let v = Vec3.Dot(Vec3.Normalize(from), Vec3.Normalize(to));
+                return Numerics.MathUtils.Acos(Numerics.MathUtils.Clamp(v, -1, 1)) * Numerics.MathUtils.RAD_TO_DEG;
+            }
+            static ClampMagnitude(v, maxLength) {
+                let nor = v.Clone();
+                let sqrMagnitude = nor.SqrMagnitude();
+                if (sqrMagnitude > (maxLength * maxLength))
+                    nor = Vec3.MulN(nor, (maxLength / Numerics.MathUtils.Sqrt(sqrMagnitude)));
+                return nor;
+            }
+            static Normalize(v) {
+                return Vec3.MulN(v, (1 / v.Magnitude()));
+            }
+            static NormalizeSafe(v) {
+                let dis = v.Magnitude();
+                if (dis == 0)
+                    return Vec3.zero;
+                return Vec3.MulN(v, 1 / dis);
+            }
+            static Dot(v0, v1) {
+                return v0.Dot(v1);
+            }
+            static Cross(v0, v1) {
+                return v0.Cross(v1);
+            }
+            static OrthoNormalVector(v) {
+                let res = new Vec3();
+                if (Numerics.MathUtils.Abs(v.z) > Vec3.OVER_SQRT2) {
+                    let a = v.y * v.y + v.z * v.z;
+                    let k = 1 / Numerics.MathUtils.Sqrt(a);
+                    res.x = 0;
+                    res.y = -v.z * k;
+                    res.z = v.y * k;
+                }
+                else {
+                    let a = v.x * v.x + v.y * v.y;
+                    let k = 1 / Numerics.MathUtils.Sqrt(a);
+                    res.x = -v.y * k;
+                    res.y = v.x * k;
+                    res.z = 0;
+                }
+                return res;
+            }
+            static SlerpUnclamped(from, to, t) {
+                let scale0;
+                let scale1;
+                let len2 = to.Magnitude();
+                let len1 = from.Magnitude();
+                let v2 = Vec3.DivN(to, len2);
+                let v1 = Vec3.DivN(from, len1);
+                let len = (len2 - len1) * t + len1;
+                let cosom = Vec3.Dot(v1, v2);
+                if (cosom > 1 - 1e-6) {
+                    scale0 = 1 - t;
+                    scale1 = t;
+                }
+                else if (cosom < -1 + 1e-6) {
+                    let axis = Vec3.OrthoNormalVector(from);
+                    let q = Numerics.Quat.AngleAxis(180.0 * t, axis);
+                    let v = Vec3.MulN(q.Transform(from), len);
+                    return v;
+                }
+                else {
+                    let omega = Numerics.MathUtils.Acos(cosom);
+                    let sinom = Numerics.MathUtils.Sin(omega);
+                    scale0 = Numerics.MathUtils.Sin((1 - t) * omega) / sinom;
+                    scale1 = Numerics.MathUtils.Sin(t * omega) / sinom;
+                }
+                v2 = Vec3.MulN(Vec3.Add(Vec3.MulN(v2, scale1), Vec3.MulN(v1, scale0)), len);
+                return v2;
+            }
+            static Slerp(from, to, t) {
+                return t <= 0 ? from.Clone() : (t >= 1 ? to.Clone() : Vec3.SlerpUnclamped(from, to, t));
+            }
+            static LerpUnclamped(from, to, t) {
+                return new Vec3(from.x + (to.x - from.x) * t, from.y + (to.y - from.y) * t, from.z + (to.z - from.z) * t);
+            }
+            static Lerp(from, to, t) {
+                return t <= 0 ? from.Clone() : (t >= 1 ? to.Clone() : Vec3.LerpUnclamped(from, to, t));
+            }
+            static SmoothDamp(current, target, currentVelocity, smoothTime, maxSpeed, deltaTime) {
+                smoothTime = Numerics.MathUtils.Max(0.0001, smoothTime);
+                let num = 2 / smoothTime;
+                let num2 = num * deltaTime;
+                let num3 = 1 / (1 + num2 + 0.48 * num2 * num2 + 0.235 * num2 * num2 * num2);
+                let maxLength = maxSpeed * smoothTime;
+                let vector = Vec3.Sub(current, target);
+                vector.ClampMagnitude(maxLength);
+                target = Vec3.Sub(current, vector);
+                let v = Vec3.MulN(Vec3.Add(currentVelocity[0], Vec3.MulN(vector, num)), deltaTime);
+                currentVelocity[0] = Vec3.MulN(Vec3.Sub(currentVelocity[0], Vec3.MulN(v, num)), num3);
+                let v2 = Vec3.Add(target, Vec3.MulN(Vec3.Add(vector, v), num3));
+                if (Vec3.Dot(Vec3.Sub(target, current), Vec3.Sub(v2, target)) > 0) {
+                    v2 = target;
+                    currentVelocity[0].Set(0, 0, 0);
+                }
+                return v2;
+            }
+            static MoveTowards(current, target, maxDistanceDelta) {
+                let delta = Vec3.Sub(target, current);
+                let sqrDelta = delta.SqrMagnitude();
+                let sqrDistance = maxDistanceDelta * maxDistanceDelta;
+                if (sqrDelta > sqrDistance) {
+                    let magnitude = Numerics.MathUtils.Sqrt(sqrDelta);
+                    if (magnitude > 1e-6) {
+                        delta = Vec3.Add(Vec3.DivN(Vec3.MulN(delta, maxDistanceDelta), magnitude), current);
+                        return delta;
+                    }
+                    return current.Clone();
+                }
+                return target.Clone();
+            }
+            static ClampedMove(lhs, rhs, clampedDelta) {
+                let delta = rhs - lhs;
+                if (delta > 0)
+                    return lhs + Numerics.MathUtils.Min(delta, clampedDelta);
+                return lhs - Numerics.MathUtils.Min(-delta, clampedDelta);
+            }
+            static RotateTowards(current, target, maxRadiansDelta, maxMagnitudeDelta) {
+                let len1 = current.Magnitude();
+                let len2 = target.Magnitude();
+                if (len1 > 1e-6 && len2 > 1e-6) {
+                    let from = Vec3.DivN(current, len1);
+                    let to = Vec3.DivN(target, len2);
+                    let cosom = Vec3.Dot(from, to);
+                    if (cosom > 1 - 1e-6)
+                        return Vec3.MoveTowards(current, target, maxMagnitudeDelta);
+                    if (cosom < -1 + 1e-6) {
+                        let q = Numerics.Quat.AngleAxis(maxRadiansDelta * Numerics.MathUtils.RAD_TO_DEG, Vec3.OrthoNormalVector(from));
+                        return Vec3.MulN(q.Transform(from), Vec3.ClampedMove(len1, len2, maxMagnitudeDelta));
+                    }
+                    else {
+                        let angle = Numerics.MathUtils.Acos(cosom);
+                        let q = Numerics.Quat.AngleAxis(Numerics.MathUtils.Min(maxRadiansDelta, angle) * Numerics.MathUtils.RAD_TO_DEG, Vec3.Normalize(Vec3.Cross(from, to)));
+                        return Vec3.MulN(q.Transform(from), Vec3.ClampedMove(len1, len2, maxMagnitudeDelta));
+                    }
+                }
+                return Vec3.MoveTowards(current, target, maxMagnitudeDelta);
+            }
+            static OrthoNormalize(va, vb, vc) {
+                va[0].Normalize();
+                vb[0] = Vec3.Sub(vb[0], Vec3.Project(vb[0], va[0]));
+                vb[0].Normalize();
+                vc[0] = Vec3.Sub(vc[0], Vec3.Project(vc[0], va[0]));
+                vc[0] = Vec3.Sub(vc[0], Vec3.Project(vc[0], vb[0]));
+                vc[0].Normalize();
+            }
+            static Project(vector, onNormal) {
+                let num = onNormal.SqrMagnitude();
+                if (num < 1.175494e-38)
+                    return Vec3.zero;
+                let num2 = Vec3.Dot(vector, onNormal);
+                let v3 = Vec3.MulN(onNormal, (num2 / num));
+                return v3;
+            }
+            static ProjectOnPlane(vector, planeNormal) {
+                return Vec3.Add(Vec3.Negate(Vec3.Project(vector, planeNormal)), vector);
+            }
+            static Reflect(inDirection, inNormal) {
+                let num = -2 * Vec3.Dot(inNormal, inDirection);
+                inNormal = Vec3.MulN(inNormal, num);
+                inNormal = Vec3.Add(inNormal, inDirection);
+                return inNormal;
+            }
+            static Hermite(value1, tangent1, value2, tangent2, t) {
+                let weightSquared = t * t;
+                let weightCubed = t * weightSquared;
+                let value1Blend = 2 * weightCubed - 3 * weightSquared + 1;
+                let tangent1Blend = weightCubed - 2 * weightSquared + t;
+                let value2Blend = -2 * weightCubed + 3 * weightSquared;
+                let tangent2Blend = weightCubed - weightSquared;
+                return new Vec3(value1.x * value1Blend + value2.x * value2Blend + tangent1.x * tangent1Blend + tangent2.x * tangent2Blend, value1.y * value1Blend + value2.y * value2Blend + tangent1.y * tangent1Blend + tangent2.y * tangent2Blend, value1.z * value1Blend + value2.z * value2Blend + tangent1.z * tangent1Blend + tangent2.z * tangent2Blend);
+            }
+            static DegToRad(v) {
+                return new Vec3(Numerics.MathUtils.DegToRad(v.x), Numerics.MathUtils.DegToRad(v.y), Numerics.MathUtils.DegToRad(v.z));
+            }
+            static RadToDeg(v) {
+                return new Vec3(Numerics.MathUtils.RadToDeg(v.x), Numerics.MathUtils.RadToDeg(v.y), Numerics.MathUtils.RadToDeg(v.z));
+            }
+            static MaxN(v, value) {
+                return new Vec3(Numerics.MathUtils.Max(v.x, value), Numerics.MathUtils.Max(v.y, value), Numerics.MathUtils.Max(v.z, value));
+            }
+            static Max(v, v1) {
+                return new Vec3(Numerics.MathUtils.Max(v.x, v1.x), Numerics.MathUtils.Max(v.y, v1.y), Numerics.MathUtils.Max(v.z, v1.z));
+            }
+            static MinN(v, v1) {
+                return new Vec3(Numerics.MathUtils.Min(v.x, v1), Numerics.MathUtils.Min(v.y, v1), Numerics.MathUtils.Min(v.z, v1));
+            }
+            static Min(v, v1) {
+                return new Vec3(Numerics.MathUtils.Min(v.x, v1.x), Numerics.MathUtils.Min(v.y, v1.y), Numerics.MathUtils.Min(v.z, v1.z));
+            }
+            static Abs(v) {
+                return new Vec3(Numerics.MathUtils.Abs(v.x), Numerics.MathUtils.Abs(v.y), Numerics.MathUtils.Abs(v.z));
+            }
+            static Pow(v, value) {
+                return new Vec3(Numerics.MathUtils.Pow(v.x, value), Numerics.MathUtils.Pow(v.y, value), Numerics.MathUtils.Pow(v.z, value));
+            }
+            static Floor(v) {
+                return new Vec3(Numerics.MathUtils.Floor(v.x), Numerics.MathUtils.Floor(v.y), Numerics.MathUtils.Floor(v.z));
+            }
+            static Round(v) {
+                return new Vec3(Numerics.MathUtils.Round(v.x), Numerics.MathUtils.Round(v.y), Numerics.MathUtils.Round(v.z));
+            }
+        }
+        Vec3.OVER_SQRT2 = 0.7071067811865475244008443621048490;
+        Numerics.Vec3 = Vec3;
+    })(Numerics = RC.Numerics || (RC.Numerics = {}));
+})(RC || (RC = {}));
+var RC;
+(function (RC) {
+    var Numerics;
+    (function (Numerics) {
+        class Vec4 {
+            constructor(x = 0, y = 0, z = 0, w = 0) {
+                this.x = x;
+                this.y = y;
+                this.z = z;
+                this.w = w;
+            }
+            static get one() {
+                return new Vec4(1, 1, 1, 1);
+            }
+            static get minusOne() {
+                return new Vec4(-1, -1, -1, -1);
+            }
+            static get zero() {
+                return new Vec4(0, 0, 0, 0);
+            }
+            static get right() {
+                return new Vec4(1, 0, 0, 0);
+            }
+            ;
+            static get left() {
+                return new Vec4(-1, 0, 0, 0);
+            }
+            ;
+            static get up() {
+                return new Vec4(0, 1, 0, 0);
+            }
+            ;
+            static get down() {
+                return new Vec4(0, -1, 0, 0);
+            }
+            ;
+            static get forward() {
+                return new Vec4(0, 0, 1, 0);
+            }
+            ;
+            static get height() {
+                return new Vec4(0, 0, 0, 1);
+            }
+            ;
+            static get low() {
+                return new Vec4(0, 0, 0, -1);
+            }
+            ;
+            static get backward() {
+                return new Vec4(0, 0, -1, 0);
+            }
+            ;
+            static get positiveInfinityVector() {
+                return new Vec4(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
+            }
+            ;
+            static get negativeInfinityVector() {
+                return new Vec4(Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY);
+            }
+            ;
+            static Add(v1, v2) {
+                v1 = v1.Clone();
+                v1.x += v2.x;
+                v1.y += v2.y;
+                v1.z += v2.z;
+                v1.w += v2.w;
+                return v1;
+            }
+            static AddN(v, n) {
+                v = v.Clone();
+                v.x += n;
+                v.y += n;
+                v.z += n;
+                v.w += n;
+                return v;
+            }
+            static Sub(v1, v2) {
+                v1 = v1.Clone();
+                v1.x -= v2.x;
+                v1.y -= v2.y;
+                v1.z -= v2.z;
+                v1.w -= v2.w;
+                return v1;
+            }
+            static SubN(v, n) {
+                v = v.Clone();
+                v.x -= n;
+                v.y -= n;
+                v.z -= n;
+                v.w -= n;
+                return v;
+            }
+            static SubN2(n, v) {
+                v = v.Clone();
+                v.x = n - v.x;
+                v.y = n - v.y;
+                v.z = n - v.z;
+                v.w = n - v.w;
+                return v;
+            }
+            static Mul(v1, v2) {
+                v1 = v1.Clone();
+                v1.x *= v2.x;
+                v1.y *= v2.y;
+                v1.z *= v2.z;
+                v1.w *= v2.w;
+                return v1;
+            }
+            static MulN(v, n) {
+                v = v.Clone();
+                v.x *= n;
+                v.y *= n;
+                v.z *= n;
+                v.w *= n;
+                return v;
+            }
+            static Div(v1, v2) {
+                v1 = v1.Clone();
+                v1.x /= v2.x;
+                v1.y /= v2.y;
+                v1.z /= v2.z;
+                v1.w /= v2.w;
+                return v1;
+            }
+            static DivN(v, n) {
+                v = v.Clone();
+                v.x /= n;
+                v.y /= n;
+                v.z /= n;
+                v.w /= n;
+                return v;
+            }
+            static DivN2(n, v) {
+                v = v.Clone();
+                v.x = n / v.x;
+                v.y = n / v.y;
+                v.z = n / v.z;
+                v.w = n / v.w;
+                return v;
+            }
+            static Equals(v1, v2) {
+                if (v1 == null || v2 == null)
+                    return false;
+                return v1.x == v2.x && v1.y == v2.y && v1.z == v2.z && v1.w == v2.w;
+            }
+            EqualsTo(v) {
+                return Vec4.Equals(this, v);
+            }
+            ToString() {
+                return "(" + this.x + "," + this.y + "," + this.z + "," + this.w + ")";
+            }
+            Clone() {
+                let v = new Vec4();
+                v.x = this.x;
+                v.y = this.y;
+                v.z = this.z;
+                v.w = this.w;
+                return v;
+            }
+            CopyFrom(v) {
+                this.x = v.x;
+                this.y = v.y;
+                this.z = v.z;
+                this.w = v.w;
+            }
+            Set(x, y, z, w) {
+                this.x = x;
+                this.y = y;
+                this.z = z;
+                this.w = w;
+            }
+            ClampMagnitude(maxLength) {
+                let sqrMagnitude = this.SqrMagnitude();
+                if (sqrMagnitude > (maxLength * maxLength)) {
+                    let f = maxLength / Numerics.MathUtils.Sqrt(sqrMagnitude);
+                    this.x *= f;
+                    this.y *= f;
+                    this.z *= f;
+                    this.w *= f;
+                }
+            }
+            Magnitude() {
+                return Numerics.MathUtils.Sqrt(this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w);
+            }
+            SqrMagnitude() {
+                return this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w;
+            }
+            Distance(vector) {
+                return Vec4.Sub(vector, this).Magnitude();
+            }
+            DistanceSquared(vector) {
+                return Vec4.Sub(vector, this).SqrMagnitude();
+            }
+            Negate() {
+                this.x = -this.x;
+                this.y = -this.y;
+                this.z = -this.z;
+                this.w = -this.w;
+            }
+            Scale(scale) {
+                this.x *= scale.x;
+                this.y *= scale.y;
+                this.z *= scale.z;
+                this.w *= scale.w;
+            }
+            Dot(vector) {
+                return this.x * vector.x + this.y * vector.y + this.z * vector.z + this.w * vector.w;
+            }
+            Normalize() {
+                let f = 1 / this.Magnitude();
+                this.x *= f;
+                this.y *= f;
+                this.z *= f;
+                this.w *= f;
+            }
+            NormalizeSafe() {
+                let f = this.Magnitude();
+                if (f == 0)
+                    return;
+                this.x *= f;
+                this.y *= f;
+                this.z *= f;
+                this.w *= f;
+            }
+            AproxEqualsBox(vector, tolerance) {
+                return (Numerics.MathUtils.Abs(this.x - vector.x) <= tolerance) &&
+                    (Numerics.MathUtils.Abs(this.y - vector.y) <= tolerance) &&
+                    (Numerics.MathUtils.Abs(this.z - vector.z) <= tolerance) &&
+                    (Numerics.MathUtils.Abs(this.w - vector.w) <= tolerance);
+            }
+            ApproxEquals(vector, tolerance) {
+                return this.Distance(vector) <= tolerance;
+            }
+            static Distance(v0, v1) {
+                return Vec4.Sub(v1, v0).Magnitude();
+            }
+            static DistanceSquared(v0, v1) {
+                return Vec4.Sub(v1, v0).SqrMagnitude();
+            }
+            static ClampMagnitude(v, maxLength) {
+                let nor = v.Clone();
+                let sqrMagnitude = nor.SqrMagnitude();
+                if (sqrMagnitude > (maxLength * maxLength))
+                    nor = Vec4.MulN(nor, (maxLength / Numerics.MathUtils.Sqrt(sqrMagnitude)));
+                return nor;
+            }
+            static Normalize(v) {
+                return Vec4.MulN(v, (1 / v.Magnitude()));
+            }
+            static NormalizeSafe(v) {
+                let f = v.Magnitude();
+                if (f == 0)
+                    return new Vec4();
+                return Vec4.MulN(v, (1 / f));
+            }
+            static LerpUnclamped(from, to, t) {
+                return new Vec4(from.x + (to.x - from.x) * t, from.y + (to.y - from.y) * t, from.z + (to.z - from.z) * t, from.w + (to.w - from.w) * t);
+            }
+            static Lerp(from, to, t) {
+                return t <= 0 ? from.Clone() : (t >= 1 ? to.Clone() : Vec4.LerpUnclamped(from, to, t));
+            }
+            static Abs(v) {
+                return new Vec4(Numerics.MathUtils.Abs(v.x), Numerics.MathUtils.Abs(v.y), Numerics.MathUtils.Abs(v.z), Numerics.MathUtils.Abs(v.w));
+            }
+            static Pow(v, power) {
+                return new Vec4(Numerics.MathUtils.Pow(v.x, power), Numerics.MathUtils.Pow(v.y, power), Numerics.MathUtils.Pow(v.z, power), Numerics.MathUtils.Pow(v.w, power));
+            }
+            static Floor(v) {
+                return new Vec4(Numerics.MathUtils.Floor(v.x), Numerics.MathUtils.Floor(v.y), Numerics.MathUtils.Floor(v.z), Numerics.MathUtils.Floor(v.w));
+            }
+            static Round(v) {
+                return new Vec4(Numerics.MathUtils.Round(v.x), Numerics.MathUtils.Round(v.y), Numerics.MathUtils.Round(v.z), Numerics.MathUtils.Round(v.w));
+            }
+        }
+        Numerics.Vec4 = Vec4;
+    })(Numerics = RC.Numerics || (RC.Numerics = {}));
 })(RC || (RC = {}));
 //# sourceMappingURL=rc.js.map

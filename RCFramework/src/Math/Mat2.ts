@@ -110,11 +110,13 @@ namespace RC.Numerics {
 		}
 
 		public static Equals(m1: Mat2, m2: Mat2): boolean {
+			if (m1 == null || m2 == null)
+				return false;
 			return m1.x.EqualsTo(m2.x) && m1.y.EqualsTo(m2.y);
 		}
 
 		public EqualsTo(m: Mat2): boolean {
-			return this.x.EqualsTo(m.x) && this.y.EqualsTo(m.y);
+			return Mat2.Equals(this, m);
 		}
 
 		public ToString(): string {

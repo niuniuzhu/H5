@@ -10,7 +10,7 @@
 	  "strict": true,
 	  "outFile": "./bin/js/rc.js",
 	  "noImplicitReturns": true,
-	//   "declaration": true
+	  "declaration": true
 	},
     "include": [
         "src/**/*"

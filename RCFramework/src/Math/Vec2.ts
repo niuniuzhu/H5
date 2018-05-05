@@ -113,12 +113,14 @@ namespace RC.Numerics {
 			return v;
 		}
 
-		public static Equals(p1: Vec2, p2: Vec2): boolean {
-			return p1.x == p2.x && p1.y == p2.y;
+		public static Equals(v1: Vec2, v2: Vec2): boolean {
+			if (v1 == null || v2 == null)
+				return false;
+			return v1.x == v2.x && v1.y == v2.y;
 		}
 
 		public EqualsTo(v: Vec2): boolean {
-			return this.x == v.x && this.y == v.y;
+			return Vec2.Equals(this, v);
 		}
 
 		public ToString(): string {

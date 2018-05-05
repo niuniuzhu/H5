@@ -1,7 +1,7 @@
 namespace Shared.Event {
 	export class SyncEvent extends BaseEvent {
-		public static readonly CREATE_BATTLE: number = 10;
-		public static readonly DESTROY_BATTLE: number = 11;
+		public static readonly BATTLE_CREATED: number = 10;
+		public static readonly BATTLE_DESTROIED: number = 11;
 		public static readonly WIN: number = 13;
 
 		public static readonly ENTITY_CREATED: number = 20;
@@ -10,7 +10,6 @@ namespace Shared.Event {
 		public static readonly ENTITY_STATE_CHANGED: number = 23;
 		public static readonly ENTITY_SYNC_PROPS: number = 24;
 
-		public static readonly USE_SKILL: number = 31;
 		public static readonly SET_FRAME_ACTION: number = 99;
 
 		private static readonly POOL: RC.Collections.Stack<SyncEvent> = new RC.Collections.Stack<SyncEvent>();
@@ -29,6 +28,18 @@ namespace Shared.Event {
 			SyncEvent.Release(this);
 		}
 
+		public static CreateBattle(id:string): void {
+			let e = this.Get();
+			e._type = SyncEvent.BATTLE_CREATED;
+			e.genericId = id;
+			e.BeginInvoke();
+		}
+
+		public static DestroyBattle(): void {
+			let e = this.Get();
+			e._type = SyncEvent.BATTLE_DESTROIED;
+			e.BeginInvoke();
+		}
 
 		public static CreateEntity(type: string, param: Shared.Model.EntityParam): void {
 			let e = this.Get();

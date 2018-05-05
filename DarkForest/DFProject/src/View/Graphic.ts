@@ -5,6 +5,8 @@ namespace View {
 		private _position: RC.Numerics.Vec3;
 		private _rotation: RC.Numerics.Quat;
 
+		public get root(): fairygui.GLoader { return this._root; }
+
 		public get position(): RC.Numerics.Vec3 { return this._position.Clone(); }
 		public set position(value: RC.Numerics.Vec3) {
 			if (value.EqualsTo(this._position))
@@ -12,6 +14,7 @@ namespace View {
 			this._position = value.Clone();
 			this.UpdatePosition();
 		}
+
 		public get rotation(): RC.Numerics.Quat { return this._rotation.Clone(); }
 		public set rotation(value: RC.Numerics.Quat) {
 			if (value.EqualsTo(this._rotation))
@@ -25,7 +28,7 @@ namespace View {
 			this._root = new fairygui.GLoader();
 		}
 
-		protected OnCreateInternal(id: string): void {
+		public Load(id: string): void {
 			this._root.url = fairygui.UIPackage.getItemURL("global", id);
 		}
 

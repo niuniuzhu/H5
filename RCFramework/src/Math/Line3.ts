@@ -47,5 +47,15 @@ namespace RC.Numerics {
 			let mul2 = (dot1 + dot2 * mul1) / dot4;
 			return new Line3(Vec3.Add(this.point1, Vec3.MulN(vector3, mul1)), Vec3.Add(line.point1, Vec3.MulN(vector2, mul2)));
 		}
+
+		public static Equals(l1: Line3, l2: Line3): boolean {
+			if (l1 == null || l2 == null)
+				return false;
+			return (l1.point1.EqualsTo(l2.point1) && l1.point2.EqualsTo(l2.point2));
+		}
+
+		public EqualsTo(l: Line3): boolean {
+			return Line3.Equals(this, l);
+		}
 	}
 }
