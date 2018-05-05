@@ -2914,6 +2914,11 @@ var RC;
                 this.w.z = 0;
                 this.w.w = 1;
             }
+            SetTranslate(translate) {
+                this.w.x = translate.x;
+                this.w.y = translate.y;
+                this.w.z = translate.z;
+            }
             Transpose() {
                 let m00 = this.x.x;
                 let m01 = this.y.x;

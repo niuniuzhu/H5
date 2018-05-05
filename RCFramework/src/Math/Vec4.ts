@@ -52,110 +52,6 @@ namespace RC.Numerics {
 			this.w = w;
 		}
 
-		public static Add(v1: Vec4, v2: Vec4): Vec4 {
-			v1 = v1.Clone();
-			v1.x += v2.x;
-			v1.y += v2.y;
-			v1.z += v2.z;
-			v1.w += v2.w;
-			return v1;
-		}
-
-		public static AddN(v: Vec4, n: number): Vec4 {
-			v = v.Clone();
-			v.x += n;
-			v.y += n;
-			v.z += n;
-			v.w += n;
-			return v;
-		}
-
-		public static Sub(v1: Vec4, v2: Vec4): Vec4 {
-			v1 = v1.Clone();
-			v1.x -= v2.x;
-			v1.y -= v2.y;
-			v1.z -= v2.z;
-			v1.w -= v2.w;
-			return v1;
-		}
-
-		public static SubN(v: Vec4, n: number): Vec4 {
-			v = v.Clone();
-			v.x -= n;
-			v.y -= n;
-			v.z -= n;
-			v.w -= n;
-			return v;
-		}
-
-		public static SubN2(n: number, v: Vec4): Vec4 {
-			v = v.Clone();
-			v.x = n - v.x;
-			v.y = n - v.y;
-			v.z = n - v.z;
-			v.w = n - v.w;
-			return v;
-		}
-
-		public static Mul(v1: Vec4, v2: Vec4): Vec4 {
-			v1 = v1.Clone();
-			v1.x *= v2.x;
-			v1.y *= v2.y;
-			v1.z *= v2.z;
-			v1.w *= v2.w;
-			return v1;
-		}
-
-		public static MulN(v: Vec4, n: number): Vec4 {
-			v = v.Clone();
-			v.x *= n;
-			v.y *= n;
-			v.z *= n;
-			v.w *= n;
-			return v;
-		}
-
-		public static Div(v1: Vec4, v2: Vec4): Vec4 {
-			v1 = v1.Clone();
-			v1.x /= v2.x;
-			v1.y /= v2.y;
-			v1.z /= v2.z;
-			v1.w /= v2.w;
-			return v1;
-		}
-
-		public static DivN(v: Vec4, n: number): Vec4 {
-			v = v.Clone();
-			v.x /= n;
-			v.y /= n;
-			v.z /= n;
-			v.w /= n;
-			return v;
-		}
-
-		public static DivN2(n: number, v: Vec4): Vec4 {
-			v = v.Clone();
-			v.x = n / v.x;
-			v.y = n / v.y;
-			v.z = n / v.z;
-			v.w = n / v.w;
-			return v;
-		}
-
-		public static Equals(v1: Vec4, v2: Vec4): boolean {
-			if (v1 == null || v2 == null)
-				return false;
-			return v1.x == v2.x && v1.y == v2.y && v1.z == v2.z && v1.w == v2.w;
-		}
-
-		public EqualsTo(v: Vec4): boolean {
-			return Vec4.Equals(this, v);
-		}
-
-		public ToString(): string {
-			return "(" + this.x + "," + this.y + "," + this.z + "," + this.w + ")";
-		}
-
 		public Clone(): Vec4 {
 			let v = new Vec4();
 			v.x = this.x;
@@ -177,6 +73,94 @@ namespace RC.Numerics {
 			this.y = y;
 			this.z = z;
 			this.w = w;
+		}
+
+		public Add(v: Vec4): Vec4 {
+			this.x += v.x;
+			this.y += v.y;
+			this.z += v.z;
+			this.w += v.w;
+			return this;
+		}
+
+		public AddN(n: number): Vec4 {
+			this.x += n;
+			this.y += n;
+			this.z += n;
+			this.w += n;
+			return this;
+		}
+
+		public Sub(v: Vec4): Vec4 {
+			this.x -= v.x;
+			this.y -= v.y;
+			this.z -= v.z;
+			this.w -= v.w;
+			return this;
+		}
+
+		public SubN(n: number): Vec4 {
+			this.x -= n;
+			this.y -= n;
+			this.z -= n;
+			this.w -= n;
+			return this;
+		}
+
+		public SubN2(n: number): Vec4 {
+			this.x = n - this.x;
+			this.y = n - this.y;
+			this.z = n - this.z;
+			this.w = n - this.w;
+			return this;
+		}
+
+		public Mul(v: Vec4): Vec4 {
+			this.x *= v.x;
+			this.y *= v.y;
+			this.z *= v.z;
+			this.w *= v.w;
+			return this;
+		}
+
+		public MulN(n: number): Vec4 {
+			this.x *= n;
+			this.y *= n;
+			this.z *= n;
+			this.w *= n;
+			return this;
+		}
+
+		public Div(v: Vec4): Vec4 {
+			this.x /= v.x;
+			this.y /= v.y;
+			this.z /= v.z;
+			this.w /= v.w;
+			return this;
+		}
+
+		public DivN(n: number): Vec4 {
+			this.x /= n;
+			this.y /= n;
+			this.z /= n;
+			this.w /= n;
+			return this;
+		}
+
+		public DivN2(n: number): Vec4 {
+			this.x = n / this.x;
+			this.y = n / this.y;
+			this.z = n / this.z;
+			this.w = n / this.w;
+			return this;
+		}
+
+		public Negate(): Vec4 {
+			this.x = -this.x;
+			this.y = -this.y;
+			this.z = -this.z;
+			this.w = -this.w;
+			return this;
 		}
 
 		public ClampMagnitude(maxLength: number): void {
@@ -204,13 +188,6 @@ namespace RC.Numerics {
 
 		public DistanceSquared(vector: Vec4): number {
 			return Vec4.Sub(vector, this).SqrMagnitude();
-		}
-
-		public Negate(): void {
-			this.x = -this.x;
-			this.y = -this.y;
-			this.z = -this.z;
-			this.w = -this.w;
 		}
 
 		public Scale(scale: Vec4): void {
@@ -251,6 +228,70 @@ namespace RC.Numerics {
 
 		public ApproxEquals(vector: Vec4, tolerance: number): boolean {
 			return this.Distance(vector) <= tolerance;
+		}
+
+		public EqualsTo(v: Vec4): boolean {
+			return Vec4.Equals(this, v);
+		}
+
+		public ToString(): string {
+			return "(" + this.x + "," + this.y + "," + this.z + "," + this.w + ")";
+		}
+
+		public static Add(v1: Vec4, v2: Vec4): Vec4 {
+			v1 = v1.Clone();
+			return v1.Add(v2);
+		}
+
+		public static AddN(v: Vec4, n: number): Vec4 {
+			v = v.Clone();
+			return v.AddN(n);
+		}
+
+		public static Sub(v1: Vec4, v2: Vec4): Vec4 {
+			v1 = v1.Clone();
+			return v1.Sub(v2);
+		}
+
+		public static SubN(v: Vec4, n: number): Vec4 {
+			v = v.Clone();
+			return v.SubN(n);
+		}
+
+		public static SubN2(n: number, v: Vec4): Vec4 {
+			v = v.Clone();
+			return v.SubN2(n);
+		}
+
+		public static Mul(v1: Vec4, v2: Vec4): Vec4 {
+			v1 = v1.Clone();
+			return v1.Mul(v2);
+		}
+
+		public static MulN(v: Vec4, n: number): Vec4 {
+			v = v.Clone();
+			return v.MulN(n);
+		}
+
+		public static Div(v1: Vec4, v2: Vec4): Vec4 {
+			v1 = v1.Clone();
+			return v1.Div(v2);
+		}
+
+		public static DivN(v: Vec4, n: number): Vec4 {
+			v = v.Clone();
+			return v.DivN(n);
+		}
+
+		public static DivN2(n: number, v: Vec4): Vec4 {
+			v = v.Clone();
+			return v.DivN2(n);
+		}
+
+		public static Equals(v1: Vec4, v2: Vec4): boolean {
+			if (v1 == null || v2 == null)
+				return false;
+			return v1.x == v2.x && v1.y == v2.y && v1.z == v2.z && v1.w == v2.w;
 		}
 
 		public static Distance(v0: Vec4, v1: Vec4): number {

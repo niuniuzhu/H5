@@ -6,7 +6,7 @@ namespace View {
 			super(manager);
 		}
 
-		public OnCreate(owner: View.CEntity, id: string): void {
+		public OnCreate(owner: CEntity, id: string): void {
 			this.Load(id);
 		}
 	}

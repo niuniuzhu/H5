@@ -1,12 +1,12 @@
 namespace Game {
 	export class GameMain {
 		constructor() {
-			Laya.init(600, 800, Laya.WebGL);
+			Laya.init(1334, 750, Laya.WebGL);
 			laya.utils.Stat.show(0, 0);
-			Laya.stage.scaleMode = "showall";
-			Laya.stage.alignH = "left";
-			Laya.stage.alignV = "top";
-			Laya.stage.screenMode = "vertical";
+			Laya.stage.scaleMode = Laya.Stage.SCALE_FIXED_WIDTH;
+			Laya.stage.alignH = Laya.Stage.ALIGN_LEFT;
+			Laya.stage.alignV = Laya.Stage.ALIGN_TOP;
+			Laya.stage.screenMode = Laya.Stage.SCREEN_HORIZONTAL;
 			this.LoadDefs();
 		}
 
@@ -47,7 +47,7 @@ namespace Game {
 			param.framesPerKeyFrame = 4;
 			param.frameRate = 20;
 			param.uid = "user";
-			param.id = "m1";
+			param.id = "m0";
 			param.rndSeed = Shared.Timer.utcTime;
 
 			let player = new Logic.Player();

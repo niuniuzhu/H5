@@ -67,6 +67,9 @@ namespace View {
 		}
 
 		private UpdateState(context: Shared.UpdateContext): void {
+			this._entities.forEach((entity) => {
+				entity.OnUpdateState(context);
+			});
 		}
 	}
 }

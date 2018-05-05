@@ -12,115 +12,9 @@ namespace RC.Numerics {
 			this.y = y;
 		}
 
-		public static FromCross(xVector: Vec2): Mat2 {
-			return new Mat2(xVector, new Vec2(-xVector.y, xVector.x));
-		}
-
-		public static Abs(m: Mat2): Mat2 {
-			return new Mat2(Vec2.Abs(m.x), Vec2.Abs(m.y));
-		}
-
-		public static Transpose(m: Mat2): Mat2 {
-			return new Mat2
-				(
-				new Vec2(m.x.x, m.y.x),
-				new Vec2(m.x.y, m.y.y)
-				);
-		}
-
-		public static Invert(m: Mat2): Mat2 {
-			let determinant = 1 / (m.x.x * m.y.y - m.x.y * m.y.x);
-			let result = new Mat2();
-			result.x.x = m.y.y * determinant;
-			result.x.y = -m.x.y * determinant;
-			result.y.x = -m.y.x * determinant;
-			result.y.y = m.x.x * determinant;
-			return result;
-		}
-
-		public static Add(p1: Mat2, p2: Mat2): Mat2 {
-			let m = new Mat2();
-			m.x = Vec2.Add(p1.x, p2.x);
-			m.y = Vec2.Add(p1.y, p2.y);
-			return m;
-		}
-
-		public static AddN(p1: Mat2, p2: number): Mat2 {
-			let m = new Mat2();
-			m.x = Vec2.AddN(p1.x, p2);
-			m.y = Vec2.AddN(p1.y, p2);
-			return m;
-		}
-
-		public static Sub(p1: Mat2, p2: Mat2): Mat2 {
-			let m = new Mat2();
-			m.x = Vec2.Sub(p1.x, p2.x);
-			m.y = Vec2.Sub(p1.y, p2.y);
-			return m;
-		}
-
-		public static SubN(p1: Mat2, p2: number): Mat2 {
-			let m = new Mat2();
-			m.x = Vec2.SubN(p1.x, p2);
-			m.y = Vec2.SubN(p1.y, p2);
-			return m;
-		}
-
-		public static SubN2(p1: number, p2: Mat2): Mat2 {
-			let m = new Mat2();
-			m.x = Vec2.SubN2(p1, p2.x);
-			m.y = Vec2.SubN2(p1, p2.y);
-			return m;
-		}
-
-		public static Mul(m1: Mat2, m2: Mat2): Mat2 {
-			return new Mat2
-				(
-				new Vec2(m2.x.x * m1.x.x + m2.x.y * m1.y.x, m2.x.x * m1.x.y + m2.x.y * m1.y.y),
-				new Vec2(m2.y.x * m1.x.x + m2.y.y * m1.y.x, m2.y.x * m1.x.y + m2.y.y * m1.y.y)
-				);
-		}
-
-		public static MulN(p1: Mat2, p2: number): Mat2 {
-			let m = new Mat2();
-			m.x = Vec2.MulN(p1.x, p2);
-			m.y = Vec2.MulN(p1.y, p2);
-			return m;
-		}
-
-		public static Div(p1: Mat2, p2: Mat2): Mat2 {
-			let m = new Mat2();
-			m.x = Vec2.Div(p1.x, p2.x);
-			m.y = Vec2.Div(p1.y, p2.y);
-			return m;
-		}
-
-		public static DivN(p1: Mat2, p2: number): Mat2 {
-			let m = new Mat2();
-			m.x = Vec2.DivN(p1.x, p2);
-			m.y = Vec2.DivN(p1.y, p2);
-			return m;
-		}
-
-		public static DivN2(p1: number, p2: Mat2): Mat2 {
-			let m = new Mat2();
-			m.x = Vec2.DivN2(p1, p2.x);
-			m.y = Vec2.DivN2(p1, p2.y);
-			return m;
-		}
-
-		public static Equals(m1: Mat2, m2: Mat2): boolean {
-			if (m1 == null || m2 == null)
-				return false;
-			return m1.x.EqualsTo(m2.x) && m1.y.EqualsTo(m2.y);
-		}
-
-		public EqualsTo(m: Mat2): boolean {
-			return Mat2.Equals(this, m);
-		}
-
-		public ToString(): string {
-			return "(" + this.x.ToString() + "," + this.y.ToString() + ")";
+		public CopyFrom(m: Mat2): void {
+			this.x.CopyFrom(m.x);
+			this.y.CopyFrom(m.y);
 		}
 
 		public Clone(): Mat2 {
@@ -128,6 +22,71 @@ namespace RC.Numerics {
 			m.x = this.x.Clone();
 			m.y = this.y.Clone();
 			return m;
+		}
+
+		public Add(p2: Mat2): Mat2 {
+			this.x.Add(p2.x);
+			this.y.Add(p2.y);
+			return this;
+		}
+		public AddN(p2: number): Mat2 {
+			this.x.AddN(p2);
+			this.y.AddN(p2);
+			return this;
+		}
+
+		public Sub(p2: Mat2): Mat2 {
+			this.x.Sub(p2.x);
+			this.y.Sub(p2.y);
+			return this;
+		}
+
+		public SubN(p2: number): Mat2 {
+			this.x.SubN(p2);
+			this.y.SubN(p2);
+			return this;
+		}
+
+		public SubN2(n: number): Mat2 {
+			this.x.SubN2(n);
+			this.y.SubN2(n);
+			return this;
+		}
+
+		public Mul(m: Mat2): Mat2 {
+			let xx = m.x.x * this.x.x + m.x.y * this.y.x;
+			let xy = m.x.x * this.x.y + m.x.y * this.y.y;
+			let yx = m.y.x * this.x.x + m.y.y * this.y.x;
+			let yy = m.y.x * this.x.y + m.y.y * this.y.y;
+			this.x.x = xx;
+			this.x.y = xy;
+			this.y.x = yx;
+			this.y.y = yy;
+			return this;
+		}
+
+		public MulN(p2: number): Mat2 {
+			this.x.MulN(p2);
+			this.y.MulN(p2);
+			return this;
+		}
+
+		public Div(p2: Mat2): Mat2 {
+			this.x.Div(p2.x);
+			this.y.Div(p2.y);
+			return this;
+		}
+
+		public DivN(p2: number): Mat2 {
+			this.x.DivN(p2);
+			this.y.DivN(p2);
+			return this;
+		}
+
+		public DivN2(n: number): Mat2 {
+			this.x.DivN2(n);
+			this.y.DivN2(n);
+			return this;
 		}
 
 		public Identity(): void {
@@ -170,6 +129,96 @@ namespace RC.Numerics {
 			this.x.y = m01;
 			this.y.x = m10;
 			this.y.y = m11;
+		}
+
+		public EqualsTo(m: Mat2): boolean {
+			return Mat2.Equals(this, m);
+		}
+
+		public ToString(): string {
+			return `(${this.x.ToString()}, ${this.y.ToString()})`;
+		}
+
+		public static FromCross(xVector: Vec2): Mat2 {
+			return new Mat2(xVector, new Vec2(-xVector.y, xVector.x));
+		}
+
+		public static Abs(m: Mat2): Mat2 {
+			return new Mat2(Vec2.Abs(m.x), Vec2.Abs(m.y));
+		}
+
+		public static Transpose(m: Mat2): Mat2 {
+			return new Mat2
+				(
+				new Vec2(m.x.x, m.y.x),
+				new Vec2(m.x.y, m.y.y)
+				);
+		}
+
+		public static Invert(m: Mat2): Mat2 {
+			let determinant = 1 / (m.x.x * m.y.y - m.x.y * m.y.x);
+			let result = new Mat2();
+			result.x.x = m.y.y * determinant;
+			result.x.y = -m.x.y * determinant;
+			result.y.x = -m.y.x * determinant;
+			result.y.y = m.x.x * determinant;
+			return result;
+		}
+
+		public static Add(m1: Mat2, m2: Mat2): Mat2 {
+			m1 = m1.Clone();
+			return m1.Add(m2);
+		}
+
+		public static AddN(m: Mat2, n: number): Mat2 {
+			m = m.Clone();
+			return m.AddN(n);
+		}
+
+		public static Sub(m1: Mat2, m2: Mat2): Mat2 {
+			m1 = m1.Clone();
+			return m1.Sub(m2);
+		}
+
+		public static SubN(m: Mat2, n: number): Mat2 {
+			m = m.Clone();
+			return m.SubN(n);
+		}
+
+		public static SubN2(n: number, m: Mat2): Mat2 {
+			m = m.Clone();
+			return m.SubN2(n);
+		}
+
+		public static Mul(m1: Mat2, m2: Mat2): Mat2 {
+			m1 = m1.Clone();
+			return m1.Mul(m2);
+		}
+
+		public static MulN(m: Mat2, n: number): Mat2 {
+			m = m.Clone();
+			return m.MulN(n);
+		}
+
+		public static Div(m1: Mat2, m2: Mat2): Mat2 {
+			m1 = m1.Clone();
+			return m1.Div(m2);
+		}
+
+		public static DivN(m: Mat2, n: number): Mat2 {
+			m = m.Clone();
+			return m.DivN(n);
+		}
+
+		public static DivN2(n: number, m: Mat2): Mat2 {
+			m = m.Clone();
+			return m.DivN2(n);
+		}
+
+		public static Equals(m1: Mat2, m2: Mat2): boolean {
+			if (m1 == null || m2 == null)
+				return false;
+			return m1.x.EqualsTo(m2.x) && m1.y.EqualsTo(m2.y);
 		}
 	}
 }

@@ -52,12 +52,12 @@ var Game;
 (function (Game) {
     class GameMain {
         constructor() {
-            Laya.init(600, 800, Laya.WebGL);
+            Laya.init(1334, 750, Laya.WebGL);
             laya.utils.Stat.show(0, 0);
-            Laya.stage.scaleMode = "showall";
-            Laya.stage.alignH = "left";
-            Laya.stage.alignV = "top";
-            Laya.stage.screenMode = "vertical";
+            Laya.stage.scaleMode = Laya.Stage.SCALE_FIXED_WIDTH;
+            Laya.stage.alignH = Laya.Stage.ALIGN_LEFT;
+            Laya.stage.alignV = Laya.Stage.ALIGN_TOP;
+            Laya.stage.screenMode = Laya.Stage.SCREEN_HORIZONTAL;
             this.LoadDefs();
         }
         LoadDefs() {
@@ -91,7 +91,7 @@ var Game;
             param.framesPerKeyFrame = 4;
             param.frameRate = 20;
             param.uid = "user";
-            param.id = "m1";
+            param.id = "m0";
             param.rndSeed = Shared.Timer.utcTime;
             let player = new Logic.Player();
             player.id = "user";
@@ -195,11 +195,11 @@ var Logic;
     class Entity extends Shared.GPoolObject {
         constructor() {
             super();
-            this._position = RC.Numerics.Vec3.zero;
-            this._direction = RC.Numerics.Vec3.zero;
             this._battle = null;
             this._markToDestroy = false;
             this._data = null;
+            this._position = RC.Numerics.Vec3.zero;
+            this._direction = new RC.Numerics.Vec3(0, 0, 1);
         }
         get position() { return this._position.Clone(); }
         set position(value) {
@@ -223,8 +223,8 @@ var Logic;
             this._battle = battle;
             this._rid = param.rid;
             this._data = Shared.Model.ModelFactory.GetEntityData(Shared.Utils.GetIDFromRID(this.rid));
-            this.position = param.position;
-            this.direction = param.direction;
+            this.position = param.position.Clone();
+            this.direction = param.direction.Clone();
             Shared.Event.SyncEvent.EntityAddedToBattle(this.rid);
             this.InternalOnAddedToBattle(param);
             this.OnSyncState();
@@ -248,8 +248,8 @@ var Logic;
         }
         OnSyncState() {
             let e = Shared.Event.SyncEvent.BeginSyncProps(this.rid);
-            Shared.Event.SyncEvent.AddSyncProp(e, Shared.Attr.Position, this._position);
-            Shared.Event.SyncEvent.AddSyncProp(e, Shared.Attr.Direction, this._direction);
+            Shared.Event.SyncEvent.AddSyncProp(e, Shared.Attr.Position, this.position);
+            Shared.Event.SyncEvent.AddSyncProp(e, Shared.Attr.Direction, this.direction);
             Shared.Event.SyncEvent.EndSyncProps(e);
         }
         MarkToDestroy() {
@@ -806,9 +806,10 @@ var View;
 (function (View) {
     class Camera {
         constructor() {
-            this._localtoWorld = RC.Numerics.Mat4.FromTRS(RC.Numerics.Vec3.zero, RC.Numerics.Quat.Euler(new RC.Numerics.Vec3(90, 0, 0)), new RC.Numerics.Vec3(1, -1, 1));
-            this._worldToLocal = RC.Numerics.Mat4.NonhomogeneousInvert(this._localtoWorld);
-            console.log(this._worldToLocal.TransformPoint(new RC.Numerics.Vec3(1, 0, -1)));
+            this._position = RC.Numerics.Vec3.zero;
+            this._direction = new RC.Numerics.Vec3(0, 0, 1);
+            this._localToWorldMat = RC.Numerics.Mat4.FromTRS(RC.Numerics.Vec3.zero, RC.Numerics.Quat.Euler(new RC.Numerics.Vec3(90, 0, 0)), new RC.Numerics.Vec3(1, -1, 1));
+            this._worldToLocalMat = RC.Numerics.Mat4.NonhomogeneousInvert(this._localToWorldMat);
         }
         get position() { return this._position.Clone(); }
         set position(value) {
@@ -826,8 +827,12 @@ var View;
             if (this.cameraTRSChangedHandler != null)
                 this.cameraTRSChangedHandler();
         }
-        get worldToLocal() { return this._worldToLocal.Clone(); }
-        get localtoWorld() { return this._localtoWorld.Clone(); }
+        WorldToLocal(point) {
+            return this._worldToLocalMat.TransformPoint(point);
+        }
+        LocalToWorld(point) {
+            return this._localToWorldMat.TransformPoint(point);
+        }
     }
     View.Camera = Camera;
 })(View || (View = {}));
@@ -884,8 +889,8 @@ var View;
         HandleCreateBattle(baseEvent) {
             let e = baseEvent;
             this._data = Shared.Model.ModelFactory.GetMapData(Shared.Utils.GetIDFromRID(e.genericId));
-            this._graphic = this._graphicManager.CreateGraphic(View.Graphic);
-            this._graphic.Load(this._data.model);
+            this._graphic = this._graphicManager.CreateGraphic(View.MapGraphic);
+            this._graphic.OnCreate(this._data.model);
         }
         HandleDestroyBattle(baseEvent) {
             this._graphicManager.DestroyGraphic(this._graphic);
@@ -903,15 +908,22 @@ var View;
         }
         HandleEntityAddedToBattle(baseEvent) {
             let e = baseEvent;
+            let entity = this._entityManager.GetEntity(e.targetId);
+            entity.OnAddedToBattle();
+            Shared.Event.UIEvent.EntityCreated(entity);
         }
         HandleEntityRemoveFromBattle(baseEvent) {
             let e = baseEvent;
+            let entity = this._entityManager.GetEntity(e.targetId);
+            entity.OnRemoveFromBattle();
         }
         HandleEntityStateChanged(baseEvent) {
             let e = baseEvent;
         }
         HandleEntitySyncProps(baseEvent) {
             let e = baseEvent;
+            let entity = this._entityManager.GetEntity(e.targetId);
+            entity.HandleSyncProps(e.attrs, e.attrValues);
         }
         HandleWin(baseEvent) {
             let e = baseEvent;
@@ -928,6 +940,8 @@ var View;
             this._markToDestroy = false;
             this._graphic = null;
             this._data = null;
+            this._position = RC.Numerics.Vec3.zero;
+            this._direction = new RC.Numerics.Vec3(0, 0, 1);
         }
         get position() { return this._position.Clone(); }
         set position(value) {
@@ -954,8 +968,8 @@ var View;
             this._battle = battle;
             this._rid = param.rid;
             this._data = Shared.Model.ModelFactory.GetEntityData(Shared.Utils.GetIDFromRID(this.rid));
-            this._logicPos = this._position = param.position;
-            this._logicDir = this._direction = param.direction;
+            this._logicPos = this._position = param.position.Clone();
+            this._logicDir = this._direction = param.direction.Clone();
             this._graphic = this._battle.graphicManager.CreateGraphic(View.EntityGraphic);
             this._graphic.OnCreate(this, this._data.model);
             this._graphic.position = this.position;
@@ -1054,6 +1068,9 @@ var View;
             this.DestroyEnties();
         }
         UpdateState(context) {
+            this._entities.forEach((entity) => {
+                entity.OnUpdateState(context);
+            });
         }
     }
     View.CEntityManager = CEntityManager;
@@ -1064,6 +1081,9 @@ var View;
         constructor(manager) {
             this._manager = manager;
             this._root = new fairygui.GLoader();
+            this._root.autoSize = true;
+            this._position = RC.Numerics.Vec3.zero;
+            this._rotation = RC.Numerics.Quat.identity;
         }
         get root() { return this._root; }
         get position() { return this._position.Clone(); }
@@ -1087,8 +1107,7 @@ var View;
             this._root.dispose();
         }
         UpdatePosition() {
-            let mat = this._manager.battle.camera.worldToLocal;
-            let localPos = mat.TransformPoint(this._position);
+            let localPos = this._manager.battle.camera.WorldToLocal(this._position);
             this._root.x = localPos.x;
             this._root.y = localPos.y;
         }
@@ -1114,7 +1133,7 @@ var View;
     class GraphicManager {
         constructor(battle) {
             this._battle = battle;
-            this._battle.camera.cameraTRSChangedHandler = this.OnCameraTRSChanged;
+            this._battle.camera.cameraTRSChangedHandler = this.OnCameraTRSChanged.bind(this);
             this._root = new fairygui.GComponent();
             this._root.name = "graphic_root";
             fairygui.GRoot.inst.addChild(this._root);
@@ -1157,6 +1176,39 @@ var View;
 })(View || (View = {}));
 var View;
 (function (View) {
+    class MapGraphic extends View.Graphic {
+        constructor(manager) {
+            super(manager);
+        }
+        OnCreate(id) {
+            this.Load(id);
+            this._root.displayObject.on(Laya.Event.MOUSE_DOWN, this, this.OnTouchBegin);
+        }
+        OnTouchBegin(evt) {
+            this._root.displayObject.on(Laya.Event.MOUSE_MOVE, this, this.OnTouchMove);
+            this._root.displayObject.on(Laya.Event.MOUSE_UP, this, this.OnTouchEnd);
+            this._root.displayObject.on(Laya.Event.MOUSE_OUT, this, this.OnTouchEnd);
+            let camera = this._manager.battle.camera;
+            this._startPos = camera.LocalToWorld(new RC.Numerics.Vec3(evt.stageX, evt.stageY, 0));
+        }
+        OnTouchMove(evt) {
+            let camera = this._manager.battle.camera;
+            let currPos = camera.LocalToWorld(new RC.Numerics.Vec3(evt.stageX, evt.stageY, 0));
+            let delta = RC.Numerics.Vec3.Sub(currPos, this._startPos);
+            this._startPos = camera.LocalToWorld(new RC.Numerics.Vec3(evt.stageX, evt.stageY, 0));
+            camera.position = RC.Numerics.Vec3.Add(camera.position, delta);
+            console.log(camera.position.ToString());
+        }
+        OnTouchEnd(evt) {
+            this._root.displayObject.off(Laya.Event.MOUSE_MOVE, this, this.OnTouchMove);
+            this._root.displayObject.off(Laya.Event.MOUSE_UP, this, this.OnTouchEnd);
+            this._root.displayObject.off(Laya.Event.MOUSE_OUT, this, this.OnTouchEnd);
+        }
+    }
+    View.MapGraphic = MapGraphic;
+})(View || (View = {}));
+var View;
+(function (View) {
     var UI;
     (function (UI) {
         class UIBattle {
@@ -1171,6 +1223,7 @@ var View;
                 Game.BattleManager.Init(param);
                 this._root = fairygui.UIPackage.createObject("battle", "Main").asCom;
                 this._root.displayObject.name = "Battle";
+                this._root.opaque = false;
                 fairygui.GRoot.inst.addChild(this._root);
                 this._root.width = fairygui.GRoot.inst.width;
                 this._root.height = fairygui.GRoot.inst.height;

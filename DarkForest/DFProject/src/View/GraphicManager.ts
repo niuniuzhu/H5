@@ -8,7 +8,7 @@ namespace View {
 
 		constructor(battle: CBattle) {
 			this._battle = battle;
-			this._battle.camera.cameraTRSChangedHandler = this.OnCameraTRSChanged;
+			this._battle.camera.cameraTRSChangedHandler = this.OnCameraTRSChanged.bind(this);
 			this._root = new fairygui.GComponent();
 			this._root.name = "graphic_root";
 			fairygui.GRoot.inst.addChild(this._root);

@@ -6,7 +6,7 @@ namespace View {
 		private _uid: string = "";
 
 		private _data: Shared.Model.MapData;
-		private _graphic: Graphic;
+		private _graphic: MapGraphic;
 		private readonly _context: Shared.UpdateContext;
 		private readonly _camera: Camera;
 		private readonly _graphicManager: GraphicManager;
@@ -64,8 +64,8 @@ namespace View {
 		private HandleCreateBattle(baseEvent: Shared.Event.BaseEvent): void {
 			let e = <Shared.Event.SyncEvent>baseEvent;
 			this._data = Shared.Model.ModelFactory.GetMapData(Shared.Utils.GetIDFromRID(e.genericId));
-			this._graphic = this._graphicManager.CreateGraphic(Graphic);
-			this._graphic.Load(this._data.model);
+			this._graphic = this._graphicManager.CreateGraphic(MapGraphic);
+			this._graphic.OnCreate(this._data.model);
 		}
 
 		private HandleDestroyBattle(baseEvent: Shared.Event.BaseEvent): void {
@@ -86,18 +86,27 @@ namespace View {
 
 		private HandleEntityAddedToBattle(baseEvent: Shared.Event.BaseEvent): void {
 			let e = <Shared.Event.SyncEvent>baseEvent;
+			let entity = this._entityManager.GetEntity( e.targetId );
+			entity.OnAddedToBattle();
+			Shared.Event.UIEvent.EntityCreated( entity );
 		}
 
 		private HandleEntityRemoveFromBattle(baseEvent: Shared.Event.BaseEvent): void {
 			let e = <Shared.Event.SyncEvent>baseEvent;
+			let entity = this._entityManager.GetEntity( e.targetId );
+			entity.OnRemoveFromBattle();
 		}
 
 		private HandleEntityStateChanged(baseEvent: Shared.Event.BaseEvent): void {
 			let e = <Shared.Event.SyncEvent>baseEvent;
+			// let entity = this._entityManager.GetChampion( e.targetId );
+			// entity.HandleEntityStateChanged( type, force, param );
 		}
 
 		private HandleEntitySyncProps(baseEvent: Shared.Event.BaseEvent): void {
 			let e = <Shared.Event.SyncEvent>baseEvent;
+			let entity = this._entityManager.GetEntity(e.targetId);
+			entity.HandleSyncProps(e.attrs, e.attrValues);
 		}
 
 		private HandleWin(baseEvent: Shared.Event.BaseEvent): void {

@@ -36,6 +36,8 @@ namespace View {
 
 		constructor() {
 			super();
+			this._position = RC.Numerics.Vec3.zero;
+			this._direction = new RC.Numerics.Vec3(0, 0, 1);
 		}
 
 		protected InternalDispose(): void {
@@ -46,8 +48,8 @@ namespace View {
 			this._rid = param.rid;
 			this._data = Shared.Model.ModelFactory.GetEntityData(Shared.Utils.GetIDFromRID(this.rid));
 
-			this._logicPos = this._position = param.position;
-			this._logicDir = this._direction = param.direction;
+			this._logicPos = this._position = param.position.Clone();
+			this._logicDir = this._direction = param.direction.Clone();
 
 			this._graphic = this._battle.graphicManager.CreateGraphic(EntityGraphic);
 			this._graphic.OnCreate(this, this._data.model);

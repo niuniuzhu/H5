@@ -504,6 +504,7 @@ declare namespace RC.Numerics {
         TransformPoint(v: Vec3): Vec3;
         TransformVector(v: Vec3): Vec3;
         Identity(): void;
+        SetTranslate(translate: Vec3): void;
         Transpose(): void;
         Determinant(): number;
         NonhomogeneousInvert(): void;

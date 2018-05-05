@@ -18,6 +18,7 @@ namespace View.UI {
 
 			this._root = fairygui.UIPackage.createObject("battle", "Main").asCom;
 			this._root.displayObject.name = "Battle";
+			this._root.opaque = false;
 			fairygui.GRoot.inst.addChild(this._root);
 			this._root.width = fairygui.GRoot.inst.width;
 			this._root.height = fairygui.GRoot.inst.height;

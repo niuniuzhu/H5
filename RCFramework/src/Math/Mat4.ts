@@ -16,6 +16,333 @@ namespace RC.Numerics {
 			this.w = w;
 		}
 
+		public CopyFrom(m: Mat4): void {
+			this.x.CopyFrom(m.x);
+			this.y.CopyFrom(m.y);
+			this.z.CopyFrom(m.z);
+			this.w.CopyFrom(m.w);
+		}
+
+		public Clone(): Mat4 {
+			let m = new Mat4();
+			m.x = this.x.Clone();
+			m.y = this.y.Clone();
+			m.z = this.z.Clone();
+			m.w = this.w.Clone();
+			return m;
+		}
+
+		public Add(m: Mat4): Mat4 {
+			this.x.Add(m.x);
+			this.y.Add(m.y);
+			this.z.Add(m.z);
+			this.w.Add(m.w);
+			return this;
+		}
+
+		public AddN(m: number): Mat4 {
+			this.x.AddN(m);
+			this.y.AddN(m);
+			this.z.AddN(m);
+			this.w.AddN(m);
+			return this;
+		}
+
+		public Sub(m: Mat4): Mat4 {
+			this.x.Sub(m.x);
+			this.y.Sub(m.y);
+			this.z.Sub(m.z);
+			this.w.Sub(m.w);
+			return this;
+		}
+
+		public SubN(m: number): Mat4 {
+			this.x.SubN(m);
+			this.y.SubN(m);
+			this.z.SubN(m);
+			this.w.SubN(m);
+			return this;
+		}
+
+		public SubN2(n: number): Mat4 {
+			this.x.SubN2(n);
+			this.y.SubN2(n);
+			this.z.SubN2(n);
+			this.w.SubN2(n);
+			return this;
+		}
+
+		public Mul(m: Mat4): Mat4 {
+			let xx = m.x.x * this.x.x + m.x.y * this.y.x + m.x.z * this.z.x + m.x.w * this.w.x;
+			let xy = m.x.x * this.x.y + m.x.y * this.y.y + m.x.z * this.z.y + m.x.w * this.w.y;
+			let xz = m.x.x * this.x.z + m.x.y * this.y.z + m.x.z * this.z.z + m.x.w * this.w.z;
+			let xw = m.x.x * this.x.w + m.x.y * this.y.w + m.x.z * this.z.w + m.x.w * this.w.w;
+			let yx = m.y.x * this.x.x + m.y.y * this.y.x + m.y.z * this.z.x + m.y.w * this.w.x;
+			let yy = m.y.x * this.x.y + m.y.y * this.y.y + m.y.z * this.z.y + m.y.w * this.w.y;
+			let yz = m.y.x * this.x.z + m.y.y * this.y.z + m.y.z * this.z.z + m.y.w * this.w.z;
+			let yw = m.y.x * this.x.w + m.y.y * this.y.w + m.y.z * this.z.w + m.y.w * this.w.w;
+			let zx = m.z.x * this.x.x + m.z.y * this.y.x + m.z.z * this.z.x + m.z.w * this.w.x;
+			let zy = m.z.x * this.x.y + m.z.y * this.y.y + m.z.z * this.z.y + m.z.w * this.w.y;
+			let zz = m.z.x * this.x.z + m.z.y * this.y.z + m.z.z * this.z.z + m.z.w * this.w.z;
+			let zw = m.z.x * this.x.w + m.z.y * this.y.w + m.z.z * this.z.w + m.z.w * this.w.w;
+			let wx = m.w.x * this.x.x + m.w.y * this.y.x + m.w.z * this.z.x + m.w.w * this.w.x;
+			let wy = m.w.x * this.x.y + m.w.y * this.y.y + m.w.z * this.z.y + m.w.w * this.w.y;
+			let wz = m.w.x * this.x.z + m.w.y * this.y.z + m.w.z * this.z.z + m.w.w * this.w.z;
+			let ww = m.w.x * this.x.w + m.w.y * this.y.w + m.w.z * this.z.w + m.w.w * this.w.w;
+			this.x.x = xx;
+			this.x.y = xy;
+			this.x.z = xz;
+			this.x.w = xw;
+			this.y.x = yx;
+			this.y.y = yy;
+			this.y.z = yz;
+			this.y.w = yw;
+			this.z.x = zx;
+			this.z.y = zy;
+			this.z.z = zz;
+			this.z.w = zw;
+			this.w.x = wx;
+			this.w.y = wy;
+			this.w.z = wz;
+			this.w.w = ww;
+			return this;
+		}
+
+		public MulN(m: number): Mat4 {
+			this.x.MulN(m);
+			this.y.MulN(m);
+			this.z.MulN(m);
+			this.w.MulN(m);
+			return this;
+		}
+
+		public Div(m: Mat4): Mat4 {
+			this.x.Div(m.x);
+			this.y.Div(m.y);
+			this.z.Div(m.z);
+			this.w.Div(m.w);
+			return this;
+		}
+
+		public DivN(m: number): Mat4 {
+			this.x.DivN(m);
+			this.y.DivN(m);
+			this.z.DivN(m);
+			this.w.DivN(m);
+			return this;
+		}
+
+		public DivN2(n: number): Mat4 {
+			this.x.DivN2(n);
+			this.y.DivN2(n);
+			this.z.DivN2(n);
+			this.w.DivN2(n);
+			return this;
+		}
+
+		public EqualsTo(m: Mat4): boolean {
+			return Mat4.Equals(this, m);
+		}
+
+		public ToString(): string {
+			return `(${this.x.ToString()}, ${this.y.ToString()}, ${this.z.ToString()}, ${this.w.ToString()})`;
+		}
+
+		public Transform(v: Vec4): Vec4 {
+			return new Vec4
+				(
+				v.x * this.x.x + v.y * this.y.x + v.z * this.z.x + v.w * this.w.x,
+				v.x * this.x.y + v.y * this.y.y + v.z * this.z.y + v.w * this.w.y,
+				v.x * this.x.z + v.y * this.y.z + v.z * this.z.z + v.w * this.w.z,
+				v.x * this.x.w + v.y * this.y.w + v.z * this.z.w + v.w * this.w.w
+				);
+		}
+
+		public TransformPoint(v: Vec3): Vec3 {
+			return new Vec3
+				(
+				v.x * this.x.x + v.y * this.y.x + v.z * this.z.x + this.w.x,
+				v.x * this.x.y + v.y * this.y.y + v.z * this.z.y + this.w.y,
+				v.x * this.x.z + v.y * this.y.z + v.z * this.z.z + this.w.z
+				);
+		}
+
+		public TransformVector(v: Vec3): Vec3 {
+			return new Vec3
+				(
+				v.x * this.x.x + v.y * this.y.x + v.z * this.z.x,
+				v.x * this.x.y + v.y * this.y.y + v.z * this.z.y,
+				v.x * this.x.z + v.y * this.y.z + v.z * this.z.z
+				);
+		}
+
+		public Identity(): void {
+			this.x.x = 1;
+			this.x.y = 0;
+			this.x.z = 0;
+			this.x.w = 0;
+			this.y.x = 0;
+			this.y.y = 1;
+			this.y.z = 0;
+			this.y.w = 0;
+			this.z.x = 0;
+			this.z.y = 0;
+			this.z.z = 1;
+			this.z.w = 0;
+			this.w.x = 0;
+			this.w.y = 0;
+			this.w.z = 0;
+			this.w.w = 1;
+		}
+
+		public SetTranslate(translate: Vec3): void {
+			this.w.x = translate.x;
+			this.w.y = translate.y;
+			this.w.z = translate.z;
+		}
+
+		public SetScale(scale: Vec3): void {
+
+		}
+
+		public SetRotation(rot: Quat): void {
+
+		}
+
+		public Transpose(): void {
+			let m00 = this.x.x;
+			let m01 = this.y.x;
+			let m02 = this.z.x;
+			let m03 = this.w.x;
+			let m10 = this.x.y;
+			let m11 = this.y.y;
+			let m12 = this.z.y;
+			let m13 = this.w.y;
+			let m20 = this.x.z;
+			let m21 = this.y.z;
+			let m22 = this.z.z;
+			let m23 = this.w.z;
+			let m30 = this.x.w;
+			let m31 = this.y.w;
+			let m32 = this.z.w;
+			let m33 = this.w.w;
+			this.x.x = m00;
+			this.x.y = m01;
+			this.x.z = m02;
+			this.x.w = m03;
+			this.y.x = m10;
+			this.y.y = m11;
+			this.y.z = m12;
+			this.y.w = m13;
+			this.z.x = m20;
+			this.z.y = m21;
+			this.z.z = m22;
+			this.z.w = m23;
+			this.w.x = m30;
+			this.w.y = m31;
+			this.w.z = m32;
+			this.w.w = m33;
+		}
+
+		public Determinant(): number {
+			let det1 = this.z.z * this.w.w - this.z.w * this.w.z;
+			let det2 = this.z.y * this.w.w - this.z.w * this.w.y;
+			let det3 = this.z.y * this.w.z - this.z.z * this.w.y;
+			let det4 = this.z.x * this.w.w - this.z.w * this.w.x;
+			let det5 = this.z.x * this.w.z - this.z.z * this.w.x;
+			let det6 = this.z.x * this.w.y - this.z.y * this.w.x;
+
+			return this.x.x * (this.y.y * det1 - this.y.z * det2 + this.y.w * det3) -
+				this.x.y * (this.y.x * det1 - this.y.z * det4 + this.y.w * det5) +
+				this.x.z * (this.y.x * det2 - this.y.y * det4 + this.y.w * det6) -
+				this.x.w * (this.y.x * det3 - this.y.y * det5 + this.y.z * det6);
+		}
+
+		public NonhomogeneousInvert(): void {
+			let m3: Mat3 = new Mat3();
+			m3.x.x = this.x.x;
+			m3.x.y = this.x.y;
+			m3.x.z = this.x.z;
+			m3.y.x = this.y.x;
+			m3.y.y = this.y.y;
+			m3.y.z = this.y.z;
+			m3.z.x = this.z.x;
+			m3.z.y = this.z.y;
+			m3.z.z = this.z.z;
+			m3.Invert();
+			let o = Mat4.identity;
+			this.x.x = m3.x.x;
+			this.x.y = m3.x.y;
+			this.x.z = m3.x.z;
+			this.y.x = m3.y.x;
+			this.y.y = m3.y.y;
+			this.y.z = m3.y.z;
+			this.z.x = m3.z.x;
+			this.z.y = m3.z.y;
+			this.z.z = m3.z.z;
+			let v = m3.Transform(new Vec3(this.w.x, this.w.y, this.w.z));
+			this.w.x = -v.x;
+			this.w.y = -v.y;
+			this.w.z = -v.z;
+		}
+
+		public Invert(): void {
+			let determinant = 1 / this.Determinant();
+
+			let m00 = (this.y.y * this.z.z * this.w.w + this.y.z * this.z.w * this.w.y + this.y.w * this.z.y * this.w.z -
+				this.y.y * this.z.w * this.w.z - this.y.z * this.z.y * this.w.w - this.y.w * this.z.z * this.w.y) * determinant;
+			let m01 = (this.x.y * this.z.w * this.w.z + this.x.z * this.z.y * this.w.w + this.x.w * this.z.z * this.w.y -
+				this.x.y * this.z.z * this.w.w - this.x.z * this.z.w * this.w.y - this.x.w * this.z.y * this.w.z) * determinant;
+			let m02 = (this.x.y * this.y.z * this.w.w + this.x.z * this.y.w * this.w.y + this.x.w * this.y.y * this.w.z -
+				this.x.y * this.y.w * this.w.z - this.x.z * this.y.y * this.w.w - this.x.w * this.y.z * this.w.y) * determinant;
+			let m03 = (this.x.y * this.y.w * this.z.z + this.x.z * this.y.y * this.z.w + this.x.w * this.y.z * this.z.y -
+				this.x.y * this.y.z * this.z.w - this.x.z * this.y.w * this.z.y - this.x.w * this.y.y * this.z.z) * determinant;
+
+			let m10 = (this.y.x * this.z.w * this.w.z + this.y.z * this.z.x * this.w.w + this.y.w * this.z.z * this.w.x -
+				this.y.x * this.z.z * this.w.w - this.y.z * this.z.w * this.w.x - this.y.w * this.z.x * this.w.z) * determinant;
+			let m11 = (this.x.x * this.z.z * this.w.w + this.x.z * this.z.w * this.w.x + this.x.w * this.z.x * this.w.z -
+				this.x.x * this.z.w * this.w.z - this.x.z * this.z.x * this.w.w - this.x.w * this.z.z * this.w.x) * determinant;
+			let m12 = (this.x.x * this.y.w * this.w.z + this.x.z * this.y.x * this.w.w + this.x.w * this.y.z * this.w.x -
+				this.x.x * this.y.z * this.w.w - this.x.z * this.y.w * this.w.x - this.x.w * this.y.x * this.w.z) * determinant;
+			let m13 = (this.x.x * this.y.z * this.z.w + this.x.z * this.y.w * this.z.x + this.x.w * this.y.x * this.z.z -
+				this.x.x * this.y.w * this.z.z - this.x.z * this.y.x * this.z.w - this.x.w * this.y.z * this.z.x) * determinant;
+
+			let m20 = (this.y.x * this.z.y * this.w.w + this.y.y * this.z.w * this.w.x + this.y.w * this.z.x * this.w.y -
+				this.y.x * this.z.w * this.w.y - this.y.y * this.z.x * this.w.w - this.y.w * this.z.y * this.w.x) * determinant;
+			let m21 = (this.x.x * this.z.w * this.w.y + this.x.y * this.z.x * this.w.w + this.x.w * this.z.y * this.w.x -
+				this.x.x * this.z.y * this.w.w - this.x.y * this.z.w * this.w.x - this.x.w * this.z.x * this.w.y) * determinant;
+			let m22 = (this.x.x * this.y.y * this.w.w + this.x.y * this.y.w * this.w.x + this.x.w * this.y.x * this.w.y -
+				this.x.x * this.y.w * this.w.y - this.x.y * this.y.x * this.w.w - this.x.w * this.y.y * this.w.x) * determinant;
+			let m23 = (this.x.x * this.y.w * this.z.y + this.x.y * this.y.x * this.z.w + this.x.w * this.y.y * this.z.x -
+				this.x.x * this.y.y * this.z.w - this.x.y * this.y.w * this.z.x - this.x.w * this.y.x * this.z.y) * determinant;
+
+			let m30 = (this.y.x * this.z.z * this.w.y + this.y.y * this.z.x * this.w.z + this.y.z * this.z.y * this.w.x -
+				this.y.x * this.z.y * this.w.z - this.y.y * this.z.z * this.w.x - this.y.z * this.z.x * this.w.y) * determinant;
+			let m31 = (this.x.x * this.z.y * this.w.z + this.x.y * this.z.z * this.w.x + this.x.z * this.z.x * this.w.y -
+				this.x.x * this.z.z * this.w.y - this.x.y * this.z.x * this.w.z - this.x.z * this.z.y * this.w.x) * determinant;
+			let m32 = (this.x.x * this.y.z * this.w.y + this.x.y * this.y.x * this.w.z + this.x.z * this.y.y * this.w.x -
+				this.x.x * this.y.y * this.w.z - this.x.y * this.y.z * this.w.x - this.x.z * this.y.x * this.w.y) * determinant;
+			let m33 = (this.x.x * this.y.y * this.z.z + this.x.y * this.y.z * this.z.x + this.x.z * this.y.x * this.z.y -
+				this.x.x * this.y.z * this.z.y - this.x.y * this.y.x * this.z.z - this.x.z * this.y.y * this.z.x) * determinant;
+
+			this.x.x = m00;
+			this.x.y = m01;
+			this.x.z = m02;
+			this.x.w = m03;
+			this.y.x = m10;
+			this.y.y = m11;
+			this.y.z = m12;
+			this.y.w = m13;
+			this.z.x = m20;
+			this.z.y = m21;
+			this.z.z = m22;
+			this.z.w = m23;
+			this.w.x = m30;
+			this.w.y = m31;
+			this.w.z = m32;
+			this.w.w = m33;
+		}
+
 		public static FromScale(scale: Vec3): Mat4 {
 			return new Mat4
 				(
@@ -173,309 +500,58 @@ namespace RC.Numerics {
 			return m1.x.EqualsTo(m2.x) && m1.y.EqualsTo(m2.y) && m1.z.EqualsTo(m2.z) && m1.w.EqualsTo(m2.w);
 		}
 
-		public EqualsTo(m: Mat4): boolean {
-			return Mat4.Equals(this, m);
-		}
-
-		public ToString(): string {
-			return "(" + this.x.ToString() + "," + this.y.ToString() + "," + this.z.ToString() + "," + this.w.ToString() + ")";
-		}
-
 		public static Abs(m: Mat4): Mat4 {
 			return new Mat4(Vec4.Abs(m.x), Vec4.Abs(m.y), Vec4.Abs(m.z), Vec4.Abs(m.w));
 		}
 
-		public static Add(p1: Mat4, p2: Mat4): Mat4 {
-			let m = new Mat4();
-			m.x = Vec4.Add(p1.x, p2.x);
-			m.y = Vec4.Add(p1.y, p2.y);
-			m.z = Vec4.Add(p1.z, p2.z);
-			m.w = Vec4.Add(p1.w, p2.w);
-			return m;
+		public static Add(m1: Mat4, m2: Mat4): Mat4 {
+			m1 = m1.Clone();
+			return m1.Add(m2);
 		}
 
-		public static AddN(p1: Mat4, p2: number): Mat4 {
-			let m = new Mat4();
-			m.x = Vec4.AddN(p1.x, p2);
-			m.y = Vec4.AddN(p1.y, p2);
-			m.z = Vec4.AddN(p1.z, p2);
-			m.w = Vec4.AddN(p1.w, p2);
-			return m;
+		public static AddN(m1: Mat4, n: number): Mat4 {
+			m1 = m1.Clone();
+			return m1.AddN(n);
 		}
 
-		public static Sub(p1: Mat4, p2: Mat4): Mat4 {
-			let m = new Mat4();
-			m.x = Vec4.Sub(p1.x, p2.x);
-			m.y = Vec4.Sub(p1.y, p2.y);
-			m.z = Vec4.Sub(p1.z, p2.z);
-			m.w = Vec4.Sub(p1.w, p2.w);
-			return m;
+		public static Sub(m1: Mat4, m2: Mat4): Mat4 {
+			m1 = m1.Clone();
+			return m1.Sub(m2);
 		}
 
-		public static SubN(p1: Mat4, p2: number): Mat4 {
-			let m = new Mat4();
-			m.x = Vec4.SubN(p1.x, p2);
-			m.y = Vec4.SubN(p1.y, p2);
-			m.z = Vec4.SubN(p1.z, p2);
-			m.w = Vec4.SubN(p1.w, p2);
-			return m;
+		public static SubN(m1: Mat4, n: number): Mat4 {
+			m1 = m1.Clone();
+			return m1.SubN(n);
 		}
 
-		public static SubN2(p1: number, p2: Mat4): Mat4 {
-			let m = new Mat4();
-			m.x = Vec4.SubN2(p1, p2.x);
-			m.y = Vec4.SubN2(p1, p2.y);
-			m.z = Vec4.SubN2(p1, p2.z);
-			m.w = Vec4.SubN2(p1, p2.w);
-			return m;
+		public static SubN2(n: number, p: Mat4): Mat4 {
+			p = p.Clone();
+			return p.SubN2(n);
 		}
 
 		public static Mul(m1: Mat4, m2: Mat4): Mat4 {
-			return new Mat4
-				(
-				new Vec4(m2.x.x * m1.x.x + m2.x.y * m1.y.x + m2.x.z * m1.z.x + m2.x.w * m1.w.x,
-					m2.x.x * m1.x.y + m2.x.y * m1.y.y + m2.x.z * m1.z.y + m2.x.w * m1.w.y,
-					m2.x.x * m1.x.z + m2.x.y * m1.y.z + m2.x.z * m1.z.z + m2.x.w * m1.w.z,
-					m2.x.x * m1.x.w + m2.x.y * m1.y.w + m2.x.z * m1.z.w + m2.x.w * m1.w.w),
-				new Vec4(m2.y.x * m1.x.x + m2.y.y * m1.y.x + m2.y.z * m1.z.x + m2.y.w * m1.w.x,
-					m2.y.x * m1.x.y + m2.y.y * m1.y.y + m2.y.z * m1.z.y + m2.y.w * m1.w.y,
-					m2.y.x * m1.x.z + m2.y.y * m1.y.z + m2.y.z * m1.z.z + m2.y.w * m1.w.z,
-					m2.y.x * m1.x.w + m2.y.y * m1.y.w + m2.y.z * m1.z.w + m2.y.w * m1.w.w),
-				new Vec4(m2.z.x * m1.x.x + m2.z.y * m1.y.x + m2.z.z * m1.z.x + m2.z.w * m1.w.x,
-					m2.z.x * m1.x.y + m2.z.y * m1.y.y + m2.z.z * m1.z.y + m2.z.w * m1.w.y,
-					m2.z.x * m1.x.z + m2.z.y * m1.y.z + m2.z.z * m1.z.z + m2.z.w * m1.w.z,
-					m2.z.x * m1.x.w + m2.z.y * m1.y.w + m2.z.z * m1.z.w + m2.z.w * m1.w.w),
-				new Vec4(m2.w.x * m1.x.x + m2.w.y * m1.y.x + m2.w.z * m1.z.x + m2.w.w * m1.w.x,
-					m2.w.x * m1.x.y + m2.w.y * m1.y.y + m2.w.z * m1.z.y + m2.w.w * m1.w.y,
-					m2.w.x * m1.x.z + m2.w.y * m1.y.z + m2.w.z * m1.z.z + m2.w.w * m1.w.z,
-					m2.w.x * m1.x.w + m2.w.y * m1.y.w + m2.w.z * m1.z.w + m2.w.w * m1.w.w)
-				);
+			m1 = m1.Clone();
+			return m1.Mul(m2);
 		}
 
-		public static MulN(p1: Mat4, p2: number): Mat4 {
-			let m = new Mat4();
-			m.x = Vec4.MulN(p1.x, p2);
-			m.y = Vec4.MulN(p1.y, p2);
-			m.z = Vec4.MulN(p1.z, p2);
-			m.w = Vec4.MulN(p1.w, p2);
-			return m;
+		public static MulN(m: Mat4, n: number): Mat4 {
+			m = m.Clone();
+			return m.MulN(n);
 		}
 
-		public static Div(p1: Mat4, p2: Mat4): Mat4 {
-			let m = new Mat4();
-			m.x = Vec4.Div(p1.x, p2.x);
-			m.y = Vec4.Div(p1.y, p2.y);
-			m.z = Vec4.Div(p1.z, p2.z);
-			m.w = Vec4.Div(p1.w, p2.w);
-			return m;
+		public static Div(m1: Mat4, m2: Mat4): Mat4 {
+			m1 = m1.Clone();
+			return m1.Div(m2);
 		}
 
-		public static DivN(p1: Mat4, p2: number): Mat4 {
-			let m = new Mat4();
-			m.x = Vec4.DivN(p1.x, p2);
-			m.y = Vec4.DivN(p1.y, p2);
-			m.z = Vec4.DivN(p1.z, p2);
-			m.w = Vec4.DivN(p1.w, p2);
-			return m;
+		public static DivN(m: Mat4, n: number): Mat4 {
+			m = m.Clone();
+			return m.DivN(n);
 		}
 
-		public static DivN2(p1: number, p2: Mat4): Mat4 {
-			let m = new Mat4();
-			m.x = Vec4.DivN2(p1, p2.x);
-			m.y = Vec4.DivN2(p1, p2.y);
-			m.z = Vec4.DivN2(p1, p2.z);
-			m.w = Vec4.DivN2(p1, p2.w);
-			return m;
-		}
-
-		public Clone(): Mat4 {
-			let m = new Mat4();
-			m.x = this.x.Clone();
-			m.y = this.y.Clone();
-			m.z = this.z.Clone();
-			m.w = this.w.Clone();
-			return m;
-		}
-
-		public Transform(v: Vec4): Vec4 {
-			return new Vec4
-				(
-				v.x * this.x.x + v.y * this.y.x + v.z * this.z.x + v.w * this.w.x,
-				v.x * this.x.y + v.y * this.y.y + v.z * this.z.y + v.w * this.w.y,
-				v.x * this.x.z + v.y * this.y.z + v.z * this.z.z + v.w * this.w.z,
-				v.x * this.x.w + v.y * this.y.w + v.z * this.z.w + v.w * this.w.w
-				);
-		}
-
-		public TransformPoint(v: Vec3): Vec3 {
-			return new Vec3
-				(
-				v.x * this.x.x + v.y * this.y.x + v.z * this.z.x + this.w.x,
-				v.x * this.x.y + v.y * this.y.y + v.z * this.z.y + this.w.y,
-				v.x * this.x.z + v.y * this.y.z + v.z * this.z.z + this.w.z
-				);
-		}
-
-		public TransformVector(v: Vec3): Vec3 {
-			return new Vec3
-				(
-				v.x * this.x.x + v.y * this.y.x + v.z * this.z.x,
-				v.x * this.x.y + v.y * this.y.y + v.z * this.z.y,
-				v.x * this.x.z + v.y * this.y.z + v.z * this.z.z
-				);
-		}
-
-		public Identity(): void {
-			this.x.x = 1;
-			this.x.y = 0;
-			this.x.z = 0;
-			this.x.w = 0;
-			this.y.x = 0;
-			this.y.y = 1;
-			this.y.z = 0;
-			this.y.w = 0;
-			this.z.x = 0;
-			this.z.y = 0;
-			this.z.z = 1;
-			this.z.w = 0;
-			this.w.x = 0;
-			this.w.y = 0;
-			this.w.z = 0;
-			this.w.w = 1;
-		}
-
-		public Transpose(): void {
-			let m00 = this.x.x;
-			let m01 = this.y.x;
-			let m02 = this.z.x;
-			let m03 = this.w.x;
-			let m10 = this.x.y;
-			let m11 = this.y.y;
-			let m12 = this.z.y;
-			let m13 = this.w.y;
-			let m20 = this.x.z;
-			let m21 = this.y.z;
-			let m22 = this.z.z;
-			let m23 = this.w.z;
-			let m30 = this.x.w;
-			let m31 = this.y.w;
-			let m32 = this.z.w;
-			let m33 = this.w.w;
-			this.x.x = m00;
-			this.x.y = m01;
-			this.x.z = m02;
-			this.x.w = m03;
-			this.y.x = m10;
-			this.y.y = m11;
-			this.y.z = m12;
-			this.y.w = m13;
-			this.z.x = m20;
-			this.z.y = m21;
-			this.z.z = m22;
-			this.z.w = m23;
-			this.w.x = m30;
-			this.w.y = m31;
-			this.w.z = m32;
-			this.w.w = m33;
-		}
-
-		public Determinant(): number {
-			let det1 = this.z.z * this.w.w - this.z.w * this.w.z;
-			let det2 = this.z.y * this.w.w - this.z.w * this.w.y;
-			let det3 = this.z.y * this.w.z - this.z.z * this.w.y;
-			let det4 = this.z.x * this.w.w - this.z.w * this.w.x;
-			let det5 = this.z.x * this.w.z - this.z.z * this.w.x;
-			let det6 = this.z.x * this.w.y - this.z.y * this.w.x;
-
-			return this.x.x * (this.y.y * det1 - this.y.z * det2 + this.y.w * det3) -
-				this.x.y * (this.y.x * det1 - this.y.z * det4 + this.y.w * det5) +
-				this.x.z * (this.y.x * det2 - this.y.y * det4 + this.y.w * det6) -
-				this.x.w * (this.y.x * det3 - this.y.y * det5 + this.y.z * det6);
-		}
-
-		public NonhomogeneousInvert(): void {
-			let m3: Mat3 = new Mat3();
-			m3.x.x = this.x.x;
-			m3.x.y = this.x.y;
-			m3.x.z = this.x.z;
-			m3.y.x = this.y.x;
-			m3.y.y = this.y.y;
-			m3.y.z = this.y.z;
-			m3.z.x = this.z.x;
-			m3.z.y = this.z.y;
-			m3.z.z = this.z.z;
-			m3.Invert();
-			let o = Mat4.identity;
-			this.x.x = m3.x.x;
-			this.x.y = m3.x.y;
-			this.x.z = m3.x.z;
-			this.y.x = m3.y.x;
-			this.y.y = m3.y.y;
-			this.y.z = m3.y.z;
-			this.z.x = m3.z.x;
-			this.z.y = m3.z.y;
-			this.z.z = m3.z.z;
-			let v = m3.Transform(new Vec3(this.w.x, this.w.y, this.w.z));
-			this.w.x = -v.x;
-			this.w.y = -v.y;
-			this.w.z = -v.z;
-		}
-
-		public Invert(): void {
-			let determinant = 1 / this.Determinant();
-
-			let m00 = (this.y.y * this.z.z * this.w.w + this.y.z * this.z.w * this.w.y + this.y.w * this.z.y * this.w.z -
-				this.y.y * this.z.w * this.w.z - this.y.z * this.z.y * this.w.w - this.y.w * this.z.z * this.w.y) * determinant;
-			let m01 = (this.x.y * this.z.w * this.w.z + this.x.z * this.z.y * this.w.w + this.x.w * this.z.z * this.w.y -
-				this.x.y * this.z.z * this.w.w - this.x.z * this.z.w * this.w.y - this.x.w * this.z.y * this.w.z) * determinant;
-			let m02 = (this.x.y * this.y.z * this.w.w + this.x.z * this.y.w * this.w.y + this.x.w * this.y.y * this.w.z -
-				this.x.y * this.y.w * this.w.z - this.x.z * this.y.y * this.w.w - this.x.w * this.y.z * this.w.y) * determinant;
-			let m03 = (this.x.y * this.y.w * this.z.z + this.x.z * this.y.y * this.z.w + this.x.w * this.y.z * this.z.y -
-				this.x.y * this.y.z * this.z.w - this.x.z * this.y.w * this.z.y - this.x.w * this.y.y * this.z.z) * determinant;
-
-			let m10 = (this.y.x * this.z.w * this.w.z + this.y.z * this.z.x * this.w.w + this.y.w * this.z.z * this.w.x -
-				this.y.x * this.z.z * this.w.w - this.y.z * this.z.w * this.w.x - this.y.w * this.z.x * this.w.z) * determinant;
-			let m11 = (this.x.x * this.z.z * this.w.w + this.x.z * this.z.w * this.w.x + this.x.w * this.z.x * this.w.z -
-				this.x.x * this.z.w * this.w.z - this.x.z * this.z.x * this.w.w - this.x.w * this.z.z * this.w.x) * determinant;
-			let m12 = (this.x.x * this.y.w * this.w.z + this.x.z * this.y.x * this.w.w + this.x.w * this.y.z * this.w.x -
-				this.x.x * this.y.z * this.w.w - this.x.z * this.y.w * this.w.x - this.x.w * this.y.x * this.w.z) * determinant;
-			let m13 = (this.x.x * this.y.z * this.z.w + this.x.z * this.y.w * this.z.x + this.x.w * this.y.x * this.z.z -
-				this.x.x * this.y.w * this.z.z - this.x.z * this.y.x * this.z.w - this.x.w * this.y.z * this.z.x) * determinant;
-
-			let m20 = (this.y.x * this.z.y * this.w.w + this.y.y * this.z.w * this.w.x + this.y.w * this.z.x * this.w.y -
-				this.y.x * this.z.w * this.w.y - this.y.y * this.z.x * this.w.w - this.y.w * this.z.y * this.w.x) * determinant;
-			let m21 = (this.x.x * this.z.w * this.w.y + this.x.y * this.z.x * this.w.w + this.x.w * this.z.y * this.w.x -
-				this.x.x * this.z.y * this.w.w - this.x.y * this.z.w * this.w.x - this.x.w * this.z.x * this.w.y) * determinant;
-			let m22 = (this.x.x * this.y.y * this.w.w + this.x.y * this.y.w * this.w.x + this.x.w * this.y.x * this.w.y -
-				this.x.x * this.y.w * this.w.y - this.x.y * this.y.x * this.w.w - this.x.w * this.y.y * this.w.x) * determinant;
-			let m23 = (this.x.x * this.y.w * this.z.y + this.x.y * this.y.x * this.z.w + this.x.w * this.y.y * this.z.x -
-				this.x.x * this.y.y * this.z.w - this.x.y * this.y.w * this.z.x - this.x.w * this.y.x * this.z.y) * determinant;
-
-			let m30 = (this.y.x * this.z.z * this.w.y + this.y.y * this.z.x * this.w.z + this.y.z * this.z.y * this.w.x -
-				this.y.x * this.z.y * this.w.z - this.y.y * this.z.z * this.w.x - this.y.z * this.z.x * this.w.y) * determinant;
-			let m31 = (this.x.x * this.z.y * this.w.z + this.x.y * this.z.z * this.w.x + this.x.z * this.z.x * this.w.y -
-				this.x.x * this.z.z * this.w.y - this.x.y * this.z.x * this.w.z - this.x.z * this.z.y * this.w.x) * determinant;
-			let m32 = (this.x.x * this.y.z * this.w.y + this.x.y * this.y.x * this.w.z + this.x.z * this.y.y * this.w.x -
-				this.x.x * this.y.y * this.w.z - this.x.y * this.y.z * this.w.x - this.x.z * this.y.x * this.w.y) * determinant;
-			let m33 = (this.x.x * this.y.y * this.z.z + this.x.y * this.y.z * this.z.x + this.x.z * this.y.x * this.z.y -
-				this.x.x * this.y.z * this.z.y - this.x.y * this.y.x * this.z.z - this.x.z * this.y.y * this.z.x) * determinant;
-
-			this.x.x = m00;
-			this.x.y = m01;
-			this.x.z = m02;
-			this.x.w = m03;
-			this.y.x = m10;
-			this.y.y = m11;
-			this.y.z = m12;
-			this.y.w = m13;
-			this.z.x = m20;
-			this.z.y = m21;
-			this.z.z = m22;
-			this.z.w = m23;
-			this.w.x = m30;
-			this.w.y = m31;
-			this.w.z = m32;
-			this.w.w = m33;
+		public static DivN2(n: number, m: Mat4): Mat4 {
+			m = m.Clone();
+			return m.DivN2(n);
 		}
 
 		public static View(position: Vec3, lookAt: Vec3, upVector: Vec3): Mat4 {

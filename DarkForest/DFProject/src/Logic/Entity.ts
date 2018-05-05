@@ -2,8 +2,8 @@
 
 namespace Logic {
 	export class Entity extends Shared.GPoolObject {
-		private _position: RC.Numerics.Vec3 = RC.Numerics.Vec3.zero;
-		private _direction: RC.Numerics.Vec3 = RC.Numerics.Vec3.zero;
+		private _position: RC.Numerics.Vec3;
+		private _direction: RC.Numerics.Vec3;
 		private _battle: Logic.Battle = null;
 		private _markToDestroy: boolean = false;
 
@@ -31,6 +31,8 @@ namespace Logic {
 
 		constructor() {
 			super();
+			this._position = RC.Numerics.Vec3.zero;
+			this._direction = new RC.Numerics.Vec3(0, 0, 1);
 		}
 
 		protected InternalDispose(): void {
@@ -40,8 +42,8 @@ namespace Logic {
 			this._battle = battle;
 			this._rid = param.rid;
 			this._data = Shared.Model.ModelFactory.GetEntityData(Shared.Utils.GetIDFromRID(this.rid));
-			this.position = param.position;
-			this.direction = param.direction;
+			this.position = param.position.Clone();
+			this.direction = param.direction.Clone();
 			Shared.Event.SyncEvent.EntityAddedToBattle(this.rid);
 			this.InternalOnAddedToBattle(param);
 			this.OnSyncState();
@@ -73,8 +75,8 @@ namespace Logic {
 
 		public OnSyncState(): void {
 			let e = Shared.Event.SyncEvent.BeginSyncProps(this.rid);
-			Shared.Event.SyncEvent.AddSyncProp(e, Shared.Attr.Position, this._position);
-			Shared.Event.SyncEvent.AddSyncProp(e, Shared.Attr.Direction, this._direction);
+			Shared.Event.SyncEvent.AddSyncProp(e, Shared.Attr.Position, this.position);
+			Shared.Event.SyncEvent.AddSyncProp(e, Shared.Attr.Direction, this.direction);
 			Shared.Event.SyncEvent.EndSyncProps(e);
 		}
 

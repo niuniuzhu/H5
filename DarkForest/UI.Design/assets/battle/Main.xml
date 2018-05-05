@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="720,1280">
+<component size="1334,750">
   <displayList>
-    <component id="n7_tmok" name="joystick" src="tmok9" xy="21,1023" visible="false"/>
-    <text id="n8_qfd6" name="count_down" xy="27,582" size="664,115" fontSize="96" color="#ffcc00" align="center" vAlign="middle" autoSize="none" bold="true" italic="true" strokeColor="#000000" text="">
+    <component id="n7_tmok" name="joystick" src="tmok9" xy="115,463" visible="false"/>
+    <text id="n8_qfd6" name="count_down" xy="334,317" size="664,115" fontSize="96" color="#ffcc00" align="center" vAlign="middle" autoSize="none" bold="true" italic="true" strokeColor="#000000" text="">
       <relation target="" sidePair="center-center,middle-middle"/>
     </text>
-    <text id="n10_qfd6" name="go_text" xy="358,634" pivot="0.5,0.5" anchor="true" size="171,115" visible="false" fontSize="96" color="#ffcc00" align="center" vAlign="middle" bold="true" italic="true" text="Go!">
+    <text id="n10_qfd6" name="go_text" xy="665,369" pivot="0.5,0.5" anchor="true" size="171,115" visible="false" fontSize="96" color="#ffcc00" align="center" vAlign="middle" bold="true" italic="true" text="Go!">
       <relation target="" sidePair="center-center,middle-middle"/>
     </text>
-    <component id="n11_atkr" name="n11" src="atkrs" xy="578,1135">
+    <component id="n11_atkr" name="n11" src="atkrs" xy="1163,586">
       <relation target="" sidePair="right-right,bottom-bottom"/>
     </component>
-    <component id="n12_qhsc" name="win_com" src="qhscz" xy="60,470" visible="false">
+    <component id="n12_qhsc" name="win_com" src="qhscz" xy="367,205" visible="false">
       <relation target="" sidePair="center-center,middle-middle"/>
     </component>
   </displayList>

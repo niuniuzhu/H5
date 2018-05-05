@@ -1,9 +1,9 @@
 namespace View {
 	export class Graphic {
-		private readonly _manager: GraphicManager;
-		private readonly _root: fairygui.GLoader;
-		private _position: RC.Numerics.Vec3;
-		private _rotation: RC.Numerics.Quat;
+		protected readonly _manager: GraphicManager;
+		protected readonly _root: fairygui.GLoader;
+		protected _position: RC.Numerics.Vec3;
+		protected _rotation: RC.Numerics.Quat;
 
 		public get root(): fairygui.GLoader { return this._root; }
 
@@ -26,6 +26,9 @@ namespace View {
 		constructor(manager: GraphicManager) {
 			this._manager = manager;
 			this._root = new fairygui.GLoader();
+			this._root.autoSize = true;
+			this._position = RC.Numerics.Vec3.zero;
+			this._rotation = RC.Numerics.Quat.identity;
 		}
 
 		public Load(id: string): void {
@@ -37,8 +40,7 @@ namespace View {
 		}
 
 		public UpdatePosition(): void {
-			let mat = this._manager.battle.camera.worldToLocal;
-			let localPos = mat.TransformPoint(this._position);
+			let localPos = this._manager.battle.camera.WorldToLocal(this._position);
 			this._root.x = localPos.x;
 			this._root.y = localPos.y;
 		}

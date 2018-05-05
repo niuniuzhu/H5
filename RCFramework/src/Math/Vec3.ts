@@ -46,108 +46,6 @@ namespace RC.Numerics {
 			this.z = z;
 		}
 
-		public static Add(v1: Vec3, v2: Vec3): Vec3 {
-			v1 = v1.Clone();
-			v1.x += v2.x;
-			v1.y += v2.y;
-			v1.z += v2.z;
-			return v1;
-		}
-
-		public static AddN(v: Vec3, n: number): Vec3 {
-			v = v.Clone();
-			v.x += n;
-			v.y += n;
-			v.z += n;
-			return v;
-		}
-
-		public static Sub(v1: Vec3, v2: Vec3): Vec3 {
-			v1 = v1.Clone();
-			v1.x -= v2.x;
-			v1.y -= v2.y;
-			v1.z -= v2.z;
-			return v1;
-		}
-
-		public static SubN(v: Vec3, n: number): Vec3 {
-			v = v.Clone();
-			v.x -= n;
-			v.y -= n;
-			v.z -= n;
-			return v;
-		}
-
-		public static SubN2(n: number, v: Vec3): Vec3 {
-			v = v.Clone();
-			v.x = n - v.x;
-			v.y = n - v.y;
-			v.z = n - v.z;
-			return v;
-		}
-
-		public static Negate(v: Vec3): Vec3 {
-			v = v.Clone();
-			v.x = -v.x;
-			v.y = -v.y;
-			v.z = -v.z;
-			return v;
-		}
-
-		public static Mul(v1: Vec3, v2: Vec3): Vec3 {
-			v1 = v1.Clone();
-			v1.x *= v2.x;
-			v1.y *= v2.y;
-			v1.z *= v2.z;
-			return v1;
-		}
-
-		public static MulN(v: Vec3, n: number): Vec3 {
-			v = v.Clone();
-			v.x *= n;
-			v.y *= n;
-			v.z *= n;
-			return v;
-		}
-
-		public static Div(v1: Vec3, v2: Vec3): Vec3 {
-			v1 = v1.Clone();
-			v1.x /= v2.x;
-			v1.y /= v2.y;
-			v1.z /= v2.z;
-			return v1;
-		}
-
-		public static DivN(v: Vec3, n: number): Vec3 {
-			v = v.Clone();
-			v.x /= n;
-			v.y /= n;
-			v.z /= n;
-			return v;
-		}
-
-		public static DivN2(n: number, v: Vec3): Vec3 {
-			v = v.Clone();
-			v.x = n / v.x;
-			v.y = n / v.y;
-			v.z = n / v.z;
-			return v;
-		}
-
-		public static Equals(v1: Vec3, v2: Vec3): boolean {
-			if (v1 == null || v2 == null)
-				return false;
-			return v1.x == v2.x && v1.y == v2.y && v1.z == v2.z;
-		}
-
-		public EqualsTo(v: Vec3): boolean {
-			return Vec3.Equals(this, v);
-		}
-
-		public ToString(): string {
-			return "(" + this.x + "," + this.y + "," + this.z + ")";
-		}
-
 		public Clone(): Vec3 {
 			let v = new Vec3();
 			v.x = this.x;
@@ -166,6 +64,83 @@ namespace RC.Numerics {
 			this.x = x;
 			this.y = y;
 			this.z = z;
+		}
+
+		public Add(v: Vec3): Vec3 {
+			this.x += v.x;
+			this.y += v.y;
+			this.z += v.z;
+			return this;
+		}
+
+		public AddN(n: number): Vec3 {
+			this.x += n;
+			this.y += n;
+			this.z += n;
+			return this;
+		}
+
+		public Sub(v: Vec3): Vec3 {
+			this.x -= v.x;
+			this.y -= v.y;
+			this.z -= v.z;
+			return this;
+		}
+
+		public SubN(n: number): Vec3 {
+			this.x -= n;
+			this.y -= n;
+			this.z -= n;
+			return this;
+		}
+
+		public SubN2(n: number): Vec3 {
+			this.x = n - this.x;
+			this.y = n - this.y;
+			this.z = n - this.z;
+			return this;
+		}
+
+		public Negate(): Vec3 {
+			this.x = -this.x;
+			this.y = -this.y;
+			this.z = -this.z;
+			return this;
+		}
+
+		public Mul(v: Vec3): Vec3 {
+			this.x *= v.x;
+			this.y *= v.y;
+			this.z *= v.z;
+			return this;
+		}
+
+		public MulN(n: number): Vec3 {
+			this.x *= n;
+			this.y *= n;
+			this.z *= n;
+			return this;
+		}
+
+		public Div(v: Vec3): Vec3 {
+			this.x /= v.x;
+			this.y /= v.y;
+			this.z /= v.z;
+			return this;
+		}
+
+		public DivN(n: number): Vec3 {
+			this.x /= n;
+			this.y /= n;
+			this.z /= n;
+			return this;
+		}
+
+		public DivN2(n: number): Vec3 {
+			this.x = n / this.x;
+			this.y = n / this.y;
+			this.z = n / this.z;
+			return this;
 		}
 
 		public ClampMagnitude(maxLength: number): void {
@@ -194,12 +169,6 @@ namespace RC.Numerics {
 			return Vec3.Sub(vector, this).SqrMagnitude();
 		}
 
-		public Negate(): void {
-			this.x = -this.x;
-			this.y = -this.y;
-			this.z = -this.z;
-		}
-
 		public Scale(scale: Vec3): void {
 			this.x *= scale.x;
 			this.y *= scale.y;
@@ -208,6 +177,10 @@ namespace RC.Numerics {
 
 		public Dot(v: Vec3): number {
 			return this.x * v.x + this.y * v.y + this.z * v.z;
+		}
+
+		public Cross(v: Vec3): Vec3 {
+			return new Vec3(this.y * v.z - this.z * v.y, this.z * v.x - this.x * v.z, this.x * v.y - this.y * v.x);
 		}
 
 		public Normalize(): void {
@@ -224,10 +197,6 @@ namespace RC.Numerics {
 			this.x *= f;
 			this.y *= f;
 			this.z *= f;
-		}
-
-		public Cross(v: Vec3): Vec3 {
-			return new Vec3(this.y * v.z - this.z * v.y, this.z * v.x - this.x * v.z, this.x * v.y - this.y * v.x);
 		}
 
 		public AproxEqualsBox(vector: Vec3, tolerance: number): boolean {
@@ -299,6 +268,75 @@ namespace RC.Numerics {
 		public InersectPlane(planeNormal: Vec3, planeLocation: Vec3): Vec3 {
 			let v = Vec3.Sub(this, planeLocation);
 			return Vec3.Sub(this, Vec3.MulN(planeNormal, v.Dot(planeNormal)));
+		}
+
+		public EqualsTo(v: Vec3): boolean {
+			return Vec3.Equals(this, v);
+		}
+
+		public ToString(): string {
+			return "(" + this.x + "," + this.y + "," + this.z + ")";
+		}
+
+		public static Add(v1: Vec3, v2: Vec3): Vec3 {
+			v1 = v1.Clone();
+			return v1.Add(v2);
+		}
+
+		public static AddN(v: Vec3, n: number): Vec3 {
+			v = v.Clone();
+			return v.AddN(n);
+		}
+
+		public static Sub(v1: Vec3, v2: Vec3): Vec3 {
+			v1 = v1.Clone();
+			return v1.Sub(v2);
+		}
+
+		public static SubN(v: Vec3, n: number): Vec3 {
+			v = v.Clone();
+			return v.SubN(n);
+		}
+
+		public static SubN2(n: number, v: Vec3): Vec3 {
+			v = v.Clone();
+			return v.SubN2(n);
+		}
+
+		public static Mul(v1: Vec3, v2: Vec3): Vec3 {
+			v1 = v1.Clone();
+			return v1.Mul(v2);
+		}
+
+		public static MulN(v: Vec3, n: number): Vec3 {
+			v = v.Clone();
+			return v.MulN(n);
+		}
+
+		public static Div(v1: Vec3, v2: Vec3): Vec3 {
+			v1 = v1.Clone();
+			return v1.Div(v2);
+		}
+
+		public static DivN(v: Vec3, n: number): Vec3 {
+			v = v.Clone();
+			return v.DivN(n);
+		}
+
+		public static DivN2(n: number, v: Vec3): Vec3 {
+			v = v.Clone();
+			return v.DivN2(n);
+		}
+
+		public static Negate(v: Vec3): Vec3 {
+			v = v.Clone();
+			return v.Negate();
+		}
+
+		public static Equals(v1: Vec3, v2: Vec3): boolean {
+			if (v1 == null || v2 == null)
+				return false;
+			return v1.x == v2.x && v1.y == v2.y && v1.z == v2.z;
 		}
 
 		public static Distance(v0: Vec3, v1: Vec3): number {
