@@ -43,20 +43,18 @@ namespace Game {
 			View.UI.UIManager.Init(new RC.Numerics.Vec2(600, 800));
 			Laya.timer.frameLoop(1, this, this.Update);
 
-			let param = new Logic.BattleParams();
+			let param = new Shared.Model.BattleParams();
 			param.framesPerKeyFrame = 4;
 			param.frameRate = 20;
 			param.uid = "user";
 			param.id = "m0";
-			param.rndSeed = Shared.Timer.utcTime;
+			param.rndSeed = RC.Utils.Timer.utcTime;
 
-			let player = new Logic.Player();
-			player.id = "user";
-			player.cid = "c0";
-			player.team = 0;
-			player.name = "name0";
+			let building = new Shared.Model.Building();
+			building.uid = "user";
+			building.id = "b0";
 
-			param.players = [player];
+			param.buildings = [building];
 
 			View.UI.UIManager.EnterBattle(param);
 		}

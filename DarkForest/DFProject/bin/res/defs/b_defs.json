@@ -18,34 +18,11 @@
 		}
 	},
 	"entities": {
-		"default": {
-			"size": [
-				0.3,
-				0.3,
-				0.3
-			],
-			"natural_speed": 2,
-			"fov": 2.8
-		},
-		"c0": {
-			"size": [
-				4,
-				1,
-				0.5
-			],
-			"name": "test1",
-			"model": "c0"
+		"b0": {
+			"name": "test",
+			"model": "b0",
+			"icon": "b0",
+			"footprint": 16
 		}
-	},
-	"arr": [
-		1,
-		2,
-		3
-	],
-	"b": [
-		true,
-		false,
-		true,
-		"abs"
-	]
+	}
 }

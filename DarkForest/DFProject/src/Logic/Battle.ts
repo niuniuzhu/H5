@@ -1,26 +1,10 @@
 namespace Logic {
-	export class BattleParams {
-		public frameRate: number = 0;
-		public framesPerKeyFrame: number = 0;
-		public uid: string = "";
-		public id: string = "";
-		public rndSeed: number = 0;
-		public players: Player[] = null;
-	}
-
-	export class Player {
-		public id: string = "";
-		public name: string = "";
-		public cid: string = "";
-		public team: number = 0;
-	}
-
 	export class Battle {
 		private _frame: number = 0;
 		private _deltaTime: number = 0;
 		private _time: number = 0;
 		private readonly _data: Shared.Model.MapData;
-		private readonly _random: Shared.ConsistentRandom;
+		private readonly _random: RC.Utils.ConsistentRandom;
 		private readonly _context: Shared.UpdateContext;
 		private readonly _entityManager: EntityManager;
 
@@ -36,15 +20,15 @@ namespace Logic {
 			return this._time;
 		}
 
-		constructor(param: BattleParams) {
+		constructor(param: Shared.Model.BattleParams) {
 			this._data = Shared.Model.ModelFactory.GetMapData(Shared.Utils.GetIDFromRID(param.id));
-			this._random = new Shared.ConsistentRandom(param.rndSeed);
+			this._random = new RC.Utils.ConsistentRandom(param.rndSeed);
 			this._context = new Shared.UpdateContext();
 			this._entityManager = new EntityManager(this);
 
 			Shared.Event.SyncEvent.CreateBattle(param.id);
 
-			this.CreatePlayers(param.players);
+			this.CreateBuildings(param);
 		}
 
 		public Dispose(): void {
@@ -65,16 +49,16 @@ namespace Logic {
 			this._entityManager.Update(this._context);
 		}
 
-		public CreatePlayers(players: Player[]): void {
-			for (let i = 0; i < players.length; ++i) {
-				let player = players[i];
+		public CreateBuildings(param: Shared.Model.BattleParams): void {
+			let buildings = param.buildings;
+			for (let i = 0; i < buildings.length; ++i) {
+				let building = buildings[i];
 				let entityParam = new Shared.Model.EntityParam();
-				entityParam.rid = player.cid + "@" + player.id;
-				entityParam.uid = player.id;
-				entityParam.team = player.team;
+				entityParam.rid = Shared.Utils.MakeRIDFromID(building.id);
+				entityParam.uid = param.uid;
 				entityParam.position = new RC.Numerics.Vec3();
 				entityParam.direction = new RC.Numerics.Vec3(1, 0, 0);
-				let entity = this._entityManager.Create<Logic.Entity>(entityParam);
+				let entity = this._entityManager.Create(Logic.Building, entityParam);
 			}
 		}
 	}

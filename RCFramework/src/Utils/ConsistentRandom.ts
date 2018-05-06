@@ -1,4 +1,4 @@
-namespace Shared {
+namespace RC.Utils {
 	export class ConsistentRandom {
 		private seed: number;
 

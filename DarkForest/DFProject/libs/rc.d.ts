@@ -905,3 +905,88 @@ declare namespace RC.Numerics {
         static Round(v: Vec4): Vec4;
     }
 }
+declare namespace RC.Utils {
+    class ConsistentRandom {
+        private seed;
+        constructor(seed: number);
+        private next(min, max);
+        nextInt(min: number, max: number): number;
+        nextDouble(): number;
+        pick(collection: any[]): any;
+    }
+}
+declare namespace RC.Utils {
+    enum GuidFormat {
+        BRACES = 1,
+        DASHES = 2,
+    }
+    class GUID {
+        static readonly empty: GUID;
+        private readonly data1;
+        private readonly data2;
+        private readonly data3;
+        private readonly data4;
+        constructor();
+        constructor(val: string);
+        constructor(val: GUID);
+        constructor(val1: Uint8Array, val2: Uint8Array, val3: Uint8Array, val4: Uint8Array);
+        private CopyCtor(val);
+        private ParseImpl(val);
+        ToString(format?: GuidFormat): string;
+        static Parse(value: string): GUID;
+        static Generate(seed?: number): GUID;
+        private static ToStringHexUint8(values, start?, end?);
+        private static StringToUint8(val);
+        private static Convolution(f, g);
+    }
+}
+declare namespace RC.Utils {
+    class Hashtable {
+        static Concat(map: {
+            [k: string]: any;
+        }, map2: {
+            [k: string]: any;
+        }): void;
+        static GetArray(map: {
+            [k: string]: any;
+        }, key: string): any[];
+        static GetMap(map: {
+            [k: string]: any;
+        }, key: string): {
+            [k: string]: any;
+        };
+        static GetString(map: {
+            [k: string]: any;
+        }, key: string): string;
+        static GetNumber(map: {
+            [k: string]: any;
+        }, key: string): number;
+        static GetBool(map: {
+            [k: string]: any;
+        }, key: string): boolean;
+        static GetStringArray(map: {
+            [k: string]: any;
+        }, key: string): string[];
+        static GetNumberArray(map: {
+            [k: string]: any;
+        }, key: string): number[];
+        static GetBoolArray(map: {
+            [k: string]: any;
+        }, key: string): boolean[];
+        static GetVec2(map: {
+            [k: string]: any;
+        }, key: string): RC.Numerics.Vec2;
+        static GetVec3(map: {
+            [k: string]: any;
+        }, key: string): RC.Numerics.Vec3;
+        static GetVec4(map: {
+            [k: string]: any;
+        }, key: string): RC.Numerics.Vec4;
+    }
+}
+declare namespace RC.Utils {
+    class Timer {
+        static readonly utcTime: number;
+        static ToLocalTimeString(utc: number): string;
+    }
+}

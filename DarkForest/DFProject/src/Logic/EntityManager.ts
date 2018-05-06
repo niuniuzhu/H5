@@ -35,8 +35,8 @@ namespace Logic {
 			}
 		}
 
-		public Create<T extends Shared.GPoolObject>(param: Shared.Model.EntityParam): Shared.GPoolObject {
-			let entity = <Entity>this._gPool.Pop(Entity);
+		public Create<T extends Shared.GPoolObject>(c: new () => T, param: Shared.Model.EntityParam): Shared.GPoolObject {
+			let entity = <Entity>this._gPool.Pop(c);
 			this._idToEntity.setValue(param.rid, entity);
 			this._entities.push(entity);
 

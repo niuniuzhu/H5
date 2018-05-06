@@ -62,7 +62,7 @@
     <component id="kw7z1q" name="ConnectingBar.xml" path="/组件/"/>
     <movieclip id="rpmj1r" name="modelwaiting.jta" path="/素材/"/>
     <sound id="lqz41s" name="click.wav" path="/素材/" exported="true"/>
-    <image id="9y1y1t" name="c0.jpg" path="/素材/建筑/" exported="true"/>
+    <image id="9y1y1t" name="b0.jpg" path="/素材/建筑/" exported="true"/>
     <image id="gj1g1w" name="m0.jpg" path="/素材/建筑/" exported="true"/>
   </resources>
   <publish name="global"/>

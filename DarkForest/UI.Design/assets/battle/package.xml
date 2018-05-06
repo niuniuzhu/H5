@@ -30,6 +30,7 @@
     <image id="b1f614" name="i0.png" path="/Materials/items/" exported="true"/>
     <image id="b1f615" name="i2.png" path="/Materials/items/" exported="true"/>
     <image id="b1f616" name="i3.png" path="/Materials/items/" exported="true"/>
+    <component id="c3ns17" name="BuildingItem.xml" path="/"/>
   </resources>
   <publish name="battle"/>
 </packageDescription>

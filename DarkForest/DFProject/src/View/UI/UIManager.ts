@@ -49,7 +49,7 @@ namespace View.UI {
 			this.EnterModule(this._login);
 		}
 
-		public static EnterBattle(param: Logic.BattleParams): void {
+		public static EnterBattle(param: Shared.Model.BattleParams): void {
 			this.EnterModule(this._battle, param);
 		}
 	}

@@ -9,7 +9,7 @@
 			"command": "tsc-plus",
 			"args": [
 				"-p",
-				"./RCFramework",
+				"./RCFramework"
 			],
 			"group": {
 				"kind": "build",
@@ -26,13 +26,16 @@
 			"command": "tsc-plus",
 			"args": [
 				"-p",
-				"./DarkForest/DFProject",
+				"./DarkForest/DFProject"
 			],
 			"group": "build",
 			"presentation": {
 				"panel": "dedicated",
 				"reveal": "silent"
-			}
+			},
+			"problemMatcher": [
+				"$tsc"
+			]
 		}
 	]
 }

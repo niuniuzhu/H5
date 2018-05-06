@@ -87,18 +87,16 @@ var Game;
             console.log("start game...");
             View.UI.UIManager.Init(new RC.Numerics.Vec2(600, 800));
             Laya.timer.frameLoop(1, this, this.Update);
-            let param = new Logic.BattleParams();
+            let param = new Shared.Model.BattleParams();
             param.framesPerKeyFrame = 4;
             param.frameRate = 20;
             param.uid = "user";
             param.id = "m0";
-            param.rndSeed = Shared.Timer.utcTime;
-            let player = new Logic.Player();
-            player.id = "user";
-            player.cid = "c0";
-            player.team = 0;
-            player.name = "name0";
-            param.players = [player];
+            param.rndSeed = RC.Utils.Timer.utcTime;
+            let building = new Shared.Model.Building();
+            building.uid = "user";
+            building.id = "b0";
+            param.buildings = [building];
             View.UI.UIManager.EnterBattle(param);
         }
         Update() {
@@ -111,37 +109,17 @@ var Game;
 })(Game || (Game = {}));
 var Logic;
 (function (Logic) {
-    class BattleParams {
-        constructor() {
-            this.frameRate = 0;
-            this.framesPerKeyFrame = 0;
-            this.uid = "";
-            this.id = "";
-            this.rndSeed = 0;
-            this.players = null;
-        }
-    }
-    Logic.BattleParams = BattleParams;
-    class Player {
-        constructor() {
-            this.id = "";
-            this.name = "";
-            this.cid = "";
-            this.team = 0;
-        }
-    }
-    Logic.Player = Player;
     class Battle {
         constructor(param) {
             this._frame = 0;
             this._deltaTime = 0;
             this._time = 0;
             this._data = Shared.Model.ModelFactory.GetMapData(Shared.Utils.GetIDFromRID(param.id));
-            this._random = new Shared.ConsistentRandom(param.rndSeed);
+            this._random = new RC.Utils.ConsistentRandom(param.rndSeed);
             this._context = new Shared.UpdateContext();
             this._entityManager = new Logic.EntityManager(this);
             Shared.Event.SyncEvent.CreateBattle(param.id);
-            this.CreatePlayers(param.players);
+            this.CreateBuildings(param);
         }
         get frame() {
             return this._frame;
@@ -165,16 +143,16 @@ var Logic;
             this._context.frame = this.frame;
             this._entityManager.Update(this._context);
         }
-        CreatePlayers(players) {
-            for (let i = 0; i < players.length; ++i) {
-                let player = players[i];
+        CreateBuildings(param) {
+            let buildings = param.buildings;
+            for (let i = 0; i < buildings.length; ++i) {
+                let building = buildings[i];
                 let entityParam = new Shared.Model.EntityParam();
-                entityParam.rid = player.cid + "@" + player.id;
-                entityParam.uid = player.id;
-                entityParam.team = player.team;
+                entityParam.rid = Shared.Utils.MakeRIDFromID(building.id);
+                entityParam.uid = param.uid;
                 entityParam.position = new RC.Numerics.Vec3();
                 entityParam.direction = new RC.Numerics.Vec3(1, 0, 0);
-                let entity = this._entityManager.Create(entityParam);
+                let entity = this._entityManager.Create(Logic.Building, entityParam);
             }
         }
     }
@@ -274,6 +252,15 @@ var Logic;
 })(Logic || (Logic = {}));
 var Logic;
 (function (Logic) {
+    class Building extends Logic.Entity {
+        constructor() {
+            super();
+        }
+    }
+    Logic.Building = Building;
+})(Logic || (Logic = {}));
+var Logic;
+(function (Logic) {
     class EntityManager {
         constructor(battle) {
             this._battle = battle;
@@ -302,8 +289,8 @@ var Logic;
                 --count;
             }
         }
-        Create(param) {
-            let entity = this._gPool.Pop(Logic.Entity);
+        Create(c, param) {
+            let entity = this._gPool.Pop(c);
             this._idToEntity.setValue(param.rid, entity);
             this._entities.push(entity);
             Shared.Event.SyncEvent.CreateEntity(entity.constructor.name, param);
@@ -360,51 +347,26 @@ var Shared;
 })(Shared || (Shared = {}));
 var Shared;
 (function (Shared) {
-    class ConsistentRandom {
-        constructor(seed) {
-            this.seed = seed;
-        }
-        next(min, max) {
-            max = max || 0;
-            min = min || 0;
-            this.seed = (this.seed * 9301 + 49297) % 233280;
-            let rnd = this.seed / 233280;
-            return min + rnd * (max - min);
-        }
-        nextInt(min, max) {
-            return Math.round(this.next(min, max));
-        }
-        nextDouble() {
-            return this.next(0, 1);
-        }
-        pick(collection) {
-            return collection[this.nextInt(0, collection.length - 1)];
-        }
-    }
-    Shared.ConsistentRandom = ConsistentRandom;
-})(Shared || (Shared = {}));
-var Shared;
-(function (Shared) {
     class Defs {
         static Init(json) {
             Defs._defs = json;
         }
         static GetMap(id) {
-            let ht = Shared.Hashtable.GetMap(Defs._defs, "maps");
-            let defaultHt = Shared.Hashtable.GetMap(ht, "default");
-            let result = Shared.Hashtable.GetMap(ht, id);
+            let ht = RC.Utils.Hashtable.GetMap(Defs._defs, "maps");
+            let defaultHt = RC.Utils.Hashtable.GetMap(ht, "default");
+            let result = RC.Utils.Hashtable.GetMap(ht, id);
             if (result == null)
                 result = {};
-            Shared.Hashtable.Concat(result, defaultHt);
+            RC.Utils.Hashtable.Concat(result, defaultHt);
             return result;
         }
         static GetEntity(id) {
-            let ht = Shared.Hashtable.GetMap(Defs._defs, "entities");
-            let defaultHt = Shared.Hashtable.GetMap(ht, "default");
-            let result = Shared.Hashtable.GetMap(ht, id);
+            let ht = RC.Utils.Hashtable.GetMap(Defs._defs, "entities");
+            let defaultHt = RC.Utils.Hashtable.GetMap(ht, "default");
+            let result = RC.Utils.Hashtable.GetMap(ht, id);
             if (result == null)
                 result = {};
-            Shared.Hashtable.Concat(result, defaultHt);
+            RC.Utils.Hashtable.Concat(result, defaultHt);
             return result;
         }
     }
@@ -450,70 +412,6 @@ var Shared;
 })(Shared || (Shared = {}));
 var Shared;
 (function (Shared) {
-    class Hashtable {
-        static Concat(map, map2) {
-            for (let k in map2) {
-                if (map[k] == undefined) {
-                    map[k] = map2[k];
-                }
-            }
-        }
-        static GetArray(map, key) {
-            return map[key];
-        }
-        static GetMap(map, key) {
-            return map[key];
-        }
-        static GetString(map, key) {
-            return map[key];
-        }
-        static GetNumber(map, key) {
-            return map[key];
-        }
-        static GetBool(map, key) {
-            return map[key];
-        }
-        static GetStringArray(map, key) {
-            return this.GetArray(map, key);
-        }
-        static GetNumberArray(map, key) {
-            return this.GetArray(map, key);
-        }
-        static GetBoolArray(map, key) {
-            return this.GetArray(map, key);
-        }
-        static GetVec2(map, key) {
-            let arr = this.GetArray(map, key);
-            return new RC.Numerics.Vec2(arr[0], arr[1]);
-        }
-        static GetVec3(map, key) {
-            let arr = this.GetArray(map, key);
-            return new RC.Numerics.Vec3(arr[0], arr[1], arr[2]);
-        }
-        static GetVec4(map, key) {
-            let arr = this.GetArray(map, key);
-            return new RC.Numerics.Vec4(arr[0], arr[1], arr[2], arr[3]);
-        }
-    }
-    Shared.Hashtable = Hashtable;
-})(Shared || (Shared = {}));
-var Shared;
-(function (Shared) {
-    class Timer {
-        static get utcTime() {
-            let d1 = new Date();
-            return new Date(d1.getUTCFullYear(), d1.getUTCMonth(), d1.getUTCDate(), d1.getUTCHours(), d1.getUTCMinutes(), d1.getUTCSeconds(), d1.getUTCMilliseconds()).getTime();
-        }
-        static ToLocalTimeString(utc) {
-            let d1 = new Date(utc);
-            let d2 = Date.UTC(d1.getFullYear(), d1.getMonth(), d1.getDate(), d1.getHours(), d1.getMinutes(), d1.getSeconds(), d1.getMilliseconds());
-            return d2.toLocaleString();
-        }
-    }
-    Shared.Timer = Timer;
-})(Shared || (Shared = {}));
-var Shared;
-(function (Shared) {
     class UpdateContext {
         constructor() {
             this.deltaTime = 0;
@@ -526,6 +424,9 @@ var Shared;
 var Shared;
 (function (Shared) {
     class Utils {
+        static MakeRIDFromID(id) {
+            return `${id}@${btoa(RC.Utils.GUID.Generate().ToString(RC.Utils.GuidFormat.DASHES))}`;
+        }
         static GetIDFromRID(rid) {
             let pos = rid.indexOf("@");
             let id = pos != -1 ? rid.substring(0, pos) : rid;
@@ -744,8 +645,10 @@ var Shared;
             constructor(id) {
                 this.id = id;
                 let def = Shared.Defs.GetEntity(this.id);
-                this.name = Shared.Hashtable.GetString(def, "name");
-                this.model = Shared.Hashtable.GetString(def, "model");
+                this.name = RC.Utils.Hashtable.GetString(def, "name");
+                this.model = RC.Utils.Hashtable.GetString(def, "model");
+                this.icon = RC.Utils.Hashtable.GetString(def, "icon");
+                this.footprint = RC.Utils.Hashtable.GetNumber(def, "footprint");
             }
         }
         Model.EntityData = EntityData;
@@ -755,6 +658,24 @@ var Shared;
 (function (Shared) {
     var Model;
     (function (Model) {
+        class BattleParams {
+            constructor() {
+                this.frameRate = 0;
+                this.framesPerKeyFrame = 0;
+                this.uid = "";
+                this.id = "";
+                this.rndSeed = 0;
+                this.buildings = null;
+            }
+        }
+        Model.BattleParams = BattleParams;
+        class Building {
+            constructor() {
+                this.id = "";
+                this.uid = "";
+            }
+        }
+        Model.Building = Building;
         class EntityParam {
         }
         Model.EntityParam = EntityParam;
@@ -768,11 +689,11 @@ var Shared;
             constructor(id) {
                 this.id = id;
                 let def = Shared.Defs.GetMap(this.id);
-                this.name = Shared.Hashtable.GetString(def, "name");
-                this.model = Shared.Hashtable.GetString(def, "model");
-                this.size = Shared.Hashtable.GetVec2(def, "size");
-                this.restriMin = Shared.Hashtable.GetVec2(def, "restri_min");
-                this.restriMax = Shared.Hashtable.GetVec2(def, "restri_max");
+                this.name = RC.Utils.Hashtable.GetString(def, "name");
+                this.model = RC.Utils.Hashtable.GetString(def, "model");
+                this.size = RC.Utils.Hashtable.GetVec2(def, "size");
+                this.restriMin = RC.Utils.Hashtable.GetVec2(def, "restri_min");
+                this.restriMax = RC.Utils.Hashtable.GetVec2(def, "restri_max");
             }
         }
         Model.MapData = MapData;
@@ -968,8 +889,8 @@ var View;
             let type = e.entityType;
             let param = e.param;
             switch (type) {
-                case "Entity":
-                    this._entityManager.Create(param);
+                case "Building":
+                    this._entityManager.Create(View.CBuilding, param);
                     break;
             }
         }
@@ -1082,6 +1003,15 @@ var View;
 })(View || (View = {}));
 var View;
 (function (View) {
+    class CBuilding extends View.CEntity {
+        constructor() {
+            super();
+        }
+    }
+    View.CBuilding = CBuilding;
+})(View || (View = {}));
+var View;
+(function (View) {
     class CEntityManager {
         constructor(battle) {
             this._battle = battle;
@@ -1110,8 +1040,8 @@ var View;
                 --count;
             }
         }
-        Create(param) {
-            let entity = this._gPool.Pop(View.CEntity);
+        Create(c, param) {
+            let entity = this._gPool.Pop(c);
             this._idToEntity.setValue(param.rid, entity);
             this._entities.push(entity);
             Shared.Event.SyncEvent.CreateEntity(entity.constructor.name, param);
@@ -1288,6 +1218,7 @@ var View;
                 this._root.width = fairygui.GRoot.inst.width;
                 this._root.height = fairygui.GRoot.inst.height;
                 this._root.addRelation(fairygui.GRoot.inst, fairygui.RelationType.Size);
+                this._buildingList = this._root.getChild("building_list").asList;
                 this._winCom = this._root.getChild("win_com").asCom;
                 this._winCom.getChild("n4").onClick(this, this.OnQuitBtnClick);
                 Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.WIN, this.HandleWin);

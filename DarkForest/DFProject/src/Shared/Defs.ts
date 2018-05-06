@@ -9,22 +9,22 @@ namespace Shared {
 		}
 
 		public static GetMap(id: string): pair {
-			let ht = Hashtable.GetMap(Defs._defs, "maps");
-			let defaultHt = Hashtable.GetMap(ht, "default");
-			let result = Hashtable.GetMap(ht, id);
+			let ht = RC.Utils.Hashtable.GetMap(Defs._defs, "maps");
+			let defaultHt = RC.Utils.Hashtable.GetMap(ht, "default");
+			let result = RC.Utils.Hashtable.GetMap(ht, id);
 			if (result == null)
 				result = {};
-			Hashtable.Concat(result, defaultHt);
+			RC.Utils.Hashtable.Concat(result, defaultHt);
 			return result;
 		}
 
 		public static GetEntity(id: string): pair {
-			let ht = Hashtable.GetMap(Defs._defs, "entities");
-			let defaultHt = Hashtable.GetMap(ht, "default");
-			let result = Hashtable.GetMap(ht, id);
+			let ht = RC.Utils.Hashtable.GetMap(Defs._defs, "entities");
+			let defaultHt = RC.Utils.Hashtable.GetMap(ht, "default");
+			let result = RC.Utils.Hashtable.GetMap(ht, id);
 			if (result == null)
 				result = {};
-			Hashtable.Concat(result, defaultHt);
+			RC.Utils.Hashtable.Concat(result, defaultHt);
 			return result;
 		}
 	}

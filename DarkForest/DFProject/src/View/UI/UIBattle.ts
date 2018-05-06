@@ -2,6 +2,7 @@ namespace View.UI {
 	export class UIBattle implements IUIModule {
 		private _root: fairygui.GComponent;
 		private _winCom: fairygui.GComponent;
+		private _buildingList: fairygui.GList;
 
 		constructor() {
 			fairygui.UIPackage.addPackage("res/ui/battle");
@@ -14,7 +15,7 @@ namespace View.UI {
 		}
 
 		public Enter(param: any): void {
-			Game.BattleManager.Init(<Logic.BattleParams>param);
+			Game.BattleManager.Init(<Shared.Model.BattleParams>param);
 
 			this._root = fairygui.UIPackage.createObject("battle", "Main").asCom;
 			this._root.displayObject.name = "Battle";
@@ -23,6 +24,8 @@ namespace View.UI {
 			this._root.width = fairygui.GRoot.inst.width;
 			this._root.height = fairygui.GRoot.inst.height;
 			this._root.addRelation(fairygui.GRoot.inst, fairygui.RelationType.Size);
+
+			this._buildingList = this._root.getChild("building_list").asList;
 
 			this._winCom = this._root.getChild("win_com").asCom;
 			this._winCom.getChild("n4").onClick(this, this.OnQuitBtnClick);

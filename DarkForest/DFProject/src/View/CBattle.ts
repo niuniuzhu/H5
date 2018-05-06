@@ -18,7 +18,7 @@ namespace View {
 		public get deltaTime(): number { return this._deltaTime; }
 		public get time(): number { return this._time; }
 
-		constructor(param: Logic.BattleParams) {
+		constructor(param: Shared.Model.BattleParams) {
 			this._uid = param.uid;
 			this._context = new Shared.UpdateContext();
 			this._camera = new Camera();
@@ -83,8 +83,8 @@ namespace View {
 			let type = e.entityType;
 			let param = e.param;
 			switch (type) {
-				case "Entity":
-					this._entityManager.Create<CEntity>(param)
+				case "Building":
+					this._entityManager.Create(CBuilding, param);
 					break;
 			}
 		}

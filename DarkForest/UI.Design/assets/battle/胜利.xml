@@ -5,7 +5,5 @@
     <component id="n4_qhsc" name="n4" src="ky4211" pkg="c7x5i49r" xy="187,227" size="225,110">
       <Button title="退出" titleColor="#00ffff" titleFontSize="64"/>
     </component>
-    <text id="n5_qhsc" name="n5" xy="35,127" size="156,79" fontSize="64" color="#ffff00" bold="true" strokeColor="#000000" text="用时:"/>
-    <text id="n6_qhsc" name="n6" xy="200,128" size="382,79" fontSize="64" color="#ffff00" autoSize="none" bold="true" strokeColor="#000000" text=""/>
   </displayList>
 </component>

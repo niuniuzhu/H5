@@ -10,7 +10,7 @@ namespace Game {
 		private static _framesPerKeyFrame: number = 0;
 		private static _nextKeyFrame: number = 0;
 
-		public static Init(param: Logic.BattleParams): void {
+		public static Init(param: Shared.Model.BattleParams): void {
 			this._init = true;
 
 			this._elapsedSinceLastLogicUpdate = 0;

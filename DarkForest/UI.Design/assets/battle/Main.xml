@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="1334,750">
   <displayList>
-    <component id="n7_tmok" name="joystick" src="tmok9" xy="115,463" visible="false"/>
-    <text id="n8_qfd6" name="count_down" xy="334,317" size="664,115" fontSize="96" color="#ffcc00" align="center" vAlign="middle" autoSize="none" bold="true" italic="true" strokeColor="#000000" text="">
-      <relation target="" sidePair="center-center,middle-middle"/>
-    </text>
-    <text id="n10_qfd6" name="go_text" xy="665,369" pivot="0.5,0.5" anchor="true" size="171,115" visible="false" fontSize="96" color="#ffcc00" align="center" vAlign="middle" bold="true" italic="true" text="Go!">
-      <relation target="" sidePair="center-center,middle-middle"/>
-    </text>
-    <component id="n11_atkr" name="n11" src="atkrs" xy="1163,586">
-      <relation target="" sidePair="right-right,bottom-bottom"/>
-    </component>
-    <component id="n12_qhsc" name="win_com" src="qhscz" xy="367,205" visible="false">
+    <component id="n12_qhsc" name="win_com" src="qhscz" xy="367,117" visible="false">
       <relation target="" sidePair="center-center,middle-middle"/>
     </component>
+    <list id="n13_c3ns" name="building_list" xy="282,623" size="770,120" layout="row" overflow="scroll" scroll="horizontal" scrollBarFlags="2" colGap="10" defaultItem="ui://ytvu69qhc3ns17" vAlign="middle">
+      <relation target="" sidePair="center-center,bottom-bottom"/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+    </list>
   </displayList>
-  <transition name="t1">
-    <item time="0" type="Alpha" target="n10_qfd6" tween="true" startValue="1" endValue="0" duration="12" ease="Expo.Out"/>
-    <item time="0" type="Scale" target="n10_qfd6" tween="true" startValue="1,1" endValue="3,3" duration="12"/>
-  </transition>
+  <transition name="t1"/>
 </component>

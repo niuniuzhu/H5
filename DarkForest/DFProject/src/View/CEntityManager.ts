@@ -35,8 +35,8 @@ namespace View {
 			}
 		}
 
-		public Create<T extends Shared.GPoolObject>(param: Shared.Model.EntityParam): Shared.GPoolObject {
-			let entity = <CEntity>this._gPool.Pop(CEntity);
+		public Create<T extends Shared.GPoolObject>(c: new () => T, param: Shared.Model.EntityParam): Shared.GPoolObject {
+			let entity = <CEntity>this._gPool.Pop(c);
 			this._idToEntity.setValue(param.rid, entity);
 			this._entities.push(entity);
 

@@ -1,4 +1,4 @@
-namespace Shared{
+namespace RC.Utils{
 	export class Timer{
 		public static get utcTime():number{
 			let d1 = new Date();
