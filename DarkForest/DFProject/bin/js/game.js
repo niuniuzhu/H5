@@ -52,20 +52,20 @@ var Game;
 (function (Game) {
     class GameMain {
         constructor() {
-            Laya.init(1334, 750, Laya.WebGL);
-            laya.utils.Stat.show(0, 0);
+            Laya.init(1334, 750);
             Laya.stage.scaleMode = Laya.Stage.SCALE_FIXED_WIDTH;
             Laya.stage.alignH = Laya.Stage.ALIGN_LEFT;
             Laya.stage.alignV = Laya.Stage.ALIGN_TOP;
             Laya.stage.screenMode = Laya.Stage.SCREEN_HORIZONTAL;
+            laya.utils.Stat.show(0, 0);
             this.LoadDefs();
         }
         LoadDefs() {
             console.log("loading defs...");
-            Laya.loader.load("res/defs/b_defs.txt", Laya.Handler.create(this, this.OnDefsLoadComplete), undefined, Laya.Loader.JSON);
+            Laya.loader.load("res/defs/b_defs.json", Laya.Handler.create(this, this.OnDefsLoadComplete), undefined, Laya.Loader.JSON);
         }
         OnDefsLoadComplete() {
-            let json = Laya.loader.getRes("res/defs/b_defs.txt");
+            let json = Laya.loader.getRes("res/defs/b_defs.json");
             Shared.Defs.Init(json);
             this.LoadUIRes();
         }
@@ -199,7 +199,7 @@ var Logic;
             this._markToDestroy = false;
             this._data = null;
             this._position = RC.Numerics.Vec3.zero;
-            this._direction = new RC.Numerics.Vec3(0, 0, 1);
+            this._direction = RC.Numerics.Vec3.forward;
         }
         get position() { return this._position.Clone(); }
         set position(value) {
@@ -770,6 +770,9 @@ var Shared;
                 let def = Shared.Defs.GetMap(this.id);
                 this.name = Shared.Hashtable.GetString(def, "name");
                 this.model = Shared.Hashtable.GetString(def, "model");
+                this.size = Shared.Hashtable.GetVec2(def, "size");
+                this.restriMin = Shared.Hashtable.GetVec2(def, "restri_min");
+                this.restriMax = Shared.Hashtable.GetVec2(def, "restri_max");
             }
         }
         Model.MapData = MapData;
@@ -807,15 +810,34 @@ var View;
     class Camera {
         constructor() {
             this._position = RC.Numerics.Vec3.zero;
-            this._direction = new RC.Numerics.Vec3(0, 0, 1);
+            this._direction = RC.Numerics.Vec3.forward;
+            this._seekerPos = this._position.Clone();
+            this._seekerDir = this._direction.Clone();
+            this._restriMin = RC.Numerics.Vec3.zero;
+            this._restriMax = new RC.Numerics.Vec3(RC.Numerics.MathUtils.MAX_VALUE, RC.Numerics.MathUtils.MAX_VALUE, RC.Numerics.MathUtils.MAX_VALUE);
             this._localToWorldMat = RC.Numerics.Mat4.FromTRS(RC.Numerics.Vec3.zero, RC.Numerics.Quat.Euler(new RC.Numerics.Vec3(90, 0, 0)), new RC.Numerics.Vec3(1, -1, 1));
             this._worldToLocalMat = RC.Numerics.Mat4.NonhomogeneousInvert(this._localToWorldMat);
+            fairygui.GRoot.inst.on(fairygui.Events.SIZE_CHANGED, this, this.OnScreenSizeChanged);
+        }
+        get seekerPos() { return this._seekerPos.Clone(); }
+        set seekerPos(value) {
+            if (this._seekerPos.EqualsTo(value))
+                return;
+            this._seekerPos = value.Clone();
+            this._seekerPos.Clamp(this._restriMin, this._restriMax);
+        }
+        get seekerDir() { return this._seekerDir.Clone(); }
+        set seekerDir(value) {
+            if (this._seekerDir.EqualsTo(value))
+                return;
+            this._seekerDir = value.Clone();
         }
         get position() { return this._position.Clone(); }
         set position(value) {
             if (value.EqualsTo(this._position))
                 return;
             this._position = value.Clone();
+            this.UpdateMatrixT();
             if (this.cameraTRSChangedHandler != null)
                 this.cameraTRSChangedHandler();
         }
@@ -824,8 +846,42 @@ var View;
             if (value.EqualsTo(this._direction))
                 return;
             this._direction = value.Clone();
+            this.UpdateMatrixR();
             if (this.cameraTRSChangedHandler != null)
                 this.cameraTRSChangedHandler();
+        }
+        SetRestriction(restriMin, restriMax) {
+            this._restriMinOrgi = new RC.Numerics.Vec3(restriMin.x, restriMin.y, 0);
+            this._restriMaxOrgi = new RC.Numerics.Vec3(restriMax.x, restriMax.y, 0);
+            this.UpdateRestriction();
+        }
+        Update(context) {
+            if (RC.Numerics.Vec3.DistanceSquared(this._position, this.seekerPos) < 0.01)
+                return;
+            this.position = RC.Numerics.Vec3.Lerp(this.position, this.seekerPos, context.deltaTime * 0.01);
+        }
+        OnScreenSizeChanged(evt) {
+            this.UpdateRestriction();
+        }
+        UpdateRestriction() {
+            let min = this.LocalToWorld(new RC.Numerics.Vec3(this._restriMinOrgi.x, this._restriMinOrgi.y, 0));
+            let max = this.LocalToWorld(new RC.Numerics.Vec3(this._restriMaxOrgi.x - fairygui.GRoot.inst.width, this._restriMaxOrgi.y - fairygui.GRoot.inst.height, 0));
+            this._restriMin.x = RC.Numerics.MathUtils.Min(min.x, max.x);
+            this._restriMin.y = RC.Numerics.MathUtils.Min(min.y, max.y);
+            this._restriMin.z = RC.Numerics.MathUtils.Min(min.z, max.z);
+            this._restriMax.x = RC.Numerics.MathUtils.Max(min.x, max.x);
+            this._restriMax.y = RC.Numerics.MathUtils.Max(min.y, max.y);
+            this._restriMax.z = RC.Numerics.MathUtils.Max(min.z, max.z);
+        }
+        UpdateMatrixT() {
+            this._localToWorldMat.SetTranslate(this._position);
+            this._worldToLocalMat.CopyFrom(this._localToWorldMat);
+            this._worldToLocalMat.NonhomogeneousInvert();
+        }
+        UpdateMatrixR() {
+            this._localToWorldMat.SetRotation(RC.Numerics.Quat.FromToRotation(this._direction, RC.Numerics.Vec3.forward));
+            this._worldToLocalMat.CopyFrom(this._localToWorldMat);
+            this._worldToLocalMat.NonhomogeneousInvert();
         }
         WorldToLocal(point) {
             return this._worldToLocalMat.TransformPoint(point);
@@ -885,10 +941,12 @@ var View;
             this._context.time = this.time;
             this._context.frame = this.frame;
             this._entityManager.Update(this._context);
+            this._camera.Update(this._context);
         }
         HandleCreateBattle(baseEvent) {
             let e = baseEvent;
             this._data = Shared.Model.ModelFactory.GetMapData(Shared.Utils.GetIDFromRID(e.genericId));
+            this._camera.SetRestriction(this._data.restriMin, this._data.restriMax);
             this._graphic = this._graphicManager.CreateGraphic(View.MapGraphic);
             this._graphic.OnCreate(this._data.model);
         }
@@ -941,7 +999,7 @@ var View;
             this._graphic = null;
             this._data = null;
             this._position = RC.Numerics.Vec3.zero;
-            this._direction = new RC.Numerics.Vec3(0, 0, 1);
+            this._direction = RC.Numerics.Vec3.forward;
         }
         get position() { return this._position.Clone(); }
         set position(value) {
@@ -1084,6 +1142,7 @@ var View;
             this._root.autoSize = true;
             this._position = RC.Numerics.Vec3.zero;
             this._rotation = RC.Numerics.Quat.identity;
+            this.UpdatePosition();
         }
         get root() { return this._root; }
         get position() { return this._position.Clone(); }
@@ -1108,8 +1167,7 @@ var View;
         }
         UpdatePosition() {
             let localPos = this._manager.battle.camera.WorldToLocal(this._position);
-            this._root.x = localPos.x;
-            this._root.y = localPos.y;
+            this._root.setXY(localPos.x, localPos.y);
         }
         UpdateDirection() {
         }
@@ -1140,6 +1198,7 @@ var View;
             this._graphics = [];
         }
         get battle() { return this._battle; }
+        get root() { return this._root; }
         Dispose() {
             let count = this._graphics.length;
             for (let i = 0; i < count; ++i) {
@@ -1179,30 +1238,28 @@ var View;
     class MapGraphic extends View.Graphic {
         constructor(manager) {
             super(manager);
+            this._startPos = RC.Numerics.Vec3.zero;
         }
         OnCreate(id) {
             this.Load(id);
             this._root.displayObject.on(Laya.Event.MOUSE_DOWN, this, this.OnTouchBegin);
         }
         OnTouchBegin(evt) {
-            this._root.displayObject.on(Laya.Event.MOUSE_MOVE, this, this.OnTouchMove);
-            this._root.displayObject.on(Laya.Event.MOUSE_UP, this, this.OnTouchEnd);
-            this._root.displayObject.on(Laya.Event.MOUSE_OUT, this, this.OnTouchEnd);
+            fairygui.GRoot.inst.displayObject.on(Laya.Event.MOUSE_MOVE, this, this.OnTouchMove);
+            fairygui.GRoot.inst.displayObject.on(Laya.Event.MOUSE_UP, this, this.OnTouchEnd);
             let camera = this._manager.battle.camera;
-            this._startPos = camera.LocalToWorld(new RC.Numerics.Vec3(evt.stageX, evt.stageY, 0));
+            this._startPos.CopyFrom(new RC.Numerics.Vec3(evt.stageX, evt.stageY, 0));
         }
         OnTouchMove(evt) {
             let camera = this._manager.battle.camera;
-            let currPos = camera.LocalToWorld(new RC.Numerics.Vec3(evt.stageX, evt.stageY, 0));
+            let currPos = new RC.Numerics.Vec3(evt.stageX, evt.stageY, 0);
             let delta = RC.Numerics.Vec3.Sub(currPos, this._startPos);
-            this._startPos = camera.LocalToWorld(new RC.Numerics.Vec3(evt.stageX, evt.stageY, 0));
-            camera.position = RC.Numerics.Vec3.Add(camera.position, delta);
-            console.log(camera.position.ToString());
+            this._startPos.CopyFrom(currPos);
+            camera.seekerPos = RC.Numerics.Vec3.Sub(camera.seekerPos, new RC.Numerics.Vec3(delta.x, 0, -delta.y));
         }
         OnTouchEnd(evt) {
-            this._root.displayObject.off(Laya.Event.MOUSE_MOVE, this, this.OnTouchMove);
-            this._root.displayObject.off(Laya.Event.MOUSE_UP, this, this.OnTouchEnd);
-            this._root.displayObject.off(Laya.Event.MOUSE_OUT, this, this.OnTouchEnd);
+            fairygui.GRoot.inst.displayObject.off(Laya.Event.MOUSE_MOVE, this, this.OnTouchMove);
+            fairygui.GRoot.inst.displayObject.off(Laya.Event.MOUSE_UP, this, this.OnTouchEnd);
         }
     }
     View.MapGraphic = MapGraphic;

@@ -104,7 +104,7 @@ namespace RC.Numerics {
 				);
 		}
 
-		public Transpose(): void {
+		public Transpose(): Mat2 {
 			let m00 = this.x.x;
 			let m01 = this.y.x;
 			let m10 = this.x.y;
@@ -113,13 +113,14 @@ namespace RC.Numerics {
 			this.x.y = m01;
 			this.y.x = m10;
 			this.y.y = m11;
+			return this;
 		}
 
 		public Determinant(): number {
 			return this.x.x * this.y.y - this.x.y * this.y.x;
 		}
 
-		public Invert(): void {
+		public Invert(): Mat2 {
 			let determinant = 1 / (this.x.x * this.y.y - this.x.y * this.y.x);
 			let m00 = this.y.y * determinant;
 			let m01 = -this.x.y * determinant;
@@ -129,6 +130,7 @@ namespace RC.Numerics {
 			this.x.y = m01;
 			this.y.x = m10;
 			this.y.y = m11;
+			return this;
 		}
 
 		public EqualsTo(m: Mat2): boolean {
@@ -148,21 +150,13 @@ namespace RC.Numerics {
 		}
 
 		public static Transpose(m: Mat2): Mat2 {
-			return new Mat2
-				(
-				new Vec2(m.x.x, m.y.x),
-				new Vec2(m.x.y, m.y.y)
-				);
+			m=m.Clone();
+			return m.Transpose();
 		}
 
 		public static Invert(m: Mat2): Mat2 {
-			let determinant = 1 / (m.x.x * m.y.y - m.x.y * m.y.x);
-			let result = new Mat2();
-			result.x.x = m.y.y * determinant;
-			result.x.y = -m.x.y * determinant;
-			result.y.x = -m.y.x * determinant;
-			result.y.y = m.x.x * determinant;
-			return result;
+			m = m.Clone();
+			return m.Invert();
 		}
 
 		public static Add(m1: Mat2, m2: Mat2): Mat2 {

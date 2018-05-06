@@ -75,6 +75,14 @@ namespace RC.Numerics {
 			this.w = w;
 		}
 
+		public Clamp(min: Vec4, max: Vec4): Vec4 {
+			this.x = MathUtils.Clamp(this.x, min.x, max.x);
+			this.y = MathUtils.Clamp(this.y, min.y, max.y);
+			this.z = MathUtils.Clamp(this.z, min.z, max.z);
+			this.w = MathUtils.Clamp(this.w, min.w, max.w);
+			return this;
+		}
+
 		public Add(v: Vec4): Vec4 {
 			this.x += v.x;
 			this.y += v.y;
@@ -235,7 +243,7 @@ namespace RC.Numerics {
 		}
 
 		public ToString(): string {
-			return "(" + this.x + "," + this.y + "," + this.z + "," + this.w + ")";
+			return `(${this.x}, ${this.y}, ${this.z}, ${this.w})`;
 		}
 
 		public static Add(v1: Vec4, v2: Vec4): Vec4 {

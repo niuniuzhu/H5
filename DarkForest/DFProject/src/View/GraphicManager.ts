@@ -6,6 +6,8 @@ namespace View {
 
 		public get battle(): CBattle { return this._battle; }
 
+		public get root(): fairygui.GComponent { return this._root; }
+
 		constructor(battle: CBattle) {
 			this._battle = battle;
 			this._battle.camera.cameraTRSChangedHandler = this.OnCameraTRSChanged.bind(this);

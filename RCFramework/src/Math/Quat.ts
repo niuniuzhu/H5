@@ -396,7 +396,7 @@ namespace RC.Numerics {
 		}
 
 		public ToString(): string {
-			return "(" + this.x + "," + this.y + "," + this.z + "," + this.w + ")";
+			return `(${this.x}, ${this.y}, ${this.z}, ${this.w})`;
 		}
 
 		/// <summary>

@@ -59,11 +59,13 @@ namespace View {
 			this._context.frame = this.frame;
 
 			this._entityManager.Update(this._context);
+			this._camera.Update(this._context);
 		}
 
 		private HandleCreateBattle(baseEvent: Shared.Event.BaseEvent): void {
 			let e = <Shared.Event.SyncEvent>baseEvent;
 			this._data = Shared.Model.ModelFactory.GetMapData(Shared.Utils.GetIDFromRID(e.genericId));
+			this._camera.SetRestriction(this._data.restriMin, this._data.restriMax);
 			this._graphic = this._graphicManager.CreateGraphic(MapGraphic);
 			this._graphic.OnCreate(this._data.model);
 		}
@@ -86,14 +88,14 @@ namespace View {
 
 		private HandleEntityAddedToBattle(baseEvent: Shared.Event.BaseEvent): void {
 			let e = <Shared.Event.SyncEvent>baseEvent;
-			let entity = this._entityManager.GetEntity( e.targetId );
+			let entity = this._entityManager.GetEntity(e.targetId);
 			entity.OnAddedToBattle();
-			Shared.Event.UIEvent.EntityCreated( entity );
+			Shared.Event.UIEvent.EntityCreated(entity);
 		}
 
 		private HandleEntityRemoveFromBattle(baseEvent: Shared.Event.BaseEvent): void {
 			let e = <Shared.Event.SyncEvent>baseEvent;
-			let entity = this._entityManager.GetEntity( e.targetId );
+			let entity = this._entityManager.GetEntity(e.targetId);
 			entity.OnRemoveFromBattle();
 		}
 

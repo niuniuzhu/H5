@@ -138,7 +138,7 @@ namespace RC.Numerics {
 				);
 		}
 
-		public Identity(): void {
+		public Identity(): Mat3 {
 			this.x.x = 1;
 			this.x.y = 0;
 			this.x.z = 0;
@@ -148,6 +148,7 @@ namespace RC.Numerics {
 			this.z.x = 0;
 			this.z.y = 0;
 			this.z.z = 1;
+			return this;
 		}
 
 		public Euler(): Vec3 {
@@ -161,7 +162,7 @@ namespace RC.Numerics {
 			return new Vec3(0, -MathUtils.PI_HALF, MathUtils.Atan2(-this.y.z, this.y.y));
 		}
 
-		public Transpose(): void {
+		public Transpose(): Mat3 {
 			let m00 = this.x.x;
 			let m01 = this.y.x;
 			let m02 = this.z.x;
@@ -180,6 +181,7 @@ namespace RC.Numerics {
 			this.z.x = m20;
 			this.z.y = m21;
 			this.z.z = m22;
+			return this;
 		}
 
 		public MultiplyTransposed(matrix: Mat3): Mat3 {
@@ -211,7 +213,7 @@ namespace RC.Numerics {
 				this.z.x * this.y.y * this.x.z - this.z.y * this.y.z * this.x.x - this.z.z * this.y.x * this.x.y;
 		}
 
-		public NonhomogeneousInvert(): void {
+		public NonhomogeneousInvert(): Mat3 {
 			let m2: Mat2 = new Mat2();
 			m2.x.x = this.x.x;
 			m2.x.y = this.x.y;
@@ -226,11 +228,11 @@ namespace RC.Numerics {
 			let v = m2.Transform(new Vec2(this.z.x, this.z.y));
 			this.z.x = -v.x;
 			this.z.y = -v.y;
+			return this;
 		}
 
-		public Invert(): void {
+		public Invert(): Mat3 {
 			let determinant = 1 / this.Determinant();
-
 			let m00 = (this.y.y * this.z.z - this.y.z * this.z.y) * determinant;
 			let m01 = (this.x.z * this.z.y - this.z.z * this.x.y) * determinant;
 			let m02 = (this.x.y * this.y.z - this.y.y * this.x.z) * determinant;
@@ -249,9 +251,10 @@ namespace RC.Numerics {
 			this.z.x = m20;
 			this.z.y = m21;
 			this.z.z = m22;
+			return this;
 		}
 
-		public RotateAroundAxisX(angle: number): void {
+		public RotateAroundAxisX(angle: number): Mat3 {
 			angle = MathUtils.DegToRad(angle);
 			let tCos = MathUtils.Cos(angle);
 			let tSin = MathUtils.Sin(angle);
@@ -273,9 +276,10 @@ namespace RC.Numerics {
 			this.z.x = m20;
 			this.z.y = m21;
 			this.z.z = m22;
+			return this;
 		}
 
-		public RotateAroundAxisY(angle: number): void {
+		public RotateAroundAxisY(angle: number): Mat3 {
 			angle = MathUtils.DegToRad(angle);
 			let tCos = MathUtils.Cos(angle);
 			let tSin = MathUtils.Sin(angle);
@@ -297,9 +301,10 @@ namespace RC.Numerics {
 			this.z.x = m20;
 			this.z.y = m21;
 			this.z.z = m22;
+			return this;
 		}
 
-		public RotateAroundAxisZ(angle: number): void {
+		public RotateAroundAxisZ(angle: number): Mat3 {
 			angle = MathUtils.DegToRad(angle);
 			let tCos = MathUtils.Cos(angle);
 			let tSin = MathUtils.Sin(angle);
@@ -321,9 +326,10 @@ namespace RC.Numerics {
 			this.z.x = m20;
 			this.z.y = m21;
 			this.z.z = m22;
+			return this;
 		}
 
-		public RotateAroundWorldAxisX(angle: number): void {
+		public RotateAroundWorldAxisX(angle: number): Mat3 {
 			angle = MathUtils.DegToRad(angle);
 			angle = -angle;
 			let tCos = MathUtils.Cos(angle);
@@ -346,9 +352,10 @@ namespace RC.Numerics {
 			this.z.x = m20;
 			this.z.y = m21;
 			this.z.z = m22;
+			return this;
 		}
 
-		public RotateAroundWorldAxisY(angle: number): void {
+		public RotateAroundWorldAxisY(angle: number): Mat3 {
 			angle = MathUtils.DegToRad(angle);
 			angle = -angle;
 			let tCos = MathUtils.Cos(angle);
@@ -371,9 +378,10 @@ namespace RC.Numerics {
 			this.z.x = m20;
 			this.z.y = m21;
 			this.z.z = m22;
+			return this;
 		}
 
-		public RotateAroundWorldAxisZ(angle: number): void {
+		public RotateAroundWorldAxisZ(angle: number): Mat3 {
 			angle = MathUtils.DegToRad(angle);
 			angle = -angle;
 			let tCos = MathUtils.Cos(angle);
@@ -396,18 +404,19 @@ namespace RC.Numerics {
 			this.z.x = m20;
 			this.z.y = m21;
 			this.z.z = m22;
+			return this;
 		}
 
 		public RotateAround(angle: number, axis: Vec3): Mat3 {
 			// rotate numbero world space
 			let quaternion = Quat.AngleAxis(0, axis).Conjugate();
-			let worldSpaceMatrix = Mat3.Mul(this, Mat3.FromQuaternion(quaternion));
+			this.Mul(Mat3.FromQuaternion(quaternion));
 
 			// rotate back to matrix space
 			quaternion = Quat.AngleAxis(angle, axis);
 			let qMat = Mat3.FromQuaternion(quaternion);
-			worldSpaceMatrix = Mat3.Mul(worldSpaceMatrix, qMat);
-			return worldSpaceMatrix;
+			this.Mul(qMat);
+			return this;
 		}
 
 		public EqualsTo(m: Mat3): boolean {
@@ -523,37 +532,13 @@ namespace RC.Numerics {
 		}
 
 		public static Invert(m: Mat3): Mat3 {
-			let determinant = 1 / m.Determinant();
-			return new Mat3
-				(
-				new Vec3
-					(
-					(m.y.y * m.z.z - m.y.z * m.z.y) * determinant,
-					(m.x.z * m.z.y - m.z.z * m.x.y) * determinant,
-					(m.x.y * m.y.z - m.y.y * m.x.z) * determinant
-					),
-				new Vec3
-					(
-					(m.y.z * m.z.x - m.y.x * m.z.z) * determinant,
-					(m.x.x * m.z.z - m.x.z * m.z.x) * determinant,
-					(m.x.z * m.y.x - m.x.x * m.y.z) * determinant
-					),
-				new Vec3
-					(
-					(m.y.x * m.z.y - m.y.y * m.z.x) * determinant,
-					(m.x.y * m.z.x - m.x.x * m.z.y) * determinant,
-					(m.x.x * m.y.y - m.x.y * m.y.x) * determinant
-					)
-				);
+			m=m.Clone();
+			return m.Invert();
 		}
 
 		public static Transpose(m: Mat3): Mat3 {
-			return new Mat3
-				(
-				new Vec3(m.x.x, m.y.x, m.z.x),
-				new Vec3(m.x.y, m.y.y, m.z.y),
-				new Vec3(m.x.z, m.y.z, m.z.z)
-				);
+			m=m.Clone();
+			return m.Transpose();
 		}
 
 		public static Abs(m: Mat3): Mat3 {

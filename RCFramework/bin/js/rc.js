@@ -2261,6 +2261,7 @@ var RC;
                 this.x.y = m01;
                 this.y.x = m10;
                 this.y.y = m11;
+                return this;
             }
             Determinant() {
                 return this.x.x * this.y.y - this.x.y * this.y.x;
@@ -2275,6 +2276,7 @@ var RC;
                 this.x.y = m01;
                 this.y.x = m10;
                 this.y.y = m11;
+                return this;
             }
             EqualsTo(m) {
                 return Mat2.Equals(this, m);
@@ -2289,16 +2291,12 @@ var RC;
                 return new Mat2(Numerics.Vec2.Abs(m.x), Numerics.Vec2.Abs(m.y));
             }
             static Transpose(m) {
-                return new Mat2(new Numerics.Vec2(m.x.x, m.y.x), new Numerics.Vec2(m.x.y, m.y.y));
+                m = m.Clone();
+                return m.Transpose();
             }
             static Invert(m) {
-                let determinant = 1 / (m.x.x * m.y.y - m.x.y * m.y.x);
-                let result = new Mat2();
-                result.x.x = m.y.y * determinant;
-                result.x.y = -m.x.y * determinant;
-                result.y.x = -m.y.x * determinant;
-                result.y.y = m.x.x * determinant;
-                return result;
+                m = m.Clone();
+                return m.Invert();
             }
             static Add(m1, m2) {
                 m1 = m1.Clone();
@@ -2469,6 +2467,7 @@ var RC;
                 this.z.x = 0;
                 this.z.y = 0;
                 this.z.z = 1;
+                return this;
             }
             Euler() {
                 if (this.z.x < 1) {
@@ -2498,6 +2497,7 @@ var RC;
                 this.z.x = m20;
                 this.z.y = m21;
                 this.z.z = m22;
+                return this;
             }
             MultiplyTransposed(matrix) {
                 return new Mat3(new Numerics.Vec3(this.x.x * matrix.x.x + this.y.x * matrix.y.x + this.z.x * matrix.z.x, this.x.x * matrix.x.y + this.y.x * matrix.y.y + this.z.x * matrix.z.y, this.x.x * matrix.x.z + this.y.x * matrix.y.z + this.z.x * matrix.z.z), new Numerics.Vec3(this.x.y * matrix.x.x + this.y.y * matrix.y.x + this.z.y * matrix.z.x, this.x.y * matrix.x.y + this.y.y * matrix.y.y + this.z.y * matrix.z.y, this.x.y * matrix.x.z + this.y.y * matrix.y.z + this.z.y * matrix.z.z), new Numerics.Vec3(this.x.z * matrix.x.x + this.y.z * matrix.y.x + this.z.z * matrix.z.x, this.x.z * matrix.x.y + this.y.z * matrix.y.y + this.z.z * matrix.z.y, this.x.z * matrix.x.z + this.y.z * matrix.y.z + this.z.z * matrix.z.z));
@@ -2521,6 +2521,7 @@ var RC;
                 let v = m2.Transform(new Numerics.Vec2(this.z.x, this.z.y));
                 this.z.x = -v.x;
                 this.z.y = -v.y;
+                return this;
             }
             Invert() {
                 let determinant = 1 / this.Determinant();
@@ -2542,6 +2543,7 @@ var RC;
                 this.z.x = m20;
                 this.z.y = m21;
                 this.z.z = m22;
+                return this;
             }
             RotateAroundAxisX(angle) {
                 angle = Numerics.MathUtils.DegToRad(angle);
@@ -2565,6 +2567,7 @@ var RC;
                 this.z.x = m20;
                 this.z.y = m21;
                 this.z.z = m22;
+                return this;
             }
             RotateAroundAxisY(angle) {
                 angle = Numerics.MathUtils.DegToRad(angle);
@@ -2588,6 +2591,7 @@ var RC;
                 this.z.x = m20;
                 this.z.y = m21;
                 this.z.z = m22;
+                return this;
             }
             RotateAroundAxisZ(angle) {
                 angle = Numerics.MathUtils.DegToRad(angle);
@@ -2611,6 +2615,7 @@ var RC;
                 this.z.x = m20;
                 this.z.y = m21;
                 this.z.z = m22;
+                return this;
             }
             RotateAroundWorldAxisX(angle) {
                 angle = Numerics.MathUtils.DegToRad(angle);
@@ -2635,6 +2640,7 @@ var RC;
                 this.z.x = m20;
                 this.z.y = m21;
                 this.z.z = m22;
+                return this;
             }
             RotateAroundWorldAxisY(angle) {
                 angle = Numerics.MathUtils.DegToRad(angle);
@@ -2659,6 +2665,7 @@ var RC;
                 this.z.x = m20;
                 this.z.y = m21;
                 this.z.z = m22;
+                return this;
             }
             RotateAroundWorldAxisZ(angle) {
                 angle = Numerics.MathUtils.DegToRad(angle);
@@ -2683,14 +2690,15 @@ var RC;
                 this.z.x = m20;
                 this.z.y = m21;
                 this.z.z = m22;
+                return this;
             }
             RotateAround(angle, axis) {
                 let quaternion = Numerics.Quat.AngleAxis(0, axis).Conjugate();
-                let worldSpaceMatrix = Mat3.Mul(this, Mat3.FromQuaternion(quaternion));
+                this.Mul(Mat3.FromQuaternion(quaternion));
                 quaternion = Numerics.Quat.AngleAxis(angle, axis);
                 let qMat = Mat3.FromQuaternion(quaternion);
-                worldSpaceMatrix = Mat3.Mul(worldSpaceMatrix, qMat);
-                return worldSpaceMatrix;
+                this.Mul(qMat);
+                return this;
             }
             EqualsTo(m) {
                 return Mat3.Equals(this, m);
@@ -2756,11 +2764,12 @@ var RC;
                 return m1;
             }
             static Invert(m) {
-                let determinant = 1 / m.Determinant();
-                return new Mat3(new Numerics.Vec3((m.y.y * m.z.z - m.y.z * m.z.y) * determinant, (m.x.z * m.z.y - m.z.z * m.x.y) * determinant, (m.x.y * m.y.z - m.y.y * m.x.z) * determinant), new Numerics.Vec3((m.y.z * m.z.x - m.y.x * m.z.z) * determinant, (m.x.x * m.z.z - m.x.z * m.z.x) * determinant, (m.x.z * m.y.x - m.x.x * m.y.z) * determinant), new Numerics.Vec3((m.y.x * m.z.y - m.y.y * m.z.x) * determinant, (m.x.y * m.z.x - m.x.x * m.z.y) * determinant, (m.x.x * m.y.y - m.x.y * m.y.x) * determinant));
+                m = m.Clone();
+                return m.Invert();
             }
             static Transpose(m) {
-                return new Mat3(new Numerics.Vec3(m.x.x, m.y.x, m.z.x), new Numerics.Vec3(m.x.y, m.y.y, m.z.y), new Numerics.Vec3(m.x.z, m.y.z, m.z.z));
+                m = m.Clone();
+                return m.Transpose();
             }
             static Abs(m) {
                 return new Mat3(Numerics.Vec3.Abs(m.x), Numerics.Vec3.Abs(m.y), Numerics.Vec3.Abs(m.z));
@@ -2941,12 +2950,6 @@ var RC;
                 this.w.DivN2(n);
                 return this;
             }
-            EqualsTo(m) {
-                return Mat4.Equals(this, m);
-            }
-            ToString() {
-                return `(${this.x.ToString()}, ${this.y.ToString()}, ${this.z.ToString()}, ${this.w.ToString()})`;
-            }
             Transform(v) {
                 return new Numerics.Vec4(v.x * this.x.x + v.y * this.y.x + v.z * this.z.x + v.w * this.w.x, v.x * this.x.y + v.y * this.y.y + v.z * this.z.y + v.w * this.w.y, v.x * this.x.z + v.y * this.y.z + v.z * this.z.z + v.w * this.w.z, v.x * this.x.w + v.y * this.y.w + v.z * this.z.w + v.w * this.w.w);
             }
@@ -2973,15 +2976,59 @@ var RC;
                 this.w.y = 0;
                 this.w.z = 0;
                 this.w.w = 1;
+                return this;
             }
             SetTranslate(translate) {
                 this.w.x = translate.x;
                 this.w.y = translate.y;
                 this.w.z = translate.z;
+                return this;
             }
             SetScale(scale) {
+                this.x.x = scale.x;
+                this.x.y = 0;
+                this.x.z = 0;
+                this.x.w = 0;
+                this.y.x = 0;
+                this.y.y = scale.y;
+                this.y.z = 0;
+                this.y.w = 0;
+                this.z.x = 0;
+                this.z.y = 0;
+                this.z.z = scale.z;
+                this.z.w = 0;
+                this.w.x = 0;
+                this.w.y = 0;
+                this.w.z = 0;
+                this.w.w = 1;
+                return this;
             }
-            SetRotation(rot) {
+            SetRotation(quaternion) {
+                let squared = new Numerics.Vec4(quaternion.x * quaternion.x, quaternion.y * quaternion.y, quaternion.z * quaternion.z, quaternion.w * quaternion.w);
+                let invSqLength = 1 / (squared.x + squared.y + squared.z + squared.w);
+                let temp1 = quaternion.x * quaternion.y;
+                let temp2 = quaternion.z * quaternion.w;
+                let temp3 = quaternion.x * quaternion.z;
+                let temp4 = quaternion.y * quaternion.w;
+                let temp5 = quaternion.y * quaternion.z;
+                let temp6 = quaternion.x * quaternion.w;
+                this.x.x = (squared.x - squared.y - squared.z + squared.w) * invSqLength;
+                this.x.y = 2 * (temp1 + temp2) * invSqLength;
+                this.x.z = 2 * (temp3 - temp4) * invSqLength;
+                this.x.w = 0;
+                this.y.x = 2 * (temp1 - temp2) * invSqLength;
+                this.y.y = (-squared.x + squared.y - squared.z + squared.w) * invSqLength;
+                this.y.z = 2 * (temp5 + temp6) * invSqLength;
+                this.y.w = 0;
+                this.z.x = 2 * (temp3 + temp4) * invSqLength;
+                this.z.y = 2 * (temp5 - temp6) * invSqLength;
+                this.z.z = (-squared.x - squared.y + squared.z + squared.w) * invSqLength;
+                this.z.w = 0;
+                this.w.x = 0;
+                this.w.y = 0;
+                this.w.z = 0;
+                this.w.w = 1;
+                return this;
             }
             Transpose() {
                 let m00 = this.x.x;
@@ -3016,6 +3063,7 @@ var RC;
                 this.w.y = m31;
                 this.w.z = m32;
                 this.w.w = m33;
+                return this;
             }
             Determinant() {
                 let det1 = this.z.z * this.w.w - this.z.w * this.w.z;
@@ -3055,6 +3103,7 @@ var RC;
                 this.w.x = -v.x;
                 this.w.y = -v.y;
                 this.w.z = -v.z;
+                return this;
             }
             Invert() {
                 let determinant = 1 / this.Determinant();
@@ -3106,6 +3155,13 @@ var RC;
                 this.w.y = m31;
                 this.w.z = m32;
                 this.w.w = m33;
+                return this;
+            }
+            EqualsTo(m) {
+                return Mat4.Equals(this, m);
+            }
+            ToString() {
+                return `(${this.x.ToString()}, ${this.y.ToString()}, ${this.z.ToString()}, ${this.w.ToString()})`;
             }
             static FromScale(scale) {
                 return new Mat4(new Numerics.Vec4(scale.x, 0, 0, 0), new Numerics.Vec4(0, scale.y, 0, 0), new Numerics.Vec4(0, 0, scale.z, 0), new Numerics.Vec4(0, 0, 0, 1));
@@ -3150,28 +3206,12 @@ var RC;
                 return m1;
             }
             static Invert(m) {
-                let determinant = 1 / m.Determinant();
-                let mat = new Mat4(new Numerics.Vec4((m.y.y * m.z.z * m.w.w + m.y.z * m.z.w * m.w.y + m.y.w * m.z.y * m.w.z -
-                    m.y.y * m.z.w * m.w.z - m.y.z * m.z.y * m.w.w - m.y.w * m.z.z * m.w.y) * determinant, (m.x.y * m.z.w * m.w.z + m.x.z * m.z.y * m.w.w + m.x.w * m.z.z * m.w.y -
-                    m.x.y * m.z.z * m.w.w - m.x.z * m.z.w * m.w.y - m.x.w * m.z.y * m.w.z) * determinant, (m.x.y * m.y.z * m.w.w + m.x.z * m.y.w * m.w.y + m.x.w * m.y.y * m.w.z -
-                    m.x.y * m.y.w * m.w.z - m.x.z * m.y.y * m.w.w - m.x.w * m.y.z * m.w.y) * determinant, (m.x.y * m.y.w * m.z.z + m.x.z * m.y.y * m.z.w + m.x.w * m.y.z * m.z.y -
-                    m.x.y * m.y.z * m.z.w - m.x.z * m.y.w * m.z.y - m.x.w * m.y.y * m.z.z) * determinant), new Numerics.Vec4((m.y.x * m.z.w * m.w.z + m.y.z * m.z.x * m.w.w + m.y.w * m.z.z * m.w.x -
-                    m.y.x * m.z.z * m.w.w - m.y.z * m.z.w * m.w.x - m.y.w * m.z.x * m.w.z) * determinant, (m.x.x * m.z.z * m.w.w + m.x.z * m.z.w * m.w.x + m.x.w * m.z.x * m.w.z -
-                    m.x.x * m.z.w * m.w.z - m.x.z * m.z.x * m.w.w - m.x.w * m.z.z * m.w.x) * determinant, (m.x.x * m.y.w * m.w.z + m.x.z * m.y.x * m.w.w + m.x.w * m.y.z * m.w.x -
-                    m.x.x * m.y.z * m.w.w - m.x.z * m.y.w * m.w.x - m.x.w * m.y.x * m.w.z) * determinant, (m.x.x * m.y.z * m.z.w + m.x.z * m.y.w * m.z.x + m.x.w * m.y.x * m.z.z -
-                    m.x.x * m.y.w * m.z.z - m.x.z * m.y.x * m.z.w - m.x.w * m.y.z * m.z.x) * determinant), new Numerics.Vec4((m.y.x * m.z.y * m.w.w + m.y.y * m.z.w * m.w.x + m.y.w * m.z.x * m.w.y -
-                    m.y.x * m.z.w * m.w.y - m.y.y * m.z.x * m.w.w - m.y.w * m.z.y * m.w.x) * determinant, (m.x.x * m.z.w * m.w.y + m.x.y * m.z.x * m.w.w + m.x.w * m.z.y * m.w.x -
-                    m.x.x * m.z.y * m.w.w - m.x.y * m.z.w * m.w.x - m.x.w * m.z.x * m.w.y) * determinant, (m.x.x * m.y.y * m.w.w + m.x.y * m.y.w * m.w.x + m.x.w * m.y.x * m.w.y -
-                    m.x.x * m.y.w * m.w.y - m.x.y * m.y.x * m.w.w - m.x.w * m.y.y * m.w.x) * determinant, (m.x.x * m.y.w * m.z.y + m.x.y * m.y.x * m.z.w + m.x.w * m.y.y * m.z.x -
-                    m.x.x * m.y.y * m.z.w - m.x.y * m.y.w * m.z.x - m.x.w * m.y.x * m.z.y) * determinant), new Numerics.Vec4((m.y.x * m.z.z * m.w.y + m.y.y * m.z.x * m.w.z + m.y.z * m.z.y * m.w.x -
-                    m.y.x * m.z.y * m.w.z - m.y.y * m.z.z * m.w.x - m.y.z * m.z.x * m.w.y) * determinant, (m.x.x * m.z.y * m.w.z + m.x.y * m.z.z * m.w.x + m.x.z * m.z.x * m.w.y -
-                    m.x.x * m.z.z * m.w.y - m.x.y * m.z.x * m.w.z - m.x.z * m.z.y * m.w.x) * determinant, (m.x.x * m.y.z * m.w.y + m.x.y * m.y.x * m.w.z + m.x.z * m.y.y * m.w.x -
-                    m.x.x * m.y.y * m.w.z - m.x.y * m.y.z * m.w.x - m.x.z * m.y.x * m.w.y) * determinant, (m.x.x * m.y.y * m.z.z + m.x.y * m.y.z * m.z.x + m.x.z * m.y.x * m.z.y -
-                    m.x.x * m.y.z * m.z.y - m.x.y * m.y.x * m.z.z - m.x.z * m.y.y * m.z.x) * determinant));
-                return mat;
+                m = m.Clone();
+                return m.Invert();
             }
             static Transpose(m) {
-                return new Mat4(new Numerics.Vec4(m.x.x, m.y.x, m.z.x, m.w.x), new Numerics.Vec4(m.x.y, m.y.y, m.z.y, m.w.y), new Numerics.Vec4(m.x.z, m.y.z, m.z.z, m.w.z), new Numerics.Vec4(m.x.w, m.y.w, m.z.w, m.w.w));
+                m = m.Clone();
+                return m.Transpose();
             }
             static Equals(m1, m2) {
                 if (m1 == null || m2 == null)
@@ -3888,7 +3928,7 @@ var RC;
                 return rotation;
             }
             ToString() {
-                return "(" + this.x + "," + this.y + "," + this.z + "," + this.w + ")";
+                return `(${this.x}, ${this.y}, ${this.z}, ${this.w})`;
             }
             static Angle(a, b) {
                 let f = Quat.Dot(a, b);
@@ -4040,6 +4080,11 @@ var RC;
                 this.x = v.x;
                 this.y = v.y;
             }
+            Clamp(min, max) {
+                this.x = Numerics.MathUtils.Clamp(this.x, min.x, max.x);
+                this.y = Numerics.MathUtils.Clamp(this.y, min.y, max.y);
+                return this;
+            }
             Add(v) {
                 this.x += v.x;
                 this.y += v.y;
@@ -4152,7 +4197,7 @@ var RC;
                 return Vec2.Equals(this, v);
             }
             ToString() {
-                return "(" + this.x + "," + this.y + ")";
+                return `(${this.x}, ${this.y})`;
             }
             static Add(v1, v2) {
                 v1 = v1.Clone();
@@ -4330,6 +4375,12 @@ var RC;
                 this.y = y;
                 this.z = z;
             }
+            Clamp(min, max) {
+                this.x = Numerics.MathUtils.Clamp(this.x, min.x, max.x);
+                this.y = Numerics.MathUtils.Clamp(this.y, min.y, max.y);
+                this.z = Numerics.MathUtils.Clamp(this.z, min.z, max.z);
+                return this;
+            }
             Add(v) {
                 this.x += v.x;
                 this.y += v.y;
@@ -4501,7 +4552,7 @@ var RC;
                 return Vec3.Equals(this, v);
             }
             ToString() {
-                return "(" + this.x + "," + this.y + "," + this.z + ")";
+                return `(${this.x}, ${this.y}, ${this.z})`;
             }
             static Add(v1, v2) {
                 v1 = v1.Clone();
@@ -4847,6 +4898,13 @@ var RC;
                 this.z = z;
                 this.w = w;
             }
+            Clamp(min, max) {
+                this.x = Numerics.MathUtils.Clamp(this.x, min.x, max.x);
+                this.y = Numerics.MathUtils.Clamp(this.y, min.y, max.y);
+                this.z = Numerics.MathUtils.Clamp(this.z, min.z, max.z);
+                this.w = Numerics.MathUtils.Clamp(this.w, min.w, max.w);
+                return this;
+            }
             Add(v) {
                 this.x += v.x;
                 this.y += v.y;
@@ -4984,7 +5042,7 @@ var RC;
                 return Vec4.Equals(this, v);
             }
             ToString() {
-                return "(" + this.x + "," + this.y + "," + this.z + "," + this.w + ")";
+                return `(${this.x}, ${this.y}, ${this.z}, ${this.w})`;
             }
             static Add(v1, v2) {
                 v1 = v1.Clone();

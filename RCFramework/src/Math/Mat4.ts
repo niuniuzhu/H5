@@ -140,14 +140,6 @@ namespace RC.Numerics {
 			return this;
 		}
 
-		public EqualsTo(m: Mat4): boolean {
-			return Mat4.Equals(this, m);
-		}
-
-		public ToString(): string {
-			return `(${this.x.ToString()}, ${this.y.ToString()}, ${this.z.ToString()}, ${this.w.ToString()})`;
-		}
-
 		public Transform(v: Vec4): Vec4 {
 			return new Vec4
 				(
@@ -176,7 +168,7 @@ namespace RC.Numerics {
 				);
 		}
 
-		public Identity(): void {
+		public Identity(): Mat4 {
 			this.x.x = 1;
 			this.x.y = 0;
 			this.x.z = 0;
@@ -193,23 +185,68 @@ namespace RC.Numerics {
 			this.w.y = 0;
 			this.w.z = 0;
 			this.w.w = 1;
+			return this;
 		}
 
-		public SetTranslate(translate: Vec3): void {
+		public SetTranslate(translate: Vec3): Mat4 {
 			this.w.x = translate.x;
 			this.w.y = translate.y;
 			this.w.z = translate.z;
+			return this;
 		}
 
-		public SetScale(scale: Vec3): void {
-
+		public SetScale(scale: Vec3): Mat4 {
+			this.x.x = scale.x;
+			this.x.y = 0;
+			this.x.z = 0;
+			this.x.w = 0;
+			this.y.x = 0;
+			this.y.y = scale.y;
+			this.y.z = 0;
+			this.y.w = 0;
+			this.z.x = 0;
+			this.z.y = 0;
+			this.z.z = scale.z;
+			this.z.w = 0;
+			this.w.x = 0;
+			this.w.y = 0;
+			this.w.z = 0;
+			this.w.w = 1;
+			return this;
 		}
 
-		public SetRotation(rot: Quat): void {
+		public SetRotation(quaternion: Quat): Mat4 {
+			let squared = new Vec4(quaternion.x * quaternion.x, quaternion.y * quaternion.y, quaternion.z * quaternion.z,
+				quaternion.w * quaternion.w);
+			let invSqLength = 1 / (squared.x + squared.y + squared.z + squared.w);
 
+			let temp1 = quaternion.x * quaternion.y;
+			let temp2 = quaternion.z * quaternion.w;
+			let temp3 = quaternion.x * quaternion.z;
+			let temp4 = quaternion.y * quaternion.w;
+			let temp5 = quaternion.y * quaternion.z;
+			let temp6 = quaternion.x * quaternion.w;
+
+			this.x.x = (squared.x - squared.y - squared.z + squared.w) * invSqLength;
+			this.x.y = 2 * (temp1 + temp2) * invSqLength;
+			this.x.z = 2 * (temp3 - temp4) * invSqLength;
+			this.x.w = 0;
+			this.y.x = 2 * (temp1 - temp2) * invSqLength;
+			this.y.y = (-squared.x + squared.y - squared.z + squared.w) * invSqLength;
+			this.y.z = 2 * (temp5 + temp6) * invSqLength;
+			this.y.w = 0;
+			this.z.x = 2 * (temp3 + temp4) * invSqLength;
+			this.z.y = 2 * (temp5 - temp6) * invSqLength;
+			this.z.z = (-squared.x - squared.y + squared.z + squared.w) * invSqLength;
+			this.z.w = 0;
+			this.w.x = 0;
+			this.w.y = 0;
+			this.w.z = 0;
+			this.w.w = 1;
+			return this;
 		}
 
-		public Transpose(): void {
+		public Transpose(): Mat4 {
 			let m00 = this.x.x;
 			let m01 = this.y.x;
 			let m02 = this.z.x;
@@ -242,6 +279,7 @@ namespace RC.Numerics {
 			this.w.y = m31;
 			this.w.z = m32;
 			this.w.w = m33;
+			return this;
 		}
 
 		public Determinant(): number {
@@ -258,7 +296,7 @@ namespace RC.Numerics {
 				this.x.w * (this.y.x * det3 - this.y.y * det5 + this.y.z * det6);
 		}
 
-		public NonhomogeneousInvert(): void {
+		public NonhomogeneousInvert(): Mat4 {
 			let m3: Mat3 = new Mat3();
 			m3.x.x = this.x.x;
 			m3.x.y = this.x.y;
@@ -284,9 +322,10 @@ namespace RC.Numerics {
 			this.w.x = -v.x;
 			this.w.y = -v.y;
 			this.w.z = -v.z;
+			return this;
 		}
 
-		public Invert(): void {
+		public Invert(): Mat4 {
 			let determinant = 1 / this.Determinant();
 
 			let m00 = (this.y.y * this.z.z * this.w.w + this.y.z * this.z.w * this.w.y + this.y.w * this.z.y * this.w.z -
@@ -341,6 +380,15 @@ namespace RC.Numerics {
 			this.w.y = m31;
 			this.w.z = m32;
 			this.w.w = m33;
+			return this;
+		}
+
+		public EqualsTo(m: Mat4): boolean {
+			return Mat4.Equals(this, m);
+		}
+
+		public ToString(): string {
+			return `(${this.x.ToString()}, ${this.y.ToString()}, ${this.z.ToString()}, ${this.w.ToString()})`;
 		}
 
 		public static FromScale(scale: Vec3): Mat4 {
@@ -433,65 +481,13 @@ namespace RC.Numerics {
 		}
 
 		public static Invert(m: Mat4): Mat4 {
-			let determinant = 1 / m.Determinant();
-			let mat = new Mat4
-				(
-				new Vec4
-					(
-					(m.y.y * m.z.z * m.w.w + m.y.z * m.z.w * m.w.y + m.y.w * m.z.y * m.w.z -
-						m.y.y * m.z.w * m.w.z - m.y.z * m.z.y * m.w.w - m.y.w * m.z.z * m.w.y) * determinant,
-					(m.x.y * m.z.w * m.w.z + m.x.z * m.z.y * m.w.w + m.x.w * m.z.z * m.w.y -
-						m.x.y * m.z.z * m.w.w - m.x.z * m.z.w * m.w.y - m.x.w * m.z.y * m.w.z) * determinant,
-					(m.x.y * m.y.z * m.w.w + m.x.z * m.y.w * m.w.y + m.x.w * m.y.y * m.w.z -
-						m.x.y * m.y.w * m.w.z - m.x.z * m.y.y * m.w.w - m.x.w * m.y.z * m.w.y) * determinant,
-					(m.x.y * m.y.w * m.z.z + m.x.z * m.y.y * m.z.w + m.x.w * m.y.z * m.z.y -
-						m.x.y * m.y.z * m.z.w - m.x.z * m.y.w * m.z.y - m.x.w * m.y.y * m.z.z) * determinant
-					),
-				new Vec4
-					(
-					(m.y.x * m.z.w * m.w.z + m.y.z * m.z.x * m.w.w + m.y.w * m.z.z * m.w.x -
-						m.y.x * m.z.z * m.w.w - m.y.z * m.z.w * m.w.x - m.y.w * m.z.x * m.w.z) * determinant,
-					(m.x.x * m.z.z * m.w.w + m.x.z * m.z.w * m.w.x + m.x.w * m.z.x * m.w.z -
-						m.x.x * m.z.w * m.w.z - m.x.z * m.z.x * m.w.w - m.x.w * m.z.z * m.w.x) * determinant,
-					(m.x.x * m.y.w * m.w.z + m.x.z * m.y.x * m.w.w + m.x.w * m.y.z * m.w.x -
-						m.x.x * m.y.z * m.w.w - m.x.z * m.y.w * m.w.x - m.x.w * m.y.x * m.w.z) * determinant,
-					(m.x.x * m.y.z * m.z.w + m.x.z * m.y.w * m.z.x + m.x.w * m.y.x * m.z.z -
-						m.x.x * m.y.w * m.z.z - m.x.z * m.y.x * m.z.w - m.x.w * m.y.z * m.z.x) * determinant
-					),
-				new Vec4
-					(
-					(m.y.x * m.z.y * m.w.w + m.y.y * m.z.w * m.w.x + m.y.w * m.z.x * m.w.y -
-						m.y.x * m.z.w * m.w.y - m.y.y * m.z.x * m.w.w - m.y.w * m.z.y * m.w.x) * determinant,
-					(m.x.x * m.z.w * m.w.y + m.x.y * m.z.x * m.w.w + m.x.w * m.z.y * m.w.x -
-						m.x.x * m.z.y * m.w.w - m.x.y * m.z.w * m.w.x - m.x.w * m.z.x * m.w.y) * determinant,
-					(m.x.x * m.y.y * m.w.w + m.x.y * m.y.w * m.w.x + m.x.w * m.y.x * m.w.y -
-						m.x.x * m.y.w * m.w.y - m.x.y * m.y.x * m.w.w - m.x.w * m.y.y * m.w.x) * determinant,
-					(m.x.x * m.y.w * m.z.y + m.x.y * m.y.x * m.z.w + m.x.w * m.y.y * m.z.x -
-						m.x.x * m.y.y * m.z.w - m.x.y * m.y.w * m.z.x - m.x.w * m.y.x * m.z.y) * determinant
-					),
-				new Vec4
-					(
-					(m.y.x * m.z.z * m.w.y + m.y.y * m.z.x * m.w.z + m.y.z * m.z.y * m.w.x -
-						m.y.x * m.z.y * m.w.z - m.y.y * m.z.z * m.w.x - m.y.z * m.z.x * m.w.y) * determinant,
-					(m.x.x * m.z.y * m.w.z + m.x.y * m.z.z * m.w.x + m.x.z * m.z.x * m.w.y -
-						m.x.x * m.z.z * m.w.y - m.x.y * m.z.x * m.w.z - m.x.z * m.z.y * m.w.x) * determinant,
-					(m.x.x * m.y.z * m.w.y + m.x.y * m.y.x * m.w.z + m.x.z * m.y.y * m.w.x -
-						m.x.x * m.y.y * m.w.z - m.x.y * m.y.z * m.w.x - m.x.z * m.y.x * m.w.y) * determinant,
-					(m.x.x * m.y.y * m.z.z + m.x.y * m.y.z * m.z.x + m.x.z * m.y.x * m.z.y -
-						m.x.x * m.y.z * m.z.y - m.x.y * m.y.x * m.z.z - m.x.z * m.y.y * m.z.x) * determinant
-					)
-				);
-			return mat;
+			m = m.Clone();
+			return m.Invert();
 		}
 
 		public static Transpose(m: Mat4): Mat4 {
-			return new Mat4
-				(
-				new Vec4(m.x.x, m.y.x, m.z.x, m.w.x),
-				new Vec4(m.x.y, m.y.y, m.z.y, m.w.y),
-				new Vec4(m.x.z, m.y.z, m.z.z, m.w.z),
-				new Vec4(m.x.w, m.y.w, m.z.w, m.w.w)
-				);
+			m = m.Clone();
+			return m.Transpose();
 		}
 
 		public static Equals(m1: Mat4, m2: Mat4): boolean {

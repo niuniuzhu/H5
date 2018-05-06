@@ -37,7 +37,7 @@ namespace View {
 		constructor() {
 			super();
 			this._position = RC.Numerics.Vec3.zero;
-			this._direction = new RC.Numerics.Vec3(0, 0, 1);
+			this._direction = RC.Numerics.Vec3.forward;
 		}
 
 		protected InternalDispose(): void {

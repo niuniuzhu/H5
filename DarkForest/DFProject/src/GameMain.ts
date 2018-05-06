@@ -1,22 +1,22 @@
 namespace Game {
 	export class GameMain {
 		constructor() {
-			Laya.init(1334, 750, Laya.WebGL);
-			laya.utils.Stat.show(0, 0);
+			Laya.init(1334, 750);
 			Laya.stage.scaleMode = Laya.Stage.SCALE_FIXED_WIDTH;
 			Laya.stage.alignH = Laya.Stage.ALIGN_LEFT;
 			Laya.stage.alignV = Laya.Stage.ALIGN_TOP;
 			Laya.stage.screenMode = Laya.Stage.SCREEN_HORIZONTAL;
+			laya.utils.Stat.show(0, 0);
 			this.LoadDefs();
 		}
 
 		private LoadDefs(): void {
 			console.log("loading defs...");
-			Laya.loader.load("res/defs/b_defs.txt", Laya.Handler.create(this, this.OnDefsLoadComplete), undefined, Laya.Loader.JSON);
+			Laya.loader.load("res/defs/b_defs.json", Laya.Handler.create(this, this.OnDefsLoadComplete), undefined, Laya.Loader.JSON);
 		}
 
 		private OnDefsLoadComplete(): void {
-			let json: JSON = Laya.loader.getRes("res/defs/b_defs.txt");
+			let json: JSON = Laya.loader.getRes("res/defs/b_defs.json");
 			Shared.Defs.Init(json);
 			this.LoadUIRes();
 		}

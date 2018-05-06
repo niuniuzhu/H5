@@ -29,6 +29,7 @@ namespace View {
 			this._root.autoSize = true;
 			this._position = RC.Numerics.Vec3.zero;
 			this._rotation = RC.Numerics.Quat.identity;
+			this.UpdatePosition();
 		}
 
 		public Load(id: string): void {
@@ -41,8 +42,7 @@ namespace View {
 
 		public UpdatePosition(): void {
 			let localPos = this._manager.battle.camera.WorldToLocal(this._position);
-			this._root.x = localPos.x;
-			this._root.y = localPos.y;
+			this._root.setXY(localPos.x, localPos.y);
 		}
 
 		public UpdateDirection(): void {

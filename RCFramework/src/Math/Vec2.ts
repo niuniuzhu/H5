@@ -53,6 +53,12 @@ namespace RC.Numerics {
 			this.y = v.y;
 		}
 
+		public Clamp(min: Vec2, max: Vec2): Vec2 {
+			this.x = MathUtils.Clamp(this.x, min.x, max.x);
+			this.y = MathUtils.Clamp(this.y, min.y, max.y);
+			return this;
+		}
+
 		public Add(v: Vec2): Vec2 {
 			this.x += v.x;
 			this.y += v.y;
@@ -189,7 +195,7 @@ namespace RC.Numerics {
 		}
 
 		public ToString(): string {
-			return "(" + this.x + "," + this.y + ")";
+			return `(${this.x}, ${this.y})`;
 		}
 
 		public static Add(v1: Vec2, v2: Vec2): Vec2 {
