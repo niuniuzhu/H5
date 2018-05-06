@@ -815,9 +815,10 @@ var View;
             this._seekerDir = this._direction.Clone();
             this._restriMin = RC.Numerics.Vec3.zero;
             this._restriMax = new RC.Numerics.Vec3(RC.Numerics.MathUtils.MAX_VALUE, RC.Numerics.MathUtils.MAX_VALUE, RC.Numerics.MathUtils.MAX_VALUE);
+            this._restriMinOrgi = RC.Numerics.Vec3.zero;
+            this._restriMaxOrgi = new RC.Numerics.Vec3(RC.Numerics.MathUtils.MAX_VALUE, RC.Numerics.MathUtils.MAX_VALUE, RC.Numerics.MathUtils.MAX_VALUE);
             this._localToWorldMat = RC.Numerics.Mat4.FromTRS(RC.Numerics.Vec3.zero, RC.Numerics.Quat.Euler(new RC.Numerics.Vec3(90, 0, 0)), new RC.Numerics.Vec3(1, -1, 1));
             this._worldToLocalMat = RC.Numerics.Mat4.NonhomogeneousInvert(this._localToWorldMat);
-            fairygui.GRoot.inst.on(fairygui.Events.SIZE_CHANGED, this, this.OnScreenSizeChanged);
         }
         get seekerPos() { return this._seekerPos.Clone(); }
         set seekerPos(value) {
@@ -850,17 +851,23 @@ var View;
             if (this.cameraTRSChangedHandler != null)
                 this.cameraTRSChangedHandler();
         }
+        Update(context) {
+            if (RC.Numerics.Vec3.DistanceSquared(this._position, this._seekerPos) < 0.01)
+                return;
+            this.position = RC.Numerics.Vec3.Lerp(this._position, this._seekerPos, context.deltaTime * 0.008);
+        }
+        BeginMove(pointerStart) {
+            this._lastPointerPos = pointerStart.Clone();
+        }
+        Move(pointerCurrent) {
+            let delta = RC.Numerics.Vec3.Sub(pointerCurrent, this._lastPointerPos);
+            this._lastPointerPos.CopyFrom(pointerCurrent);
+            this._seekerPos.Sub(delta);
+            this._seekerPos.Clamp(this._restriMin, this._restriMax);
+        }
         SetRestriction(restriMin, restriMax) {
             this._restriMinOrgi = new RC.Numerics.Vec3(restriMin.x, restriMin.y, 0);
             this._restriMaxOrgi = new RC.Numerics.Vec3(restriMax.x, restriMax.y, 0);
-            this.UpdateRestriction();
-        }
-        Update(context) {
-            if (RC.Numerics.Vec3.DistanceSquared(this._position, this.seekerPos) < 0.01)
-                return;
-            this.position = RC.Numerics.Vec3.Lerp(this.position, this.seekerPos, context.deltaTime * 0.01);
-        }
-        OnScreenSizeChanged(evt) {
             this.UpdateRestriction();
         }
         UpdateRestriction() {
@@ -947,6 +954,8 @@ var View;
             let e = baseEvent;
             this._data = Shared.Model.ModelFactory.GetMapData(Shared.Utils.GetIDFromRID(e.genericId));
             this._camera.SetRestriction(this._data.restriMin, this._data.restriMax);
+            this._camera.seekerPos = new RC.Numerics.Vec3((this._data.size.x - fairygui.GRoot.inst.width) * 0.5, 0, (this._data.size.y - fairygui.GRoot.inst.height) * -0.5);
+            this._camera.position = this._camera.seekerPos;
             this._graphic = this._graphicManager.CreateGraphic(View.MapGraphic);
             this._graphic.OnCreate(this._data.model);
         }
@@ -1238,7 +1247,6 @@ var View;
     class MapGraphic extends View.Graphic {
         constructor(manager) {
             super(manager);
-            this._startPos = RC.Numerics.Vec3.zero;
         }
         OnCreate(id) {
             this.Load(id);
@@ -1247,15 +1255,10 @@ var View;
         OnTouchBegin(evt) {
             fairygui.GRoot.inst.displayObject.on(Laya.Event.MOUSE_MOVE, this, this.OnTouchMove);
             fairygui.GRoot.inst.displayObject.on(Laya.Event.MOUSE_UP, this, this.OnTouchEnd);
-            let camera = this._manager.battle.camera;
-            this._startPos.CopyFrom(new RC.Numerics.Vec3(evt.stageX, evt.stageY, 0));
+            this._manager.battle.camera.BeginMove(new RC.Numerics.Vec3(evt.stageX, 0, -evt.stageY));
         }
         OnTouchMove(evt) {
-            let camera = this._manager.battle.camera;
-            let currPos = new RC.Numerics.Vec3(evt.stageX, evt.stageY, 0);
-            let delta = RC.Numerics.Vec3.Sub(currPos, this._startPos);
-            this._startPos.CopyFrom(currPos);
-            camera.seekerPos = RC.Numerics.Vec3.Sub(camera.seekerPos, new RC.Numerics.Vec3(delta.x, 0, -delta.y));
+            this._manager.battle.camera.Move(new RC.Numerics.Vec3(evt.stageX, 0, -evt.stageY));
         }
         OnTouchEnd(evt) {
             fairygui.GRoot.inst.displayObject.off(Laya.Event.MOUSE_MOVE, this, this.OnTouchMove);

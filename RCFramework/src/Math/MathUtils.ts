@@ -528,5 +528,9 @@ namespace RC.Numerics {
 		public static GammaToLinearSpace(value: number): number {
 			return MathUtils.Pow(value, 2.2);
 		}
+
+		public static RubberDelta(overStretching: number, viewSize: number): number {
+			return (1 - (1 / ((RC.Numerics.MathUtils.Abs(overStretching) * 0.55 / viewSize) + 1))) * viewSize * RC.Numerics.MathUtils.Sign(overStretching);
+		}
 	}
 }

@@ -611,6 +611,7 @@ declare namespace RC.Numerics {
         static RadToDeg(rad: number): number;
         static LinearToGammaSpace(value: number): number;
         static GammaToLinearSpace(value: number): number;
+        static RubberDelta(overStretching: number, viewSize: number): number;
     }
 }
 declare namespace RC.Numerics {

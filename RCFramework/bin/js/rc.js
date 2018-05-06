@@ -3632,6 +3632,9 @@ var RC;
             static GammaToLinearSpace(value) {
                 return MathUtils.Pow(value, 2.2);
             }
+            static RubberDelta(overStretching, viewSize) {
+                return (1 - (1 / ((RC.Numerics.MathUtils.Abs(overStretching) * 0.55 / viewSize) + 1))) * viewSize * RC.Numerics.MathUtils.Sign(overStretching);
+            }
         }
         MathUtils.EPSILON = 0.0001;
         MathUtils.MAX_VALUE = Number.MAX_VALUE;

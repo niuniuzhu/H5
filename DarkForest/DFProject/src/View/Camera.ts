@@ -10,6 +10,7 @@ namespace View {
 		private _restriMax: RC.Numerics.Vec3;
 		private _seekerPos: RC.Numerics.Vec3;
 		private _seekerDir: RC.Numerics.Vec3;
+		private _lastPointerPos: RC.Numerics.Vec3;
 
 		public get seekerPos(): RC.Numerics.Vec3 { return this._seekerPos.Clone(); }
 		public set seekerPos(value: RC.Numerics.Vec3) {
@@ -55,26 +56,34 @@ namespace View {
 			this._seekerDir = this._direction.Clone();
 			this._restriMin = RC.Numerics.Vec3.zero;
 			this._restriMax = new RC.Numerics.Vec3(RC.Numerics.MathUtils.MAX_VALUE, RC.Numerics.MathUtils.MAX_VALUE, RC.Numerics.MathUtils.MAX_VALUE);
+			this._restriMinOrgi = RC.Numerics.Vec3.zero;
+			this._restriMaxOrgi = new RC.Numerics.Vec3(RC.Numerics.MathUtils.MAX_VALUE, RC.Numerics.MathUtils.MAX_VALUE, RC.Numerics.MathUtils.MAX_VALUE);
 			this._localToWorldMat = RC.Numerics.Mat4.FromTRS(RC.Numerics.Vec3.zero,
 				RC.Numerics.Quat.Euler(new RC.Numerics.Vec3(90, 0, 0)),
 				new RC.Numerics.Vec3(1, -1, 1));
 			this._worldToLocalMat = RC.Numerics.Mat4.NonhomogeneousInvert(this._localToWorldMat);
-			fairygui.GRoot.inst.on(fairygui.Events.SIZE_CHANGED, this, this.OnScreenSizeChanged);
+		}
+
+		public Update(context: Shared.UpdateContext): void {
+			if (RC.Numerics.Vec3.DistanceSquared(this._position, this._seekerPos) < 0.01)
+				return;
+			this.position = RC.Numerics.Vec3.Lerp(this._position, this._seekerPos, context.deltaTime * 0.008);
+		}
+
+		public BeginMove(pointerStart: RC.Numerics.Vec3): void {
+			this._lastPointerPos = pointerStart.Clone();
+		}
+
+		public Move(pointerCurrent: RC.Numerics.Vec3): void {
+			let delta = RC.Numerics.Vec3.Sub(pointerCurrent, this._lastPointerPos);
+			this._lastPointerPos.CopyFrom(pointerCurrent);
+			this._seekerPos.Sub(delta);
+			this._seekerPos.Clamp(this._restriMin, this._restriMax);
 		}
 
 		public SetRestriction(restriMin: RC.Numerics.Vec2, restriMax: RC.Numerics.Vec2): void {
 			this._restriMinOrgi = new RC.Numerics.Vec3(restriMin.x, restriMin.y, 0);
 			this._restriMaxOrgi = new RC.Numerics.Vec3(restriMax.x, restriMax.y, 0);
-			this.UpdateRestriction();
-		}
-
-		public Update(context: Shared.UpdateContext): void {
-			if (RC.Numerics.Vec3.DistanceSquared(this._position, this.seekerPos) < 0.01)
-				return;
-			this.position = RC.Numerics.Vec3.Lerp(this.position, this.seekerPos, context.deltaTime * 0.01);
-		}
-
-		private OnScreenSizeChanged(evt: laya.events.Event): any {
 			this.UpdateRestriction();
 		}
 

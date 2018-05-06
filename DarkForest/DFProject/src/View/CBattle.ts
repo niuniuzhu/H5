@@ -66,6 +66,9 @@ namespace View {
 			let e = <Shared.Event.SyncEvent>baseEvent;
 			this._data = Shared.Model.ModelFactory.GetMapData(Shared.Utils.GetIDFromRID(e.genericId));
 			this._camera.SetRestriction(this._data.restriMin, this._data.restriMax);
+			this._camera.seekerPos = new RC.Numerics.Vec3((this._data.size.x - fairygui.GRoot.inst.width) * 0.5, 0,
+				(this._data.size.y - fairygui.GRoot.inst.height) * -0.5);
+			this._camera.position = this._camera.seekerPos;
 			this._graphic = this._graphicManager.CreateGraphic(MapGraphic);
 			this._graphic.OnCreate(this._data.model);
 		}
