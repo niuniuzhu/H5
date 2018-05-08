@@ -1,11 +1,11 @@
 namespace View {
-	export class Graphic {
+	export abstract class Graphic {
 		protected readonly _manager: GraphicManager;
-		protected readonly _root: fairygui.GLoader;
+		protected readonly _root: fairygui.GComponent;
 		protected _position: RC.Numerics.Vec3;
 		protected _rotation: RC.Numerics.Quat;
 
-		public get root(): fairygui.GLoader { return this._root; }
+		public get root(): fairygui.GComponent { return this._root; }
 
 		public get position(): RC.Numerics.Vec3 { return this._position.Clone(); }
 		public set position(value: RC.Numerics.Vec3) {
@@ -25,16 +25,14 @@ namespace View {
 
 		constructor(manager: GraphicManager) {
 			this._manager = manager;
-			this._root = new fairygui.GLoader();
-			this._root.autoSize = true;
+			this._root = new fairygui.GComponent();
+			this._manager.root.addChild(this._root);
 			this._position = RC.Numerics.Vec3.zero;
 			this._rotation = RC.Numerics.Quat.identity;
 			this.UpdatePosition();
 		}
 
-		public Load(id: string): void {
-			this._root.url = fairygui.UIPackage.getItemURL("global", id);
-		}
+		public abstract Load(id: string): void;
 
 		public Dispose(): void {
 			this._root.dispose();

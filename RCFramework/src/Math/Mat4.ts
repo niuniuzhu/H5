@@ -73,6 +73,42 @@ namespace RC.Numerics {
 		}
 
 		public Mul(m: Mat4): Mat4 {
+			let xx = this.x.x * m.x.x + this.x.y * m.y.x + this.x.z * m.z.x + this.x.w * m.w.x;
+			let xy = this.x.x * m.x.y + this.x.y * m.y.y + this.x.z * m.z.y + this.x.w * m.w.y;
+			let xz = this.x.x * m.x.z + this.x.y * m.y.z + this.x.z * m.z.z + this.x.w * m.w.z;
+			let xw = this.x.x * m.x.w + this.x.y * m.y.w + this.x.z * m.z.w + this.x.w * m.w.w;
+			let yx = this.y.x * m.x.x + this.y.y * m.y.x + this.y.z * m.z.x + this.y.w * m.w.x;
+			let yy = this.y.x * m.x.y + this.y.y * m.y.y + this.y.z * m.z.y + this.y.w * m.w.y;
+			let yz = this.y.x * m.x.z + this.y.y * m.y.z + this.y.z * m.z.z + this.y.w * m.w.z;
+			let yw = this.y.x * m.x.w + this.y.y * m.y.w + this.y.z * m.z.w + this.y.w * m.w.w;
+			let zx = this.z.x * m.x.x + this.z.y * m.y.x + this.z.z * m.z.x + this.z.w * m.w.x;
+			let zy = this.z.x * m.x.y + this.z.y * m.y.y + this.z.z * m.z.y + this.z.w * m.w.y;
+			let zz = this.z.x * m.x.z + this.z.y * m.y.z + this.z.z * m.z.z + this.z.w * m.w.z;
+			let zw = this.z.x * m.x.w + this.z.y * m.y.w + this.z.z * m.z.w + this.z.w * m.w.w;
+			let wx = this.w.x * m.x.x + this.w.y * m.y.x + this.w.z * m.z.x + this.w.w * m.w.x;
+			let wy = this.w.x * m.x.y + this.w.y * m.y.y + this.w.z * m.z.y + this.w.w * m.w.y;
+			let wz = this.w.x * m.x.z + this.w.y * m.y.z + this.w.z * m.z.z + this.w.w * m.w.z;
+			let ww = this.w.x * m.x.w + this.w.y * m.y.w + this.w.z * m.z.w + this.w.w * m.w.w;
+			this.x.x = xx;
+			this.x.y = xy;
+			this.x.z = xz;
+			this.x.w = xw;
+			this.y.x = yx;
+			this.y.y = yy;
+			this.y.z = yz;
+			this.y.w = yw;
+			this.z.x = zx;
+			this.z.y = zy;
+			this.z.z = zz;
+			this.z.w = zw;
+			this.w.x = wx;
+			this.w.y = wy;
+			this.w.z = wz;
+			this.w.w = ww;
+			return this;
+		}
+
+		public Mul2(m: Mat4): Mat4 {
 			let xx = m.x.x * this.x.x + m.x.y * this.y.x + m.x.z * this.z.x + m.x.w * this.w.x;
 			let xy = m.x.x * this.x.y + m.x.y * this.y.y + m.x.z * this.z.y + m.x.w * this.w.y;
 			let xz = m.x.x * this.x.z + m.x.y * this.y.z + m.x.z * this.z.z + m.x.w * this.w.z;
@@ -467,7 +503,7 @@ namespace RC.Numerics {
 		}
 
 		public static FromTRS(pos: Vec3, q: Quat, scale: Vec3): Mat4 {
-			let m = Mat4.Mul(Mat4.FromQuaternion(q), Mat4.FromScale(scale));
+			let m = Mat4.FromScale(scale).Mul(Mat4.FromQuaternion(q));
 			m.w.x = pos.x;
 			m.w.y = pos.y;
 			m.w.z = pos.z;
@@ -528,6 +564,11 @@ namespace RC.Numerics {
 		public static Mul(m1: Mat4, m2: Mat4): Mat4 {
 			m1 = m1.Clone();
 			return m1.Mul(m2);
+		}
+
+		public static Mul2(m1: Mat4, m2: Mat4): Mat4 {
+			m1 = m1.Clone();
+			return m1.Mul2(m2);
 		}
 
 		public static MulN(m: Mat4, n: number): Mat4 {

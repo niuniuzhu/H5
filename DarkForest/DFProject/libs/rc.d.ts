@@ -401,6 +401,7 @@ declare namespace RC.Numerics {
         SubN(p2: number): Mat2;
         SubN2(n: number): Mat2;
         Mul(m: Mat2): Mat2;
+        Mul2(m: Mat2): Mat2;
         MulN(p2: number): Mat2;
         Div(p2: Mat2): Mat2;
         DivN(p2: number): Mat2;
@@ -444,6 +445,7 @@ declare namespace RC.Numerics {
         SubN(n: number): Mat3;
         SubN2(n: number): Mat3;
         Mul(m: Mat3): Mat3;
+        Mul2(m: Mat3): Mat3;
         MulN(n: number): Mat3;
         Div(m: Mat3): Mat3;
         DivN(n: number): Mat3;
@@ -484,6 +486,7 @@ declare namespace RC.Numerics {
         static SubN(m1: Mat3, n: number): Mat3;
         static SubN2(n: number, p: Mat3): Mat3;
         static Mul(m1: Mat3, m2: Mat3): Mat3;
+        static Mul2(m1: Mat3, m2: Mat3): Mat3;
         static MulN(m: Mat3, n: number): Mat3;
         static Div(m1: Mat3, m2: Mat3): Mat3;
         static DivN(m: Mat3, n: number): Mat3;
@@ -507,6 +510,7 @@ declare namespace RC.Numerics {
         SubN(m: number): Mat4;
         SubN2(n: number): Mat4;
         Mul(m: Mat4): Mat4;
+        Mul2(m: Mat4): Mat4;
         MulN(m: number): Mat4;
         Div(m: Mat4): Mat4;
         DivN(m: number): Mat4;
@@ -540,6 +544,7 @@ declare namespace RC.Numerics {
         static SubN(m1: Mat4, n: number): Mat4;
         static SubN2(n: number, p: Mat4): Mat4;
         static Mul(m1: Mat4, m2: Mat4): Mat4;
+        static Mul2(m1: Mat4, m2: Mat4): Mat4;
         static MulN(m: Mat4, n: number): Mat4;
         static Div(m1: Mat4, m2: Mat4): Mat4;
         static DivN(m: Mat4, n: number): Mat4;

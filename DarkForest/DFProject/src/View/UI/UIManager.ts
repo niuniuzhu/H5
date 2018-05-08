@@ -32,6 +32,9 @@ namespace View.UI {
 				this._currModule.Update(deltaTime);
 		}
 
+		public static OnResize(e: laya.events.Event): any {
+		}
+
 		private static EnterModule(module: IUIModule, param?: any): void {
 			if (this._currModule != null)
 				this._currModule.Leave();

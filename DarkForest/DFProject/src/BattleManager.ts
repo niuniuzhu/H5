@@ -48,6 +48,12 @@ namespace Game {
 			this.UpdateLogic(deltaTime);
 		}
 
+		public static OnResize(e: laya.events.Event): any {
+			if (!this._init)
+				return;
+			this.cBattle.OnResize(e);
+		}
+
 		private static UpdateLogic(deltaTime: number): void {
 			let millisecondsPreFrame = 1000 / this._frameRate;
 			this._elapsed += deltaTime;

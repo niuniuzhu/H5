@@ -6,7 +6,7 @@ namespace Game {
 			Laya.stage.alignH = Laya.Stage.ALIGN_LEFT;
 			Laya.stage.alignV = Laya.Stage.ALIGN_TOP;
 			Laya.stage.screenMode = Laya.Stage.SCREEN_HORIZONTAL;
-			laya.utils.Stat.show(0, 0);
+			// laya.utils.Stat.show(0, 0);
 			this.LoadDefs();
 		}
 
@@ -41,6 +41,7 @@ namespace Game {
 			console.log("start game...");
 
 			View.UI.UIManager.Init(new RC.Numerics.Vec2(600, 800));
+			fairygui.GRoot.inst.on(fairygui.Events.SIZE_CHANGED, this, this.OnResize);
 			Laya.timer.frameLoop(1, this, this.Update);
 
 			let param = new Shared.Model.BattleParams();
@@ -59,10 +60,15 @@ namespace Game {
 			View.UI.UIManager.EnterBattle(param);
 		}
 
-		public Update(): void {
+		private Update(): void {
 			let dt = Laya.timer.delta;
 			View.UI.UIManager.Update(dt);
 			BattleManager.Update(dt);
+		}
+
+		private OnResize(e: laya.events.Event): void {
+			View.UI.UIManager.OnResize(e);
+			BattleManager.OnResize(e);
 		}
 	}
 }

@@ -52,7 +52,7 @@ namespace View {
 			this._logicDir = this._direction = param.direction.Clone();
 
 			this._graphic = this._battle.graphicManager.CreateGraphic(EntityGraphic);
-			this._graphic.OnCreate(this, this._data.model);
+			this._graphic.Load(this._data.model);
 			this._graphic.position = this.position;
 			this._graphic.rotation = RC.Numerics.Quat.LookRotation(this.direction, RC.Numerics.Vec3.up);
 		}

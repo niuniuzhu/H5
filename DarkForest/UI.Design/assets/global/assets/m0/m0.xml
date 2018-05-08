@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="2160,1280" designImageAlpha="70" designImageLayer="1">
+  <displayList>
+    <image id="n5_sl4n" name="n5" src="sl4n22" xy="0,0" size="2160,1280"/>
+    <graph id="n6_sl4n" name="n6" xy="0,0" size="100,100" type="rect" fillColor="#ff33ff00"/>
+    <graph id="n7_sl4n" name="n7" xy="2060,0" size="100,100" type="rect" fillColor="#ff33ff00"/>
+    <graph id="n8_sl4n" name="n8" xy="2060,1180" size="100,100" type="rect" fillColor="#ff33ff00"/>
+    <graph id="n9_sl4n" name="n9" xy="0,1180" size="100,100" type="rect" fillColor="#ff33ff00"/>
+    <graph id="n10_sl4n" name="n10" xy="1030,590" size="100,100" type="rect" fillColor="#ff33ff00"/>
+  </displayList>
+</component>

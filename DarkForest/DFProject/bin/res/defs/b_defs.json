@@ -3,17 +3,12 @@
 		"m0": {
 			"name": "test",
 			"model": "m0",
+			"tile_slope": 45,
+			"tile_aspect": 0.5,
+			"tile_ratio": 216,
 			"size": [
-				2048,
-				1238
-			],
-			"restri_min": [
-				0,
-				0
-			],
-			"restri_max": [
-				2048,
-				1238
+				2160,
+				1280
 			]
 		}
 	},

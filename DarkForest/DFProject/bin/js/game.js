@@ -29,6 +29,11 @@ var Game;
             this.cBattle.Update(deltaTime);
             this.UpdateLogic(deltaTime);
         }
+        static OnResize(e) {
+            if (!this._init)
+                return;
+            this.cBattle.OnResize(e);
+        }
         static UpdateLogic(deltaTime) {
             let millisecondsPreFrame = 1000 / this._frameRate;
             this._elapsed += deltaTime;
@@ -57,7 +62,6 @@ var Game;
             Laya.stage.alignH = Laya.Stage.ALIGN_LEFT;
             Laya.stage.alignV = Laya.Stage.ALIGN_TOP;
             Laya.stage.screenMode = Laya.Stage.SCREEN_HORIZONTAL;
-            laya.utils.Stat.show(0, 0);
             this.LoadDefs();
         }
         LoadDefs() {
@@ -86,6 +90,7 @@ var Game;
         StartGame() {
             console.log("start game...");
             View.UI.UIManager.Init(new RC.Numerics.Vec2(600, 800));
+            fairygui.GRoot.inst.on(fairygui.Events.SIZE_CHANGED, this, this.OnResize);
             Laya.timer.frameLoop(1, this, this.Update);
             let param = new Shared.Model.BattleParams();
             param.framesPerKeyFrame = 4;
@@ -104,6 +109,10 @@ var Game;
             View.UI.UIManager.Update(dt);
             Game.BattleManager.Update(dt);
         }
+        OnResize(e) {
+            View.UI.UIManager.OnResize(e);
+            Game.BattleManager.OnResize(e);
+        }
     }
     Game.GameMain = GameMain;
 })(Game || (Game = {}));
@@ -118,8 +127,8 @@ var Logic;
             this._random = new RC.Utils.ConsistentRandom(param.rndSeed);
             this._context = new Shared.UpdateContext();
             this._entityManager = new Logic.EntityManager(this);
+            this._tile = new Logic.Tile(this._data.tileSlope, this._data.tileAspect, this._data.tileRatio);
             Shared.Event.SyncEvent.CreateBattle(param.id);
-            this.CreateBuildings(param);
         }
         get frame() {
             return this._frame;
@@ -329,6 +338,29 @@ var Logic;
         }
     }
     Logic.EntityManager = EntityManager;
+})(Logic || (Logic = {}));
+var Shared;
+(function (Shared) {
+    class TileBase {
+        constructor(slope, aspect, ratio) {
+            this._localToWorldMat = RC.Numerics.Mat4.FromTRS(RC.Numerics.Vec3.zero, RC.Numerics.Quat.Euler(new RC.Numerics.Vec3(0, slope, 0)), new RC.Numerics.Vec3(1, 1, 1));
+            this._localToWorldMat.Mul(RC.Numerics.Mat4.FromScale(new RC.Numerics.Vec3(ratio, 1, aspect * ratio)));
+            this._worldToLocalMat = RC.Numerics.Mat4.NonhomogeneousInvert(this._localToWorldMat);
+        }
+        WorldToLocal(point) {
+            return this._worldToLocalMat.TransformPoint(point);
+        }
+        LocalToWorld(point) {
+            return this._localToWorldMat.TransformPoint(point);
+        }
+    }
+    Shared.TileBase = TileBase;
+})(Shared || (Shared = {}));
+var Logic;
+(function (Logic) {
+    class Tile extends Shared.TileBase {
+    }
+    Logic.Tile = Tile;
 })(Logic || (Logic = {}));
 var Shared;
 (function (Shared) {
@@ -691,9 +723,10 @@ var Shared;
                 let def = Shared.Defs.GetMap(this.id);
                 this.name = RC.Utils.Hashtable.GetString(def, "name");
                 this.model = RC.Utils.Hashtable.GetString(def, "model");
+                this.tileSlope = RC.Utils.Hashtable.GetNumber(def, "tile_slope");
+                this.tileAspect = RC.Utils.Hashtable.GetNumber(def, "tile_aspect");
+                this.tileRatio = RC.Utils.Hashtable.GetNumber(def, "tile_ratio");
                 this.size = RC.Utils.Hashtable.GetVec2(def, "size");
-                this.restriMin = RC.Utils.Hashtable.GetVec2(def, "restri_min");
-                this.restriMax = RC.Utils.Hashtable.GetVec2(def, "restri_max");
             }
         }
         Model.MapData = MapData;
@@ -738,7 +771,7 @@ var View;
             this._restriMax = new RC.Numerics.Vec3(RC.Numerics.MathUtils.MAX_VALUE, RC.Numerics.MathUtils.MAX_VALUE, RC.Numerics.MathUtils.MAX_VALUE);
             this._restriMinOrgi = RC.Numerics.Vec3.zero;
             this._restriMaxOrgi = new RC.Numerics.Vec3(RC.Numerics.MathUtils.MAX_VALUE, RC.Numerics.MathUtils.MAX_VALUE, RC.Numerics.MathUtils.MAX_VALUE);
-            this._localToWorldMat = RC.Numerics.Mat4.FromTRS(RC.Numerics.Vec3.zero, RC.Numerics.Quat.Euler(new RC.Numerics.Vec3(90, 0, 0)), new RC.Numerics.Vec3(1, -1, 1));
+            this._localToWorldMat = RC.Numerics.Mat4.FromTRS(this._position, RC.Numerics.Quat.Euler(new RC.Numerics.Vec3(90, 0, 0)), new RC.Numerics.Vec3(1, -1, 1));
             this._worldToLocalMat = RC.Numerics.Mat4.NonhomogeneousInvert(this._localToWorldMat);
         }
         get seekerPos() { return this._seekerPos.Clone(); }
@@ -786,20 +819,20 @@ var View;
             this._seekerPos.Sub(delta);
             this._seekerPos.Clamp(this._restriMin, this._restriMax);
         }
-        SetRestriction(restriMin, restriMax) {
-            this._restriMinOrgi = new RC.Numerics.Vec3(restriMin.x, restriMin.y, 0);
-            this._restriMaxOrgi = new RC.Numerics.Vec3(restriMax.x, restriMax.y, 0);
-            this.UpdateRestriction();
-        }
-        UpdateRestriction() {
-            let min = this.LocalToWorld(new RC.Numerics.Vec3(this._restriMinOrgi.x, this._restriMinOrgi.y, 0));
-            let max = this.LocalToWorld(new RC.Numerics.Vec3(this._restriMaxOrgi.x - fairygui.GRoot.inst.width, this._restriMaxOrgi.y - fairygui.GRoot.inst.height, 0));
+        UpdateRestriction(restriMin, restriMax) {
+            let m = this._localToWorldMat.Clone();
+            m.w.x = 0;
+            m.w.y = 0;
+            m.w.z = 0;
+            let min = m.TransformPoint(restriMin);
+            let max = m.TransformPoint(restriMax);
             this._restriMin.x = RC.Numerics.MathUtils.Min(min.x, max.x);
             this._restriMin.y = RC.Numerics.MathUtils.Min(min.y, max.y);
             this._restriMin.z = RC.Numerics.MathUtils.Min(min.z, max.z);
             this._restriMax.x = RC.Numerics.MathUtils.Max(min.x, max.x);
             this._restriMax.y = RC.Numerics.MathUtils.Max(min.y, max.y);
             this._restriMax.z = RC.Numerics.MathUtils.Max(min.z, max.z);
+            this._seekerPos.Clamp(this._restriMin, this._restriMax);
         }
         UpdateMatrixT() {
             this._localToWorldMat.SetTranslate(this._position);
@@ -829,10 +862,17 @@ var View;
             this._time = 0;
             this._uid = "";
             this._uid = param.uid;
+            this._data = Shared.Model.ModelFactory.GetMapData(Shared.Utils.GetIDFromRID(param.id));
+            this._entityManager = new View.CEntityManager(this);
+            this._graphicManager = new View.GraphicManager(this);
             this._context = new Shared.UpdateContext();
             this._camera = new View.Camera();
-            this._graphicManager = new View.GraphicManager(this);
-            this._entityManager = new View.CEntityManager(this);
+            this._camera.cameraTRSChangedHandler = this._graphicManager.OnCameraTRSChanged.bind(this._graphicManager);
+            this._graphic = this._graphicManager.CreateGraphic(View.MapGraphic);
+            this._graphic.Load(this._data.model);
+            this._tile = new View.CTile(this._data.tileSlope, this._data.tileAspect, this._data.tileRatio);
+            this._input = new View.Input(this);
+            this.camera.UpdateRestriction(RC.Numerics.Vec3.zero, new RC.Numerics.Vec3(this._graphic.sprite.width - fairygui.GRoot.inst.width, this._graphic.sprite.height - fairygui.GRoot.inst.height, 0));
             Shared.Event.EventCenter.AddListener(Shared.Event.SyncEvent.BATTLE_CREATED, this.HandleCreateBattle.bind(this));
             Shared.Event.EventCenter.AddListener(Shared.Event.SyncEvent.BATTLE_DESTROIED, this.HandleDestroyBattle.bind(this));
             Shared.Event.EventCenter.AddListener(Shared.Event.SyncEvent.ENTITY_CREATED, this.HandleEntityCreate.bind(this));
@@ -842,13 +882,17 @@ var View;
             Shared.Event.EventCenter.AddListener(Shared.Event.SyncEvent.ENTITY_SYNC_PROPS, this.HandleEntitySyncProps.bind(this));
             Shared.Event.EventCenter.AddListener(Shared.Event.SyncEvent.WIN, this.HandleWin.bind(this));
         }
-        get camera() { return this._camera; }
-        ;
-        get graphicManager() { return this._graphicManager; }
-        ;
         get frame() { return this._frame; }
         get deltaTime() { return this._deltaTime; }
         get time() { return this._time; }
+        get graphicManager() { return this._graphicManager; }
+        ;
+        get camera() { return this._camera; }
+        ;
+        get graphic() { return this._graphic; }
+        ;
+        get tile() { return this._tile; }
+        ;
         Dispose() {
             Shared.Event.EventCenter.RemoveListener(Shared.Event.SyncEvent.BATTLE_CREATED, this.HandleCreateBattle.bind(this));
             Shared.Event.EventCenter.RemoveListener(Shared.Event.SyncEvent.BATTLE_DESTROIED, this.HandleDestroyBattle.bind(this));
@@ -871,18 +915,14 @@ var View;
             this._entityManager.Update(this._context);
             this._camera.Update(this._context);
         }
+        OnResize(e) {
+            this.camera.UpdateRestriction(RC.Numerics.Vec3.zero, new RC.Numerics.Vec3(this._graphic.sprite.width - fairygui.GRoot.inst.width, this._graphic.sprite.height - fairygui.GRoot.inst.height, 0));
+        }
         HandleCreateBattle(baseEvent) {
             let e = baseEvent;
-            this._data = Shared.Model.ModelFactory.GetMapData(Shared.Utils.GetIDFromRID(e.genericId));
-            this._camera.SetRestriction(this._data.restriMin, this._data.restriMax);
-            this._camera.seekerPos = new RC.Numerics.Vec3((this._data.size.x - fairygui.GRoot.inst.width) * 0.5, 0, (this._data.size.y - fairygui.GRoot.inst.height) * -0.5);
-            this._camera.position = this._camera.seekerPos;
-            this._graphic = this._graphicManager.CreateGraphic(View.MapGraphic);
-            this._graphic.OnCreate(this._data.model);
         }
         HandleDestroyBattle(baseEvent) {
             this._graphicManager.DestroyGraphic(this._graphic);
-            this._data = null;
         }
         HandleEntityCreate(baseEvent) {
             let e = baseEvent;
@@ -959,7 +999,7 @@ var View;
             this._logicPos = this._position = param.position.Clone();
             this._logicDir = this._direction = param.direction.Clone();
             this._graphic = this._battle.graphicManager.CreateGraphic(View.EntityGraphic);
-            this._graphic.OnCreate(this, this._data.model);
+            this._graphic.Load(this._data.model);
             this._graphic.position = this.position;
             this._graphic.rotation = RC.Numerics.Quat.LookRotation(this.direction, RC.Numerics.Vec3.up);
         }
@@ -1074,11 +1114,20 @@ var View;
 })(View || (View = {}));
 var View;
 (function (View) {
+    class CTile extends Shared.TileBase {
+        Test(point) {
+            let localPoint = this.WorldToLocal(point);
+        }
+    }
+    View.CTile = CTile;
+})(View || (View = {}));
+var View;
+(function (View) {
     class Graphic {
         constructor(manager) {
             this._manager = manager;
-            this._root = new fairygui.GLoader();
-            this._root.autoSize = true;
+            this._root = new fairygui.GComponent();
+            this._manager.root.addChild(this._root);
             this._position = RC.Numerics.Vec3.zero;
             this._rotation = RC.Numerics.Quat.identity;
             this.UpdatePosition();
@@ -1098,9 +1147,6 @@ var View;
             this._rotation = value.Clone();
             this.UpdateDirection();
         }
-        Load(id) {
-            this._root.url = fairygui.UIPackage.getItemURL("global", id);
-        }
         Dispose() {
             this._root.dispose();
         }
@@ -1119,8 +1165,15 @@ var View;
         constructor(manager) {
             super(manager);
         }
-        OnCreate(owner, id) {
-            this.Load(id);
+        Dispose() {
+            this._loader.dispose();
+            super.Dispose();
+        }
+        Load(id) {
+            this._loader = new fairygui.GLoader();
+            this._loader.autoSize = true;
+            this._loader.url = fairygui.UIPackage.getItemURL("global", id);
+            this._root.addChild(this._loader);
         }
     }
     View.EntityGraphic = EntityGraphic;
@@ -1130,7 +1183,6 @@ var View;
     class GraphicManager {
         constructor(battle) {
             this._battle = battle;
-            this._battle.camera.cameraTRSChangedHandler = this.OnCameraTRSChanged.bind(this);
             this._root = new fairygui.GComponent();
             this._root.name = "graphic_root";
             fairygui.GRoot.inst.addChild(this._root);
@@ -1157,7 +1209,6 @@ var View;
         }
         CreateGraphic(c) {
             let graphic = new c(this);
-            this._root.addChild(graphic.root);
             this._graphics.push(graphic);
             return graphic;
         }
@@ -1174,25 +1225,96 @@ var View;
 })(View || (View = {}));
 var View;
 (function (View) {
-    class MapGraphic extends View.Graphic {
-        constructor(manager) {
-            super(manager);
+    class InputIdleState {
+        constructor(owner) {
+            this._owner = owner;
         }
-        OnCreate(id) {
-            this.Load(id);
-            this._root.displayObject.on(Laya.Event.MOUSE_DOWN, this, this.OnTouchBegin);
+        Enter() {
+            this._owner.battle.graphic.sprite.displayObject.on(Laya.Event.MOUSE_DOWN, this, this.OnTouchBegin);
+        }
+        Exit() {
+            this._owner.battle.graphic.sprite.displayObject.off(Laya.Event.MOUSE_DOWN, this, this.OnTouchBegin);
+        }
+        Update(context) {
         }
         OnTouchBegin(evt) {
             fairygui.GRoot.inst.displayObject.on(Laya.Event.MOUSE_MOVE, this, this.OnTouchMove);
             fairygui.GRoot.inst.displayObject.on(Laya.Event.MOUSE_UP, this, this.OnTouchEnd);
-            this._manager.battle.camera.BeginMove(new RC.Numerics.Vec3(evt.stageX, 0, -evt.stageY));
+            this._owner.battle.camera.BeginMove(new RC.Numerics.Vec3(evt.stageX, 0, -evt.stageY));
         }
         OnTouchMove(evt) {
-            this._manager.battle.camera.Move(new RC.Numerics.Vec3(evt.stageX, 0, -evt.stageY));
+            let point = new RC.Numerics.Vec3(evt.stageX, 0, -evt.stageY);
+            this._owner.battle.camera.Move(point);
         }
         OnTouchEnd(evt) {
             fairygui.GRoot.inst.displayObject.off(Laya.Event.MOUSE_MOVE, this, this.OnTouchMove);
             fairygui.GRoot.inst.displayObject.off(Laya.Event.MOUSE_UP, this, this.OnTouchEnd);
+        }
+    }
+    View.InputIdleState = InputIdleState;
+    class InputLayoutState {
+        constructor(owner) {
+            this._owner = owner;
+        }
+        Enter() {
+            fairygui.GRoot.inst.displayObject.on(Laya.Event.MOUSE_MOVE, this, this.OnTouchMove);
+        }
+        Exit() {
+            fairygui.GRoot.inst.displayObject.off(Laya.Event.MOUSE_MOVE, this, this.OnTouchMove);
+        }
+        Update(context) {
+        }
+        OnTouchMove(evt) {
+            let point = this._owner.battle.camera.LocalToWorld(new RC.Numerics.Vec3(evt.stageX, evt.stageY, 0));
+            let p1 = this._owner.battle.tile.WorldToLocal(point);
+            let x = RC.Numerics.MathUtils.Floor(p1.x);
+            let y = RC.Numerics.MathUtils.Floor(p1.z);
+            console.log(`p0:${point.ToString()}\np1:${x},${y}`);
+        }
+    }
+    View.InputLayoutState = InputLayoutState;
+    let InputStateType;
+    (function (InputStateType) {
+        InputStateType[InputStateType["Idle"] = 0] = "Idle";
+        InputStateType[InputStateType["Layout"] = 1] = "Layout";
+    })(InputStateType = View.InputStateType || (View.InputStateType = {}));
+    class Input {
+        constructor(battle) {
+            this._battle = battle;
+            this._states = [
+                new InputIdleState(this),
+                new InputLayoutState(this)
+            ];
+            this.ChangeState(InputStateType.Layout);
+        }
+        get battle() { return this._battle; }
+        ChangeState(type) {
+            if (this._currentState != null)
+                this._currentState.Exit();
+            this._currentState = this._states[type];
+            this._currentState.Enter();
+        }
+        Update(context) {
+            if (this._currentState != null)
+                this._currentState.Update(context);
+        }
+    }
+    View.Input = Input;
+})(View || (View = {}));
+var View;
+(function (View) {
+    class MapGraphic extends View.Graphic {
+        constructor(manager) {
+            super(manager);
+        }
+        get sprite() { return this._sprite; }
+        Dispose() {
+            this._sprite.dispose();
+            super.Dispose();
+        }
+        Load(id) {
+            this._sprite = fairygui.UIPackage.createObject("global", id).asCom;
+            this._root.addChild(this._sprite);
         }
     }
     View.MapGraphic = MapGraphic;
@@ -1303,6 +1425,8 @@ var View;
             static Update(deltaTime) {
                 if (this._currModule != null)
                     this._currModule.Update(deltaTime);
+            }
+            static OnResize(e) {
             }
             static EnterModule(module, param) {
                 if (this._currModule != null)

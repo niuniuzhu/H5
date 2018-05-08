@@ -54,6 +54,18 @@ namespace RC.Numerics {
 		}
 
 		public Mul(m: Mat2): Mat2 {
+			let xx = this.x.x * m.x.x + this.x.y * m.y.x;
+			let xy = this.x.x * m.x.y + this.x.y * m.y.y;
+			let yx = this.y.x * m.x.x + this.y.y * m.y.x;
+			let yy = this.y.x * m.x.y + this.y.y * m.y.y;
+			this.x.x = xx;
+			this.x.y = xy;
+			this.y.x = yx;
+			this.y.y = yy;
+			return this;
+		}
+
+		public Mul2(m: Mat2): Mat2 {
 			let xx = m.x.x * this.x.x + m.x.y * this.y.x;
 			let xy = m.x.x * this.x.y + m.x.y * this.y.y;
 			let yx = m.y.x * this.x.x + m.y.y * this.y.x;

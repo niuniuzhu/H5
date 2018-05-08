@@ -10,7 +10,6 @@ namespace View {
 
 		constructor(battle: CBattle) {
 			this._battle = battle;
-			this._battle.camera.cameraTRSChangedHandler = this.OnCameraTRSChanged.bind(this);
 			this._root = new fairygui.GComponent();
 			this._root.name = "graphic_root";
 			fairygui.GRoot.inst.addChild(this._root);
@@ -38,7 +37,6 @@ namespace View {
 
 		public CreateGraphic<T extends Graphic>(c: new (manager: GraphicManager) => T): T {
 			let graphic: Graphic = new c(this);
-			this._root.addChild(graphic.root);
 			this._graphics.push(graphic);
 			return <T>graphic;
 		}

@@ -64,6 +64,28 @@ namespace RC.Numerics {
 		}
 
 		public Mul(m: Mat3): Mat3 {
+			let xx = this.x.x * m.x.x + this.x.y * m.y.x + this.x.z * m.z.x;
+			let xy = this.x.x * m.x.y + this.x.y * m.y.y + this.x.z * m.z.y;
+			let xz = this.x.x * m.x.z + this.x.y * m.y.z + this.x.z * m.z.z;
+			let yx = this.y.x * m.x.x + this.y.y * m.y.x + this.y.z * m.z.x;
+			let yy = this.y.x * m.x.y + this.y.y * m.y.y + this.y.z * m.z.y;
+			let yz = this.y.x * m.x.z + this.y.y * m.y.z + this.y.z * m.z.z;
+			let zx = this.z.x * m.x.x + this.z.y * m.y.x + this.z.z * m.z.x;
+			let zy = this.z.x * m.x.y + this.z.y * m.y.y + this.z.z * m.z.y;
+			let zz = this.z.x * m.x.z + this.z.y * m.y.z + this.z.z * m.z.z;
+			this.x.x = xx;
+			this.x.y = xy;
+			this.x.z = xz;
+			this.y.x = yx;
+			this.y.y = yy;
+			this.y.z = yz;
+			this.z.x = zx;
+			this.z.y = zy;
+			this.z.z = zz;
+			return this;
+		}
+
+		public Mul2(m: Mat3): Mat3 {
 			let xx = m.x.x * this.x.x + m.x.y * this.y.x + m.x.z * this.z.x;
 			let xy = m.x.x * this.x.y + m.x.y * this.y.y + m.x.z * this.z.y;
 			let xz = m.x.x * this.x.z + m.x.y * this.y.z + m.x.z * this.z.z;
@@ -410,12 +432,12 @@ namespace RC.Numerics {
 		public RotateAround(angle: number, axis: Vec3): Mat3 {
 			// rotate numbero world space
 			let quaternion = Quat.AngleAxis(0, axis).Conjugate();
-			this.Mul(Mat3.FromQuaternion(quaternion));
+			this.Mul2(Mat3.FromQuaternion(quaternion));
 
 			// rotate back to matrix space
 			quaternion = Quat.AngleAxis(angle, axis);
 			let qMat = Mat3.FromQuaternion(quaternion);
-			this.Mul(qMat);
+			this.Mul2(qMat);
 			return this;
 		}
 
@@ -573,6 +595,11 @@ namespace RC.Numerics {
 		public static Mul(m1: Mat3, m2: Mat3): Mat3 {
 			m1 = m1.Clone();
 			return m1.Mul(m2);
+		}
+
+		public static Mul2(m1: Mat3, m2: Mat3): Mat3 {
+			m1 = m1.Clone();
+			return m1.Mul2(m2);
 		}
 
 		public static MulN(m: Mat3, n: number): Mat3 {

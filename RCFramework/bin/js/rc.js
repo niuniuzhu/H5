@@ -4,12 +4,11 @@ var RC;
     class Test {
         constructor() {
             let m1 = RC.Numerics.Mat4.FromTRS(new RC.Numerics.Vec3(1, -2, 3), RC.Numerics.Quat.Euler(new RC.Numerics.Vec3(90, 0, 0)), new RC.Numerics.Vec3(2, 3, 4));
-            let m2 = RC.Numerics.Mat4.FromRotationAxis(-43, RC.Numerics.Vec3.Normalize(new RC.Numerics.Vec3(3, 2, 4)));
-            let m3 = RC.Numerics.Mat4.Mul(m1, m2);
-            console.log(m3);
+            console.log(m1);
             let m4 = RC.Numerics.Mat3.FromOuterProduct(new RC.Numerics.Vec3(1, -2, 3), new RC.Numerics.Vec3(93, 44, 32));
             let m5 = RC.Numerics.Mat3.FromCross(new RC.Numerics.Vec3(2.5, 3, 4));
-            let m6 = RC.Numerics.Mat3.Mul(m4, m5);
+            let m6 = RC.Numerics.Mat3.Mul2(m4, m5);
+            m6.RotateAround(33, new RC.Numerics.Vec3(2, 3, 4));
             console.log(m6);
         }
     }
@@ -2213,6 +2212,17 @@ var RC;
                 return this;
             }
             Mul(m) {
+                let xx = this.x.x * m.x.x + this.x.y * m.y.x;
+                let xy = this.x.x * m.x.y + this.x.y * m.y.y;
+                let yx = this.y.x * m.x.x + this.y.y * m.y.x;
+                let yy = this.y.x * m.x.y + this.y.y * m.y.y;
+                this.x.x = xx;
+                this.x.y = xy;
+                this.y.x = yx;
+                this.y.y = yy;
+                return this;
+            }
+            Mul2(m) {
                 let xx = m.x.x * this.x.x + m.x.y * this.y.x;
                 let xy = m.x.x * this.x.y + m.x.y * this.y.y;
                 let yx = m.y.x * this.x.x + m.y.y * this.y.x;
@@ -2404,6 +2414,27 @@ var RC;
                 return this;
             }
             Mul(m) {
+                let xx = this.x.x * m.x.x + this.x.y * m.y.x + this.x.z * m.z.x;
+                let xy = this.x.x * m.x.y + this.x.y * m.y.y + this.x.z * m.z.y;
+                let xz = this.x.x * m.x.z + this.x.y * m.y.z + this.x.z * m.z.z;
+                let yx = this.y.x * m.x.x + this.y.y * m.y.x + this.y.z * m.z.x;
+                let yy = this.y.x * m.x.y + this.y.y * m.y.y + this.y.z * m.z.y;
+                let yz = this.y.x * m.x.z + this.y.y * m.y.z + this.y.z * m.z.z;
+                let zx = this.z.x * m.x.x + this.z.y * m.y.x + this.z.z * m.z.x;
+                let zy = this.z.x * m.x.y + this.z.y * m.y.y + this.z.z * m.z.y;
+                let zz = this.z.x * m.x.z + this.z.y * m.y.z + this.z.z * m.z.z;
+                this.x.x = xx;
+                this.x.y = xy;
+                this.x.z = xz;
+                this.y.x = yx;
+                this.y.y = yy;
+                this.y.z = yz;
+                this.z.x = zx;
+                this.z.y = zy;
+                this.z.z = zz;
+                return this;
+            }
+            Mul2(m) {
                 let xx = m.x.x * this.x.x + m.x.y * this.y.x + m.x.z * this.z.x;
                 let xy = m.x.x * this.x.y + m.x.y * this.y.y + m.x.z * this.z.y;
                 let xz = m.x.x * this.x.z + m.x.y * this.y.z + m.x.z * this.z.z;
@@ -2694,10 +2725,10 @@ var RC;
             }
             RotateAround(angle, axis) {
                 let quaternion = Numerics.Quat.AngleAxis(0, axis).Conjugate();
-                this.Mul(Mat3.FromQuaternion(quaternion));
+                this.Mul2(Mat3.FromQuaternion(quaternion));
                 quaternion = Numerics.Quat.AngleAxis(angle, axis);
                 let qMat = Mat3.FromQuaternion(quaternion);
-                this.Mul(qMat);
+                this.Mul2(qMat);
                 return this;
             }
             EqualsTo(m) {
@@ -2798,6 +2829,10 @@ var RC;
                 m1 = m1.Clone();
                 return m1.Mul(m2);
             }
+            static Mul2(m1, m2) {
+                m1 = m1.Clone();
+                return m1.Mul2(m2);
+            }
             static MulN(m, n) {
                 m = m.Clone();
                 return m.MulN(n);
@@ -2888,6 +2923,41 @@ var RC;
                 return this;
             }
             Mul(m) {
+                let xx = this.x.x * m.x.x + this.x.y * m.y.x + this.x.z * m.z.x + this.x.w * m.w.x;
+                let xy = this.x.x * m.x.y + this.x.y * m.y.y + this.x.z * m.z.y + this.x.w * m.w.y;
+                let xz = this.x.x * m.x.z + this.x.y * m.y.z + this.x.z * m.z.z + this.x.w * m.w.z;
+                let xw = this.x.x * m.x.w + this.x.y * m.y.w + this.x.z * m.z.w + this.x.w * m.w.w;
+                let yx = this.y.x * m.x.x + this.y.y * m.y.x + this.y.z * m.z.x + this.y.w * m.w.x;
+                let yy = this.y.x * m.x.y + this.y.y * m.y.y + this.y.z * m.z.y + this.y.w * m.w.y;
+                let yz = this.y.x * m.x.z + this.y.y * m.y.z + this.y.z * m.z.z + this.y.w * m.w.z;
+                let yw = this.y.x * m.x.w + this.y.y * m.y.w + this.y.z * m.z.w + this.y.w * m.w.w;
+                let zx = this.z.x * m.x.x + this.z.y * m.y.x + this.z.z * m.z.x + this.z.w * m.w.x;
+                let zy = this.z.x * m.x.y + this.z.y * m.y.y + this.z.z * m.z.y + this.z.w * m.w.y;
+                let zz = this.z.x * m.x.z + this.z.y * m.y.z + this.z.z * m.z.z + this.z.w * m.w.z;
+                let zw = this.z.x * m.x.w + this.z.y * m.y.w + this.z.z * m.z.w + this.z.w * m.w.w;
+                let wx = this.w.x * m.x.x + this.w.y * m.y.x + this.w.z * m.z.x + this.w.w * m.w.x;
+                let wy = this.w.x * m.x.y + this.w.y * m.y.y + this.w.z * m.z.y + this.w.w * m.w.y;
+                let wz = this.w.x * m.x.z + this.w.y * m.y.z + this.w.z * m.z.z + this.w.w * m.w.z;
+                let ww = this.w.x * m.x.w + this.w.y * m.y.w + this.w.z * m.z.w + this.w.w * m.w.w;
+                this.x.x = xx;
+                this.x.y = xy;
+                this.x.z = xz;
+                this.x.w = xw;
+                this.y.x = yx;
+                this.y.y = yy;
+                this.y.z = yz;
+                this.y.w = yw;
+                this.z.x = zx;
+                this.z.y = zy;
+                this.z.z = zz;
+                this.z.w = zw;
+                this.w.x = wx;
+                this.w.y = wy;
+                this.w.z = wz;
+                this.w.w = ww;
+                return this;
+            }
+            Mul2(m) {
                 let xx = m.x.x * this.x.x + m.x.y * this.y.x + m.x.z * this.z.x + m.x.w * this.w.x;
                 let xy = m.x.x * this.x.y + m.x.y * this.y.y + m.x.z * this.z.y + m.x.w * this.w.y;
                 let xz = m.x.x * this.x.z + m.x.y * this.y.z + m.x.z * this.z.z + m.x.w * this.w.z;
@@ -3194,7 +3264,7 @@ var RC;
                 return Mat4.FromQuaternion(quaternion);
             }
             static FromTRS(pos, q, scale) {
-                let m = Mat4.Mul(Mat4.FromQuaternion(q), Mat4.FromScale(scale));
+                let m = Mat4.FromScale(scale).Mul(Mat4.FromQuaternion(q));
                 m.w.x = pos.x;
                 m.w.y = pos.y;
                 m.w.z = pos.z;
@@ -3244,6 +3314,10 @@ var RC;
             static Mul(m1, m2) {
                 m1 = m1.Clone();
                 return m1.Mul(m2);
+            }
+            static Mul2(m1, m2) {
+                m1 = m1.Clone();
+                return m1.Mul2(m2);
             }
             static MulN(m, n) {
                 m = m.Clone();

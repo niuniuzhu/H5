@@ -7,6 +7,7 @@ namespace Logic {
 		private readonly _random: RC.Utils.ConsistentRandom;
 		private readonly _context: Shared.UpdateContext;
 		private readonly _entityManager: EntityManager;
+		private readonly _tile: Tile;
 
 		public get frame(): number {
 			return this._frame;
@@ -25,10 +26,11 @@ namespace Logic {
 			this._random = new RC.Utils.ConsistentRandom(param.rndSeed);
 			this._context = new Shared.UpdateContext();
 			this._entityManager = new EntityManager(this);
+			this._tile = new Tile(this._data.tileSlope, this._data.tileAspect, this._data.tileRatio);
 
 			Shared.Event.SyncEvent.CreateBattle(param.id);
 
-			this.CreateBuildings(param);
+			// this.CreateBuildings(param);
 		}
 
 		public Dispose(): void {

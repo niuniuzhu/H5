@@ -58,7 +58,7 @@ namespace View {
 			this._restriMax = new RC.Numerics.Vec3(RC.Numerics.MathUtils.MAX_VALUE, RC.Numerics.MathUtils.MAX_VALUE, RC.Numerics.MathUtils.MAX_VALUE);
 			this._restriMinOrgi = RC.Numerics.Vec3.zero;
 			this._restriMaxOrgi = new RC.Numerics.Vec3(RC.Numerics.MathUtils.MAX_VALUE, RC.Numerics.MathUtils.MAX_VALUE, RC.Numerics.MathUtils.MAX_VALUE);
-			this._localToWorldMat = RC.Numerics.Mat4.FromTRS(RC.Numerics.Vec3.zero,
+			this._localToWorldMat = RC.Numerics.Mat4.FromTRS(this._position,
 				RC.Numerics.Quat.Euler(new RC.Numerics.Vec3(90, 0, 0)),
 				new RC.Numerics.Vec3(1, -1, 1));
 			this._worldToLocalMat = RC.Numerics.Mat4.NonhomogeneousInvert(this._localToWorldMat);
@@ -81,21 +81,20 @@ namespace View {
 			this._seekerPos.Clamp(this._restriMin, this._restriMax);
 		}
 
-		public SetRestriction(restriMin: RC.Numerics.Vec2, restriMax: RC.Numerics.Vec2): void {
-			this._restriMinOrgi = new RC.Numerics.Vec3(restriMin.x, restriMin.y, 0);
-			this._restriMaxOrgi = new RC.Numerics.Vec3(restriMax.x, restriMax.y, 0);
-			this.UpdateRestriction();
-		}
-
-		private UpdateRestriction(): void {
-			let min = this.LocalToWorld(new RC.Numerics.Vec3(this._restriMinOrgi.x, this._restriMinOrgi.y, 0));
-			let max = this.LocalToWorld(new RC.Numerics.Vec3(this._restriMaxOrgi.x - fairygui.GRoot.inst.width, this._restriMaxOrgi.y - fairygui.GRoot.inst.height, 0));
+		public UpdateRestriction(restriMin: RC.Numerics.Vec3, restriMax: RC.Numerics.Vec3): void {
+			let m = this._localToWorldMat.Clone();
+			m.w.x = 0;
+			m.w.y = 0;
+			m.w.z = 0;
+			let min = m.TransformPoint(restriMin);
+			let max = m.TransformPoint(restriMax);
 			this._restriMin.x = RC.Numerics.MathUtils.Min(min.x, max.x);
 			this._restriMin.y = RC.Numerics.MathUtils.Min(min.y, max.y);
 			this._restriMin.z = RC.Numerics.MathUtils.Min(min.z, max.z);
 			this._restriMax.x = RC.Numerics.MathUtils.Max(min.x, max.x);
 			this._restriMax.y = RC.Numerics.MathUtils.Max(min.y, max.y);
 			this._restriMax.z = RC.Numerics.MathUtils.Max(min.z, max.z);
+			this._seekerPos.Clamp(this._restriMin, this._restriMax);
 		}
 
 		private UpdateMatrixT(): void {
