@@ -109,11 +109,11 @@ namespace View {
 			this._worldToLocalMat.NonhomogeneousInvert();
 		}
 
-		public WorldToLocal(point: RC.Numerics.Vec3): RC.Numerics.Vec3 {
+		public WorldToScreen(point: RC.Numerics.Vec3): RC.Numerics.Vec3 {
 			return this._worldToLocalMat.TransformPoint(point);
 		}
 
-		public LocalToWorld(point: RC.Numerics.Vec3): RC.Numerics.Vec3 {
+		public ScreenToWorld(point: RC.Numerics.Vec3): RC.Numerics.Vec3 {
 			return this._localToWorldMat.TransformPoint(point);
 		}
 	}

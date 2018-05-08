@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<component size="63,52">
-  <displayList>
-    <image id="n4_rpmj" name="n4" src="rpmj6" xy="0,0"/>
-    <image id="n11_rpmj" name="n11" src="rpmj5" xy="34,23"/>
-  </displayList>
-</component>

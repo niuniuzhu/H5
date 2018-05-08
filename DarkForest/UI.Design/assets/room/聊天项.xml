@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<component size="1212,60">
-  <displayList>
-    <text id="n1" name="content" xy="16,10" size="1174,39" fontSize="32" color="#66ff00" autoSize="height" text=""/>
-  </displayList>
-  <relation target="n1" sidePair="height-height"/>
-</component>

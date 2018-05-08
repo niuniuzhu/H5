@@ -12,8 +12,8 @@ namespace View.UI {
 			Laya.stage.addChild(fairygui.GRoot.inst.displayObject);
 
 			fairygui.UIPackage.addPackage( "res/ui/global" );
-			fairygui.UIConfig.globalModalWaiting = fairygui.UIPackage.getItemURL("global", "ModalWaiting");
-			fairygui.UIConfig.windowModalWaiting = fairygui.UIPackage.getItemURL("global", "ModalWaiting");
+			fairygui.UIConfig.globalModalWaiting = fairygui.UIPackage.getItemURL("global", "qtm011");
+			fairygui.UIConfig.windowModalWaiting = fairygui.UIPackage.getItemURL("global", "qtm011");
 			fairygui.UIConfig.buttonSound = fairygui.UIPackage.getItemURL("global", "click");
 
 			this._login = new UILogin();

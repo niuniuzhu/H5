@@ -59,8 +59,8 @@ namespace View {
 		}
 
 		private OnTouchMove(evt: laya.events.Event): any {
-			let point = this._owner.battle.camera.LocalToWorld(new RC.Numerics.Vec3(evt.stageX, evt.stageY, 0));
-			let p1 = this._owner.battle.tile.WorldToLocal(point);
+			let point = this._owner.battle.camera.ScreenToWorld(new RC.Numerics.Vec3(evt.stageX, evt.stageY, 0));
+			let p1 = this._owner.battle.tile.WorldToTile(point);
 			let x = RC.Numerics.MathUtils.Floor(p1.x);
 			let y = RC.Numerics.MathUtils.Floor(p1.z);
 			// console.log(`p0:${point.ToString()}\np1:${x},${y}`);
@@ -85,7 +85,7 @@ namespace View {
 				new InputIdleState(this),
 				new InputLayoutState(this)
 			]
-			this.ChangeState(InputStateType.Layout);
+			this.ChangeState(InputStateType.Idle);
 		}
 
 		public ChangeState(type: InputStateType): void {

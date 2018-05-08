@@ -1,12 +1,12 @@
 namespace Game {
 	export class GameMain {
 		constructor() {
-			Laya.init(1334, 750);
+			Laya.init(720, 1280);
 			Laya.stage.scaleMode = Laya.Stage.SCALE_FIXED_WIDTH;
 			Laya.stage.alignH = Laya.Stage.ALIGN_LEFT;
 			Laya.stage.alignV = Laya.Stage.ALIGN_TOP;
-			Laya.stage.screenMode = Laya.Stage.SCREEN_HORIZONTAL;
-			// laya.utils.Stat.show(0, 0);
+			Laya.stage.screenMode = Laya.Stage.SCREEN_VERTICAL;
+			laya.utils.Stat.show(0, 0);
 			this.LoadDefs();
 		}
 
@@ -23,7 +23,7 @@ namespace Game {
 
 		private LoadUIRes(): void {
 			console.log("loading res...");
-			let res = ["global", "battle", "main", "cutscene"];
+			let res = ["global", "battle"];
 			let urls = [];
 			let i = 0;
 			for (let u of res) {

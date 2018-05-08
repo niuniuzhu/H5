@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="348,685">
+  <displayList>
+    <image id="n44_gkbm" name="n44" src="gkbm1c" xy="0,0" size="348,685"/>
+    <list id="n46_gkbm" name="list" xy="28,18" size="292,648" overflow="scroll" lineGap="5" defaultItem="ui://ytvu69qhgkbm2a">
+      <item title="发电站" name="b0"/>
+      <item title="科研所" name="b1"/>
+      <item title="交易所" name="b2"/>
+      <item title="军工厂" name="b3"/>
+      <item title="空间站" name="b4"/>
+      <item title="星际监听站" name="b5"/>
+      <item title="星际防护网" name="b6"/>
+      <item title="二向箔发射器" name="b7"/>
+      <item title="光粒发射器" name="b8"/>
+      <item title="矿场" name="b9"/>
+      <item title="炼油厂" name="b10"/>
+    </list>
+  </displayList>
+</component>

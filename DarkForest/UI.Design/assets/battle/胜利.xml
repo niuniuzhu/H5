@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<component size="600,340">
-  <displayList>
-    <text id="n0_qhsc" name="n0" xy="215,4" size="167,97" fontSize="80" color="#ffff00" bold="true" shadowColor="#000000" shadowOffset="1,1" text="胜利"/>
-    <component id="n4_qhsc" name="n4" src="ky4211" pkg="c7x5i49r" xy="187,227" size="225,110">
-      <Button title="退出" titleColor="#00ffff" titleFontSize="64"/>
-    </component>
-  </displayList>
-</component>

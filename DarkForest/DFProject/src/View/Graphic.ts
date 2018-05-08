@@ -39,7 +39,7 @@ namespace View {
 		}
 
 		public UpdatePosition(): void {
-			let localPos = this._manager.battle.camera.WorldToLocal(this._position);
+			let localPos = this._manager.battle.camera.WorldToScreen(this._position);
 			this._root.setXY(localPos.x, localPos.y);
 		}
 

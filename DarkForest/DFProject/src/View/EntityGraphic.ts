@@ -16,6 +16,7 @@ namespace View {
 		public Load(id: string): void {
 			this._loader = new fairygui.GLoader();
 			this._loader.autoSize = true;
+			this._loader.touchable = false;
 			this._loader.url = fairygui.UIPackage.getItemURL("global", id);
 			this._root.addChild(this._loader);
 		}

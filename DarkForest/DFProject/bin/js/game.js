@@ -57,11 +57,12 @@ var Game;
 (function (Game) {
     class GameMain {
         constructor() {
-            Laya.init(1334, 750);
+            Laya.init(720, 1280);
             Laya.stage.scaleMode = Laya.Stage.SCALE_FIXED_WIDTH;
             Laya.stage.alignH = Laya.Stage.ALIGN_LEFT;
             Laya.stage.alignV = Laya.Stage.ALIGN_TOP;
-            Laya.stage.screenMode = Laya.Stage.SCREEN_HORIZONTAL;
+            Laya.stage.screenMode = Laya.Stage.SCREEN_VERTICAL;
+            laya.utils.Stat.show(0, 0);
             this.LoadDefs();
         }
         LoadDefs() {
@@ -75,7 +76,7 @@ var Game;
         }
         LoadUIRes() {
             console.log("loading res...");
-            let res = ["global", "battle", "main", "cutscene"];
+            let res = ["global", "battle"];
             let urls = [];
             let i = 0;
             for (let u of res) {
@@ -679,7 +680,6 @@ var Shared;
                 let def = Shared.Defs.GetEntity(this.id);
                 this.name = RC.Utils.Hashtable.GetString(def, "name");
                 this.model = RC.Utils.Hashtable.GetString(def, "model");
-                this.icon = RC.Utils.Hashtable.GetString(def, "icon");
                 this.footprint = RC.Utils.Hashtable.GetNumber(def, "footprint");
             }
         }
@@ -867,10 +867,13 @@ var View;
             this._graphicManager = new View.GraphicManager(this);
             this._context = new Shared.UpdateContext();
             this._camera = new View.Camera();
+            this._camera.seekerPos = new RC.Numerics.Vec3((this._data.size.x - fairygui.GRoot.inst.width) * 0.5, 0, (this._data.size.y - fairygui.GRoot.inst.height) * -0.5);
+            this._camera.position = this._camera.seekerPos;
             this._camera.cameraTRSChangedHandler = this._graphicManager.OnCameraTRSChanged.bind(this._graphicManager);
             this._graphic = this._graphicManager.CreateGraphic(View.MapGraphic);
             this._graphic.Load(this._data.model);
             this._tile = new View.CTile(this._data.tileSlope, this._data.tileAspect, this._data.tileRatio);
+            this._layoutProcessor = new View.LayoutProcessor();
             this._input = new View.Input(this);
             this.camera.UpdateRestriction(RC.Numerics.Vec3.zero, new RC.Numerics.Vec3(this._graphic.sprite.width - fairygui.GRoot.inst.width, this._graphic.sprite.height - fairygui.GRoot.inst.height, 0));
             Shared.Event.EventCenter.AddListener(Shared.Event.SyncEvent.BATTLE_CREATED, this.HandleCreateBattle.bind(this));
@@ -893,6 +896,7 @@ var View;
         ;
         get tile() { return this._tile; }
         ;
+        get layoutProcessor() { return this._layoutProcessor; }
         Dispose() {
             Shared.Event.EventCenter.RemoveListener(Shared.Event.SyncEvent.BATTLE_CREATED, this.HandleCreateBattle.bind(this));
             Shared.Event.EventCenter.RemoveListener(Shared.Event.SyncEvent.BATTLE_DESTROIED, this.HandleDestroyBattle.bind(this));
@@ -917,6 +921,15 @@ var View;
         }
         OnResize(e) {
             this.camera.UpdateRestriction(RC.Numerics.Vec3.zero, new RC.Numerics.Vec3(this._graphic.sprite.width - fairygui.GRoot.inst.width, this._graphic.sprite.height - fairygui.GRoot.inst.height, 0));
+        }
+        CreateBuildings(id, position = RC.Numerics.Vec3.zero, direction = RC.Numerics.Vec3.forward) {
+            let rid = Shared.Utils.MakeRIDFromID(id);
+            let param = new Shared.Model.EntityParam();
+            param.rid = rid;
+            param.position = position;
+            param.direction = direction;
+            let entity = this._entityManager.Create(View.CBuilding, param);
+            return entity;
         }
         HandleCreateBattle(baseEvent) {
             let e = baseEvent;
@@ -1172,6 +1185,7 @@ var View;
         Load(id) {
             this._loader = new fairygui.GLoader();
             this._loader.autoSize = true;
+            this._loader.touchable = false;
             this._loader.url = fairygui.UIPackage.getItemURL("global", id);
             this._root.addChild(this._loader);
         }
@@ -1269,7 +1283,6 @@ var View;
             let p1 = this._owner.battle.tile.WorldToLocal(point);
             let x = RC.Numerics.MathUtils.Floor(p1.x);
             let y = RC.Numerics.MathUtils.Floor(p1.z);
-            console.log(`p0:${point.ToString()}\np1:${x},${y}`);
         }
     }
     View.InputLayoutState = InputLayoutState;
@@ -1285,7 +1298,7 @@ var View;
                 new InputIdleState(this),
                 new InputLayoutState(this)
             ];
-            this.ChangeState(InputStateType.Layout);
+            this.ChangeState(InputStateType.Idle);
         }
         get battle() { return this._battle; }
         ChangeState(type) {
@@ -1300,6 +1313,12 @@ var View;
         }
     }
     View.Input = Input;
+})(View || (View = {}));
+var View;
+(function (View) {
+    class LayoutProcessor {
+    }
+    View.LayoutProcessor = LayoutProcessor;
 })(View || (View = {}));
 var View;
 (function (View) {
@@ -1336,13 +1355,25 @@ var View;
                 this._root = fairygui.UIPackage.createObject("battle", "Main").asCom;
                 this._root.displayObject.name = "Battle";
                 this._root.opaque = false;
+                this._root.getChild("c0").asCom.opaque = false;
                 fairygui.GRoot.inst.addChild(this._root);
                 this._root.width = fairygui.GRoot.inst.width;
                 this._root.height = fairygui.GRoot.inst.height;
                 this._root.addRelation(fairygui.GRoot.inst, fairygui.RelationType.Size);
-                this._buildingList = this._root.getChild("building_list").asList;
-                this._winCom = this._root.getChild("win_com").asCom;
-                this._winCom.getChild("n4").onClick(this, this.OnQuitBtnClick);
+                this._controller = this._root.getController("c1");
+                let tansuoBtn = this._root.getChild("c0").asCom.getChild("tansuo_btn");
+                tansuoBtn.onClick(this, (e) => { this._controller.selectedIndex = 1; });
+                let backBtn = this._root.getChild("c1").asCom.getChild("back_btn");
+                backBtn.onClick(this, (e) => { this._controller.selectedIndex = 0; });
+                let jiansheBtn = this._root.getChild("c0").asCom.getChild("jianshe_btn");
+                jiansheBtn.onClick(this, (e) => {
+                    if (this._buildPanel == null) {
+                        this._buildPanel = fairygui.UIPackage.createObject("battle", "buildPanel").asCom;
+                        this._buildPanel.getChild("list").on(fairygui.Events.CLICK_ITEM, this, this.OnBuildItemClick);
+                    }
+                    fairygui.GRoot.inst.togglePopup(this._buildPanel, fairygui.GRoot.inst);
+                    this._buildPanel.center();
+                });
                 Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.WIN, this.HandleWin);
                 Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.ENTITY_CREATED, this.HandleEntityCreated);
                 Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.ENTITY_DESTROIED, this.HandleEntityDestroied);
@@ -1351,6 +1382,13 @@ var View;
             }
             Leave() {
                 Game.BattleManager.Dispose();
+                if (this._buildPanel != null) {
+                    this._buildPanel.dispose();
+                    this._buildPanel = null;
+                }
+                this._root.dispose();
+                this._root = null;
+                this._controller = null;
                 Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.WIN, this.HandleWin);
                 Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.ENTITY_CREATED, this.HandleEntityCreated);
                 Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.ENTITY_DESTROIED, this.HandleEntityDestroied);
@@ -1358,7 +1396,6 @@ var View;
                 Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.USE_SKILL, this.HandleUseSkill);
             }
             HandleWin(e) {
-                this._winCom.visible = true;
             }
             HandleEntityCreated(e) {
                 let uiEvent = e;
@@ -1371,7 +1408,11 @@ var View;
             }
             HandleUseSkill(e) {
             }
-            OnQuitBtnClick(e) {
+            OnBuildItemClick(sender, e) {
+                let bid = sender.asCom.name;
+                let position = Game.BattleManager.cBattle.camera.LocalToWorld(new RC.Numerics.Vec3(e.stageX, e.stageY));
+                let building = Game.BattleManager.cBattle.CreateBuildings(bid, position);
+                fairygui.GRoot.inst.hidePopup();
             }
         }
         UI.UIBattle = UIBattle;
@@ -1410,8 +1451,8 @@ var View;
             static Init(resolution) {
                 Laya.stage.addChild(fairygui.GRoot.inst.displayObject);
                 fairygui.UIPackage.addPackage("res/ui/global");
-                fairygui.UIConfig.globalModalWaiting = fairygui.UIPackage.getItemURL("global", "ModalWaiting");
-                fairygui.UIConfig.windowModalWaiting = fairygui.UIPackage.getItemURL("global", "ModalWaiting");
+                fairygui.UIConfig.globalModalWaiting = fairygui.UIPackage.getItemURL("global", "qtm011");
+                fairygui.UIConfig.windowModalWaiting = fairygui.UIPackage.getItemURL("global", "qtm011");
                 fairygui.UIConfig.buttonSound = fairygui.UIPackage.getItemURL("global", "click");
                 this._login = new UI.UILogin();
                 this._battle = new UI.UIBattle();

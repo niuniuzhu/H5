@@ -1,71 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <packageDescription id="c7x5i49r" jpegQuality="80" compressPNG="true">
   <resources>
-    <image id="ky421" name="按钮翻页.png" path="/素材/"/>
-    <image id="ky422" name="主底板框.png" path="/素材/"/>
-    <image id="ky423" name="血条紫.png" path="/素材/"/>
-    <image id="ky424" name="血条蓝.png" path="/素材/"/>
-    <image id="ky425" name="血条黄.png" path="/素材/"/>
-    <image id="ky426" name="血条红.png" path="/素材/"/>
-    <image id="ky427" name="血条底图.png" path="/素材/"/>
-    <image id="ky428" name="血条半透明.png" path="/素材/"/>
-    <image id="ky429" name="物品框紫01.png" path="/素材/"/>
-    <image id="ky42a" name="物品框绿01.png" path="/素材/"/>
-    <image id="ky42b" name="物品框蓝01.png" path="/素材/"/>
-    <image id="ky42c" name="物品框黄01.png" path="/素材/"/>
-    <image id="ky42d" name="物品框白.png" path="/素材/"/>
-    <image id="ky42e" name="钱币数值底图.png" path="/素材/"/>
-    <image id="ky42f" name="空白物品边框.png" path="/素材/"/>
-    <image id="ky42g" name="底板框带标头02.png" path="/素材/"/>
-    <image id="ky42h" name="底板框带标头01.png" path="/素材/" scale="9grid" scale9grid="26,99,52,22"/>
-    <image id="ky42i" name="道具框底图.png" path="/素材/"/>
-    <image id="ky42j" name="标题底图.png" path="/素材/"/>
-    <image id="ky42k" name="标签按钮橙.png" path="/素材/"/>
-    <image id="ky42l" name="标签按钮02.png" path="/素材/"/>
-    <image id="ky42m" name="标签按钮01.png" path="/素材/"/>
-    <image id="ky42n" name="被选中.png" path="/素材/"/>
-    <image id="ky42o" name="按钮-选择最大.png" path="/素材/"/>
-    <image id="ky42p" name="按钮添加.png" path="/素材/"/>
-    <image id="ky42q" name="按钮-绿.png" path="/素材/"/>
-    <image id="ky42r" name="按钮蓝小.png" path="/素材/" scale="9grid" scale9grid="38,30,21,15"/>
-    <image id="ky42s" name="按钮-蓝.png" path="/素材/"/>
-    <image id="ky42t" name="按钮-减少.png" path="/素材/"/>
-    <image id="ky42u" name="按钮加技能点.png" path="/素材/"/>
-    <image id="ky42v" name="按钮黄小.png" path="/素材/" scale="9grid" scale9grid="38,31,23,13"/>
-    <image id="ky42w" name="按钮黄扁.png" path="/素材/"/>
-    <image id="ky42x" name="按钮关闭.png" path="/素材/"/>
-    <image id="ky42y" name="按钮-返回.png" path="/素材/"/>
-    <component id="ky4210" name="Button1.xml" path="/组件/" exported="true"/>
-    <component id="ky4211" name="Button2.xml" path="/组件/" exported="true"/>
-    <component id="n9ol13" name="WindowFrame.xml" path="/组件/" exported="true"/>
-    <component id="opon14" name="Alert.xml" path="/组件/" exported="true"/>
-    <movieclip id="iqcm15" name="qtm011.jta" path="/素材/"/>
-    <component id="iqcm16" name="ModalWaiting.xml" path="/组件/" exported="true"/>
-    <image id="fre117" name="下拉框_普通.png" path="/素材/" scale="9grid" scale9grid="33,10,57,20"/>
-    <component id="fre118" name="下拉按钮.xml" path="/组件/"/>
-    <image id="fre119" name="下拉框_按下.png" path="/素材/" scale="9grid" scale9grid="33,10,57,20"/>
-    <component id="fre11a" name="下拉框.xml" path="/组件/" exported="true"/>
-    <image id="n9qa1b" name="按钮1_选中.png" path="/素材/" scale="9grid" scale9grid="25,11,50,6"/>
-    <image id="n9qa1c" name="按钮1_普通.png" path="/素材/" scale="9grid" scale9grid="25,11,50,5"/>
-    <image id="n9qa1d" name="按钮1_按下.png" path="/素材/" scale="9grid" scale9grid="25,11,50,7"/>
-    <component id="n9qa1e" name="Button3.xml" path="/组件/" exported="true"/>
-    <component id="xn241f" name="Button4.xml" path="/组件/" exported="true"/>
-    <image id="u4l21g" name="显示框.png" path="/素材/" exported="true" scale="9grid" scale9grid="26,11,52,22"/>
-    <component id="u4l21h" name="下拉列表.xml" path="/组件/"/>
-    <image id="u4l21i" name="输入框_选中.png" path="/素材/" scale="9grid" scale9grid="26,10,52,20"/>
-    <image id="u4l21j" name="输入框_普通.png" path="/素材/" scale="9grid" scale9grid="26,10,52,20"/>
-    <image id="u4l21k" name="输入框_按下.png" path="/素材/" scale="9grid" scale9grid="26,10,52,20"/>
-    <component id="u4l21m" name="下拉列表项.xml" path="/组件/"/>
-    <component id="rxt81n" name="Confirm.xml" path="/组件/" exported="true"/>
-    <image id="qnmf1o" name="开战.png" path="/素材/"/>
-    <component id="dzuz1p" name="Connecting.xml" path="/组件/" exported="true"/>
-    <component id="kw7z1q" name="ConnectingBar.xml" path="/组件/"/>
-    <movieclip id="rpmj1r" name="modelwaiting.jta" path="/素材/"/>
-    <sound id="lqz41s" name="click.wav" path="/素材/" exported="true"/>
-    <image id="9y1y1t" name="b0.jpg" path="/assets/" exported="true"/>
+    <movieclip id="iqcm15" name="qtm011.jta" path="/assets/" exported="true"/>
+    <sound id="lqz41s" name="click.wav" path="/assets/" exported="true"/>
     <component id="rkt41y" name="m0.xml" path="/assets/m0/" exported="true"/>
-    <image id="sl4n20" name="黑暗森林A1.jpg" path="/assets/m0/"/>
-    <image id="sl4n22" name="tile.jpg" path="/assets/m0/" scale="tile"/>
+    <image id="sl4n22" name="tile.png" path="/assets/m0/" scale="tile"/>
+    <image id="gkbm23" name="格子a.png" path="/assets/m0/" scale="tile"/>
+    <image id="gkbm24" name="b0.png" path="/assets/" exported="true"/>
+    <image id="gkbm25" name="b7.png" path="/assets/" exported="true"/>
+    <image id="gkbm26" name="b8.png" path="/assets/" exported="true"/>
+    <image id="gkbm27" name="b2.png" path="/assets/" exported="true"/>
+    <image id="gkbm28" name="b3.png" path="/assets/" exported="true"/>
+    <image id="gkbm29" name="b1.png" path="/assets/" exported="true"/>
+    <image id="gkbm2a" name="b4.png" path="/assets/" exported="true"/>
+    <image id="gkbm2b" name="b9.png" path="/assets/" exported="true"/>
+    <image id="gkbm2c" name="b10.png" path="/assets/" exported="true"/>
+    <image id="gkbm2d" name="b6.png" path="/assets/" exported="true"/>
+    <image id="gkbm2e" name="b5.png" path="/assets/" exported="true"/>
   </resources>
   <publish name="global"/>
 </packageDescription>
