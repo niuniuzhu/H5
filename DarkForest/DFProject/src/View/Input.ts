@@ -79,7 +79,7 @@ namespace View {
 			this._touchMovied = false;
 
 			let srcBuilding = <CBuilding>param[0];
-			this._editingBuilding = this._owner.battle.CreateEditingBuilding(srcBuilding.id, srcBuilding.position, srcBuilding.direction);
+			this._editingBuilding = this._owner.battle.CreateEditingBuilding(srcBuilding.id, srcBuilding.position);
 			this._editingBuilding.Steup(srcBuilding);
 
 			let touchPoint = <RC.Numerics.Vec3>param[1];

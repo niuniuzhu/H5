@@ -31,7 +31,6 @@ namespace View {
 			for (let i = 0; i < count; ++i) {
 				let graphic = this._graphics[i];
 				graphic.UpdatePosition();
-				graphic.UpdateDirection();
 			}
 		}
 

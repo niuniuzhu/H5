@@ -3,7 +3,6 @@ namespace View {
 		protected readonly _manager: GraphicManager;
 		protected readonly _root: fairygui.GComponent;
 		protected _position: RC.Numerics.Vec3;
-		protected _rotation: RC.Numerics.Quat;
 
 		public get root(): fairygui.GComponent { return this._root; }
 
@@ -11,16 +10,8 @@ namespace View {
 		public set position(value: RC.Numerics.Vec3) {
 			if (value.EqualsTo(this._position))
 				return;
-			this._position = value.Clone();
+			this._position.CopyFrom(value);
 			this.UpdatePosition();
-		}
-
-		public get rotation(): RC.Numerics.Quat { return this._rotation.Clone(); }
-		public set rotation(value: RC.Numerics.Quat) {
-			if (value.EqualsTo(this._rotation))
-				return;
-			this._rotation = value.Clone();
-			this.UpdateDirection();
 		}
 
 		public get alpha(): number { return this._root.alpha; }
@@ -34,7 +25,6 @@ namespace View {
 			this._root = new fairygui.GComponent();
 			this._manager.root.addChild(this._root);
 			this._position = RC.Numerics.Vec3.zero;
-			this._rotation = RC.Numerics.Quat.identity;
 			this.UpdatePosition();
 		}
 
@@ -47,9 +37,6 @@ namespace View {
 		public UpdatePosition(): void {
 			let localPos = this._manager.battle.camera.WorldToScreen(this._position);
 			this._root.setXY(localPos.x, localPos.y);
-		}
-
-		public UpdateDirection(): void {
 		}
 	}
 }

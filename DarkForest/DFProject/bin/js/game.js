@@ -3,54 +3,27 @@ var Game;
     class BattleManager {
         static Init(param) {
             this._init = true;
-            this._elapsedSinceLastLogicUpdate = 0;
-            this._framesPerKeyFrame = param.framesPerKeyFrame;
-            this._frameRate = param.frameRate;
-            this._nextKeyFrame = this._framesPerKeyFrame;
             this.cBattle = new View.CBattle(param);
-            this.lBattle = new Logic.Battle(param);
         }
         static Dispose() {
             if (!this._init)
                 return;
             this._init = false;
-            this._elapsed = 0;
-            this._elapsedSinceLastLogicUpdate = 0;
-            this.lBattle.Dispose();
-            Shared.Event.EventCenter.Sync();
-            this.cBattle.Dispose();
-            this.lBattle = null;
             this.cBattle = null;
         }
         static Update(deltaTime) {
             if (!this._init)
                 return;
-            Shared.Event.EventCenter.Sync();
             this.cBattle.Update(deltaTime);
-            this.UpdateLogic(deltaTime);
         }
         static OnResize(e) {
             if (!this._init)
                 return;
             this.cBattle.OnResize(e);
         }
-        static UpdateLogic(deltaTime) {
-            let millisecondsPreFrame = 1000 / this._frameRate;
-            this._elapsed += deltaTime;
-            while (this._elapsed >= millisecondsPreFrame) {
-                this.lBattle.Update(millisecondsPreFrame);
-                this._elapsed -= millisecondsPreFrame;
-            }
-        }
     }
     BattleManager.cBattle = null;
-    BattleManager.lBattle = null;
     BattleManager._init = false;
-    BattleManager._elapsedSinceLastLogicUpdate = 0;
-    BattleManager._elapsed = 0;
-    BattleManager._frameRate = 0;
-    BattleManager._framesPerKeyFrame = 0;
-    BattleManager._nextKeyFrame = 0;
     Game.BattleManager = BattleManager;
 })(Game || (Game = {}));
 var Game;
@@ -116,57 +89,86 @@ var Game;
     }
     Game.GameMain = GameMain;
 })(Game || (Game = {}));
-var Logic;
-(function (Logic) {
-    class Battle {
-        constructor(param) {
-            this._frame = 0;
-            this._deltaTime = 0;
-            this._time = 0;
-            this._data = Shared.Model.ModelFactory.GetMapData(Shared.Utils.GetIDFromRID(param.id));
-            this._random = new RC.Utils.ConsistentRandom(param.rndSeed);
-            this._context = new Shared.UpdateContext();
-            this._entityManager = new Logic.EntityManager(this);
-            this._tile = new Logic.Tile(this._data.tileSlope, this._data.tileAspect, this._data.tileRatio);
-            Shared.Event.SyncEvent.CreateBattle(param.id);
+var Shared;
+(function (Shared) {
+    let Attr;
+    (function (Attr) {
+        Attr[Attr["Undefine"] = 0] = "Undefine";
+        Attr[Attr["Id"] = 2] = "Id";
+        Attr[Attr["Name"] = 3] = "Name";
+        Attr[Attr["Model"] = 4] = "Model";
+        Attr[Attr["Bounds"] = 5] = "Bounds";
+        Attr[Attr["Position"] = 6] = "Position";
+        Attr[Attr["Direction"] = 7] = "Direction";
+        Attr[Attr["Uid"] = 50] = "Uid";
+        Attr[Attr["Team"] = 51] = "Team";
+    })(Attr = Shared.Attr || (Shared.Attr = {}));
+})(Shared || (Shared = {}));
+var Shared;
+(function (Shared) {
+    class Defs {
+        static Init(json) {
+            Defs._defs = json;
         }
-        get frame() {
-            return this._frame;
+        static GetMap(id) {
+            let ht = RC.Utils.Hashtable.GetMap(Defs._defs, "maps");
+            let defaultHt = RC.Utils.Hashtable.GetMap(ht, "default");
+            let result = RC.Utils.Hashtable.GetMap(ht, id);
+            if (result == null)
+                result = {};
+            RC.Utils.Hashtable.Concat(result, defaultHt);
+            return result;
         }
-        get deltaTime() {
-            return this._deltaTime;
-        }
-        get time() {
-            return this._time;
-        }
-        Dispose() {
-            this._entityManager.Dispose();
-            Shared.Event.SyncEvent.DestroyBattle();
-        }
-        Update(deltaTime) {
-            ++this._frame;
-            this._deltaTime = deltaTime;
-            this._time += this.deltaTime;
-            this._context.deltaTime = this.deltaTime;
-            this._context.time = this.time;
-            this._context.frame = this.frame;
-            this._entityManager.Update(this._context);
-        }
-        CreateBuildings(param) {
-            let buildings = param.buildings;
-            for (let i = 0; i < buildings.length; ++i) {
-                let building = buildings[i];
-                let entityParam = new Shared.Model.EntityParam();
-                entityParam.rid = Shared.Utils.MakeRIDFromID(building.id);
-                entityParam.uid = param.uid;
-                entityParam.position = new RC.Numerics.Vec3();
-                entityParam.direction = new RC.Numerics.Vec3(1, 0, 0);
-                let entity = this._entityManager.Create(Logic.Building, entityParam);
-            }
+        static GetEntity(id) {
+            let ht = RC.Utils.Hashtable.GetMap(Defs._defs, "entities");
+            let defaultHt = RC.Utils.Hashtable.GetMap(ht, "default");
+            let result = RC.Utils.Hashtable.GetMap(ht, id);
+            if (result == null)
+                result = {};
+            RC.Utils.Hashtable.Concat(result, defaultHt);
+            return result;
         }
     }
-    Logic.Battle = Battle;
-})(Logic || (Logic = {}));
+    Shared.Defs = Defs;
+})(Shared || (Shared = {}));
+var Shared;
+(function (Shared) {
+    class GPool {
+        constructor() {
+            this._typeToObjects = new RC.Collections.Dictionary();
+        }
+        Count(c) {
+            let n = c.name;
+            let objs = this._typeToObjects.getValue(n);
+            return objs.size();
+        }
+        Pop(c) {
+            let n = c.name;
+            let objs = this._typeToObjects.getValue(n);
+            if (objs == null) {
+                objs = new RC.Collections.Queue();
+                this._typeToObjects.setValue(n, objs);
+            }
+            let obj = objs.size() == 0 ? new c() : objs.dequeue();
+            return obj;
+        }
+        Push(obj) {
+            let n = obj.constructor.name;
+            let q = this._typeToObjects.getValue(n);
+            q.enqueue(obj);
+        }
+        Dispose() {
+            this._typeToObjects.forEach((k, v) => {
+                while (v.size() > 0) {
+                    let obj = v.dequeue();
+                    obj.Dispose();
+                }
+            });
+            this._typeToObjects.clear();
+        }
+    }
+    Shared.GPool = GPool;
+})(Shared || (Shared = {}));
 var Shared;
 (function (Shared) {
     class GPoolObject {
@@ -177,168 +179,6 @@ var Shared;
     }
     Shared.GPoolObject = GPoolObject;
 })(Shared || (Shared = {}));
-var Logic;
-(function (Logic) {
-    class Entity extends Shared.GPoolObject {
-        constructor() {
-            super();
-            this._battle = null;
-            this._markToDestroy = false;
-            this._data = null;
-            this._position = RC.Numerics.Vec3.zero;
-            this._direction = RC.Numerics.Vec3.forward;
-        }
-        get position() { return this._position.Clone(); }
-        set position(value) {
-            if (this._position.EqualsTo(value))
-                return;
-            this._position = value.Clone();
-            this.OnPositionChanged();
-        }
-        get direction() { return this._direction.Clone(); }
-        set direction(value) {
-            if (this._direction.EqualsTo(value))
-                return;
-            this._direction = value.Clone();
-            this.OnDirectionChanged();
-        }
-        get battle() { return this._battle; }
-        get markToDestroy() { return this._markToDestroy; }
-        InternalDispose() {
-        }
-        OnAddedToBattle(battle, param) {
-            this._battle = battle;
-            this._rid = param.rid;
-            this._data = Shared.Model.ModelFactory.GetEntityData(Shared.Utils.GetIDFromRID(this.rid));
-            this.position = param.position.Clone();
-            this.direction = param.direction.Clone();
-            Shared.Event.SyncEvent.EntityAddedToBattle(this.rid);
-            this.InternalOnAddedToBattle(param);
-            this.OnSyncState();
-        }
-        OnRemoveFromBattle() {
-            Shared.Event.SyncEvent.EntityRemoveFromBattle(this.rid);
-            this.InternalOnRemoveFromBattle();
-            this._markToDestroy = false;
-            this._battle = null;
-            this._data = null;
-        }
-        InternalOnAddedToBattle(param) {
-        }
-        InternalOnRemoveFromBattle() {
-        }
-        OnPositionChanged() {
-        }
-        OnDirectionChanged() {
-        }
-        OnGenericUpdate(context) {
-        }
-        OnSyncState() {
-            let e = Shared.Event.SyncEvent.BeginSyncProps(this.rid);
-            Shared.Event.SyncEvent.AddSyncProp(e, Shared.Attr.Position, this.position);
-            Shared.Event.SyncEvent.AddSyncProp(e, Shared.Attr.Direction, this.direction);
-            Shared.Event.SyncEvent.EndSyncProps(e);
-        }
-        MarkToDestroy() {
-            this._markToDestroy = true;
-        }
-        PointToWorld(point) {
-            return RC.Numerics.Vec3.Add(this.position, RC.Numerics.Quat.FromToRotation(RC.Numerics.Vec3.forward, this.direction).Transform(point));
-        }
-        PointToLocal(point) {
-            let q = RC.Numerics.Quat.Invert(RC.Numerics.Quat.FromToRotation(RC.Numerics.Vec3.forward, this.direction));
-            return q.Transform(RC.Numerics.Vec3.Sub(point, this.position));
-        }
-        VectorToWorld(point) {
-            return RC.Numerics.Quat.FromToRotation(RC.Numerics.Vec3.forward, this.direction).Transform(point);
-        }
-        VectorToLocal(point) {
-            let q = RC.Numerics.Quat.Invert(RC.Numerics.Quat.FromToRotation(RC.Numerics.Vec3.forward, this.direction));
-            return q.Transform(point);
-        }
-    }
-    Logic.Entity = Entity;
-})(Logic || (Logic = {}));
-var Logic;
-(function (Logic) {
-    class Building extends Logic.Entity {
-        constructor() {
-            super();
-        }
-    }
-    Logic.Building = Building;
-})(Logic || (Logic = {}));
-var Logic;
-(function (Logic) {
-    class EntityManager {
-        constructor(battle) {
-            this._battle = battle;
-            this._gPool = new Shared.GPool();
-            this._entities = [];
-            this._idToEntity = new RC.Collections.Dictionary();
-        }
-        Dispose() {
-            this._entities.forEach((entity) => {
-                entity.MarkToDestroy();
-            });
-            this.DestroyEnties();
-            this._gPool.Dispose();
-        }
-        DestroyEnties() {
-            let count = this._entities.length;
-            for (let i = 0; i < count; i++) {
-                let entity = this._entities[i];
-                if (!entity.markToDestroy)
-                    continue;
-                entity.OnRemoveFromBattle();
-                this._entities.splice(i, 1);
-                this._idToEntity.remove(entity.rid);
-                this._gPool.Push(entity);
-                --i;
-                --count;
-            }
-        }
-        Create(c, param) {
-            let entity = this._gPool.Pop(c);
-            this._idToEntity.setValue(param.rid, entity);
-            this._entities.push(entity);
-            Shared.Event.SyncEvent.CreateEntity(entity.constructor.name, param);
-            entity.OnAddedToBattle(this._battle, param);
-            return entity;
-        }
-        GetEntity(rid) {
-            if (rid == null || rid == undefined)
-                return null;
-            let entity = this._idToEntity.getValue(rid);
-            return entity;
-        }
-        GetEntityAt(index) {
-            if (index < 0 ||
-                index > this._entities.length - 1)
-                return null;
-            return this._entities[index];
-        }
-        Update(context) {
-            this.GenericUpdate(context);
-            this.UpdateState(context);
-            this.SyncState();
-            this.DestroyEnties();
-        }
-        GenericUpdate(context) {
-            this._entities.forEach((entity) => {
-                entity.OnGenericUpdate(context);
-            });
-        }
-        UpdateState(context) {
-        }
-        SyncState() {
-            this._entities.forEach((entity) => {
-                entity.OnSyncState();
-            });
-        }
-    }
-    Logic.EntityManager = EntityManager;
-})(Logic || (Logic = {}));
 var Shared;
 (function (Shared) {
     class TileBase {
@@ -435,92 +275,6 @@ var Shared;
         }
     }
     Shared.TileBase = TileBase;
-})(Shared || (Shared = {}));
-var Logic;
-(function (Logic) {
-    class Tile extends Shared.TileBase {
-    }
-    Logic.Tile = Tile;
-})(Logic || (Logic = {}));
-var Shared;
-(function (Shared) {
-    let Attr;
-    (function (Attr) {
-        Attr[Attr["Undefine"] = 0] = "Undefine";
-        Attr[Attr["Id"] = 2] = "Id";
-        Attr[Attr["Name"] = 3] = "Name";
-        Attr[Attr["Model"] = 4] = "Model";
-        Attr[Attr["Bounds"] = 5] = "Bounds";
-        Attr[Attr["Position"] = 6] = "Position";
-        Attr[Attr["Direction"] = 7] = "Direction";
-        Attr[Attr["Uid"] = 50] = "Uid";
-        Attr[Attr["Team"] = 51] = "Team";
-    })(Attr = Shared.Attr || (Shared.Attr = {}));
-})(Shared || (Shared = {}));
-var Shared;
-(function (Shared) {
-    class Defs {
-        static Init(json) {
-            Defs._defs = json;
-        }
-        static GetMap(id) {
-            let ht = RC.Utils.Hashtable.GetMap(Defs._defs, "maps");
-            let defaultHt = RC.Utils.Hashtable.GetMap(ht, "default");
-            let result = RC.Utils.Hashtable.GetMap(ht, id);
-            if (result == null)
-                result = {};
-            RC.Utils.Hashtable.Concat(result, defaultHt);
-            return result;
-        }
-        static GetEntity(id) {
-            let ht = RC.Utils.Hashtable.GetMap(Defs._defs, "entities");
-            let defaultHt = RC.Utils.Hashtable.GetMap(ht, "default");
-            let result = RC.Utils.Hashtable.GetMap(ht, id);
-            if (result == null)
-                result = {};
-            RC.Utils.Hashtable.Concat(result, defaultHt);
-            return result;
-        }
-    }
-    Shared.Defs = Defs;
-})(Shared || (Shared = {}));
-var Shared;
-(function (Shared) {
-    class GPool {
-        constructor() {
-            this._typeToObjects = new RC.Collections.Dictionary();
-        }
-        Count(c) {
-            let n = c.name;
-            let objs = this._typeToObjects.getValue(n);
-            return objs.size();
-        }
-        Pop(c) {
-            let n = c.name;
-            let objs = this._typeToObjects.getValue(n);
-            if (objs == null) {
-                objs = new RC.Collections.Queue();
-                this._typeToObjects.setValue(n, objs);
-            }
-            let obj = objs.size() == 0 ? new c() : objs.dequeue();
-            return obj;
-        }
-        Push(obj) {
-            let n = obj.constructor.name;
-            let q = this._typeToObjects.getValue(n);
-            q.enqueue(obj);
-        }
-        Dispose() {
-            this._typeToObjects.forEach((k, v) => {
-                while (v.size() > 0) {
-                    let obj = v.dequeue();
-                    obj.Dispose();
-                }
-            });
-            this._typeToObjects.clear();
-        }
-    }
-    Shared.GPool = GPool;
 })(Shared || (Shared = {}));
 var Shared;
 (function (Shared) {
@@ -937,8 +691,6 @@ var View;
             this._frame = 0;
             this._deltaTime = 0;
             this._time = 0;
-            this._uid = "";
-            this._uid = param.uid;
             this._data = Shared.Model.ModelFactory.GetMapData(Shared.Utils.GetIDFromRID(param.id));
             this._entityManager = new View.CEntityManager(this);
             this._graphicManager = new View.GraphicManager(this);
@@ -952,14 +704,6 @@ var View;
             this._tile = new View.CTile(this._data.tileSlope, this._data.tileAspect, this._data.tileRatio);
             this._input = new View.Input(this);
             this.camera.UpdateRestriction(RC.Numerics.Vec3.zero, new RC.Numerics.Vec3(this._graphic.sprite.width - fairygui.GRoot.inst.width, this._graphic.sprite.height - fairygui.GRoot.inst.height, 0));
-            Shared.Event.EventCenter.AddListener(Shared.Event.SyncEvent.BATTLE_CREATED, this.HandleCreateBattle.bind(this));
-            Shared.Event.EventCenter.AddListener(Shared.Event.SyncEvent.BATTLE_DESTROIED, this.HandleDestroyBattle.bind(this));
-            Shared.Event.EventCenter.AddListener(Shared.Event.SyncEvent.ENTITY_CREATED, this.HandleEntityCreate.bind(this));
-            Shared.Event.EventCenter.AddListener(Shared.Event.SyncEvent.ENTITY_ADDED_TO_BATTLE, this.HandleEntityAddedToBattle.bind(this));
-            Shared.Event.EventCenter.AddListener(Shared.Event.SyncEvent.ENTITY_REMOVE_FROM_BATTLE, this.HandleEntityRemoveFromBattle.bind(this));
-            Shared.Event.EventCenter.AddListener(Shared.Event.SyncEvent.ENTITY_STATE_CHANGED, this.HandleEntityStateChanged.bind(this));
-            Shared.Event.EventCenter.AddListener(Shared.Event.SyncEvent.ENTITY_SYNC_PROPS, this.HandleEntitySyncProps.bind(this));
-            Shared.Event.EventCenter.AddListener(Shared.Event.SyncEvent.WIN, this.HandleWin.bind(this));
         }
         get frame() { return this._frame; }
         get deltaTime() { return this._deltaTime; }
@@ -974,14 +718,6 @@ var View;
         ;
         get input() { return this._input; }
         Dispose() {
-            Shared.Event.EventCenter.RemoveListener(Shared.Event.SyncEvent.BATTLE_CREATED, this.HandleCreateBattle.bind(this));
-            Shared.Event.EventCenter.RemoveListener(Shared.Event.SyncEvent.BATTLE_DESTROIED, this.HandleDestroyBattle.bind(this));
-            Shared.Event.EventCenter.RemoveListener(Shared.Event.SyncEvent.ENTITY_CREATED, this.HandleEntityCreate.bind(this));
-            Shared.Event.EventCenter.RemoveListener(Shared.Event.SyncEvent.ENTITY_ADDED_TO_BATTLE, this.HandleEntityAddedToBattle.bind(this));
-            Shared.Event.EventCenter.RemoveListener(Shared.Event.SyncEvent.ENTITY_REMOVE_FROM_BATTLE, this.HandleEntityRemoveFromBattle.bind(this));
-            Shared.Event.EventCenter.RemoveListener(Shared.Event.SyncEvent.ENTITY_STATE_CHANGED, this.HandleEntityStateChanged.bind(this));
-            Shared.Event.EventCenter.RemoveListener(Shared.Event.SyncEvent.ENTITY_SYNC_PROPS, this.HandleEntitySyncProps.bind(this));
-            Shared.Event.EventCenter.RemoveListener(Shared.Event.SyncEvent.WIN, this.HandleWin.bind(this));
             this._graphicManager.Dispose();
             this._entityManager.Dispose();
             this._tile.Dispose();
@@ -1000,61 +736,21 @@ var View;
         OnResize(e) {
             this.camera.UpdateRestriction(RC.Numerics.Vec3.zero, new RC.Numerics.Vec3(this._graphic.sprite.width - fairygui.GRoot.inst.width, this._graphic.sprite.height - fairygui.GRoot.inst.height, 0));
         }
-        CreateBuilding(id, position = RC.Numerics.Vec3.zero, direction = RC.Numerics.Vec3.forward) {
+        CreateBuilding(id, position = RC.Numerics.Vec3.zero) {
             let rid = Shared.Utils.MakeRIDFromID(id);
             let param = new Shared.Model.EntityParam();
             param.rid = rid;
             param.position = position;
-            param.direction = direction;
             let entity = this._entityManager.Create(View.CBuilding, param);
             return entity;
         }
-        CreateEditingBuilding(id, position = RC.Numerics.Vec3.zero, direction = RC.Numerics.Vec3.forward) {
+        CreateEditingBuilding(id, position = RC.Numerics.Vec3.zero) {
             let rid = Shared.Utils.MakeRIDFromID(id);
             let param = new Shared.Model.EntityParam();
             param.rid = rid;
             param.position = position;
-            param.direction = direction;
             let entity = this._entityManager.Create(View.EditingBuilding, param);
             return entity;
-        }
-        HandleCreateBattle(baseEvent) {
-            let e = baseEvent;
-        }
-        HandleDestroyBattle(baseEvent) {
-            this._graphicManager.DestroyGraphic(this._graphic);
-        }
-        HandleEntityCreate(baseEvent) {
-            let e = baseEvent;
-            let type = e.entityType;
-            let param = e.param;
-            switch (type) {
-                case "Building":
-                    this._entityManager.Create(View.CBuilding, param);
-                    break;
-            }
-        }
-        HandleEntityAddedToBattle(baseEvent) {
-            let e = baseEvent;
-            let entity = this._entityManager.GetEntity(e.targetId);
-            entity.OnAddedToBattle();
-            Shared.Event.UIEvent.EntityCreated(entity);
-        }
-        HandleEntityRemoveFromBattle(baseEvent) {
-            let e = baseEvent;
-            let entity = this._entityManager.GetEntity(e.targetId);
-            entity.OnRemoveFromBattle();
-        }
-        HandleEntityStateChanged(baseEvent) {
-            let e = baseEvent;
-        }
-        HandleEntitySyncProps(baseEvent) {
-            let e = baseEvent;
-            let entity = this._entityManager.GetEntity(e.targetId);
-            entity.HandleSyncProps(e.attrs, e.attrValues);
-        }
-        HandleWin(baseEvent) {
-            let e = baseEvent;
         }
     }
     View.CBattle = CBattle;
@@ -1066,24 +762,15 @@ var View;
             super();
             this._data = null;
             this._position = RC.Numerics.Vec3.zero;
-            this._direction = RC.Numerics.Vec3.forward;
         }
         get id() { return this._data.id; }
         get position() { return this._position.Clone(); }
         set position(value) {
             if (this._position.EqualsTo(value))
                 return;
-            this._position = value.Clone();
+            this._position.CopyFrom(value);
             if (this._graphic != null)
                 this._graphic.position = this._position;
-        }
-        get direction() { return this._direction.Clone(); }
-        set direction(value) {
-            if (this._direction.EqualsTo(value))
-                return;
-            this._direction = value.Clone();
-            if (this._graphic != null)
-                this._graphic.rotation = RC.Numerics.Quat.LookRotation(this._direction, RC.Numerics.Vec3.up);
         }
         get footprint() { return this._data.footprint.Clone(); }
         get battle() { return this._battle; }
@@ -1095,12 +782,10 @@ var View;
             this._battle = battle;
             this._rid = param.rid;
             this._data = Shared.Model.ModelFactory.GetEntityData(Shared.Utils.GetIDFromRID(this.rid));
-            this._logicPos = this._position = param.position.Clone();
-            this._logicDir = this._direction = param.direction.Clone();
+            this.position = param.position;
             this._graphic = this._battle.graphicManager.CreateGraphic(View.EntityGraphic);
             this._graphic.Load(this._data.model);
             this._graphic.position = this.position;
-            this._graphic.rotation = RC.Numerics.Quat.LookRotation(this.direction, RC.Numerics.Vec3.up);
         }
         OnAddedToBattle() {
         }
@@ -1114,27 +799,7 @@ var View;
         MarkToDestroy() {
             this._markToDestroy = true;
         }
-        HandleSyncProps(attrs, values) {
-            for (let i = 0; i < attrs.length; i++)
-                this.OnAttrChanged(attrs[i], values[i]);
-        }
-        OnAttrChanged(attr, value) {
-            switch (attr) {
-                case Shared.Attr.Position:
-                    this._logicPos = value;
-                    break;
-                case Shared.Attr.Direction:
-                    this._logicDir = value;
-                    break;
-            }
-            Shared.Event.UIEvent.EntityAttrChanged(this, attr, value);
-        }
         OnUpdateState(context) {
-            let dt = context.deltaTime;
-            if (!this.disableTransformLerp) {
-                this.position = RC.Numerics.Vec3.Lerp(this._position, this._logicPos, dt * 10);
-                this.direction = RC.Numerics.Vec3.Slerp(this._direction, this._logicDir, dt * 8);
-            }
         }
     }
     View.CEntity = CEntity;
@@ -1281,7 +946,6 @@ var View;
     class EditingBuilding extends View.CBuilding {
         constructor() {
             super();
-            this.disableTransformLerp = true;
         }
         OnRemoveFromBattle() {
             super.OnRemoveFromBattle();
@@ -1295,7 +959,6 @@ var View;
         }
         Apply() {
             if (this._battle.tile.CanPlace(this)) {
-                this._srcBuilding.disableTransformLerp = true;
                 this._srcBuilding.position = this._position;
                 this._srcBuilding.graphic.visible = true;
                 this._battle.tile.PlaceBuilding(this._srcBuilding);
@@ -1322,7 +985,6 @@ var View;
             this._root = new fairygui.GComponent();
             this._manager.root.addChild(this._root);
             this._position = RC.Numerics.Vec3.zero;
-            this._rotation = RC.Numerics.Quat.identity;
             this.UpdatePosition();
         }
         get root() { return this._root; }
@@ -1330,15 +992,8 @@ var View;
         set position(value) {
             if (value.EqualsTo(this._position))
                 return;
-            this._position = value.Clone();
+            this._position.CopyFrom(value);
             this.UpdatePosition();
-        }
-        get rotation() { return this._rotation.Clone(); }
-        set rotation(value) {
-            if (value.EqualsTo(this._rotation))
-                return;
-            this._rotation = value.Clone();
-            this.UpdateDirection();
         }
         get alpha() { return this._root.alpha; }
         set alpha(value) { this._root.alpha = value; }
@@ -1350,8 +1005,6 @@ var View;
         UpdatePosition() {
             let localPos = this._manager.battle.camera.WorldToScreen(this._position);
             this._root.setXY(localPos.x, localPos.y);
-        }
-        UpdateDirection() {
         }
     }
     View.Graphic = Graphic;
@@ -1400,7 +1053,6 @@ var View;
             for (let i = 0; i < count; ++i) {
                 let graphic = this._graphics[i];
                 graphic.UpdatePosition();
-                graphic.UpdateDirection();
             }
         }
         CreateGraphic(c) {
@@ -1476,7 +1128,7 @@ var View;
             this._dragingBuilding = false;
             this._touchMovied = false;
             let srcBuilding = param[0];
-            this._editingBuilding = this._owner.battle.CreateEditingBuilding(srcBuilding.id, srcBuilding.position, srcBuilding.direction);
+            this._editingBuilding = this._owner.battle.CreateEditingBuilding(srcBuilding.id, srcBuilding.position);
             this._editingBuilding.Steup(srcBuilding);
             let touchPoint = param[1];
             if (touchPoint) {

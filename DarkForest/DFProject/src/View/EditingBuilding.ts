@@ -6,7 +6,6 @@ namespace View {
 
 		constructor() {
 			super();
-			this.disableTransformLerp = true;
 		}
 
 		public OnRemoveFromBattle(): void {
@@ -23,7 +22,6 @@ namespace View {
 
 		public Apply(): boolean {
 			if (this._battle.tile.CanPlace(this)) {
-				this._srcBuilding.disableTransformLerp = true;// todo
 				this._srcBuilding.position = this._position;
 				this._srcBuilding.graphic.visible = true;
 				this._battle.tile.PlaceBuilding(this._srcBuilding);
