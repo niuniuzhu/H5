@@ -6,7 +6,7 @@ namespace Shared.Model {
 		public model: string;
 
 		// building
-		public footprint:number;
+		public footprint:RC.Numerics.Vec2;
 
 		constructor(id: string) {
 			this.id = id;
@@ -14,7 +14,7 @@ namespace Shared.Model {
 			this.name = RC.Utils.Hashtable.GetString(def, "name");
 			this.model = RC.Utils.Hashtable.GetString(def, "model");
 
-			this.footprint = RC.Utils.Hashtable.GetNumber(def, "footprint");
+			this.footprint = RC.Utils.Hashtable.GetVec2(def, "footprint");
 		}
 	}
 }

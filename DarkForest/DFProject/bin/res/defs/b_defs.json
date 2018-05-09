@@ -14,59 +14,59 @@
 	},
 	"entities": {
 		"b0": {
-			"name": "test",
+			"name": "发电厂",
 			"model": "b0",
-			"footprint": 16
+			"footprint": [5,5]
 		},
 		"b1": {
 			"name": "test",
 			"model": "b1",
-			"footprint": 16
+			"footprint": [5,5]
 		},
 		"b2": {
 			"name": "test",
 			"model": "b2",
-			"footprint": 16
+			"footprint": [5,4]
 		},
 		"b3": {
 			"name": "test",
 			"model": "b3",
-			"footprint": 16
+			"footprint": [5,4]
 		},
 		"b4": {
 			"name": "test",
 			"model": "b4",
-			"footprint": 16
+			"footprint": [4,5]
 		},
 		"b5": {
 			"name": "test",
 			"model": "b5",
-			"footprint": 16
+			"footprint": [4,4]
 		},
 		"b6": {
 			"name": "test",
 			"model": "b6",
-			"footprint": 16
+			"footprint": [4,4]
 		},
 		"b7": {
 			"name": "test",
 			"model": "b7",
-			"footprint": 16
+			"footprint": [4,4]
 		},
 		"b8": {
 			"name": "test",
 			"model": "b8",
-			"footprint": 16
+			"footprint": [4,4]
 		},
 		"b9": {
 			"name": "test",
 			"model": "b9",
-			"footprint": 16
+			"footprint": [4,4]
 		},
 		"b10": {
 			"name": "test",
 			"model": "b10",
-			"footprint": 16
+			"footprint": [4,4]
 		}
 	}
 }

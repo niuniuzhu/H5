@@ -44,7 +44,7 @@ namespace View {
 			this._graphic.Load(this._data.model);
 
 			this._tile = new CTile(this._data.tileSlope, this._data.tileAspect, this._data.tileRatio);
-			this._layoutProcessor = new LayoutProcessor();
+			this._layoutProcessor = new LayoutProcessor(this);
 			this._input = new Input(this);
 
 			this.camera.UpdateRestriction(RC.Numerics.Vec3.zero,
@@ -73,6 +73,7 @@ namespace View {
 
 			this._graphicManager.Dispose();
 			this._entityManager.Dispose();
+			this._tile.Dispose();
 		}
 
 		public Update(deltaTime: number): void {

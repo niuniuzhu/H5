@@ -2,23 +2,21 @@
 
 namespace View {
 	export class EntityGraphic extends Graphic {
-		private _loader:fairygui.GLoader;
+		private _sprite: fairygui.GComponent;
 
 		constructor(manager: GraphicManager) {
 			super(manager);
 		}
 
-		public Dispose():void{
-			this._loader.dispose();
+		public Dispose(): void {
+			this._sprite.dispose();
 			super.Dispose();
 		}
 
 		public Load(id: string): void {
-			this._loader = new fairygui.GLoader();
-			this._loader.autoSize = true;
-			this._loader.touchable = false;
-			this._loader.url = fairygui.UIPackage.getItemURL("global", id);
-			this._root.addChild(this._loader);
+			this._sprite = fairygui.UIPackage.createObject("global", id).asCom;
+			this._root.addChild(this._sprite);
+			this._sprite.touchable = false;
 		}
 	}
 }

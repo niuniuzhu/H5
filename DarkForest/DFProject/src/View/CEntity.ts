@@ -30,6 +30,8 @@ namespace View {
 				this._graphic.rotation = RC.Numerics.Quat.LookRotation(this._direction, RC.Numerics.Vec3.up);
 		}
 
+		public get footprint(): RC.Numerics.Vec2 { return this._data.footprint.Clone(); }
+
 		public get battle(): View.CBattle { return this._battle; }
 		public get graphic(): EntityGraphic { return this._graphic; }
 		public get markToDestroy(): boolean { return this._markToDestroy; }

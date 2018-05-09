@@ -2,21 +2,19 @@ namespace View {
 	export class Camera {
 		private _position: RC.Numerics.Vec3;
 		private _direction: RC.Numerics.Vec3;
-		private _worldToLocalMat: RC.Numerics.Mat4;
-		private _localToWorldMat: RC.Numerics.Mat4;
-		private _restriMinOrgi: RC.Numerics.Vec3;
-		private _restriMaxOrgi: RC.Numerics.Vec3;
-		private _restriMin: RC.Numerics.Vec3;
-		private _restriMax: RC.Numerics.Vec3;
-		private _seekerPos: RC.Numerics.Vec3;
-		private _seekerDir: RC.Numerics.Vec3;
+		private readonly _worldToLocalMat: RC.Numerics.Mat4;
+		private readonly _localToWorldMat: RC.Numerics.Mat4;
+		private readonly _restriMin: RC.Numerics.Vec3;
+		private readonly _restriMax: RC.Numerics.Vec3;
+		private readonly _seekerPos: RC.Numerics.Vec3;
+		private readonly _seekerDir: RC.Numerics.Vec3;
 		private _lastPointerPos: RC.Numerics.Vec3;
 
 		public get seekerPos(): RC.Numerics.Vec3 { return this._seekerPos.Clone(); }
 		public set seekerPos(value: RC.Numerics.Vec3) {
 			if (this._seekerPos.EqualsTo(value))
 				return;
-			this._seekerPos = value.Clone();
+			this._seekerPos.CopyFrom(value);
 			this._seekerPos.Clamp(this._restriMin, this._restriMax);
 		}
 
@@ -24,7 +22,7 @@ namespace View {
 		public set seekerDir(value: RC.Numerics.Vec3) {
 			if (this._seekerDir.EqualsTo(value))
 				return;
-			this._seekerDir = value.Clone();
+			this._seekerDir.CopyFrom(value);
 		}
 
 		public get position(): RC.Numerics.Vec3 { return this._position.Clone(); }
@@ -56,8 +54,6 @@ namespace View {
 			this._seekerDir = this._direction.Clone();
 			this._restriMin = RC.Numerics.Vec3.zero;
 			this._restriMax = new RC.Numerics.Vec3(RC.Numerics.MathUtils.MAX_VALUE, RC.Numerics.MathUtils.MAX_VALUE, RC.Numerics.MathUtils.MAX_VALUE);
-			this._restriMinOrgi = RC.Numerics.Vec3.zero;
-			this._restriMaxOrgi = new RC.Numerics.Vec3(RC.Numerics.MathUtils.MAX_VALUE, RC.Numerics.MathUtils.MAX_VALUE, RC.Numerics.MathUtils.MAX_VALUE);
 			this._localToWorldMat = RC.Numerics.Mat4.FromTRS(this._position,
 				RC.Numerics.Quat.Euler(new RC.Numerics.Vec3(90, 0, 0)),
 				new RC.Numerics.Vec3(1, -1, 1));

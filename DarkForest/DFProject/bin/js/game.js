@@ -344,15 +344,54 @@ var Shared;
 (function (Shared) {
     class TileBase {
         constructor(slope, aspect, ratio) {
+            this._occupied = new Set();
             this._localToWorldMat = RC.Numerics.Mat4.FromTRS(RC.Numerics.Vec3.zero, RC.Numerics.Quat.Euler(new RC.Numerics.Vec3(0, slope, 0)), new RC.Numerics.Vec3(1, 1, 1));
             this._localToWorldMat.Mul(RC.Numerics.Mat4.FromScale(new RC.Numerics.Vec3(ratio, 1, aspect * ratio)));
             this._worldToLocalMat = RC.Numerics.Mat4.NonhomogeneousInvert(this._localToWorldMat);
         }
-        WorldToLocal(point) {
-            return this._worldToLocalMat.TransformPoint(point);
+        WorldToTile(point) {
+            let v = this._worldToLocalMat.TransformPoint(point);
+            v.x = RC.Numerics.MathUtils.Floor(v.x);
+            v.y = RC.Numerics.MathUtils.Floor(v.y);
+            v.z = RC.Numerics.MathUtils.Floor(v.z);
+            return v;
         }
-        LocalToWorld(point) {
+        TileToWorld(point) {
             return this._localToWorldMat.TransformPoint(point);
+        }
+        CheckOccupies(localCenter, footprint) {
+            let topLeftX = RC.Numerics.MathUtils.Floor(localCenter.x - footprint.x);
+            let topLeftY = RC.Numerics.MathUtils.Floor(localCenter.z - footprint.y);
+            for (let x = 0; x < footprint.x; ++x) {
+                for (let y = 0; y < footprint.y; ++y) {
+                    if (!this.GetOccupy(new RC.Numerics.Vec3(x + topLeftX, y + topLeftY)))
+                        return false;
+                }
+            }
+            return true;
+        }
+        SetOccupies(localCenter, footprint) {
+            let topLeftX = RC.Numerics.MathUtils.Floor(localCenter.x - footprint.x);
+            let topLeftY = RC.Numerics.MathUtils.Floor(localCenter.z - footprint.y);
+            for (let x = 0; x < footprint.x; ++x) {
+                for (let y = 0; y < footprint.y; ++y) {
+                    this.SetOccupy(new RC.Numerics.Vec3(x + topLeftX, y + topLeftY));
+                }
+            }
+        }
+        SetOccupy(localPoint) {
+            this._occupied.add(this.EncodePoint(localPoint.x, localPoint.z));
+        }
+        GetOccupy(localPoint) {
+            this._occupied.has(this.EncodePoint(localPoint.x, localPoint.z));
+        }
+        EncodePoint(x, z) {
+            let value = x << 16;
+            let sign = RC.Numerics.MathUtils.Sign(z);
+            if (sign < 0)
+                value |= 1 << 15;
+            value |= z;
+            return value;
         }
     }
     Shared.TileBase = TileBase;
@@ -680,7 +719,7 @@ var Shared;
                 let def = Shared.Defs.GetEntity(this.id);
                 this.name = RC.Utils.Hashtable.GetString(def, "name");
                 this.model = RC.Utils.Hashtable.GetString(def, "model");
-                this.footprint = RC.Utils.Hashtable.GetNumber(def, "footprint");
+                this.footprint = RC.Utils.Hashtable.GetVec2(def, "footprint");
             }
         }
         Model.EntityData = EntityData;
@@ -769,8 +808,6 @@ var View;
             this._seekerDir = this._direction.Clone();
             this._restriMin = RC.Numerics.Vec3.zero;
             this._restriMax = new RC.Numerics.Vec3(RC.Numerics.MathUtils.MAX_VALUE, RC.Numerics.MathUtils.MAX_VALUE, RC.Numerics.MathUtils.MAX_VALUE);
-            this._restriMinOrgi = RC.Numerics.Vec3.zero;
-            this._restriMaxOrgi = new RC.Numerics.Vec3(RC.Numerics.MathUtils.MAX_VALUE, RC.Numerics.MathUtils.MAX_VALUE, RC.Numerics.MathUtils.MAX_VALUE);
             this._localToWorldMat = RC.Numerics.Mat4.FromTRS(this._position, RC.Numerics.Quat.Euler(new RC.Numerics.Vec3(90, 0, 0)), new RC.Numerics.Vec3(1, -1, 1));
             this._worldToLocalMat = RC.Numerics.Mat4.NonhomogeneousInvert(this._localToWorldMat);
         }
@@ -778,14 +815,14 @@ var View;
         set seekerPos(value) {
             if (this._seekerPos.EqualsTo(value))
                 return;
-            this._seekerPos = value.Clone();
+            this._seekerPos.CopyFrom(value);
             this._seekerPos.Clamp(this._restriMin, this._restriMax);
         }
         get seekerDir() { return this._seekerDir.Clone(); }
         set seekerDir(value) {
             if (this._seekerDir.EqualsTo(value))
                 return;
-            this._seekerDir = value.Clone();
+            this._seekerDir.CopyFrom(value);
         }
         get position() { return this._position.Clone(); }
         set position(value) {
@@ -844,10 +881,10 @@ var View;
             this._worldToLocalMat.CopyFrom(this._localToWorldMat);
             this._worldToLocalMat.NonhomogeneousInvert();
         }
-        WorldToLocal(point) {
+        WorldToScreen(point) {
             return this._worldToLocalMat.TransformPoint(point);
         }
-        LocalToWorld(point) {
+        ScreenToWorld(point) {
             return this._localToWorldMat.TransformPoint(point);
         }
     }
@@ -1129,7 +1166,7 @@ var View;
 (function (View) {
     class CTile extends Shared.TileBase {
         Test(point) {
-            let localPoint = this.WorldToLocal(point);
+            let localPoint = this.WorldToTile(point);
         }
     }
     View.CTile = CTile;
@@ -1164,7 +1201,7 @@ var View;
             this._root.dispose();
         }
         UpdatePosition() {
-            let localPos = this._manager.battle.camera.WorldToLocal(this._position);
+            let localPos = this._manager.battle.camera.WorldToScreen(this._position);
             this._root.setXY(localPos.x, localPos.y);
         }
         UpdateDirection() {
@@ -1179,15 +1216,13 @@ var View;
             super(manager);
         }
         Dispose() {
-            this._loader.dispose();
+            this._sprite.dispose();
             super.Dispose();
         }
         Load(id) {
-            this._loader = new fairygui.GLoader();
-            this._loader.autoSize = true;
-            this._loader.touchable = false;
-            this._loader.url = fairygui.UIPackage.getItemURL("global", id);
-            this._root.addChild(this._loader);
+            this._sprite = fairygui.UIPackage.createObject("global", id).asCom;
+            this._root.addChild(this._sprite);
+            this._sprite.touchable = false;
         }
     }
     View.EntityGraphic = EntityGraphic;
@@ -1279,8 +1314,8 @@ var View;
         Update(context) {
         }
         OnTouchMove(evt) {
-            let point = this._owner.battle.camera.LocalToWorld(new RC.Numerics.Vec3(evt.stageX, evt.stageY, 0));
-            let p1 = this._owner.battle.tile.WorldToLocal(point);
+            let point = this._owner.battle.camera.ScreenToWorld(new RC.Numerics.Vec3(evt.stageX, evt.stageY, 0));
+            let p1 = this._owner.battle.tile.WorldToTile(point);
             let x = RC.Numerics.MathUtils.Floor(p1.x);
             let y = RC.Numerics.MathUtils.Floor(p1.z);
         }
@@ -1317,6 +1352,12 @@ var View;
 var View;
 (function (View) {
     class LayoutProcessor {
+        constructor(battle) {
+            this._battle = battle;
+        }
+        Enter(entity) {
+            this._editingItem = entity;
+        }
     }
     View.LayoutProcessor = LayoutProcessor;
 })(View || (View = {}));
@@ -1410,9 +1451,10 @@ var View;
             }
             OnBuildItemClick(sender, e) {
                 let bid = sender.asCom.name;
-                let position = Game.BattleManager.cBattle.camera.LocalToWorld(new RC.Numerics.Vec3(e.stageX, e.stageY));
+                let position = Game.BattleManager.cBattle.camera.ScreenToWorld(new RC.Numerics.Vec3(e.stageX, e.stageY));
                 let building = Game.BattleManager.cBattle.CreateBuildings(bid, position);
                 fairygui.GRoot.inst.hidePopup();
+                Game.BattleManager.cBattle.layoutProcessor.Enter(building);
             }
         }
         UI.UIBattle = UIBattle;

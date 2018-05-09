@@ -92,6 +92,7 @@ namespace View.UI {
 			let position = Game.BattleManager.cBattle.camera.ScreenToWorld(new RC.Numerics.Vec3(e.stageX, e.stageY));
 			let building = Game.BattleManager.cBattle.CreateBuildings(bid, position);
 			fairygui.GRoot.inst.hidePopup();
+			Game.BattleManager.cBattle.layoutProcessor.Enter(building);
 		}
 	}
 }

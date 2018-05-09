@@ -3,20 +3,26 @@
   <resources>
     <movieclip id="iqcm15" name="qtm011.jta" path="/assets/" exported="true"/>
     <sound id="lqz41s" name="click.wav" path="/assets/" exported="true"/>
-    <component id="rkt41y" name="m0.xml" path="/assets/m0/" exported="true"/>
-    <image id="sl4n22" name="tile.png" path="/assets/m0/" scale="tile"/>
-    <image id="gkbm23" name="格子a.png" path="/assets/m0/" scale="tile"/>
-    <image id="gkbm24" name="b0.png" path="/assets/" exported="true"/>
-    <image id="gkbm25" name="b7.png" path="/assets/" exported="true"/>
-    <image id="gkbm26" name="b8.png" path="/assets/" exported="true"/>
-    <image id="gkbm27" name="b2.png" path="/assets/" exported="true"/>
-    <image id="gkbm28" name="b3.png" path="/assets/" exported="true"/>
-    <image id="gkbm29" name="b1.png" path="/assets/" exported="true"/>
-    <image id="gkbm2a" name="b4.png" path="/assets/" exported="true"/>
-    <image id="gkbm2b" name="b9.png" path="/assets/" exported="true"/>
-    <image id="gkbm2c" name="b10.png" path="/assets/" exported="true"/>
-    <image id="gkbm2d" name="b6.png" path="/assets/" exported="true"/>
-    <image id="gkbm2e" name="b5.png" path="/assets/" exported="true"/>
+    <component id="rkt41y" name="m0.xml" path="/coms/" exported="true"/>
+    <image id="sl4n22" name="tile.png" path="/assets/" scale="tile"/>
+    <image id="gkbm23" name="格子a.png" path="/assets/" scale="tile"/>
+    <image id="gkbm24" name="b0.png" path="/assets/"/>
+    <image id="gkbm25" name="b7.png" path="/assets/"/>
+    <image id="gkbm26" name="b8.png" path="/assets/"/>
+    <image id="gkbm27" name="b2.png" path="/assets/"/>
+    <image id="gkbm28" name="b3.png" path="/assets/"/>
+    <image id="gkbm29" name="b1.png" path="/assets/"/>
+    <image id="gkbm2a" name="b4.png" path="/assets/"/>
+    <image id="gkbm2b" name="b9.png" path="/assets/"/>
+    <image id="gkbm2c" name="b10.png" path="/assets/"/>
+    <image id="gkbm2d" name="b6.png" path="/assets/"/>
+    <image id="gkbm2e" name="b5.png" path="/assets/"/>
+    <component id="q4b72f" name="Component1.xml" path="/coms/"/>
+    <component id="q4b72g" name="b0.xml" path="/coms/" exported="true"/>
+    <component id="q4b72h" name="b1.xml" path="/coms/" exported="true"/>
+    <component id="q4b72i" name="b2.xml" path="/coms/" exported="true"/>
+    <component id="q4b72j" name="b3.xml" path="/coms/" exported="true"/>
+    <component id="q4b72k" name="b4.xml" path="/coms/" exported="true"/>
   </resources>
   <publish name="global"/>
 </packageDescription>
