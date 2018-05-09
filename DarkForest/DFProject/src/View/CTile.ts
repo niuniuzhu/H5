@@ -17,15 +17,16 @@ namespace View {
 		public CanPlace(building: CBuilding): boolean {
 			let localPoint = this.WorldToTile(building.position);
 			let footprint = building.footprint;
-			return this.CheckOccupies(localPoint, footprint.x, footprint.y);
+			return this.CheckOccupies(localPoint, footprint.x, footprint.z);
 		}
 
-		public SetBuilding(building: CBuilding): boolean {
+		public PlaceBuilding(building: CBuilding): boolean {
 			let localPoint = this.WorldToTile(building.position);
 			let footprint = building.footprint;
-			if (!this.CheckOccupies(localPoint, footprint.x, footprint.y))
+			if (!this.CheckOccupies(localPoint, footprint.x, footprint.z))
 				return false;
-			let keys = this.SetOccupies(localPoint, footprint.x, footprint.y);
+			let keys = this.SetOccupies(localPoint, footprint.x, footprint.z);
+			building.occupies = keys;
 			for (let key of keys) {
 				this._tileToEntity.setValue(key, building);
 			}
@@ -33,10 +34,8 @@ namespace View {
 		}
 
 		public RemoveBuilding(building: CBuilding): void {
-			let localPoint = this.WorldToTile(building.position);
-			let footprint = building.footprint;
-			let keys = this.RemoveOccupies(localPoint, footprint.x, footprint.y);
-			for (let key of keys) {
+			for (let key of building.occupies) {
+				this.RemoveOccupyByKey(key);
 				this._tileToEntity.remove(key);
 			}
 		}

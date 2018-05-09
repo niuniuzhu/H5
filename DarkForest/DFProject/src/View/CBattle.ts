@@ -104,6 +104,16 @@ namespace View {
 			return <CBuilding>entity;
 		}
 
+		public CreateEditingBuilding(id: string, position: RC.Numerics.Vec3 = RC.Numerics.Vec3.zero, direction: RC.Numerics.Vec3 = RC.Numerics.Vec3.forward): EditingBuilding {
+			let rid = Shared.Utils.MakeRIDFromID(id);
+			let param = new Shared.Model.EntityParam();
+			param.rid = rid;
+			param.position = position;
+			param.direction = direction;
+			let entity = this._entityManager.Create(EditingBuilding, param);
+			return <EditingBuilding>entity;
+		}
+
 		private HandleCreateBattle(baseEvent: Shared.Event.BaseEvent): void {
 			let e = <Shared.Event.SyncEvent>baseEvent;
 		}

@@ -94,7 +94,7 @@ namespace View.UI {
 			worldPoint = Game.BattleManager.cBattle.tile.TileToWorld(worldPoint);
 			let building = Game.BattleManager.cBattle.CreateBuilding(bid, worldPoint);
 			fairygui.GRoot.inst.hidePopup();
-			if (!Game.BattleManager.cBattle.tile.SetBuilding(building)) {
+			if (!Game.BattleManager.cBattle.tile.PlaceBuilding(building)) {
 				Game.BattleManager.cBattle.input.ChangeState(InputStateType.Layout, building);
 			}
 		}

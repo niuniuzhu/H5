@@ -403,6 +403,9 @@ var Shared;
                 return key;
             return RC.Numerics.MathUtils.MAX_VALUE;
         }
+        RemoveOccupyByKey(key) {
+            return this._occupied.delete(key);
+        }
         SetOccupy(localPoint) {
             let key = this.EncodePoint(localPoint.x, localPoint.z);
             this._occupied.add(key);
@@ -756,7 +759,7 @@ var Shared;
                 let def = Shared.Defs.GetEntity(this.id);
                 this.name = RC.Utils.Hashtable.GetString(def, "name");
                 this.model = RC.Utils.Hashtable.GetString(def, "model");
-                this.footprint = RC.Utils.Hashtable.GetVec2(def, "footprint");
+                this.footprint = RC.Utils.Hashtable.GetVec3(def, "footprint");
             }
         }
         Model.EntityData = EntityData;
@@ -1006,6 +1009,15 @@ var View;
             let entity = this._entityManager.Create(View.CBuilding, param);
             return entity;
         }
+        CreateEditingBuilding(id, position = RC.Numerics.Vec3.zero, direction = RC.Numerics.Vec3.forward) {
+            let rid = Shared.Utils.MakeRIDFromID(id);
+            let param = new Shared.Model.EntityParam();
+            param.rid = rid;
+            param.position = position;
+            param.direction = direction;
+            let entity = this._entityManager.Create(View.EditingBuilding, param);
+            return entity;
+        }
         HandleCreateBattle(baseEvent) {
             let e = baseEvent;
         }
@@ -1056,8 +1068,7 @@ var View;
             this._position = RC.Numerics.Vec3.zero;
             this._direction = RC.Numerics.Vec3.forward;
         }
-        get logicPosition() { return this._logicPos.Clone(); }
-        get logicDirection() { return this._logicDir.Clone(); }
+        get id() { return this._data.id; }
         get position() { return this._position.Clone(); }
         set position(value) {
             if (this._position.EqualsTo(value))
@@ -1133,6 +1144,30 @@ var View;
     class CBuilding extends View.CEntity {
         constructor() {
             super();
+            this._occupies = [];
+        }
+        get occupies() { return this._occupies; }
+        set occupies(value) {
+            this._occupies.splice(0);
+            for (let key of value) {
+                this._occupies.push(key);
+            }
+        }
+        ContainsPoint(worldPoint) {
+            let tileSpacePos = this._battle.tile.WorldToTile(this._position);
+            let tileSpacePoint = this._battle.tile.WorldToTile(worldPoint);
+            let halfX = RC.Numerics.MathUtils.Floor(this._data.footprint.x * 0.5);
+            let halfZ = RC.Numerics.MathUtils.Floor(this._data.footprint.z * 0.5);
+            let minX = tileSpacePos.x - halfX;
+            let maxX = minX + this._data.footprint.x;
+            let minZ = tileSpacePos.z - halfZ;
+            let maxZ = minZ + this._data.footprint.z;
+            if (tileSpacePoint.x < minX ||
+                tileSpacePoint.z < minZ ||
+                tileSpacePoint.x > maxX ||
+                tileSpacePoint.z > maxZ)
+                return false;
+            return true;
         }
     }
     View.CBuilding = CBuilding;
@@ -1213,24 +1248,23 @@ var View;
         CanPlace(building) {
             let localPoint = this.WorldToTile(building.position);
             let footprint = building.footprint;
-            return this.CheckOccupies(localPoint, footprint.x, footprint.y);
+            return this.CheckOccupies(localPoint, footprint.x, footprint.z);
         }
-        SetBuilding(building) {
+        PlaceBuilding(building) {
             let localPoint = this.WorldToTile(building.position);
             let footprint = building.footprint;
-            if (!this.CheckOccupies(localPoint, footprint.x, footprint.y))
+            if (!this.CheckOccupies(localPoint, footprint.x, footprint.z))
                 return false;
-            let keys = this.SetOccupies(localPoint, footprint.x, footprint.y);
+            let keys = this.SetOccupies(localPoint, footprint.x, footprint.z);
+            building.occupies = keys;
             for (let key of keys) {
                 this._tileToEntity.setValue(key, building);
             }
             return true;
         }
         RemoveBuilding(building) {
-            let localPoint = this.WorldToTile(building.position);
-            let footprint = building.footprint;
-            let keys = this.RemoveOccupies(localPoint, footprint.x, footprint.y);
-            for (let key of keys) {
+            for (let key of building.occupies) {
+                this.RemoveOccupyByKey(key);
                 this._tileToEntity.remove(key);
             }
         }
@@ -1241,6 +1275,44 @@ var View;
         }
     }
     View.CTile = CTile;
+})(View || (View = {}));
+var View;
+(function (View) {
+    class EditingBuilding extends View.CBuilding {
+        constructor() {
+            super();
+            this.disableTransformLerp = true;
+        }
+        OnRemoveFromBattle() {
+            super.OnRemoveFromBattle();
+            this._srcBuilding = null;
+        }
+        Steup(srcBuilding) {
+            this._srcBuilding = srcBuilding;
+            this._srcBuilding.graphic.visible = false;
+            this._graphic.alpha = 0.6;
+            this._battle.tile.RemoveBuilding(this._srcBuilding);
+        }
+        Apply() {
+            if (this._battle.tile.CanPlace(this)) {
+                this._srcBuilding.disableTransformLerp = true;
+                this._srcBuilding.position = this._position;
+                this._srcBuilding.graphic.visible = true;
+                this._battle.tile.PlaceBuilding(this._srcBuilding);
+                this.MarkToDestroy();
+                console.log("apply");
+                return true;
+            }
+            return false;
+        }
+        Cancel() {
+            this._srcBuilding.graphic.visible = true;
+            this._battle.tile.PlaceBuilding(this._srcBuilding);
+            this.MarkToDestroy();
+            console.log("cancel");
+        }
+    }
+    View.EditingBuilding = EditingBuilding;
 })(View || (View = {}));
 var View;
 (function (View) {
@@ -1270,6 +1342,8 @@ var View;
         }
         get alpha() { return this._root.alpha; }
         set alpha(value) { this._root.alpha = value; }
+        get visible() { return this._root.visible; }
+        set visible(value) { this._root.visible = value; }
         Dispose() {
             this._root.dispose();
         }
@@ -1401,14 +1475,13 @@ var View;
             this._owner.battle.graphic.sprite.displayObject.on(Laya.Event.MOUSE_DOWN, this, this.OnTouchBegin);
             this._dragingBuilding = false;
             this._touchMovied = false;
-            this._editingBuilding = param[0];
-            this._editingBuilding.disableTransformLerp = true;
-            this._editingBuilding.graphic.alpha = 0.6;
+            let srcBuilding = param[0];
+            this._editingBuilding = this._owner.battle.CreateEditingBuilding(srcBuilding.id, srcBuilding.position, srcBuilding.direction);
+            this._editingBuilding.Steup(srcBuilding);
             let touchPoint = param[1];
             if (touchPoint) {
                 this.TouchBegin(touchPoint);
             }
-            this._owner.battle.tile.RemoveBuilding(this._editingBuilding);
         }
         Exit() {
             this._owner.battle.graphic.sprite.displayObject.off(Laya.Event.MOUSE_DOWN, this, this.OnTouchBegin);
@@ -1421,10 +1494,8 @@ var View;
             fairygui.GRoot.inst.displayObject.on(Laya.Event.MOUSE_MOVE, this, this.OnTouchMove);
             fairygui.GRoot.inst.displayObject.on(Laya.Event.MOUSE_UP, this, this.OnTouchEnd);
             let worldPoint = this._owner.battle.camera.ScreenToWorld(touchPoint);
-            let building = this._owner.battle.tile.GetBuilding(worldPoint);
-            if (building == this._editingBuilding) {
+            if (this._editingBuilding.ContainsPoint(worldPoint))
                 this._dragingBuilding = true;
-            }
             else
                 this._owner.battle.camera.BeginMove(new RC.Numerics.Vec3(touchPoint.x, 0, -touchPoint.y));
         }
@@ -1445,21 +1516,25 @@ var View;
             }
         }
         OnTouchEnd(evt) {
-            this._touchMovied = false;
+            fairygui.GRoot.inst.displayObject.off(Laya.Event.MOUSE_MOVE, this, this.OnTouchMove);
+            fairygui.GRoot.inst.displayObject.off(Laya.Event.MOUSE_UP, this, this.OnTouchEnd);
             if (this._dragingBuilding) {
+                this._dragingBuilding = false;
+                this._touchMovied = false;
                 let worldPoint = this._owner.battle.camera.ScreenToWorld(new RC.Numerics.Vec3(evt.stageX, evt.stageY, 0));
-                let building = this._editingBuilding;
-                this._editingBuilding.graphic.alpha = 1;
-                this._editingBuilding = null;
-                if (this._owner.battle.tile.SetBuilding(building)) {
+                if (this._editingBuilding.Apply()) {
+                    this._editingBuilding = null;
                     this._owner.ChangeState(InputStateType.Idle);
+                }
+                else {
                 }
             }
             else {
                 if (!this._touchMovied) {
-                    console.log("back");
+                    this._editingBuilding.Cancel();
                     this._owner.ChangeState(InputStateType.Idle);
                 }
+                this._touchMovied = false;
             }
         }
     }
@@ -1491,18 +1566,6 @@ var View;
         }
     }
     View.Input = Input;
-})(View || (View = {}));
-var View;
-(function (View) {
-    class LayoutProcessor {
-        constructor(battle) {
-            this._battle = battle;
-        }
-        Enter(entity) {
-            this._editingItem = entity;
-        }
-    }
-    View.LayoutProcessor = LayoutProcessor;
 })(View || (View = {}));
 var View;
 (function (View) {
@@ -1599,7 +1662,7 @@ var View;
                 worldPoint = Game.BattleManager.cBattle.tile.TileToWorld(worldPoint);
                 let building = Game.BattleManager.cBattle.CreateBuilding(bid, worldPoint);
                 fairygui.GRoot.inst.hidePopup();
-                if (!Game.BattleManager.cBattle.tile.SetBuilding(building)) {
+                if (!Game.BattleManager.cBattle.tile.PlaceBuilding(building)) {
                     Game.BattleManager.cBattle.input.ChangeState(View.InputStateType.Layout, building);
                 }
             }

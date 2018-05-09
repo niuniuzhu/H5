@@ -2,18 +2,17 @@
 
 namespace View {
 	export class CEntity extends Shared.GPoolObject {
-		private _position: RC.Numerics.Vec3;
-		private _direction: RC.Numerics.Vec3;
-		private _battle: View.CBattle;
-		private _markToDestroy: boolean;
-		private _graphic: EntityGraphic;
-		private _logicPos: RC.Numerics.Vec3;
-		private _logicDir: RC.Numerics.Vec3;
+		protected _position: RC.Numerics.Vec3;
+		protected _direction: RC.Numerics.Vec3;
+		protected _battle: View.CBattle;
+		protected _markToDestroy: boolean;
+		protected _graphic: EntityGraphic;
+		protected _logicPos: RC.Numerics.Vec3;
+		protected _logicDir: RC.Numerics.Vec3;
 
 		protected _data: Shared.Model.EntityData = null;
 
-		public get logicPosition():RC.Numerics.Vec3 { return this._logicPos.Clone(); }
-		public get logicDirection():RC.Numerics.Vec3 { return this._logicDir.Clone(); }
+		public get id(): string { return this._data.id; }
 
 		public get position(): RC.Numerics.Vec3 { return this._position.Clone(); }
 		public set position(value: RC.Numerics.Vec3) {
@@ -33,8 +32,7 @@ namespace View {
 				this._graphic.rotation = RC.Numerics.Quat.LookRotation(this._direction, RC.Numerics.Vec3.up);
 		}
 
-		public get footprint(): RC.Numerics.Vec2 { return this._data.footprint.Clone(); }
-
+		public get footprint(): RC.Numerics.Vec3 { return this._data.footprint.Clone(); }
 		public get battle(): View.CBattle { return this._battle; }
 		public get graphic(): EntityGraphic { return this._graphic; }
 		public get markToDestroy(): boolean { return this._markToDestroy; }

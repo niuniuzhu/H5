@@ -75,6 +75,10 @@ namespace Shared {
 			return RC.Numerics.MathUtils.MAX_VALUE;
 		}
 
+		public RemoveOccupyByKey(key: number): boolean {
+			return this._occupied.delete(key);
+		}
+
 		public SetOccupy(localPoint: RC.Numerics.Vec3): number {
 			let key = this.EncodePoint(localPoint.x, localPoint.z);
 			this._occupied.add(key);
