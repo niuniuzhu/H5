@@ -66,13 +66,13 @@ namespace View {
 			this.position = RC.Numerics.Vec3.Lerp(this._position, this._seekerPos, context.deltaTime * 0.008);
 		}
 
-		public BeginMove(pointerStart: RC.Numerics.Vec3): void {
-			this._lastPointerPos = pointerStart.Clone();
+		public BeginMove(screenPoint: RC.Numerics.Vec3): void {
+			this._lastPointerPos = screenPoint.Clone();
 		}
 
-		public Move(pointerCurrent: RC.Numerics.Vec3): void {
-			let delta = RC.Numerics.Vec3.Sub(pointerCurrent, this._lastPointerPos);
-			this._lastPointerPos.CopyFrom(pointerCurrent);
+		public Move(screenPoint: RC.Numerics.Vec3): void {
+			let delta = RC.Numerics.Vec3.Sub(screenPoint, this._lastPointerPos);
+			this._lastPointerPos.CopyFrom(screenPoint);
 			this._seekerPos.Sub(delta);
 			this._seekerPos.Clamp(this._restriMin, this._restriMax);
 		}

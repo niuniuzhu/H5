@@ -2,58 +2,46 @@
 
 namespace View {
 	export class CTile extends Shared.TileBase {
-		private readonly _tileToEntity: RC.Collections.Dictionary<number, CEntity>;
-		private readonly _entityToTile: RC.Collections.Dictionary<CEntity, number[]>;
+		private readonly _tileToEntity: RC.Collections.Dictionary<number, CBuilding>;
 
 		constructor(slope: number, aspect: number, ratio: number) {
 			super(slope, aspect, ratio);
-			this._tileToEntity = new RC.Collections.Dictionary<number, CEntity>();
-			this._entityToTile = new RC.Collections.Dictionary<CEntity, number[]>();
+			this._tileToEntity = new RC.Collections.Dictionary<number, CBuilding>();
 		}
 
 		public Dispose(): void {
 			super.Dispose();
 			this._tileToEntity.clear();
-			this._entityToTile.clear();
 		}
 
-		public SetEntity(entity: CEntity): void {
-			let localPoint = this.WorldToTile(entity.position);
-			let footprint = entity.footprint;
-			let tiles = this._entityToTile.getValue(entity);
-			if (tiles == null) {
-				tiles = [];
-				this._entityToTile.setValue(entity, tiles);
-			}
+		public CanPlace(building: CBuilding): boolean {
+			let localPoint = this.WorldToTile(building.position);
+			let footprint = building.footprint;
+			return this.CheckOccupies(localPoint, footprint.x, footprint.y);
+		}
+
+		public SetBuilding(building: CBuilding): boolean {
+			let localPoint = this.WorldToTile(building.position);
+			let footprint = building.footprint;
+			if (!this.CheckOccupies(localPoint, footprint.x, footprint.y))
+				return false;
 			let keys = this.SetOccupies(localPoint, footprint.x, footprint.y);
 			for (let key of keys) {
-				this._tileToEntity.setValue(key, entity);
-				tiles.push(key);
+				this._tileToEntity.setValue(key, building);
 			}
+			return true;
 		}
 
-		public RemoveEntity(entity: CEntity): void {
-			let localPoint = this.WorldToTile(entity.position);
-			let footprint = entity.footprint;
-			let tiles = this._entityToTile.getValue(entity);
-			if (tiles == null) {
-				tiles = [];
-				this._entityToTile.setValue(entity, tiles);
-			}
+		public RemoveBuilding(building: CBuilding): void {
+			let localPoint = this.WorldToTile(building.position);
+			let footprint = building.footprint;
 			let keys = this.RemoveOccupies(localPoint, footprint.x, footprint.y);
 			for (let key of keys) {
-				this._tileToEntity.setValue(key, entity);
-				tiles.push(key);
+				this._tileToEntity.remove(key);
 			}
-			// let keys = this._entityToTile.getValue(entity);
-			// if (keys == null)
-			// 	return false;
-			// for (let key of keys) {
-			// 	this._tileToEntity.remove(key);
-			// }
 		}
 
-		public GetEntity(worldPosition): CEntity {
+		public GetBuilding(worldPosition): CBuilding {
 			let localPoint = this.WorldToTile(worldPosition);
 			let key = this.EncodePoint(localPoint.x, localPoint.z);
 			return this._tileToEntity.getValue(key);

@@ -23,6 +23,12 @@ namespace View {
 			this.UpdateDirection();
 		}
 
+		public get alpha(): number { return this._root.alpha; }
+		public set alpha(value: number) { this._root.alpha = value; }
+
+		public get visible(): boolean { return this._root.visible; }
+		public set visible(value: boolean) { this._root.visible = value; }
+
 		constructor(manager: GraphicManager) {
 			this._manager = manager;
 			this._root = new fairygui.GComponent();

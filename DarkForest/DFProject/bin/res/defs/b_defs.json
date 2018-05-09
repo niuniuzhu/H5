@@ -16,12 +16,12 @@
 		"b0": {
 			"name": "发电厂",
 			"model": "b0",
-			"footprint": [5,5]
+			"footprint": [4,4]
 		},
 		"b1": {
 			"name": "test",
 			"model": "b1",
-			"footprint": [5,5]
+			"footprint": [4,4]
 		},
 		"b2": {
 			"name": "test",

@@ -13,7 +13,6 @@ namespace View {
 		private readonly _camera: Camera;
 		private readonly _graphic: MapGraphic;
 		private readonly _tile: CTile;
-		private readonly _layoutProcessor: LayoutProcessor;
 		private readonly _input: Input;
 
 		public get frame(): number { return this._frame; }
@@ -25,7 +24,7 @@ namespace View {
 		public get camera(): Camera { return this._camera };
 		public get graphic(): MapGraphic { return this._graphic };
 		public get tile(): CTile { return this._tile };
-		public get layoutProcessor(): LayoutProcessor { return this._layoutProcessor; }
+		public get input(): Input { return this._input; }
 
 		constructor(param: Shared.Model.BattleParams) {
 			this._uid = param.uid;
@@ -44,7 +43,6 @@ namespace View {
 			this._graphic.Load(this._data.model);
 
 			this._tile = new CTile(this._data.tileSlope, this._data.tileAspect, this._data.tileRatio);
-			this._layoutProcessor = new LayoutProcessor(this);
 			this._input = new Input(this);
 
 			this.camera.UpdateRestriction(RC.Numerics.Vec3.zero,
@@ -87,6 +85,7 @@ namespace View {
 
 			this._entityManager.Update(this._context);
 			this._camera.Update(this._context);
+			this._input.Update(this._context);
 		}
 
 		public OnResize(e: laya.events.Event): any {
@@ -95,7 +94,7 @@ namespace View {
 					this._graphic.sprite.height - fairygui.GRoot.inst.height, 0));
 		}
 
-		public CreateBuildings(id: string, position: RC.Numerics.Vec3 = RC.Numerics.Vec3.zero, direction: RC.Numerics.Vec3 = RC.Numerics.Vec3.forward): CBuilding {
+		public CreateBuilding(id: string, position: RC.Numerics.Vec3 = RC.Numerics.Vec3.zero, direction: RC.Numerics.Vec3 = RC.Numerics.Vec3.forward): CBuilding {
 			let rid = Shared.Utils.MakeRIDFromID(id);
 			let param = new Shared.Model.EntityParam();
 			param.rid = rid;

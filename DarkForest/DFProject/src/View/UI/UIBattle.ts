@@ -89,10 +89,14 @@ namespace View.UI {
 
 		private OnBuildItemClick(sender: fairygui.GObject, e: laya.events.Event): void {
 			let bid = sender.asCom.name;
-			let position = Game.BattleManager.cBattle.camera.ScreenToWorld(new RC.Numerics.Vec3(e.stageX, e.stageY));
-			let building = Game.BattleManager.cBattle.CreateBuildings(bid, position);
+			let worldPoint = Game.BattleManager.cBattle.camera.ScreenToWorld(new RC.Numerics.Vec3(e.stageX, e.stageY));
+			worldPoint = Game.BattleManager.cBattle.tile.WorldToTile(worldPoint);
+			worldPoint = Game.BattleManager.cBattle.tile.TileToWorld(worldPoint);
+			let building = Game.BattleManager.cBattle.CreateBuilding(bid, worldPoint);
 			fairygui.GRoot.inst.hidePopup();
-			Game.BattleManager.cBattle.layoutProcessor.Enter(building);
+			if (!Game.BattleManager.cBattle.tile.SetBuilding(building)) {
+				Game.BattleManager.cBattle.input.ChangeState(InputStateType.Layout, building);
+			}
 		}
 	}
 }

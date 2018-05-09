@@ -4,13 +4,16 @@ namespace View {
 	export class CEntity extends Shared.GPoolObject {
 		private _position: RC.Numerics.Vec3;
 		private _direction: RC.Numerics.Vec3;
-		private _battle: View.CBattle = null;
-		private _markToDestroy: boolean = false;
-		private _graphic: EntityGraphic = null;
+		private _battle: View.CBattle;
+		private _markToDestroy: boolean;
+		private _graphic: EntityGraphic;
 		private _logicPos: RC.Numerics.Vec3;
 		private _logicDir: RC.Numerics.Vec3;
 
 		protected _data: Shared.Model.EntityData = null;
+
+		public get logicPosition():RC.Numerics.Vec3 { return this._logicPos.Clone(); }
+		public get logicDirection():RC.Numerics.Vec3 { return this._logicDir.Clone(); }
 
 		public get position(): RC.Numerics.Vec3 { return this._position.Clone(); }
 		public set position(value: RC.Numerics.Vec3) {
@@ -36,6 +39,8 @@ namespace View {
 		public get graphic(): EntityGraphic { return this._graphic; }
 		public get markToDestroy(): boolean { return this._markToDestroy; }
 
+		public disableTransformLerp: boolean;
+
 		constructor() {
 			super();
 			this._position = RC.Numerics.Vec3.zero;
@@ -59,19 +64,15 @@ namespace View {
 			this._graphic.rotation = RC.Numerics.Quat.LookRotation(this.direction, RC.Numerics.Vec3.up);
 		}
 
-		public OnDestroy(): void {
-			this._battle.graphicManager.DestroyGraphic(this._graphic);
-			this._graphic = null;
-			this._markToDestroy = false;
-			this._battle = null;
-			this._data = null;
-		}
-
 		public OnAddedToBattle(): void {
 		}
 
 		public OnRemoveFromBattle(): void {
-			this._markToDestroy = true;
+			this._markToDestroy = false;
+			this._battle.graphicManager.DestroyGraphic(this._graphic);
+			this._graphic = null;
+			this._battle = null;
+			this._data = null;
 		}
 
 		public MarkToDestroy(): void {
@@ -99,8 +100,10 @@ namespace View {
 
 		public OnUpdateState(context: Shared.UpdateContext): void {
 			let dt = context.deltaTime;
-			this.position = RC.Numerics.Vec3.Lerp(this._position, this._logicPos, dt * 10);
-			this.direction = RC.Numerics.Vec3.Slerp(this._direction, this._logicDir, dt * 8);
+			if (!this.disableTransformLerp) {
+				this.position = RC.Numerics.Vec3.Lerp(this._position, this._logicPos, dt * 10);
+				this.direction = RC.Numerics.Vec3.Slerp(this._direction, this._logicDir, dt * 8);
+			}
 		}
 	}
 }

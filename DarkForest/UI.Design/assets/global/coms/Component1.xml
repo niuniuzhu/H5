@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="658,477">
+<component size="766,770">
   <displayList>
-    <image id="n1_q4b7" name="n1" src="sl4n22" xy="0,0" size="658,477"/>
+    <component id="n7_q4b7" name="n7" src="q4b72h" xy="0,0"/>
+    <image id="n1_q4b7" name="n1" src="sl4n22" xy="-306,-154" size="766,770" locked="true"/>
   </displayList>
 </component>

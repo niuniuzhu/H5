@@ -30,11 +30,11 @@ namespace Shared {
 		}
 
 		public CheckOccupies(localCenter: RC.Numerics.Vec3, length: number, depth: number): boolean {
-			let topLeftX = localCenter.x - length;
-			let topLeftY = localCenter.z - depth;
+			let topLeftX = localCenter.x - RC.Numerics.MathUtils.Floor(length * 0.5);
+			let topLeftZ = localCenter.z - RC.Numerics.MathUtils.Floor(depth * 0.5);
 			for (let x = 0; x < length; ++x) {
-				for (let y = 0; y < depth; ++y) {
-					if (!this.GetOccupy(new RC.Numerics.Vec3(x + topLeftX, y + topLeftY)))
+				for (let z = 0; z < depth; ++z) {
+					if (this.IsOccupied(new RC.Numerics.Vec3(x + topLeftX, 0, z + topLeftZ)))
 						return false;
 				}
 			}
@@ -43,12 +43,13 @@ namespace Shared {
 
 		public RemoveOccupies(localCenter: RC.Numerics.Vec3, length: number, depth: number): number[] {
 			let keys: number[] = [];
-			let topLeftX = localCenter.x - length;
-			let topLeftY = localCenter.z - depth;
+			let topLeftX = localCenter.x - RC.Numerics.MathUtils.Floor(length * 0.5);
+			let topLeftZ = localCenter.z - RC.Numerics.MathUtils.Floor(depth * 0.5);
 			for (let x = 0; x < length; ++x) {
-				for (let y = 0; y < depth; ++y) {
-					let key = this.RemoveOccupy(new RC.Numerics.Vec3(x + topLeftX, y + topLeftY));
-					keys.push(key);
+				for (let z = 0; z < depth; ++z) {
+					let key = this.RemoveOccupy(new RC.Numerics.Vec3(x + topLeftX, 0, z + topLeftZ));
+					if (key != RC.Numerics.MathUtils.MAX_VALUE)
+						keys.push(key);
 				}
 			}
 			return keys;
@@ -56,11 +57,11 @@ namespace Shared {
 
 		public SetOccupies(localCenter: RC.Numerics.Vec3, length: number, depth: number): number[] {
 			let keys: number[] = [];
-			let topLeftX = localCenter.x - length;
-			let topLeftY = localCenter.z - depth;
+			let topLeftX = localCenter.x - RC.Numerics.MathUtils.Floor(length * 0.5);
+			let topLeftZ = localCenter.z - RC.Numerics.MathUtils.Floor(depth * 0.5);
 			for (let x = 0; x < length; ++x) {
-				for (let y = 0; y < depth; ++y) {
-					let key = this.SetOccupy(new RC.Numerics.Vec3(x + topLeftX, y + topLeftY));
+				for (let z = 0; z < depth; ++z) {
+					let key = this.SetOccupy(new RC.Numerics.Vec3(x + topLeftX, 0, z + topLeftZ));
 					keys.push(key);
 				}
 			}
@@ -69,7 +70,6 @@ namespace Shared {
 
 		public RemoveOccupy(localPoint: RC.Numerics.Vec3): number {
 			let key = this.EncodePoint(localPoint.x, localPoint.z);
-			this._occupied.add(key);
 			if (this._occupied.delete(key))
 				return key;
 			return RC.Numerics.MathUtils.MAX_VALUE;
@@ -81,17 +81,29 @@ namespace Shared {
 			return key;
 		}
 
-		public GetOccupy(localPoint: RC.Numerics.Vec3): boolean {
+		public IsOccupied(localPoint: RC.Numerics.Vec3): boolean {
 			return this._occupied.has(this.EncodePoint(localPoint.x, localPoint.z));
 		}
 
 		protected EncodePoint(x: number, z: number): number {
 			let value = x << 16;
 			let sign = RC.Numerics.MathUtils.Sign(z);
-			if (sign < 0)
+			if (sign < 0) {
 				value |= 1 << 15;
-			value |= z;
+				value |= -z;
+			}
+			else
+				value |= z;
 			return value;
+		}
+
+		protected DecodePoint(key: number): number[] {
+			let x = key >> 16;
+			let sign = (key & 0x8000) >> 15;
+			let z = key & 0x7fff;
+			if (sign == 1)
+				z = -z;
+			return [x, z];
 		}
 	}
 }
