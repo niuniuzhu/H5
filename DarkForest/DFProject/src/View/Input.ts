@@ -81,7 +81,7 @@ namespace View {
 		}
 
 		public Enter(param: any[]): void {
-			Shared.Event.UIEvent.StartLayout();
+			this._owner.battle.StartLayout();
 			this._owner.battle.graphic.sprite.displayObject.on(Laya.Event.MOUSE_DOWN, this, this.OnTouchBegin);
 			this._dragingBuilding = false;
 			this._touchMovied = false;
@@ -100,7 +100,7 @@ namespace View {
 			this._owner.battle.graphic.sprite.displayObject.off(Laya.Event.MOUSE_DOWN, this, this.OnTouchBegin);
 			fairygui.GRoot.inst.displayObject.off(Laya.Event.MOUSE_MOVE, this, this.OnTouchMove);
 			fairygui.GRoot.inst.displayObject.off(Laya.Event.MOUSE_UP, this, this.OnTouchEnd);
-			Shared.Event.UIEvent.EndLayout();
+			this._owner.battle.EndLayout();
 		}
 
 		public Update(context: Shared.UpdateContext): void {

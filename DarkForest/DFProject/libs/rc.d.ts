@@ -914,10 +914,10 @@ declare namespace RC.Utils {
     class ConsistentRandom {
         private seed;
         constructor(seed: number);
-        private next(min, max);
-        nextInt(min: number, max: number): number;
-        nextDouble(): number;
-        pick(collection: any[]): any;
+        private Next(min, max);
+        NextInt(min: number, max: number): number;
+        NextDouble(): number;
+        Pick(collection: any[]): any;
     }
 }
 declare namespace RC.Utils {

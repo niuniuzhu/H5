@@ -19,6 +19,7 @@ namespace View {
 		public get time(): number { return this._time; }
 
 		public get graphicManager(): GraphicManager { return this._graphicManager };
+		public get entityManager(): CEntityManager { return this._entityManager };
 
 		public get camera(): Camera { return this._camera };
 		public get graphic(): MapGraphic { return this._graphic };
@@ -94,6 +95,14 @@ namespace View {
 			param.position = position;
 			let entity = this._entityManager.Create(EditingBuilding, param);
 			return <EditingBuilding>entity;
+		}
+
+		public StartLayout(): any {
+			Shared.Event.UIEvent.StartLayout();
+		}
+
+		public EndLayout(): any {
+			Shared.Event.UIEvent.EndLayout();
 		}
 	}
 }

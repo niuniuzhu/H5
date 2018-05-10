@@ -56,7 +56,7 @@
     <image id="suoq2n" name="shibai.png" path="/assets/zhandou/"/>
     <image id="suoq2o" name="tiaoguo.png" path="/assets/zhandou/"/>
     <image id="suoq2p" name="科幻背景.jpg" path="/assets/zhandou/"/>
-    <component id="suoq2q" name="win.xml" path="/" exported="true"/>
+    <component id="suoq2q" name="fight_result.xml" path="/" exported="true"/>
     <component id="suoq2r" name="btn3.xml" path="/"/>
     <movieclip id="suoq2s" name="红.jta" path="/assets/zhandou/"/>
     <movieclip id="suoq2t" name="蓝.jta" path="/assets/zhandou/"/>

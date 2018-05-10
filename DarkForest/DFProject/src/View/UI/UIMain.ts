@@ -8,16 +8,25 @@ namespace View.UI {
 		private _rolePanel: RolePanel;
 		private _taskPanel: TaskPanel;
 		private _msgPanel: MsgPanel;
+		private readonly _panels: IMainPanel[];
 
-		public get controller(): fairygui.Controller { return this._controller; }
 		public get root(): fairygui.GComponent { return this._root; }
 		public get homePanel(): HomePanel { return this._homePanel; }
 		public get searchPanel(): SearchPanel { return this._searchPanel; }
 		public get fightPanel(): FightPanel { return this._fightPanel; }
 		public get rolePanel(): RolePanel { return this._rolePanel; }
 
+		public set panelIndex(value: number) {
+			if (this._controller.selectedIndex == value)
+				return;
+			this._panels[value].Exit();
+			this._panels[value].Enter();
+			this._controller.selectedIndex = value;
+		}
+
 		constructor() {
 			fairygui.UIPackage.addPackage("res/ui/battle");
+			this._panels = [];
 		}
 
 		public Dispose(): void {
@@ -40,15 +49,22 @@ namespace View.UI {
 			this._rolePanel = new RolePanel(this);
 			this._taskPanel = new TaskPanel(this);
 			this._msgPanel = new MsgPanel(this);
+
+			this._panels.push(this._homePanel);
+			this._panels.push(this._searchPanel);
+			this._panels.push(this._fightPanel);
+			this._panels.push(this._rolePanel);
+			this._panels.push(this._taskPanel);
+			this._panels.push(this._msgPanel);
+
+			this._controller.selectedIndex = 0;
+			this._homePanel.Enter();
 		}
 
 		public Leave(): void {
-			this._homePanel.Dispose();
-			this._searchPanel.Dispose();
-			this._fightPanel.Dispose();
-			this._rolePanel.Dispose();
-			this._taskPanel.Dispose();
-			this._msgPanel.Dispose();
+			for (let p of this._panels)
+				p.Dispose();
+			this._panels.splice(0);
 
 			this._root.dispose();
 			this._root = null;
@@ -56,11 +72,13 @@ namespace View.UI {
 		}
 
 		public Update(deltaTime: number): void {
-			this._homePanel.Update(deltaTime);
+			for (let p of this._panels)
+				p.Update(deltaTime);
 		}
 
 		public OnResize(e: laya.events.Event): void {
-			this._homePanel.OnResize(e);
+			for (let p of this._panels)
+				p.OnResize(e);
 		}
 	}
 }

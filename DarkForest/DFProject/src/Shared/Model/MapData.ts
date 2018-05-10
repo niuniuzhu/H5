@@ -1,12 +1,12 @@
 namespace Shared.Model {
 	export class MapData {
-		public id: string;
-		public name: string;
-		public model: string;
-		public tileSlope:number;
-		public tileAspect:number;
-		public tileRatio:number;
-		public size: RC.Numerics.Vec2;
+		public readonly id: string;
+		public readonly name: string;
+		public readonly model: string;
+		public readonly tileSlope: number;
+		public readonly tileAspect: number;
+		public readonly tileRatio: number;
+		public readonly size: RC.Numerics.Vec2;
 
 		constructor(id: string) {
 			this.id = id;

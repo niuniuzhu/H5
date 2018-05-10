@@ -8,6 +8,11 @@ namespace Shared {
 			Defs._defs = json;
 		}
 
+		public static GetUser(): pair {
+			let ht = RC.Utils.Hashtable.GetMap(Defs._defs, "user");
+			return ht;
+		}
+
 		public static GetMap(id: string): pair {
 			let ht = RC.Utils.Hashtable.GetMap(Defs._defs, "maps");
 			let defaultHt = RC.Utils.Hashtable.GetMap(ht, "default");

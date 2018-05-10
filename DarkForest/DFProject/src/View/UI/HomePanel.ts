@@ -1,25 +1,37 @@
 namespace View.UI {
-	export class HomePanel {
+	export class HomePanel implements IMainPanel{
 		private _owner: UIMain;
 		private _root: fairygui.GComponent;
 		private _buildPanel: fairygui.GComponent;
 		private _home: View.Home;
+		private _mine: fairygui.GTextField;
+		private _energy: fairygui.GTextField;
+		private _power: fairygui.GTextField;
+		private _atk: fairygui.GTextField;
+		private _def: fairygui.GTextField;
 
 		constructor(owner: UIMain, param: Shared.Model.BattleParams) {
 			this._owner = owner;
 			this._root = owner.root.getChild("c0").asCom;
 
+			this._mine = this._root.getChild("mine").asTextField;
+			this._energy = this._root.getChild("energy").asTextField;
+			this._power = this._root.getChild("power").asTextField;
+			this._atk = this._root.getChild("atk").asTextField;
+			this._def = this._root.getChild("def").asTextField;
+			this.UpdateResources();
+
 			let tansuoBtn = this._root.getChild("tansuo_btn");
-			tansuoBtn.onClick(this, (e) => { this._owner.controller.selectedIndex = 1 });
+			tansuoBtn.onClick(this, (e) => { this._owner.panelIndex = 1 });
 
 			let juseBtn = this._root.getChild("juse_btn");
-			juseBtn.onClick(this, (e) => { this._owner.controller.selectedIndex = 3 });
+			juseBtn.onClick(this, (e) => { this._owner.panelIndex = 3 });
 
 			let renwuBtn = this._root.getChild("renwu_btn");
-			renwuBtn.onClick(this, (e) => { this._owner.controller.selectedIndex = 4 });
+			renwuBtn.onClick(this, (e) => { this._owner.panelIndex = 4 });
 
 			let xiaoxiBtn = this._root.getChild("xiaoxi_btn");
-			xiaoxiBtn.onClick(this, (e) => { this._owner.controller.selectedIndex = 5 });
+			xiaoxiBtn.onClick(this, (e) => { this._owner.panelIndex = 5 });
 
 			let jiansheBtn = this._root.getChild("jianshe_btn");
 			jiansheBtn.onClick(this, (e) => {
@@ -49,11 +61,17 @@ namespace View.UI {
 			this._home.Dispose();
 		}
 
+		public Enter(): void {
+		}
+
+		public Exit(): void {
+		}
+
 		public Update(deltaTime: number): void {
 			this._home.Update(deltaTime);
 		}
 
-		public OnResize(e: laya.events.Event): any {
+		public OnResize(e: laya.events.Event): void {
 			this._home.OnResize(e);
 		}
 
@@ -66,6 +84,7 @@ namespace View.UI {
 				this._home.input.ChangeState(InputStateType.Layout, building);
 			} else {
 				this._home.tile.PlaceBuilding(building);
+				this.UpdateBuildings();
 			}
 			fairygui.GRoot.inst.hidePopup();
 		}
@@ -78,13 +97,27 @@ namespace View.UI {
 		private HandleEndLayout(e: Shared.Event.BaseEvent): void {
 			this._root.getController("c1").selectedIndex = 0;
 			this._root.getChild("jianshe_btn").asCom.touchable = true;
+			this.UpdateBuildings();
+		}
+
+		private UpdateBuildings(): void {
+			View.CUser.CalcBuildingContribution(this._home.entityManager.GetBuildings());
+			this.UpdateResources();
+		}
+
+		private UpdateResources(): void {
+			this._mine.text = CUser.mine.toString();
+			this._energy.text = CUser.energy.toString();
+			this._power.text = CUser.power.toString();
+			this._atk.text = CUser.atk.toString();
+			this._def.text = CUser.def.toString();
 		}
 
 		public SetImage(id: string): void {
 			this._root.getChild("juse_btn").asCom.getChild("n1").asLoader.url = fairygui.UIPackage.getItemURL("battle", id);
 		}
 
-		public SetName(name:string):void{
+		public SetName(name: string): void {
 			this._root.getChild("juse_btn").asCom.getChild("n0").asTextField.text = name;
 		}
 	}

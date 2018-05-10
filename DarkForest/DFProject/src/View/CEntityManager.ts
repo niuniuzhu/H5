@@ -4,15 +4,19 @@ namespace View {
 		private readonly _gPool: Shared.GPool;
 		private readonly _entities: CEntity[];
 		private readonly _idToEntity: RC.Collections.Dictionary<string, CEntity>;
+		private readonly _typeToEntity: RC.Collections.Dictionary<new () => CEntity, CEntity[]>;
 
 		constructor(owner: Home) {
 			this._owner = owner;
 			this._gPool = new Shared.GPool();
 			this._entities = [];
 			this._idToEntity = new RC.Collections.Dictionary<string, CEntity>();
+			this._typeToEntity = new RC.Collections.Dictionary<new () => CEntity, CEntity[]>();
+			this._typeToEntity.setValue(CBuilding, []);
+			this._typeToEntity.setValue(EditingBuilding, []);
 		}
 
-		public Dispose():void{
+		public Dispose(): void {
 			this._entities.forEach((entity) => {
 				entity.MarkToDestroy();
 			});
@@ -29,20 +33,25 @@ namespace View {
 				entity.OnRemoveFromBattle();
 				this._entities.splice(i, 1);
 				this._idToEntity.remove(entity.rid);
+				let entities = this._typeToEntity.getValue(<any>entity.constructor);
+				entities.splice(entities.indexOf(entity), 1);
 				this._gPool.Push(entity);
 				--i;
 				--count;
 			}
 		}
 
-		public Create<T extends Shared.GPoolObject>(c: new () => T, param: Shared.Model.EntityParam): Shared.GPoolObject {
+		public Create<T extends CEntity>(c: new () => T, param: Shared.Model.EntityParam): Shared.GPoolObject {
 			let entity = <CEntity>this._gPool.Pop(c);
 			this._idToEntity.setValue(param.rid, entity);
+			this._typeToEntity.getValue(c).push(entity);
 			this._entities.push(entity);
-
-			Shared.Event.SyncEvent.CreateEntity((<any>entity).constructor.name, param);
 			entity.OnCreated(this._owner, param);
 			return entity;
+		}
+
+		public GetBuildings(): CBuilding[] {
+			return <CBuilding[]>this._typeToEntity.getValue(CBuilding);
 		}
 
 		public GetEntity(rid: string): CEntity {

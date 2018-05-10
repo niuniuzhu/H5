@@ -5218,21 +5218,21 @@ var RC;
             constructor(seed) {
                 this.seed = seed;
             }
-            next(min, max) {
+            Next(min, max) {
                 max = max || 0;
                 min = min || 0;
                 this.seed = (this.seed * 9301 + 49297) % 233280;
                 let rnd = this.seed / 233280;
                 return min + rnd * (max - min);
             }
-            nextInt(min, max) {
-                return Math.round(this.next(min, max));
+            NextInt(min, max) {
+                return Math.round(this.Next(min, max));
             }
-            nextDouble() {
-                return this.next(0, 1);
+            NextDouble() {
+                return this.Next(0, 1);
             }
-            pick(collection) {
-                return collection[this.nextInt(0, collection.length - 1)];
+            Pick(collection) {
+                return collection[this.NextInt(0, collection.length - 1)];
             }
         }
         Utils.ConsistentRandom = ConsistentRandom;

@@ -80,6 +80,10 @@ var Shared;
         static Init(json) {
             Defs._defs = json;
         }
+        static GetUser() {
+            let ht = RC.Utils.Hashtable.GetMap(Defs._defs, "user");
+            return ht;
+        }
         static GetMap(id) {
             let ht = RC.Utils.Hashtable.GetMap(Defs._defs, "maps");
             let defaultHt = RC.Utils.Hashtable.GetMap(ht, "default");
@@ -496,9 +500,24 @@ var Shared;
                 this.name = RC.Utils.Hashtable.GetString(def, "name");
                 this.model = RC.Utils.Hashtable.GetString(def, "model");
                 this.footprint = RC.Utils.Hashtable.GetVec3(def, "footprint");
+                this.lvl = [];
+                let lvlDefs = RC.Utils.Hashtable.GetArray(def, "lvl");
+                for (let lvlDef of lvlDefs) {
+                    this.lvl.push(new Level(lvlDef));
+                }
             }
         }
         Model.EntityData = EntityData;
+        class Level {
+            constructor(lvl) {
+                this.mine = lvl["mine"];
+                this.energy = lvl["energy"];
+                this.power = lvl["power"];
+                this.atk = lvl["atk"];
+                this.def = lvl["def"];
+            }
+        }
+        Model.Level = Level;
     })(Model = Shared.Model || (Shared.Model = {}));
 })(Shared || (Shared = {}));
 var Shared;
@@ -552,9 +571,15 @@ var Shared;
     var Model;
     (function (Model) {
         class ModelFactory {
+            static GerUserData() {
+                if (this.USER_DATA != null)
+                    return this.USER_DATA;
+                this.USER_DATA = new Model.UserData();
+                return this.USER_DATA;
+            }
             static GetMapData(id) {
                 let data = this.MAP_DATA.getValue(id);
-                if (data != null && data != undefined)
+                if (data != null)
                     return data;
                 data = new Model.MapData(id);
                 this.MAP_DATA.setValue(id, data);
@@ -562,7 +587,7 @@ var Shared;
             }
             static GetEntityData(id) {
                 let data = this.ENTITY_DATA.getValue(id);
-                if (data != null && data != undefined)
+                if (data != null)
                     return data;
                 data = new Model.EntityData(id);
                 this.ENTITY_DATA.setValue(id, data);
@@ -572,6 +597,20 @@ var Shared;
         ModelFactory.MAP_DATA = new RC.Collections.Dictionary();
         ModelFactory.ENTITY_DATA = new RC.Collections.Dictionary();
         Model.ModelFactory = ModelFactory;
+    })(Model = Shared.Model || (Shared.Model = {}));
+})(Shared || (Shared = {}));
+var Shared;
+(function (Shared) {
+    var Model;
+    (function (Model) {
+        class UserData {
+            constructor() {
+                let def = Shared.Defs.GetUser();
+                this.mine = RC.Utils.Hashtable.GetNumber(def, "mine");
+                this.energy = RC.Utils.Hashtable.GetNumber(def, "energy");
+            }
+        }
+        Model.UserData = UserData;
     })(Model = Shared.Model || (Shared.Model = {}));
 })(Shared || (Shared = {}));
 var View;
@@ -734,6 +773,16 @@ var View;
                 this._occupies.push(key);
             }
         }
+        get lvl() { return this._lvl; }
+        get mine() { return this._data.lvl[this.lvl].mine; }
+        get energy() { return this._data.lvl[this.lvl].energy; }
+        get power() { return this._data.lvl[this.lvl].power; }
+        get atk() { return this._data.lvl[this.lvl].atk; }
+        get def() { return this._data.lvl[this.lvl].def; }
+        OnCreated(owner, param) {
+            super.OnCreated(owner, param);
+            this._lvl = 0;
+        }
         SnapToTile() {
             this._tilePoint = this._owner.tile.WorldToLocal(this._position);
             this.position = this._owner.tile.LocalToWorld(this._tilePoint);
@@ -762,6 +811,9 @@ var View;
             this._gPool = new Shared.GPool();
             this._entities = [];
             this._idToEntity = new RC.Collections.Dictionary();
+            this._typeToEntity = new RC.Collections.Dictionary();
+            this._typeToEntity.setValue(View.CBuilding, []);
+            this._typeToEntity.setValue(View.EditingBuilding, []);
         }
         Dispose() {
             this._entities.forEach((entity) => {
@@ -779,6 +831,8 @@ var View;
                 entity.OnRemoveFromBattle();
                 this._entities.splice(i, 1);
                 this._idToEntity.remove(entity.rid);
+                let entities = this._typeToEntity.getValue(entity.constructor);
+                entities.splice(entities.indexOf(entity), 1);
                 this._gPool.Push(entity);
                 --i;
                 --count;
@@ -787,10 +841,13 @@ var View;
         Create(c, param) {
             let entity = this._gPool.Pop(c);
             this._idToEntity.setValue(param.rid, entity);
+            this._typeToEntity.getValue(c).push(entity);
             this._entities.push(entity);
-            Shared.Event.SyncEvent.CreateEntity(entity.constructor.name, param);
             entity.OnCreated(this._owner, param);
             return entity;
+        }
+        GetBuildings() {
+            return this._typeToEntity.getValue(View.CBuilding);
         }
         GetEntity(rid) {
             if (rid == null || rid == undefined)
@@ -853,6 +910,48 @@ var View;
         }
     }
     View.CTile = CTile;
+})(View || (View = {}));
+var View;
+(function (View) {
+    class CUser {
+        static get mine() {
+            return Shared.Model.ModelFactory.GerUserData().mine + CUser.G_MINE + CUser.B_MINE;
+        }
+        static get energy() {
+            return Shared.Model.ModelFactory.GerUserData().energy + CUser.G_ENERGY + CUser.B_ENERGY;
+        }
+        static get power() {
+            return CUser.B_DEF;
+        }
+        static get atk() {
+            return CUser.B_ATK;
+        }
+        static get def() {
+            return CUser.B_DEF;
+        }
+        static CalcBuildingContribution(buildings) {
+            CUser.B_POWER = 0;
+            CUser.B_ATK = 0;
+            CUser.B_DEF = 0;
+            CUser.B_MINE = 0;
+            CUser.B_ENERGY = 0;
+            for (let building of buildings) {
+                CUser.B_POWER += building.power;
+                CUser.B_ATK += building.atk;
+                CUser.B_DEF += building.def;
+                CUser.B_MINE += building.mine;
+                CUser.B_ENERGY += building.energy;
+            }
+        }
+    }
+    CUser.B_ATK = 0;
+    CUser.B_DEF = 0;
+    CUser.B_POWER = 0;
+    CUser.B_MINE = 0;
+    CUser.B_ENERGY = 0;
+    CUser.G_MINE = 0;
+    CUser.G_ENERGY = 0;
+    View.CUser = CUser;
 })(View || (View = {}));
 var View;
 (function (View) {
@@ -1010,6 +1109,8 @@ var View;
         get time() { return this._time; }
         get graphicManager() { return this._graphicManager; }
         ;
+        get entityManager() { return this._entityManager; }
+        ;
         get camera() { return this._camera; }
         ;
         get graphic() { return this._graphic; }
@@ -1054,6 +1155,12 @@ var View;
             param.position = position;
             let entity = this._entityManager.Create(View.EditingBuilding, param);
             return entity;
+        }
+        StartLayout() {
+            Shared.Event.UIEvent.StartLayout();
+        }
+        EndLayout() {
+            Shared.Event.UIEvent.EndLayout();
         }
     }
     View.Home = Home;
@@ -1113,7 +1220,7 @@ var View;
             this._startDragPosition = RC.Numerics.Vec3.zero;
         }
         Enter(param) {
-            Shared.Event.UIEvent.StartLayout();
+            this._owner.battle.StartLayout();
             this._owner.battle.graphic.sprite.displayObject.on(Laya.Event.MOUSE_DOWN, this, this.OnTouchBegin);
             this._dragingBuilding = false;
             this._touchMovied = false;
@@ -1129,7 +1236,7 @@ var View;
             this._owner.battle.graphic.sprite.displayObject.off(Laya.Event.MOUSE_DOWN, this, this.OnTouchBegin);
             fairygui.GRoot.inst.displayObject.off(Laya.Event.MOUSE_MOVE, this, this.OnTouchMove);
             fairygui.GRoot.inst.displayObject.off(Laya.Event.MOUSE_UP, this, this.OnTouchEnd);
-            Shared.Event.UIEvent.EndLayout();
+            this._owner.battle.EndLayout();
         }
         Update(context) {
         }
@@ -1243,6 +1350,14 @@ var View;
             }
             Dispose() {
             }
+            Enter() {
+            }
+            Exit() {
+            }
+            Update(deltaTime) {
+            }
+            OnResize(e) {
+            }
         }
         UI.FightPanel = FightPanel;
     })(UI = View.UI || (View.UI = {}));
@@ -1255,6 +1370,12 @@ var View;
             constructor(owner, param) {
                 this._owner = owner;
                 this._root = owner.root.getChild("c0").asCom;
+                this._mine = this._root.getChild("mine").asTextField;
+                this._energy = this._root.getChild("energy").asTextField;
+                this._power = this._root.getChild("power").asTextField;
+                this._atk = this._root.getChild("atk").asTextField;
+                this._def = this._root.getChild("def").asTextField;
+                this.UpdateResources();
                 let tansuoBtn = this._root.getChild("tansuo_btn");
                 tansuoBtn.onClick(this, (e) => { this._owner.controller.selectedIndex = 1; });
                 let juseBtn = this._root.getChild("juse_btn");
@@ -1286,6 +1407,10 @@ var View;
                 }
                 this._home.Dispose();
             }
+            Enter() {
+            }
+            Exit() {
+            }
             Update(deltaTime) {
                 this._home.Update(deltaTime);
             }
@@ -1302,6 +1427,7 @@ var View;
                 }
                 else {
                     this._home.tile.PlaceBuilding(building);
+                    this.UpdateBuildings();
                 }
                 fairygui.GRoot.inst.hidePopup();
             }
@@ -1312,6 +1438,18 @@ var View;
             HandleEndLayout(e) {
                 this._root.getController("c1").selectedIndex = 0;
                 this._root.getChild("jianshe_btn").asCom.touchable = true;
+                this.UpdateBuildings();
+            }
+            UpdateBuildings() {
+                View.CUser.CalcBuildingContribution(this._home.entityManager.GetBuildings());
+                this.UpdateResources();
+            }
+            UpdateResources() {
+                this._mine.text = View.CUser.mine.toString();
+                this._energy.text = View.CUser.energy.toString();
+                this._power.text = View.CUser.power.toString();
+                this._atk.text = View.CUser.atk.toString();
+                this._def.text = View.CUser.def.toString();
             }
             SetImage(id) {
                 this._root.getChild("juse_btn").asCom.getChild("n1").asLoader.url = fairygui.UIPackage.getItemURL("battle", id);
@@ -1335,6 +1473,14 @@ var View;
                 backBtn.onClick(this, (e) => { this._owner.controller.selectedIndex = 0; });
             }
             Dispose() {
+            }
+            Enter() {
+            }
+            Exit() {
+            }
+            Update(deltaTime) {
+            }
+            OnResize(e) {
             }
         }
         UI.MsgPanel = MsgPanel;
@@ -1365,6 +1511,14 @@ var View;
             }
             Dispose() {
             }
+            Enter() {
+            }
+            Exit() {
+            }
+            Update(deltaTime) {
+            }
+            OnResize(e) {
+            }
             OnImageItemClick(sender, e) {
                 let id = sender.asCom.name;
                 let loader = this._root.getChild("n23").asLoader;
@@ -1383,9 +1537,21 @@ var View;
         class SearchPanel {
             constructor(owner) {
                 this._owner = owner;
-                this._root = owner.root.getChild("c2").asCom;
+                this._root = owner.root.getChild("c1").asCom;
+                let searchBtn = this._root.getChild("search_btn");
+                searchBtn.onClick(this, (e) => { this._owner.controller.selectedIndex = 2; });
+                let backBtn = this._root.getChild("back_btn");
+                backBtn.onClick(this, (e) => { this._owner.controller.selectedIndex = 0; });
             }
             Dispose() {
+            }
+            Enter() {
+            }
+            Exit() {
+            }
+            Update(deltaTime) {
+            }
+            OnResize(e) {
             }
         }
         UI.SearchPanel = SearchPanel;
@@ -1403,6 +1569,14 @@ var View;
                 backBtn.onClick(this, (e) => { this._owner.controller.selectedIndex = 0; });
             }
             Dispose() {
+            }
+            Enter() {
+            }
+            Exit() {
+            }
+            Update(deltaTime) {
+            }
+            OnResize(e) {
             }
         }
         UI.TaskPanel = TaskPanel;
@@ -1436,13 +1610,20 @@ var View;
         class UIMain {
             constructor() {
                 fairygui.UIPackage.addPackage("res/ui/battle");
+                this._panels = [];
             }
-            get controller() { return this._controller; }
             get root() { return this._root; }
             get homePanel() { return this._homePanel; }
             get searchPanel() { return this._searchPanel; }
             get fightPanel() { return this._fightPanel; }
             get rolePanel() { return this._rolePanel; }
+            set panelIndex(value) {
+                if (this._controller.selectedIndex == value)
+                    return;
+                this._panels[value].Exit();
+                this._panels[value].Enter();
+                this._controller.selectedIndex = value;
+            }
             Dispose() {
             }
             Enter(param) {
@@ -1461,23 +1642,30 @@ var View;
                 this._rolePanel = new UI.RolePanel(this);
                 this._taskPanel = new UI.TaskPanel(this);
                 this._msgPanel = new UI.MsgPanel(this);
+                this._panels.push(this._homePanel);
+                this._panels.push(this._searchPanel);
+                this._panels.push(this._fightPanel);
+                this._panels.push(this._rolePanel);
+                this._panels.push(this._taskPanel);
+                this._panels.push(this._msgPanel);
+                this._controller.selectedIndex = 0;
+                this._homePanel.Enter();
             }
             Leave() {
-                this._homePanel.Dispose();
-                this._searchPanel.Dispose();
-                this._fightPanel.Dispose();
-                this._rolePanel.Dispose();
-                this._taskPanel.Dispose();
-                this._msgPanel.Dispose();
+                for (let p of this._panels)
+                    p.Dispose();
+                this._panels.splice(0);
                 this._root.dispose();
                 this._root = null;
                 this._controller = null;
             }
             Update(deltaTime) {
-                this._homePanel.Update(deltaTime);
+                for (let p of this._panels)
+                    p.Update(deltaTime);
             }
             OnResize(e) {
-                this._homePanel.OnResize(e);
+                for (let p of this._panels)
+                    p.OnResize(e);
             }
         }
         UI.UIMain = UIMain;

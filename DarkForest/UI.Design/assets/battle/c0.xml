@@ -10,9 +10,9 @@
     <image id="n21_gkbm" name="n21" src="gkbm19" xy="312,123" group="n28_q4b7"/>
     <image id="n22_gkbm" name="n22" src="gkbm1l" xy="155,120" group="n28_q4b7"/>
     <image id="n23_gkbm" name="n23" src="gkbm1j" xy="455,122" group="n28_q4b7"/>
-    <text id="n24_gkbm" name="n24" xy="199,122" size="90,29" group="n28_q4b7" fontSize="22" color="#ffd200" autoSize="none" text="34525"/>
-    <text id="n25_gkbm" name="n25" xy="340,122" size="90,29" group="n28_q4b7" fontSize="22" color="#ffd200" autoSize="none" text="32432"/>
-    <text id="n26_gkbm" name="n26" xy="483,122" size="90,29" group="n28_q4b7" fontSize="22" color="#ffd200" autoSize="none" text="4327894"/>
+    <text id="n24_gkbm" name="mine" xy="199,122" size="90,29" group="n28_q4b7" fontSize="22" color="#ffd200" autoSize="none" text="0"/>
+    <text id="n25_gkbm" name="energy" xy="340,122" size="90,29" group="n28_q4b7" fontSize="22" color="#ffd200" autoSize="none" text="0"/>
+    <text id="n26_gkbm" name="power" xy="483,122" size="90,29" group="n28_q4b7" fontSize="22" color="#ffd200" autoSize="none" text="0"/>
     <group id="n28_q4b7" name="n28" xy="0,0" size="720,188" advanced="true" collapsed="true">
       <gearXY controller="c1" pages="1" values="0,-110" default="0,0" tween="true" duration="0.2"/>
     </group>
@@ -25,8 +25,8 @@
     <image id="n30_suoq" name="n30" src="gkbm1f" xy="0,1158" group="n35_suoq"/>
     <text id="n31_suoq" name="n31" xy="66,1206" size="113,34" group="n35_suoq" fontSize="26" color="#55acff" bold="true" text="攻击数值"/>
     <text id="n32_suoq" name="n32" xy="426,1206" size="113,34" group="n35_suoq" fontSize="26" color="#55acff" bold="true" text="防御数值"/>
-    <text id="n33_suoq" name="n33" xy="181,1206" size="124,29" group="n35_suoq" fontSize="26" color="#ffffff" autoSize="none" text="24325324"/>
-    <text id="n34_suoq" name="n34" xy="540,1206" size="124,29" group="n35_suoq" fontSize="26" color="#ffffff" autoSize="none" text="4323124"/>
+    <text id="n33_suoq" name="atk" xy="181,1206" size="124,29" group="n35_suoq" fontSize="26" color="#ffffff" autoSize="none" text="0"/>
+    <text id="n34_suoq" name="def" xy="540,1206" size="124,29" group="n35_suoq" fontSize="26" color="#ffffff" autoSize="none" text="0"/>
     <group id="n35_suoq" name="n35" xy="0,1158" size="720,122" advanced="true" collapsed="true">
       <gearXY controller="c1" pages="1" values="0,1283" default="0,1158" tween="true" duration="0.2"/>
     </group>

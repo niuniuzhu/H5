@@ -1,11 +1,20 @@
 namespace Shared.Model {
 	export class ModelFactory {
+		private static USER_DATA: UserData;
 		private static readonly MAP_DATA = new RC.Collections.Dictionary<string, MapData>();
 		private static readonly ENTITY_DATA = new RC.Collections.Dictionary<string, EntityData>();
 
+		public static GerUserData(): UserData {
+			if (this.USER_DATA != null)
+				return this.USER_DATA;
+
+			this.USER_DATA = new UserData();
+			return this.USER_DATA;
+		}
+
 		public static GetMapData(id: string): MapData {
 			let data = this.MAP_DATA.getValue(id);
-			if (data != null && data != undefined)
+			if (data != null)
 				return data;
 
 			data = new MapData(id);
@@ -15,7 +24,7 @@ namespace Shared.Model {
 
 		public static GetEntityData(id: string): EntityData {
 			let data = this.ENTITY_DATA.getValue(id);
-			if (data != null && data != undefined)
+			if (data != null)
 				return data;
 
 			data = new EntityData(id);

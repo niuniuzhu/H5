@@ -6,7 +6,7 @@ namespace RC.Utils {
 			this.seed = seed;
 		}
 
-		private next(min: number, max: number): number {
+		private Next(min: number, max: number): number {
 			max = max || 0;
 			min = min || 0;
 
@@ -16,16 +16,16 @@ namespace RC.Utils {
 			return min + rnd * (max - min);
 		}
 
-		public nextInt(min: number, max: number): number {
-			return Math.round(this.next(min, max));
+		public NextInt(min: number, max: number): number {
+			return Math.round(this.Next(min, max));
 		}
 
-		public nextDouble(): number {
-			return this.next(0, 1);
+		public NextDouble(): number {
+			return this.Next(0, 1);
 		}
 
-		public pick(collection: any[]): any {
-			return collection[this.nextInt(0, collection.length - 1)];
+		public Pick(collection: any[]): any {
+			return collection[this.NextInt(0, collection.length - 1)];
 		}
 	}
 }

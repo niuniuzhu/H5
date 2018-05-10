@@ -1,5 +1,5 @@
 namespace View.UI {
-	export class MsgPanel {
+	export class MsgPanel implements IMainPanel {
 		private _owner: UIMain;
 		private _root: fairygui.GComponent;
 
@@ -12,7 +12,18 @@ namespace View.UI {
 		}
 
 		public Dispose(): void {
+		}
 
+		public Enter(): void {
+		}
+
+		public Exit(): void {
+		}
+
+		public Update(deltaTime: number): void {
+		}
+
+		public OnResize(e: laya.events.Event): void {
 		}
 	}
 }

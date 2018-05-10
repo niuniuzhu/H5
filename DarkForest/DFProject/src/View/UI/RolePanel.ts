@@ -1,5 +1,5 @@
 namespace View.UI {
-	export class RolePanel {
+	export class RolePanel implements IMainPanel {
 		private _owner: UIMain;
 		private _root: fairygui.GComponent;
 		private _imagePanel: fairygui.GComponent;
@@ -23,11 +23,22 @@ namespace View.UI {
 			});
 
 			let backBtn = this._root.getChild("back_btn");
-			backBtn.onClick(this, (e) => { this._owner.controller.selectedIndex = 0 });
+			backBtn.onClick(this, (e) => { this._owner.panelIndex = 0 });
 		}
 
 		public Dispose(): void {
+		}
 
+		public Enter(): void {
+		}
+
+		public Exit(): void {
+		}
+
+		public Update(deltaTime: number): void {
+		}
+
+		public OnResize(e: laya.events.Event): void {
 		}
 
 		private OnImageItemClick(sender: fairygui.GObject, e: laya.events.Event): void {

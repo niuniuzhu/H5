@@ -4,6 +4,7 @@ namespace View {
 	export class CBuilding extends CEntity {
 		protected _occupies: number[];
 		protected _tilePoint: RC.Numerics.Vec3;
+		protected _lvl: number;
 
 		public get tilePoint(): RC.Numerics.Vec3 { return this._tilePoint.Clone(); }
 		public set tilePoint(value: RC.Numerics.Vec3) { this._tilePoint = value.Clone(); }
@@ -16,9 +17,21 @@ namespace View {
 			}
 		}
 
+		public get lvl(): number { return this._lvl; }
+		public get mine(): number { return this._data.lvl[this.lvl].mine; }
+		public get energy(): number { return this._data.lvl[this.lvl].energy; }
+		public get power(): number { return this._data.lvl[this.lvl].power; }
+		public get atk(): number { return this._data.lvl[this.lvl].atk; }
+		public get def(): number { return this._data.lvl[this.lvl].def; }
+
 		constructor() {
 			super();
 			this._occupies = [];
+		}
+
+		public OnCreated(owner: Home, param: Shared.Model.EntityParam): void {
+			super.OnCreated(owner, param);
+			this._lvl = 0;
 		}
 
 		public SnapToTile(): void {
