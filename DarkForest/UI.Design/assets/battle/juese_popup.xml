@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="243,356">
+  <displayList>
+    <image id="n1_suoq" name="n1" src="suoq2z" xy="0,0" size="243,356"/>
+    <list id="n0_suoq" name="list" xy="8,8" size="226,340" layout="flow_hz" overflow="scroll" lineGap="3" colGap="3" defaultItem="ui://ytvu69qhsuoq34">
+      <item icon="ui://ytvu69qhsuoq38" name="i0"/>
+      <item icon="ui://ytvu69qhsuoq39" name="i1"/>
+      <item icon="ui://ytvu69qhsuoq3a" name="i2"/>
+      <item icon="ui://ytvu69qhsuoq3b" name="i3"/>
+      <item icon="ui://ytvu69qhsuoq3c" name="i4"/>
+      <item icon="ui://ytvu69qhsuoq3d" name="i5"/>
+    </list>
+  </displayList>
+</component>

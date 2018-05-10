@@ -19,15 +19,15 @@ namespace View {
 			this.tilePoint = this._srcBuilding.tilePoint;
 			this.position = this._srcBuilding.position;
 			this._graphic.alpha = 0.6;
-			this._battle.tile.RemoveBuilding(this._srcBuilding);
+			this._owner.tile.RemoveBuilding(this._srcBuilding);
 		}
 
 		public Apply(): boolean {
-			if (this._battle.tile.CanPlace(this)) {
+			if (this._owner.tile.CanPlace(this)) {
 				this._srcBuilding.tilePoint = this._tilePoint;
 				this._srcBuilding.graphic.visible = true;
 				this._srcBuilding.position = this._position;
-				this._battle.tile.PlaceBuilding(this._srcBuilding);
+				this._owner.tile.PlaceBuilding(this._srcBuilding);
 				this.MarkToDestroy();
 				return true;
 			}
@@ -36,7 +36,7 @@ namespace View {
 
 		public Cancel(): void {
 			this._srcBuilding.graphic.visible = true;
-			this._battle.tile.PlaceBuilding(this._srcBuilding);
+			this._owner.tile.PlaceBuilding(this._srcBuilding);
 			this.MarkToDestroy();
 		}
 	}

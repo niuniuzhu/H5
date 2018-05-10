@@ -3,7 +3,7 @@
 namespace View {
 	export class CEntity extends Shared.GPoolObject {
 		protected _position: RC.Numerics.Vec3;
-		protected _battle: View.CBattle;
+		protected _owner: View.Home;
 		protected _markToDestroy: boolean;
 		protected _graphic: EntityGraphic;
 		protected _data: Shared.Model.EntityData = null;
@@ -21,7 +21,7 @@ namespace View {
 		}
 
 		public get footprint(): RC.Numerics.Vec3 { return this._data.footprint.Clone(); }
-		public get battle(): View.CBattle { return this._battle; }
+		public get battle(): View.Home { return this._owner; }
 		public get graphic(): EntityGraphic { return this._graphic; }
 		public get markToDestroy(): boolean { return this._markToDestroy; }
 
@@ -33,12 +33,12 @@ namespace View {
 		protected InternalDispose(): void {
 		}
 
-		public OnCreated(battle: CBattle, param: Shared.Model.EntityParam): void {
-			this._battle = battle;
+		public OnCreated(owner: Home, param: Shared.Model.EntityParam): void {
+			this._owner = owner;
 			this._rid = param.rid;
 			this._data = Shared.Model.ModelFactory.GetEntityData(Shared.Utils.GetIDFromRID(this.rid));
 			this.position = param.position;
-			this._graphic = this._battle.graphicManager.CreateGraphic(EntityGraphic);
+			this._graphic = this._owner.graphicManager.CreateGraphic(EntityGraphic);
 			this._graphic.Load(this._data.model);
 			this._graphic.position = this.position;
 		}
@@ -48,9 +48,9 @@ namespace View {
 
 		public OnRemoveFromBattle(): void {
 			this._markToDestroy = false;
-			this._battle.graphicManager.DestroyGraphic(this._graphic);
+			this._owner.graphicManager.DestroyGraphic(this._graphic);
 			this._graphic = null;
-			this._battle = null;
+			this._owner = null;
 			this._data = null;
 		}
 

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="720,1280" designImageLayer="1">
+  <displayList>
+    <image id="n0_suoq" name="n0" src="gkbm1x" xy="0,0"/>
+    <image id="n1_suoq" name="n1" src="gkbm23" xy="0,0"/>
+    <component id="n2_suoq" name="back_btn" src="gkbm26" xy="596,0"/>
+    <text id="n3_suoq" name="n3" xy="25,15" size="79,47" fontSize="36" color="#ffffff" bold="true" strokeColor="#000000" text="消息"/>
+    <list id="n4_suoq" name="n4" xy="16,130" size="687,1055" overflow="scroll" scrollBarFlags="2" lineGap="5" defaultItem="ui://ytvu69qhsuoq3j">
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+    </list>
+  </displayList>
+</component>

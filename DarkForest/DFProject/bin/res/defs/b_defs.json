@@ -46,7 +46,7 @@
 			"footprint": [
 				4,
 				0,
-				4
+				3
 			]
 		},
 		"b4": {
@@ -98,7 +98,7 @@
 			"name": "test",
 			"model": "b9",
 			"footprint": [
-				5,
+				4,
 				0,
 				6
 			]

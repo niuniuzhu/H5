@@ -1,33 +1,5 @@
 var Game;
 (function (Game) {
-    class BattleManager {
-        static Init(param) {
-            this._init = true;
-            this.cBattle = new View.CBattle(param);
-        }
-        static Dispose() {
-            if (!this._init)
-                return;
-            this._init = false;
-            this.cBattle = null;
-        }
-        static Update(deltaTime) {
-            if (!this._init)
-                return;
-            this.cBattle.Update(deltaTime);
-        }
-        static OnResize(e) {
-            if (!this._init)
-                return;
-            this.cBattle.OnResize(e);
-        }
-    }
-    BattleManager.cBattle = null;
-    BattleManager._init = false;
-    Game.BattleManager = BattleManager;
-})(Game || (Game = {}));
-var Game;
-(function (Game) {
     class GameMain {
         constructor() {
             Laya.init(720, 1280);
@@ -80,11 +52,9 @@ var Game;
         Update() {
             let dt = Laya.timer.delta;
             View.UI.UIManager.Update(dt);
-            Game.BattleManager.Update(dt);
         }
         OnResize(e) {
             View.UI.UIManager.OnResize(e);
-            Game.BattleManager.OnResize(e);
         }
     }
     Game.GameMain = GameMain;
@@ -698,75 +668,6 @@ var View;
 })(View || (View = {}));
 var View;
 (function (View) {
-    class CBattle {
-        constructor(param) {
-            this._frame = 0;
-            this._deltaTime = 0;
-            this._time = 0;
-            this._data = Shared.Model.ModelFactory.GetMapData(Shared.Utils.GetIDFromRID(param.id));
-            this._entityManager = new View.CEntityManager(this);
-            this._graphicManager = new View.GraphicManager(this);
-            this._context = new Shared.UpdateContext();
-            this._camera = new View.Camera();
-            this._camera.cameraTRSChangedHandler = this._graphicManager.OnCameraTRSChanged.bind(this._graphicManager);
-            this._graphic = this._graphicManager.CreateGraphic(View.MapGraphic);
-            this._graphic.Load(this._data.model);
-            this._tile = new View.CTile(this._data.tileSlope, this._data.tileAspect, this._data.tileRatio);
-            this._input = new View.Input(this);
-            this.camera.UpdateRestriction(RC.Numerics.Vec3.zero, new RC.Numerics.Vec3(this._graphic.sprite.width - fairygui.GRoot.inst.width, this._graphic.sprite.height - fairygui.GRoot.inst.height, 0));
-        }
-        get frame() { return this._frame; }
-        get deltaTime() { return this._deltaTime; }
-        get time() { return this._time; }
-        get graphicManager() { return this._graphicManager; }
-        ;
-        get camera() { return this._camera; }
-        ;
-        get graphic() { return this._graphic; }
-        ;
-        get tile() { return this._tile; }
-        ;
-        get input() { return this._input; }
-        Dispose() {
-            this._graphicManager.Dispose();
-            this._entityManager.Dispose();
-            this._tile.Dispose();
-        }
-        Update(deltaTime) {
-            ++this._frame;
-            this._deltaTime = deltaTime;
-            this._time += this.deltaTime;
-            this._context.deltaTime = this.deltaTime;
-            this._context.time = this.time;
-            this._context.frame = this.frame;
-            this._entityManager.Update(this._context);
-            this._camera.Update(this._context);
-            this._input.Update(this._context);
-        }
-        OnResize(e) {
-            this.camera.UpdateRestriction(RC.Numerics.Vec3.zero, new RC.Numerics.Vec3(this._graphic.sprite.width - fairygui.GRoot.inst.width, this._graphic.sprite.height - fairygui.GRoot.inst.height, 0));
-        }
-        CreateBuilding(id, position = RC.Numerics.Vec3.zero) {
-            let rid = Shared.Utils.MakeRIDFromID(id);
-            let param = new Shared.Model.EntityParam();
-            param.rid = rid;
-            param.position = position;
-            let entity = this._entityManager.Create(View.CBuilding, param);
-            return entity;
-        }
-        CreateEditingBuilding(id, position = RC.Numerics.Vec3.zero) {
-            let rid = Shared.Utils.MakeRIDFromID(id);
-            let param = new Shared.Model.EntityParam();
-            param.rid = rid;
-            param.position = position;
-            let entity = this._entityManager.Create(View.EditingBuilding, param);
-            return entity;
-        }
-    }
-    View.CBattle = CBattle;
-})(View || (View = {}));
-var View;
-(function (View) {
     class CEntity extends Shared.GPoolObject {
         constructor() {
             super();
@@ -784,17 +685,17 @@ var View;
             this.OnPositionChanged();
         }
         get footprint() { return this._data.footprint.Clone(); }
-        get battle() { return this._battle; }
+        get battle() { return this._owner; }
         get graphic() { return this._graphic; }
         get markToDestroy() { return this._markToDestroy; }
         InternalDispose() {
         }
-        OnCreated(battle, param) {
-            this._battle = battle;
+        OnCreated(owner, param) {
+            this._owner = owner;
             this._rid = param.rid;
             this._data = Shared.Model.ModelFactory.GetEntityData(Shared.Utils.GetIDFromRID(this.rid));
             this.position = param.position;
-            this._graphic = this._battle.graphicManager.CreateGraphic(View.EntityGraphic);
+            this._graphic = this._owner.graphicManager.CreateGraphic(View.EntityGraphic);
             this._graphic.Load(this._data.model);
             this._graphic.position = this.position;
         }
@@ -802,9 +703,9 @@ var View;
         }
         OnRemoveFromBattle() {
             this._markToDestroy = false;
-            this._battle.graphicManager.DestroyGraphic(this._graphic);
+            this._owner.graphicManager.DestroyGraphic(this._graphic);
             this._graphic = null;
-            this._battle = null;
+            this._owner = null;
             this._data = null;
         }
         OnPositionChanged() {
@@ -834,11 +735,11 @@ var View;
             }
         }
         SnapToTile() {
-            this._tilePoint = this._battle.tile.WorldToLocal(this._position);
-            this.position = this._battle.tile.LocalToWorld(this._tilePoint);
+            this._tilePoint = this._owner.tile.WorldToLocal(this._position);
+            this.position = this._owner.tile.LocalToWorld(this._tilePoint);
         }
         ContainsPoint(tileSpaceTouchPoint) {
-            let tileSpacePos = this._battle.tile.WorldToLocal(this._position);
+            let tileSpacePos = this._owner.tile.WorldToLocal(this._position);
             let minX = tileSpacePos.x - this._data.footprint.x + 1;
             let maxX = tileSpacePos.x;
             let minZ = tileSpacePos.z;
@@ -856,8 +757,8 @@ var View;
 var View;
 (function (View) {
     class CEntityManager {
-        constructor(battle) {
-            this._battle = battle;
+        constructor(owner) {
+            this._owner = owner;
             this._gPool = new Shared.GPool();
             this._entities = [];
             this._idToEntity = new RC.Collections.Dictionary();
@@ -888,7 +789,7 @@ var View;
             this._idToEntity.setValue(param.rid, entity);
             this._entities.push(entity);
             Shared.Event.SyncEvent.CreateEntity(entity.constructor.name, param);
-            entity.OnCreated(this._battle, param);
+            entity.OnCreated(this._owner, param);
             return entity;
         }
         GetEntity(rid) {
@@ -969,14 +870,14 @@ var View;
             this.tilePoint = this._srcBuilding.tilePoint;
             this.position = this._srcBuilding.position;
             this._graphic.alpha = 0.6;
-            this._battle.tile.RemoveBuilding(this._srcBuilding);
+            this._owner.tile.RemoveBuilding(this._srcBuilding);
         }
         Apply() {
-            if (this._battle.tile.CanPlace(this)) {
+            if (this._owner.tile.CanPlace(this)) {
                 this._srcBuilding.tilePoint = this._tilePoint;
                 this._srcBuilding.graphic.visible = true;
                 this._srcBuilding.position = this._position;
-                this._battle.tile.PlaceBuilding(this._srcBuilding);
+                this._owner.tile.PlaceBuilding(this._srcBuilding);
                 this.MarkToDestroy();
                 return true;
             }
@@ -984,7 +885,7 @@ var View;
         }
         Cancel() {
             this._srcBuilding.graphic.visible = true;
-            this._battle.tile.PlaceBuilding(this._srcBuilding);
+            this._owner.tile.PlaceBuilding(this._srcBuilding);
             this.MarkToDestroy();
         }
     }
@@ -1043,15 +944,15 @@ var View;
 var View;
 (function (View) {
     class GraphicManager {
-        constructor(battle) {
-            this._battle = battle;
+        constructor(owner) {
+            this._owner = owner;
             this._root = new fairygui.GComponent();
-            this._root.name = "graphic_root";
             fairygui.GRoot.inst.addChild(this._root);
             this._graphics = [];
         }
-        get battle() { return this._battle; }
+        get battle() { return this._owner; }
         get root() { return this._root; }
+        set root(value) { this._root = value; }
         Dispose() {
             let count = this._graphics.length;
             for (let i = 0; i < count; ++i) {
@@ -1059,7 +960,6 @@ var View;
                 graphic.Dispose();
             }
             this._graphics.splice(0);
-            this._root.dispose();
         }
         OnCameraTRSChanged() {
             let count = this._graphics.length;
@@ -1083,6 +983,80 @@ var View;
         }
     }
     View.GraphicManager = GraphicManager;
+})(View || (View = {}));
+var View;
+(function (View) {
+    class Home {
+        constructor(param) {
+            this._frame = 0;
+            this._deltaTime = 0;
+            this._time = 0;
+            this._data = Shared.Model.ModelFactory.GetMapData(Shared.Utils.GetIDFromRID(param.id));
+            this._entityManager = new View.CEntityManager(this);
+            this._graphicManager = new View.GraphicManager(this);
+            this._context = new Shared.UpdateContext();
+            this._camera = new View.Camera();
+            this._camera.seekerPos = new RC.Numerics.Vec3((this._data.size.x - fairygui.GRoot.inst.width) * 0.5, 0, (this._data.size.y - fairygui.GRoot.inst.height) * -0.5);
+            this._camera.position = this._camera.seekerPos;
+            this._camera.cameraTRSChangedHandler = this._graphicManager.OnCameraTRSChanged.bind(this._graphicManager);
+            this._graphic = this._graphicManager.CreateGraphic(View.MapGraphic);
+            this._graphic.Load(this._data.model);
+            this._tile = new View.CTile(this._data.tileSlope, this._data.tileAspect, this._data.tileRatio);
+            this._input = new View.Input(this);
+            this.camera.UpdateRestriction(RC.Numerics.Vec3.zero, new RC.Numerics.Vec3(this._graphic.sprite.width - fairygui.GRoot.inst.width, this._graphic.sprite.height - fairygui.GRoot.inst.height, 0));
+        }
+        get frame() { return this._frame; }
+        get deltaTime() { return this._deltaTime; }
+        get time() { return this._time; }
+        get graphicManager() { return this._graphicManager; }
+        ;
+        get camera() { return this._camera; }
+        ;
+        get graphic() { return this._graphic; }
+        ;
+        get tile() { return this._tile; }
+        ;
+        get input() { return this._input; }
+        Dispose() {
+            this._graphicManager.Dispose();
+            this._entityManager.Dispose();
+            this._tile.Dispose();
+        }
+        Update(deltaTime) {
+            ++this._frame;
+            this._deltaTime = deltaTime;
+            this._time += this.deltaTime;
+            this._context.deltaTime = this.deltaTime;
+            this._context.time = this.time;
+            this._context.frame = this.frame;
+            this._entityManager.Update(this._context);
+            this._camera.Update(this._context);
+            this._input.Update(this._context);
+        }
+        OnResize(e) {
+            this.camera.UpdateRestriction(RC.Numerics.Vec3.zero, new RC.Numerics.Vec3(this._graphic.sprite.width - fairygui.GRoot.inst.width, this._graphic.sprite.height - fairygui.GRoot.inst.height, 0));
+        }
+        SetGraphicRoot(graphicRoot) {
+            graphicRoot.addChild(this.graphicManager.root);
+        }
+        CreateBuilding(id, position = RC.Numerics.Vec3.zero) {
+            let rid = Shared.Utils.MakeRIDFromID(id);
+            let param = new Shared.Model.EntityParam();
+            param.rid = rid;
+            param.position = position;
+            let entity = this._entityManager.Create(View.CBuilding, param);
+            return entity;
+        }
+        CreateEditingBuilding(id, position = RC.Numerics.Vec3.zero) {
+            let rid = Shared.Utils.MakeRIDFromID(id);
+            let param = new Shared.Model.EntityParam();
+            param.rid = rid;
+            param.position = position;
+            let entity = this._entityManager.Create(View.EditingBuilding, param);
+            return entity;
+        }
+    }
+    View.Home = Home;
 })(View || (View = {}));
 var View;
 (function (View) {
@@ -1135,6 +1109,8 @@ var View;
     class InputLayoutState {
         constructor(owner) {
             this._owner = owner;
+            this._startDragPoint = RC.Numerics.Vec3.zero;
+            this._startDragPosition = RC.Numerics.Vec3.zero;
         }
         Enter(param) {
             Shared.Event.UIEvent.StartLayout();
@@ -1164,6 +1140,8 @@ var View;
             let tilePoint = this._owner.battle.tile.WorldToLocal(worldPoint);
             if (this._editingBuilding.ContainsPoint(tilePoint)) {
                 this._dragingBuilding = true;
+                this._startDragPoint.CopyFrom(worldPoint);
+                this._startDragPosition.CopyFrom(this._editingBuilding.position);
             }
             else
                 this._owner.battle.camera.BeginMove(new RC.Numerics.Vec3(touchPoint.x, 0, -touchPoint.y));
@@ -1174,8 +1152,9 @@ var View;
         OnTouchMove(evt) {
             this._touchMovied = true;
             if (this._dragingBuilding) {
-                let worldPoint = this._owner.battle.camera.ScreenToWorld(new RC.Numerics.Vec3(evt.stageX, evt.stageY, 0));
-                this._editingBuilding.position = worldPoint;
+                let currPoint = this._owner.battle.camera.ScreenToWorld(new RC.Numerics.Vec3(evt.stageX, evt.stageY, 0));
+                let delta = RC.Numerics.Vec3.Sub(currPoint, this._startDragPoint);
+                this._editingBuilding.position = RC.Numerics.Vec3.Add(this._startDragPosition, delta);
                 this._editingBuilding.SnapToTile();
             }
             else {
@@ -1213,15 +1192,15 @@ var View;
         InputStateType[InputStateType["Layout"] = 1] = "Layout";
     })(InputStateType = View.InputStateType || (View.InputStateType = {}));
     class Input {
-        constructor(battle) {
-            this._battle = battle;
+        constructor(owner) {
+            this._owner = owner;
             this._states = [
                 new InputIdleState(this),
                 new InputLayoutState(this)
             ];
             this.ChangeState(InputStateType.Idle);
         }
-        get battle() { return this._battle; }
+        get battle() { return this._owner; }
         ChangeState(type, ...param) {
             if (this._currentState != null)
                 this._currentState.Exit();
@@ -1257,30 +1236,34 @@ var View;
 (function (View) {
     var UI;
     (function (UI) {
-        class UIBattle {
-            constructor() {
-                fairygui.UIPackage.addPackage("res/ui/battle");
+        class FightPanel {
+            constructor(owner) {
+                this._owner = owner;
+                this._root = owner.root.getChild("c2").asCom;
             }
             Dispose() {
             }
-            Update(deltaTime) {
-            }
-            Enter(param) {
-                Game.BattleManager.Init(param);
-                this._root = fairygui.UIPackage.createObject("battle", "Main").asCom;
-                this._root.displayObject.name = "Battle";
-                this._root.opaque = false;
-                this._root.getChild("c0").asCom.opaque = false;
-                fairygui.GRoot.inst.addChild(this._root);
-                this._root.width = fairygui.GRoot.inst.width;
-                this._root.height = fairygui.GRoot.inst.height;
-                this._root.addRelation(fairygui.GRoot.inst, fairygui.RelationType.Size);
-                this._controller = this._root.getController("c1");
-                let tansuoBtn = this._root.getChild("c0").asCom.getChild("tansuo_btn");
-                tansuoBtn.onClick(this, (e) => { this._controller.selectedIndex = 1; });
-                let backBtn = this._root.getChild("c1").asCom.getChild("back_btn");
-                backBtn.onClick(this, (e) => { this._controller.selectedIndex = 0; });
-                let jiansheBtn = this._root.getChild("c0").asCom.getChild("jianshe_btn");
+        }
+        UI.FightPanel = FightPanel;
+    })(UI = View.UI || (View.UI = {}));
+})(View || (View = {}));
+var View;
+(function (View) {
+    var UI;
+    (function (UI) {
+        class HomePanel {
+            constructor(owner, param) {
+                this._owner = owner;
+                this._root = owner.root.getChild("c0").asCom;
+                let tansuoBtn = this._root.getChild("tansuo_btn");
+                tansuoBtn.onClick(this, (e) => { this._owner.controller.selectedIndex = 1; });
+                let juseBtn = this._root.getChild("juse_btn");
+                juseBtn.onClick(this, (e) => { this._owner.controller.selectedIndex = 3; });
+                let renwuBtn = this._root.getChild("renwu_btn");
+                renwuBtn.onClick(this, (e) => { this._owner.controller.selectedIndex = 4; });
+                let xiaoxiBtn = this._root.getChild("xiaoxi_btn");
+                xiaoxiBtn.onClick(this, (e) => { this._owner.controller.selectedIndex = 5; });
+                let jiansheBtn = this._root.getChild("jianshe_btn");
                 jiansheBtn.onClick(this, (e) => {
                     if (this._buildPanel == null) {
                         this._buildPanel = fairygui.UIPackage.createObject("battle", "buildPanel").asCom;
@@ -1289,67 +1272,140 @@ var View;
                     fairygui.GRoot.inst.togglePopup(this._buildPanel, fairygui.GRoot.inst);
                     this._buildPanel.center();
                 });
-                Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.WIN, this.HandleWin.bind(this));
-                Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.ENTITY_CREATED, this.HandleEntityCreated.bind(this));
-                Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.ENTITY_DESTROIED, this.HandleEntityDestroied.bind(this));
-                Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.ENTITY_ATTR_CHANGED, this.HandleEntityAttrChanged.bind(this));
-                Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.USE_SKILL, this.HandleUseSkill.bind(this));
                 Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.START_LAYOUT, this.HandleStartLayout.bind(this));
                 Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.END_LAYOUT, this.HandleEndLayout.bind(this));
+                this._home = new View.Home(param);
+                this._home.SetGraphicRoot(this._root.getChild("n37").asCom);
             }
-            Leave() {
-                Game.BattleManager.Dispose();
+            Dispose() {
+                Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.START_LAYOUT, this.HandleStartLayout.bind(this));
+                Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.END_LAYOUT, this.HandleEndLayout.bind(this));
                 if (this._buildPanel != null) {
                     this._buildPanel.dispose();
                     this._buildPanel = null;
                 }
-                this._root.dispose();
-                this._root = null;
-                this._controller = null;
-                Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.WIN, this.HandleWin.bind(this));
-                Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.ENTITY_CREATED, this.HandleEntityCreated.bind(this));
-                Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.ENTITY_DESTROIED, this.HandleEntityDestroied.bind(this));
-                Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.ENTITY_ATTR_CHANGED, this.HandleEntityAttrChanged.bind(this));
-                Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.USE_SKILL, this.HandleUseSkill.bind(this));
-                Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.START_LAYOUT, this.HandleStartLayout.bind(this));
-                Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.END_LAYOUT, this.HandleEndLayout.bind(this));
+                this._home.Dispose();
             }
-            HandleWin(e) {
+            Update(deltaTime) {
+                this._home.Update(deltaTime);
             }
-            HandleEntityCreated(e) {
-                let uiEvent = e;
-            }
-            HandleEntityDestroied(e) {
-                let uiEvent = e;
-            }
-            HandleEntityAttrChanged(e) {
-                let uiEvent = e;
-            }
-            HandleUseSkill(e) {
-            }
-            HandleStartLayout(e) {
-                this._root.getChild("c0").asCom.getController("c1").selectedIndex = 1;
-                this._root.getChild("c0").asCom.getChild("jianshe_btn").asCom.touchable = false;
-            }
-            HandleEndLayout(e) {
-                this._root.getChild("c0").asCom.getController("c1").selectedIndex = 0;
-                this._root.getChild("c0").asCom.getChild("jianshe_btn").asCom.touchable = true;
+            OnResize(e) {
+                this._home.OnResize(e);
             }
             OnBuildItemClick(sender, e) {
                 let bid = sender.asCom.name;
-                let worldPoint = Game.BattleManager.cBattle.camera.ScreenToWorld(new RC.Numerics.Vec3(e.stageX, e.stageY));
-                let building = Game.BattleManager.cBattle.CreateBuilding(bid, worldPoint);
+                let worldPoint = this._home.camera.ScreenToWorld(new RC.Numerics.Vec3(e.stageX, e.stageY));
+                let building = this._home.CreateBuilding(bid, worldPoint);
                 building.SnapToTile();
-                fairygui.GRoot.inst.hidePopup();
-                if (!Game.BattleManager.cBattle.tile.CanPlace(building)) {
-                    Game.BattleManager.cBattle.input.ChangeState(View.InputStateType.Layout, building);
+                if (!this._home.tile.CanPlace(building)) {
+                    this._home.input.ChangeState(View.InputStateType.Layout, building);
                 }
                 else {
-                    Game.BattleManager.cBattle.tile.PlaceBuilding(building);
+                    this._home.tile.PlaceBuilding(building);
                 }
+                fairygui.GRoot.inst.hidePopup();
+            }
+            HandleStartLayout(e) {
+                this._root.getController("c1").selectedIndex = 1;
+                this._root.getChild("jianshe_btn").asCom.touchable = false;
+            }
+            HandleEndLayout(e) {
+                this._root.getController("c1").selectedIndex = 0;
+                this._root.getChild("jianshe_btn").asCom.touchable = true;
+            }
+            SetImage(id) {
+                this._root.getChild("juse_btn").asCom.getChild("n1").asLoader.url = fairygui.UIPackage.getItemURL("battle", id);
+            }
+            SetName(name) {
+                this._root.getChild("juse_btn").asCom.getChild("n0").asTextField.text = name;
             }
         }
-        UI.UIBattle = UIBattle;
+        UI.HomePanel = HomePanel;
+    })(UI = View.UI || (View.UI = {}));
+})(View || (View = {}));
+var View;
+(function (View) {
+    var UI;
+    (function (UI) {
+        class MsgPanel {
+            constructor(owner) {
+                this._owner = owner;
+                this._root = owner.root.getChild("c5").asCom;
+                let backBtn = this._root.getChild("back_btn");
+                backBtn.onClick(this, (e) => { this._owner.controller.selectedIndex = 0; });
+            }
+            Dispose() {
+            }
+        }
+        UI.MsgPanel = MsgPanel;
+    })(UI = View.UI || (View.UI = {}));
+})(View || (View = {}));
+var View;
+(function (View) {
+    var UI;
+    (function (UI) {
+        class RolePanel {
+            constructor(owner) {
+                this._owner = owner;
+                this._root = owner.root.getChild("c3").asCom;
+                let imageCom = this._root.getChild("n9").asCom;
+                imageCom.onClick(this, (e) => {
+                    if (this._imagePanel == null) {
+                        this._imagePanel = fairygui.UIPackage.createObject("battle", "juese_popup").asCom;
+                        this._imagePanel.getChild("list").on(fairygui.Events.CLICK_ITEM, this, this.OnImageItemClick);
+                    }
+                    fairygui.GRoot.inst.togglePopup(this._imagePanel);
+                });
+                let changeNameBtn = this._root.getChild("n13").asCom;
+                changeNameBtn.onClick(this, (e) => {
+                    this._owner.homePanel.SetName(this._root.getChild("n12").asTextInput.text);
+                });
+                let backBtn = this._root.getChild("back_btn");
+                backBtn.onClick(this, (e) => { this._owner.controller.selectedIndex = 0; });
+            }
+            Dispose() {
+            }
+            OnImageItemClick(sender, e) {
+                let id = sender.asCom.name;
+                let loader = this._root.getChild("n23").asLoader;
+                loader.url = fairygui.UIPackage.getItemURL("battle", id);
+                this._owner.homePanel.SetImage(id);
+                fairygui.GRoot.inst.hidePopup();
+            }
+        }
+        UI.RolePanel = RolePanel;
+    })(UI = View.UI || (View.UI = {}));
+})(View || (View = {}));
+var View;
+(function (View) {
+    var UI;
+    (function (UI) {
+        class SearchPanel {
+            constructor(owner) {
+                this._owner = owner;
+                this._root = owner.root.getChild("c2").asCom;
+            }
+            Dispose() {
+            }
+        }
+        UI.SearchPanel = SearchPanel;
+    })(UI = View.UI || (View.UI = {}));
+})(View || (View = {}));
+var View;
+(function (View) {
+    var UI;
+    (function (UI) {
+        class TaskPanel {
+            constructor(owner) {
+                this._owner = owner;
+                this._root = owner.root.getChild("c4").asCom;
+                let backBtn = this._root.getChild("back_btn");
+                backBtn.onClick(this, (e) => { this._owner.controller.selectedIndex = 0; });
+            }
+            Dispose() {
+            }
+        }
+        UI.TaskPanel = TaskPanel;
     })(UI = View.UI || (View.UI = {}));
 })(View || (View = {}));
 var View;
@@ -1360,16 +1416,14 @@ var View;
             constructor() {
             }
             Dispose() {
-                throw new Error("Method not implemented.");
             }
             Enter(param) {
-                throw new Error("Method not implemented.");
             }
             Leave() {
-                throw new Error("Method not implemented.");
             }
             Update(deltaTime) {
-                throw new Error("Method not implemented.");
+            }
+            OnResize(e) {
             }
         }
         UI.UILogin = UILogin;
@@ -1379,9 +1433,63 @@ var View;
 (function (View) {
     var UI;
     (function (UI) {
+        class UIMain {
+            constructor() {
+                fairygui.UIPackage.addPackage("res/ui/battle");
+            }
+            get controller() { return this._controller; }
+            get root() { return this._root; }
+            get homePanel() { return this._homePanel; }
+            get searchPanel() { return this._searchPanel; }
+            get fightPanel() { return this._fightPanel; }
+            get rolePanel() { return this._rolePanel; }
+            Dispose() {
+            }
+            Enter(param) {
+                this._root = fairygui.UIPackage.createObject("battle", "Main").asCom;
+                this._root.displayObject.name = "Battle";
+                this._root.opaque = false;
+                this._root.getChild("c0").asCom.opaque = false;
+                fairygui.GRoot.inst.addChild(this._root);
+                this._root.width = fairygui.GRoot.inst.width;
+                this._root.height = fairygui.GRoot.inst.height;
+                this._root.addRelation(fairygui.GRoot.inst, fairygui.RelationType.Size);
+                this._controller = this._root.getController("c1");
+                this._homePanel = new UI.HomePanel(this, param);
+                this._searchPanel = new UI.SearchPanel(this);
+                this._fightPanel = new UI.FightPanel(this);
+                this._rolePanel = new UI.RolePanel(this);
+                this._taskPanel = new UI.TaskPanel(this);
+                this._msgPanel = new UI.MsgPanel(this);
+            }
+            Leave() {
+                this._homePanel.Dispose();
+                this._searchPanel.Dispose();
+                this._fightPanel.Dispose();
+                this._rolePanel.Dispose();
+                this._taskPanel.Dispose();
+                this._msgPanel.Dispose();
+                this._root.dispose();
+                this._root = null;
+                this._controller = null;
+            }
+            Update(deltaTime) {
+                this._homePanel.Update(deltaTime);
+            }
+            OnResize(e) {
+                this._homePanel.OnResize(e);
+            }
+        }
+        UI.UIMain = UIMain;
+    })(UI = View.UI || (View.UI = {}));
+})(View || (View = {}));
+var View;
+(function (View) {
+    var UI;
+    (function (UI) {
         class UIManager {
             static get login() { return this._login; }
-            static get battle() { return this._battle; }
+            static get battle() { return this._main; }
             static Init(resolution) {
                 Laya.stage.addChild(fairygui.GRoot.inst.displayObject);
                 fairygui.UIPackage.addPackage("res/ui/global");
@@ -1389,7 +1497,7 @@ var View;
                 fairygui.UIConfig.windowModalWaiting = fairygui.UIPackage.getItemURL("global", "qtm011");
                 fairygui.UIConfig.buttonSound = fairygui.UIPackage.getItemURL("global", "click");
                 this._login = new UI.UILogin();
-                this._battle = new UI.UIBattle();
+                this._main = new UI.UIMain();
             }
             static Dispose() {
                 if (this._currModule != null) {
@@ -1402,6 +1510,8 @@ var View;
                     this._currModule.Update(deltaTime);
             }
             static OnResize(e) {
+                if (this._currModule != null)
+                    this._currModule.OnResize(e);
             }
             static EnterModule(module, param) {
                 if (this._currModule != null)
@@ -1418,7 +1528,7 @@ var View;
                 this.EnterModule(this._login);
             }
             static EnterBattle(param) {
-                this.EnterModule(this._battle, param);
+                this.EnterModule(this._main, param);
             }
         }
         UI.UIManager = UIManager;

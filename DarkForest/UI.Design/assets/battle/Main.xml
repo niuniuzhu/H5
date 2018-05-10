@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="720,1280" designImageLayer="1">
-  <controller name="c1" pages="0,,1," selected="0"/>
+  <controller name="c1" pages="0,,1,,2,,3,,4,,5," selected="4"/>
   <displayList>
     <component id="n14_gkbm" name="c0" src="gkbm28" xy="0,0">
       <gearDisplay controller="c1" pages="0"/>
@@ -8,11 +8,17 @@
     <component id="n34_gkbm" name="c1" src="gkbm25" xy="0,0">
       <gearDisplay controller="c1" pages="1"/>
     </component>
-    <image id="n38_gkbm" name="n38" src="gkbm1f" xy="0,1158" group="n43_gkbm"/>
-    <text id="n39_gkbm" name="n39" xy="66,1206" size="113,34" group="n43_gkbm" fontSize="26" color="#55acff" bold="true" text="攻击数值"/>
-    <text id="n40_gkbm" name="n40" xy="426,1206" size="113,34" group="n43_gkbm" fontSize="26" color="#55acff" bold="true" text="防御数值"/>
-    <text id="n41_gkbm" name="n41" xy="181,1206" size="124,29" group="n43_gkbm" fontSize="26" color="#ffffff" autoSize="none" text="24325324"/>
-    <text id="n42_gkbm" name="n42" xy="540,1206" size="124,29" group="n43_gkbm" fontSize="26" color="#ffffff" autoSize="none" text="4323124"/>
-    <group id="n43_gkbm" name="n43" xy="0,1158" size="720,122"/>
+    <component id="n35_suoq" name="c2" src="suoq2g" xy="0,0">
+      <gearDisplay controller="c1" pages="2"/>
+    </component>
+    <component id="n36_suoq" name="c3" src="suoq2w" xy="0,0">
+      <gearDisplay controller="c1" pages="3"/>
+    </component>
+    <component id="n37_suoq" name="c4" src="suoq3h" xy="0,0">
+      <gearDisplay controller="c1" pages="4"/>
+    </component>
+    <component id="n38_suoq" name="c5" src="suoq3k" xy="0,0">
+      <gearDisplay controller="c1" pages="5"/>
+    </component>
   </displayList>
 </component>

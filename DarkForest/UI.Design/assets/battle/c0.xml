@@ -2,23 +2,33 @@
 <component size="720,1280">
   <controller name="c1" pages="0,,1," selected="0"/>
   <displayList>
+    <component id="n37_suoq" name="n37" src="suoq36" xy="0,0"/>
     <image id="n14_gkbm" name="n14" src="gkbm1b" xy="0,0" group="n28_q4b7"/>
-    <component id="n19_gkbm" name="tansuo_btn" src="gkbm1o" xy="285,5" group="n28_q4b7"/>
-    <component id="n20_gkbm" name="n20" src="gkbm1p" xy="537,31" group="n28_q4b7"/>
+    <component id="n36_suoq" name="juse_btn" src="suoq35" xy="10,18" group="n28_q4b7"/>
+    <component id="n19_gkbm" name="tansuo_btn" src="gkbm1o" xy="269,3" group="n28_q4b7"/>
+    <component id="n20_gkbm" name="chongzhi_btn" src="gkbm1p" xy="485,12" group="n28_q4b7"/>
     <image id="n21_gkbm" name="n21" src="gkbm19" xy="312,123" group="n28_q4b7"/>
     <image id="n22_gkbm" name="n22" src="gkbm1l" xy="155,120" group="n28_q4b7"/>
     <image id="n23_gkbm" name="n23" src="gkbm1j" xy="455,122" group="n28_q4b7"/>
     <text id="n24_gkbm" name="n24" xy="199,122" size="90,29" group="n28_q4b7" fontSize="22" color="#ffd200" autoSize="none" text="34525"/>
     <text id="n25_gkbm" name="n25" xy="340,122" size="90,29" group="n28_q4b7" fontSize="22" color="#ffd200" autoSize="none" text="32432"/>
     <text id="n26_gkbm" name="n26" xy="483,122" size="90,29" group="n28_q4b7" fontSize="22" color="#ffd200" autoSize="none" text="4327894"/>
-    <group id="n28_q4b7" name="n28" xy="0,0" size="720,188" visible="false" advanced="true">
+    <group id="n28_q4b7" name="n28" xy="0,0" size="720,188" advanced="true" collapsed="true">
       <gearXY controller="c1" pages="1" values="0,-110" default="0,0" tween="true" duration="0.2"/>
     </group>
     <component id="n16_gkbm" name="renwu_btn" src="gkbm1m" xy="605,198" group="n29_suoq"/>
     <component id="n17_gkbm" name="xiaoxi_btn" src="gkbm1n" xy="605,341" group="n29_suoq"/>
     <component id="n27_gkbm" name="jianshe_btn" src="gkbm2c" xy="605,484" group="n29_suoq"/>
-    <group id="n29_suoq" name="n29" xy="605,198" size="96,404" advanced="true">
+    <group id="n29_suoq" name="n29" xy="605,198" size="96,404" advanced="true" collapsed="true">
       <gearXY controller="c1" pages="1" values="722,198" default="605,198" tween="true" duration="0.2"/>
+    </group>
+    <image id="n30_suoq" name="n30" src="gkbm1f" xy="0,1158" group="n35_suoq"/>
+    <text id="n31_suoq" name="n31" xy="66,1206" size="113,34" group="n35_suoq" fontSize="26" color="#55acff" bold="true" text="攻击数值"/>
+    <text id="n32_suoq" name="n32" xy="426,1206" size="113,34" group="n35_suoq" fontSize="26" color="#55acff" bold="true" text="防御数值"/>
+    <text id="n33_suoq" name="n33" xy="181,1206" size="124,29" group="n35_suoq" fontSize="26" color="#ffffff" autoSize="none" text="24325324"/>
+    <text id="n34_suoq" name="n34" xy="540,1206" size="124,29" group="n35_suoq" fontSize="26" color="#ffffff" autoSize="none" text="4323124"/>
+    <group id="n35_suoq" name="n35" xy="0,1158" size="720,122" advanced="true" collapsed="true">
+      <gearXY controller="c1" pages="1" values="0,1283" default="0,1158" tween="true" duration="0.2"/>
     </group>
   </displayList>
 </component>

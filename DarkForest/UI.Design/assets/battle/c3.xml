@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="720,1280" designImageLayer="1">
+  <displayList>
+    <image id="n4_suoq" name="n4" src="gkbm1x" xy="0,0"/>
+    <image id="n5_suoq" name="n5" src="gkbm23" xy="0,0"/>
+    <component id="n6_suoq" name="back_btn" src="gkbm26" xy="596,0"/>
+    <text id="n7_suoq" name="n7" xy="25,15" size="79,47" fontSize="36" color="#ffffff" bold="true" strokeColor="#000000" text="角色"/>
+    <image id="n8_suoq" name="n8" src="suoq2z" xy="112,294" size="496,691"/>
+    <component id="n9_suoq" name="n9" src="suoq37" xy="305,419"/>
+    <image id="n11_suoq" name="n11" src="suoq2y" xy="225,566"/>
+    <text id="n12_suoq" name="n12" xy="230,569" size="215,39" input="true" maxLength="8" fontSize="26" color="#55acff" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="孤独的流浪者"/>
+    <component id="n13_suoq" name="n13" src="suoq3e" xy="451,569"/>
+    <image id="n14_suoq" name="n14" src="gkbm19" xy="213,757"/>
+    <image id="n15_suoq" name="n15" src="gkbm1l" xy="207,675"/>
+    <image id="n16_suoq" name="n16" src="gkbm1j" xy="214,834"/>
+    <text id="n17_suoq" name="n17" xy="261,676" size="75,35" fontSize="26" color="#ffd200" text="34525"/>
+    <text id="n18_suoq" name="n18" xy="261,755" size="75,35" fontSize="26" color="#ffd200" text="32432"/>
+    <text id="n19_suoq" name="n19" xy="261,832" size="103,35" fontSize="26" color="#ffd200" text="4327894"/>
+    <text id="n20_suoq" name="n20" xy="392,676" size="114,35" fontSize="26" color="#ffffff" text="+100小时"/>
+    <text id="n21_suoq" name="n21" xy="392,755" size="114,35" fontSize="26" color="#ffffff" text="+100小时"/>
+    <text id="n22_suoq" name="n22" xy="392,832" size="114,35" fontSize="26" color="#ffffff" text="+100小时"/>
+    <loader id="n23_suoq" name="n23" xy="305,419" size="110,110" touchable="false" url="ui://ytvu69qhsuoq38"/>
+  </displayList>
+</component>

@@ -22,12 +22,12 @@ namespace View {
 		}
 
 		public SnapToTile(): void {
-			this._tilePoint = this._battle.tile.WorldToLocal(this._position);
-			this.position = this._battle.tile.LocalToWorld(this._tilePoint);
+			this._tilePoint = this._owner.tile.WorldToLocal(this._position);
+			this.position = this._owner.tile.LocalToWorld(this._tilePoint);
 		}
 
 		public ContainsPoint(tileSpaceTouchPoint: RC.Numerics.Vec3): boolean {
-			let tileSpacePos = this._battle.tile.WorldToLocal(this._position);
+			let tileSpacePos = this._owner.tile.WorldToLocal(this._position);
 			let minX = tileSpacePos.x - this._data.footprint.x + 1;
 			let maxX = tileSpacePos.x;
 			let minZ = tileSpacePos.z;

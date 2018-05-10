@@ -71,9 +71,13 @@ namespace View {
 		private _editingBuilding: EditingBuilding;
 		private _dragingBuilding: boolean;
 		private _touchMovied: boolean;
+		private _startDragPoint: RC.Numerics.Vec3;
+		private _startDragPosition: RC.Numerics.Vec3;
 
 		constructor(owner: Input) {
 			this._owner = owner;
+			this._startDragPoint = RC.Numerics.Vec3.zero;
+			this._startDragPosition = RC.Numerics.Vec3.zero;
 		}
 
 		public Enter(param: any[]): void {
@@ -110,6 +114,8 @@ namespace View {
 			let tilePoint = this._owner.battle.tile.WorldToLocal(worldPoint);
 			if (this._editingBuilding.ContainsPoint(tilePoint)) {
 				this._dragingBuilding = true;
+				this._startDragPoint.CopyFrom(worldPoint);
+				this._startDragPosition.CopyFrom(this._editingBuilding.position);
 			}
 			else
 				this._owner.battle.camera.BeginMove(new RC.Numerics.Vec3(touchPoint.x, 0, -touchPoint.y));
@@ -122,8 +128,9 @@ namespace View {
 		private OnTouchMove(evt: laya.events.Event): any {
 			this._touchMovied = true;
 			if (this._dragingBuilding) {
-				let worldPoint = this._owner.battle.camera.ScreenToWorld(new RC.Numerics.Vec3(evt.stageX, evt.stageY, 0));
-				this._editingBuilding.position = worldPoint;
+				let currPoint = this._owner.battle.camera.ScreenToWorld(new RC.Numerics.Vec3(evt.stageX, evt.stageY, 0));
+				let delta = RC.Numerics.Vec3.Sub(currPoint, this._startDragPoint);
+				this._editingBuilding.position = RC.Numerics.Vec3.Add(this._startDragPosition, delta);
 				this._editingBuilding.SnapToTile();
 			}
 			else {
@@ -162,14 +169,14 @@ namespace View {
 	}
 
 	export class Input {
-		private readonly _battle: CBattle;
+		private readonly _owner: Home;
 		private readonly _states: IInputState[];
 		private _currentState: IInputState;
 
-		public get battle(): CBattle { return this._battle; }
+		public get battle(): Home { return this._owner; }
 
-		constructor(battle: CBattle) {
-			this._battle = battle;
+		constructor(owner: Home) {
+			this._owner = owner;
 			this._states = [
 				new InputIdleState(this),
 				new InputLayoutState(this)

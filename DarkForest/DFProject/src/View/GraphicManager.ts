@@ -1,17 +1,18 @@
 namespace View {
 	export class GraphicManager {
-		private readonly _battle: CBattle;
-		private readonly _root: fairygui.GComponent;
+		private readonly _owner: Home;
 		private readonly _graphics: Graphic[];
 
-		public get battle(): CBattle { return this._battle; }
+		private _root: fairygui.GComponent;
+
+		public get battle(): Home { return this._owner; }
 
 		public get root(): fairygui.GComponent { return this._root; }
+		public set root(value: fairygui.GComponent) { this._root = value; }
 
-		constructor(battle: CBattle) {
-			this._battle = battle;
+		constructor(owner: Home) {
+			this._owner = owner;
 			this._root = new fairygui.GComponent();
-			this._root.name = "graphic_root";
 			fairygui.GRoot.inst.addChild(this._root);
 			this._graphics = [];
 		}
@@ -23,7 +24,6 @@ namespace View {
 				graphic.Dispose();
 			}
 			this._graphics.splice(0);
-			this._root.dispose();
 		}
 
 		public OnCameraTRSChanged(): void {

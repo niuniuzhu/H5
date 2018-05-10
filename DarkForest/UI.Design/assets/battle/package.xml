@@ -58,6 +58,34 @@
     <image id="suoq2p" name="科幻背景.jpg" path="/assets/zhandou/"/>
     <component id="suoq2q" name="win.xml" path="/" exported="true"/>
     <component id="suoq2r" name="btn3.xml" path="/"/>
+    <movieclip id="suoq2s" name="红.jta" path="/assets/zhandou/"/>
+    <movieclip id="suoq2t" name="蓝.jta" path="/assets/zhandou/"/>
+    <image id="suoq2u" name="04角色02.jpg" path="/assets/juese/"/>
+    <image id="suoq2v" name="04角色01.jpg" path="/assets/juese/"/>
+    <component id="suoq2w" name="c3.xml" path="/"/>
+    <image id="suoq2x" name="gaimingzi.png" path="/assets/juese/"/>
+    <image id="suoq2y" name="minzikuang.png" path="/assets/juese/"/>
+    <image id="suoq2z" name="tangchukuang03.png" path="/assets/juese/" scale="9grid" scale9grid="71,101,142,202"/>
+    <image id="suoq30" name="touxiangkuang.png" path="/assets/juese/"/>
+    <image id="suoq31" name="touxiangkuangxuanzhe.png" path="/assets/juese/"/>
+    <component id="suoq32" name="juese_popup.xml" path="/" exported="true"/>
+    <component id="suoq34" name="juse_item.xml" path="/"/>
+    <component id="suoq35" name="jueseBtn.xml" path="/"/>
+    <component id="suoq36" name="home_root_container.xml" path="/"/>
+    <component id="suoq37" name="role_panel_image.xml" path="/"/>
+    <image id="suoq38" name="i0.png" path="/assets/juese/"/>
+    <image id="suoq39" name="i1.png" path="/assets/juese/"/>
+    <image id="suoq3a" name="i2.png" path="/assets/juese/"/>
+    <image id="suoq3b" name="i3.png" path="/assets/juese/"/>
+    <image id="suoq3c" name="i4.png" path="/assets/juese/"/>
+    <image id="suoq3d" name="i5.png" path="/assets/juese/"/>
+    <component id="suoq3e" name="confirm_change_name.xml" path="/"/>
+    <image id="suoq3f" name="05任务01.jpg" path="/assets/renwu/"/>
+    <image id="suoq3g" name="06消息01.jpg" path="/assets/xiaoxi/"/>
+    <component id="suoq3h" name="c4.xml" path="/"/>
+    <image id="suoq3i" name="kuang05.png" path="/assets/renwu/"/>
+    <component id="suoq3j" name="renwu_item.xml" path="/"/>
+    <component id="suoq3k" name="c5.xml" path="/"/>
   </resources>
   <publish name="battle"/>
 </packageDescription>

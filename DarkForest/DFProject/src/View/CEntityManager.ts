@@ -1,12 +1,12 @@
 namespace View {
 	export class CEntityManager {
-		private readonly _battle: CBattle;
+		private readonly _owner: Home;
 		private readonly _gPool: Shared.GPool;
 		private readonly _entities: CEntity[];
 		private readonly _idToEntity: RC.Collections.Dictionary<string, CEntity>;
 
-		constructor(battle: CBattle) {
-			this._battle = battle;
+		constructor(owner: Home) {
+			this._owner = owner;
 			this._gPool = new Shared.GPool();
 			this._entities = [];
 			this._idToEntity = new RC.Collections.Dictionary<string, CEntity>();
@@ -41,7 +41,7 @@ namespace View {
 			this._entities.push(entity);
 
 			Shared.Event.SyncEvent.CreateEntity((<any>entity).constructor.name, param);
-			entity.OnCreated(this._battle, param);
+			entity.OnCreated(this._owner, param);
 			return entity;
 		}
 

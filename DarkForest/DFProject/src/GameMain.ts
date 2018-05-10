@@ -63,12 +63,10 @@ namespace Game {
 		private Update(): void {
 			let dt = Laya.timer.delta;
 			View.UI.UIManager.Update(dt);
-			BattleManager.Update(dt);
 		}
 
 		private OnResize(e: laya.events.Event): void {
 			View.UI.UIManager.OnResize(e);
-			BattleManager.OnResize(e);
 		}
 	}
 }

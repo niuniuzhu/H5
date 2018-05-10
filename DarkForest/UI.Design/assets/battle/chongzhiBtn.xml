@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="154,63" extention="Button">
-  <Button/>
-  <controller name="button" pages="0,up,1,down,2,over,3,selectedOver"/>
+<component size="220,84" extention="Button">
+  <controller name="button" pages="0,up,1,down,2,over,3,selectedOver" selected="0"/>
   <displayList>
-    <image id="n1" src="gkbm1i" name="n1" xy="0,0">
-      <relation target="" sidePair="width,height"/>
-    </image>
+    <image id="n1" name="n1" src="gkbm1i" xy="52,15"/>
   </displayList>
+  <Button/>
 </component>
