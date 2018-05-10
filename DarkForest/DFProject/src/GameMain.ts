@@ -6,7 +6,7 @@ namespace Game {
 			Laya.stage.alignH = Laya.Stage.ALIGN_LEFT;
 			Laya.stage.alignV = Laya.Stage.ALIGN_TOP;
 			Laya.stage.screenMode = Laya.Stage.SCREEN_VERTICAL;
-			// laya.utils.Stat.show(0, 0);
+			laya.utils.Stat.show(0, 0);
 			this.LoadDefs();
 		}
 

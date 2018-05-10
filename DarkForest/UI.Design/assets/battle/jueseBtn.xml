@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="237,90">
+<component size="237,90" extention="Button">
   <displayList>
     <text id="n0_suoq" name="n0" xy="80,27" size="154,29" fontSize="22" color="#c5bff3" align="center" autoSize="none" text="孤独的流浪者"/>
     <loader id="n1_suoq" name="n1" xy="0,0" size="90,90" url="ui://ytvu69qhsuoq38" fill="scale"/>
   </displayList>
+  <Button/>
 </component>
