@@ -3,6 +3,13 @@
 		"mine": 300,
 		"energy": 200
 	},
+	"preloads": [
+		"global.fui,0",
+		"global@atlas0.png,1",
+		"battle.fui,0",
+		"battle@atlas0.png,1",
+		"battle@atlas0_1.png,1"
+	],
 	"maps": {
 		"m0": {
 			"name": "test",

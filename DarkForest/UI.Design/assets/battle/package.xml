@@ -86,6 +86,8 @@
     <image id="suoq3i" name="kuang05.png" path="/assets/renwu/"/>
     <component id="suoq3j" name="renwu_item.xml" path="/"/>
     <component id="suoq3k" name="c5.xml" path="/"/>
+    <component id="m44e3l" name="hp_bar.xml" path="/"/>
+    <component id="cnqw3m" name="skip_btn.xml" path="/"/>
   </resources>
   <publish name="battle"/>
 </packageDescription>

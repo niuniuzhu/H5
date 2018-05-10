@@ -23,12 +23,11 @@ namespace Game {
 
 		private LoadUIRes(): void {
 			console.log("loading res...");
-			let res = ["global", "battle"];
+			let preloads = Shared.Defs.GetPreloads();
 			let urls = [];
-			let i = 0;
-			for (let u of res) {
-				urls[i++] = { url: "res/ui/" + u + "@atlas0.png", type: Laya.Loader.IMAGE };
-				urls[i++] = { url: "res/ui/" + u + ".fui", type: Laya.Loader.BUFFER }
+			for (let u of preloads) {
+				let ss = u.split(",");
+				urls.push({ url: "res/ui/" + ss[0], type: ss[1] == "0" ? Laya.Loader.BUFFER : Laya.Loader.IMAGE });
 			}
 			Laya.loader.load(urls, Laya.Handler.create(this, this.OnUIResLoadComplete));
 		}

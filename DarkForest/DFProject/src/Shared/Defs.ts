@@ -13,6 +13,11 @@ namespace Shared {
 			return ht;
 		}
 
+		public static GetPreloads(): string[] {
+			let arr = RC.Utils.Hashtable.GetArray(Defs._defs, "preloads");
+			return arr;
+		}
+
 		public static GetMap(id: string): pair {
 			let ht = RC.Utils.Hashtable.GetMap(Defs._defs, "maps");
 			let defaultHt = RC.Utils.Hashtable.GetMap(ht, "default");

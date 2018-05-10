@@ -20,12 +20,11 @@ var Game;
         }
         LoadUIRes() {
             console.log("loading res...");
-            let res = ["global", "battle"];
+            let preloads = Shared.Defs.GetPreloads();
             let urls = [];
-            let i = 0;
-            for (let u of res) {
-                urls[i++] = { url: "res/ui/" + u + "@atlas0.png", type: Laya.Loader.IMAGE };
-                urls[i++] = { url: "res/ui/" + u + ".fui", type: Laya.Loader.BUFFER };
+            for (let u of preloads) {
+                let ss = u.split(",");
+                urls.push({ url: "res/ui/" + ss[0], type: ss[1] == "0" ? Laya.Loader.BUFFER : Laya.Loader.IMAGE });
             }
             Laya.loader.load(urls, Laya.Handler.create(this, this.OnUIResLoadComplete));
         }
@@ -83,6 +82,10 @@ var Shared;
         static GetUser() {
             let ht = RC.Utils.Hashtable.GetMap(Defs._defs, "user");
             return ht;
+        }
+        static GetPreloads() {
+            let arr = RC.Utils.Hashtable.GetArray(Defs._defs, "preloads");
+            return arr;
         }
         static GetMap(id) {
             let ht = RC.Utils.Hashtable.GetMap(Defs._defs, "maps");
@@ -1347,19 +1350,156 @@ var View;
             constructor(owner) {
                 this._owner = owner;
                 this._root = owner.root.getChild("c2").asCom;
+                this._p1hpCom = this._root.getChild("p1hp").asProgress;
+                this._p2hpCom = this._root.getChild("p2hp").asProgress;
+                this._p1FightAni = this._root.getChild("n14").asMovieClip;
+                this._p2FightAni = this._root.getChild("n15").asMovieClip;
+                this._resultPanel = fairygui.UIPackage.createObject("battle", "fight_result").asCom;
+                this._resultPanel.setSize(fairygui.GRoot.inst.width, fairygui.GRoot.inst.height);
+                this._resultPanel.addRelation(fairygui.GRoot.inst, fairygui.RelationType.Size);
+                this._resultPanel.getChild("back_btn").onClick(this, (e) => {
+                    fairygui.GRoot.inst.removeChild(this._resultPanel);
+                    this._owner.panelIndex = 0;
+                });
+                let skipBtn = this._root.getChild("skip_btn").asCom;
+                skipBtn.onClick(this, this.Skip);
+                this._p1Records = new RC.Collections.Queue();
+                this._p2Records = new RC.Collections.Queue();
             }
             Dispose() {
+                this._resultPanel.dispose();
             }
             Enter() {
+                this._p1hpCom.max = FightPanel.MAX_HP;
+                this._p1hpCom.value = FightPanel.MAX_HP;
+                this._p2hpCom.max = FightPanel.MAX_HP;
+                this._p2hpCom.value = FightPanel.MAX_HP;
+                this._p1hp = FightPanel.MAX_HP;
+                this._p2hp = FightPanel.MAX_HP;
+                this.CreateOpponent();
+                this.PerformFight();
+                this._root.getChild("atk0").text = View.CUser.atk.toString();
+                this._root.getChild("def0").text = View.CUser.def.toString();
+                this._root.getChild("atk1").text = this._opAtk.toString();
+                this._root.getChild("def1").text = this._opDef.toString();
+                this.PlayRecord();
             }
             Exit() {
+                this._p1Records.clear();
+                this._p2Records.clear();
             }
             Update(deltaTime) {
             }
             OnResize(e) {
             }
+            CreateOpponent() {
+                this._opAtk = RC.Numerics.MathUtils.Round(RC.Numerics.MathUtils.Max(Math.random() * 20 + 10, View.CUser.atk + (Math.random() * 40 - 20)));
+                this._opDef = RC.Numerics.MathUtils.Round(RC.Numerics.MathUtils.Max(Math.random() * 20 + 10, View.CUser.def + (Math.random() * 40 - 20)));
+            }
+            PerformFight() {
+                let userHp = FightPanel.MAX_HP;
+                let opHp = FightPanel.MAX_HP;
+                let result = 0;
+                for (let i = 0; i < FightPanel.MAX_ROUND; ++i) {
+                    let hurt0 = RC.Numerics.MathUtils.Max(0, View.CUser.atk - this._opDef);
+                    hurt0 += Math.random() * hurt0 * 0.4 - hurt0 * 0.2;
+                    let hurt1 = RC.Numerics.MathUtils.Max(0, this._opAtk - View.CUser.def);
+                    hurt1 += Math.random() * hurt1 * 0.4 - hurt1 * 0.2;
+                    hurt0 = RC.Numerics.MathUtils.Round(hurt0);
+                    hurt1 = RC.Numerics.MathUtils.Round(hurt1);
+                    this._p1Records.enqueue(hurt1);
+                    this._p2Records.enqueue(hurt0);
+                    userHp -= hurt1;
+                    opHp -= hurt0;
+                    if (opHp <= 0 || userHp <= 0) {
+                        break;
+                    }
+                }
+            }
+            Skip() {
+                while (this._p1Records.size() > 0) {
+                    this.PreformP1();
+                }
+                while (this._p2Records.size() > 0) {
+                    this.PreformP2();
+                }
+                this.Settlement();
+            }
+            PlayRecord() {
+                if (this._p1Records.size() == 0 && this._p2Records.size() == 0) {
+                    this.Settlement();
+                }
+                else {
+                    let timer = new laya.utils.Timer();
+                    timer.once(FightPanel.REPLAY_INTERVAL, this, this.PlayAni);
+                }
+            }
+            PlayAni() {
+                if (this._p1Records.size() > 0) {
+                    this._p1FightAni.setPlaySettings(0, -1, 1, 0, new laya.utils.Handler(this, this.OnP1AniComplete));
+                    this._p1FightAni.playing = true;
+                }
+                if (this._p2Records.size() > 0) {
+                    this._p2FightAni.setPlaySettings(0, -1, 1, 0, new laya.utils.Handler(this, this.OnP2AniComplete));
+                    this._p2FightAni.playing = true;
+                }
+            }
+            OnP1AniComplete() {
+                if (this._p1Records.size() == 0)
+                    return;
+                this.PreformP1();
+                this._p1FightAni.playing = false;
+                if (!this._p2FightAni.playing)
+                    this.PlayRecord();
+            }
+            OnP2AniComplete() {
+                if (this._p2Records.size() == 0)
+                    return;
+                this.PreformP2();
+                this._p2FightAni.playing = false;
+                if (!this._p1FightAni.playing)
+                    this.PlayRecord();
+            }
+            PreformP1() {
+                let hurt = this._p1Records.dequeue();
+                this._p1hp -= hurt;
+                this._p1hpCom.value = this._p1hp;
+            }
+            PreformP2() {
+                let hurt = this._p2Records.dequeue();
+                this._p2hp -= hurt;
+                this._p2hpCom.value = this._p2hp;
+            }
+            Settlement() {
+                fairygui.GRoot.inst.addChild(this._resultPanel);
+                this._resultPanel.center();
+                let mine;
+                let energy;
+                if (this._p1hp >= this._p2hp) {
+                    mine = (Math.random() * 80 + 80);
+                    energy = (Math.random() * 50 + 50);
+                    this._resultPanel.getController("c1").selectedIndex = 0;
+                }
+                else {
+                    mine = (Math.random() * 30 + 30);
+                    energy = (Math.random() * 10 + 10);
+                    this._resultPanel.getController("c1").selectedIndex = 1;
+                }
+                mine = RC.Numerics.MathUtils.Round(mine);
+                energy = RC.Numerics.MathUtils.Round(energy);
+                View.CUser.G_MINE += mine;
+                View.CUser.G_ENERGY += energy;
+                this._resultPanel.getChild("mine").asTextField.text = mine.toString();
+                this._resultPanel.getChild("energy").asTextField.text = energy.toString();
+            }
         }
+        FightPanel.MAX_HP = 300;
+        FightPanel.MAX_ROUND = 20;
+        FightPanel.REPLAY_INTERVAL = 300;
         UI.FightPanel = FightPanel;
+        class FightRecord {
+        }
+        UI.FightRecord = FightRecord;
     })(UI = View.UI || (View.UI = {}));
 })(View || (View = {}));
 var View;
@@ -1377,13 +1517,13 @@ var View;
                 this._def = this._root.getChild("def").asTextField;
                 this.UpdateResources();
                 let tansuoBtn = this._root.getChild("tansuo_btn");
-                tansuoBtn.onClick(this, (e) => { this._owner.controller.selectedIndex = 1; });
+                tansuoBtn.onClick(this, (e) => { this._owner.panelIndex = 2; });
                 let juseBtn = this._root.getChild("juse_btn");
-                juseBtn.onClick(this, (e) => { this._owner.controller.selectedIndex = 3; });
+                juseBtn.onClick(this, (e) => { this._owner.panelIndex = 3; });
                 let renwuBtn = this._root.getChild("renwu_btn");
-                renwuBtn.onClick(this, (e) => { this._owner.controller.selectedIndex = 4; });
+                renwuBtn.onClick(this, (e) => { this._owner.panelIndex = 4; });
                 let xiaoxiBtn = this._root.getChild("xiaoxi_btn");
-                xiaoxiBtn.onClick(this, (e) => { this._owner.controller.selectedIndex = 5; });
+                xiaoxiBtn.onClick(this, (e) => { this._owner.panelIndex = 5; });
                 let jiansheBtn = this._root.getChild("jianshe_btn");
                 jiansheBtn.onClick(this, (e) => {
                     if (this._buildPanel == null) {
@@ -1408,6 +1548,7 @@ var View;
                 this._home.Dispose();
             }
             Enter() {
+                this.UpdateResources();
             }
             Exit() {
             }
@@ -1470,7 +1611,7 @@ var View;
                 this._owner = owner;
                 this._root = owner.root.getChild("c5").asCom;
                 let backBtn = this._root.getChild("back_btn");
-                backBtn.onClick(this, (e) => { this._owner.controller.selectedIndex = 0; });
+                backBtn.onClick(this, (e) => { this._owner.panelIndex = 0; });
             }
             Dispose() {
             }
@@ -1507,7 +1648,7 @@ var View;
                     this._owner.homePanel.SetName(this._root.getChild("n12").asTextInput.text);
                 });
                 let backBtn = this._root.getChild("back_btn");
-                backBtn.onClick(this, (e) => { this._owner.controller.selectedIndex = 0; });
+                backBtn.onClick(this, (e) => { this._owner.panelIndex = 0; });
             }
             Dispose() {
             }
@@ -1539,9 +1680,9 @@ var View;
                 this._owner = owner;
                 this._root = owner.root.getChild("c1").asCom;
                 let searchBtn = this._root.getChild("search_btn");
-                searchBtn.onClick(this, (e) => { this._owner.controller.selectedIndex = 2; });
+                searchBtn.onClick(this, (e) => { this._owner.panelIndex = 2; });
                 let backBtn = this._root.getChild("back_btn");
-                backBtn.onClick(this, (e) => { this._owner.controller.selectedIndex = 0; });
+                backBtn.onClick(this, (e) => { this._owner.panelIndex = 0; });
             }
             Dispose() {
             }
@@ -1566,7 +1707,7 @@ var View;
                 this._owner = owner;
                 this._root = owner.root.getChild("c4").asCom;
                 let backBtn = this._root.getChild("back_btn");
-                backBtn.onClick(this, (e) => { this._owner.controller.selectedIndex = 0; });
+                backBtn.onClick(this, (e) => { this._owner.panelIndex = 0; });
             }
             Dispose() {
             }

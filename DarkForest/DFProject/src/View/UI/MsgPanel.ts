@@ -8,7 +8,7 @@ namespace View.UI {
 			this._root = owner.root.getChild("c5").asCom;
 
 			let backBtn = this._root.getChild("back_btn");
-			backBtn.onClick(this, (e) => { this._owner.controller.selectedIndex = 0 });
+			backBtn.onClick(this, (e) => { this._owner.panelIndex = 0 });
 		}
 
 		public Dispose(): void {

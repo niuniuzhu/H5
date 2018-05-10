@@ -1,22 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="523,567" designImage="ui://ytvu69qhsuoq2i">
+<component size="523,567">
   <controller name="c1" pages="0,,1," selected="0"/>
   <displayList>
-    <image id="n0_suoq" name="n0" src="suoq2l" xy="0,72"/>
-    <image id="n11_suoq" name="n11" src="suoq2n" xy="156,0">
+    <graph id="n12_cnqw" name="n12" xy="0,0" size="523,567" alpha="0.5" type="rect" lineSize="0" fillColor="#ff000000">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <image id="n0_suoq" name="n0" src="suoq2l" xy="0,72" group="n13_cnqw"/>
+    <image id="n11_suoq" name="n11" src="suoq2n" xy="156,0" group="n13_cnqw">
       <gearDisplay controller="c1" pages="1"/>
     </image>
-    <image id="n1_suoq" name="n1" src="suoq2m" xy="157,0">
+    <image id="n1_suoq" name="n1" src="suoq2m" xy="157,0" group="n13_cnqw">
       <gearDisplay controller="c1" pages="0"/>
     </image>
-    <image id="n2_suoq" name="n2" src="gkbm19" xy="259,283"/>
-    <image id="n3_suoq" name="n3" src="gkbm1l" xy="255,195"/>
-    <text id="n4_suoq" name="n4" xy="107,192" size="139,39" fontSize="30" color="#55acff" bold="true" text="获得矿石:"/>
-    <text id="n5_suoq" name="n5" xy="107,278" size="139,39" fontSize="30" color="#55acff" bold="true" text="获得能源:"/>
-    <text id="n6_suoq" name="n6" xy="291,192" size="124,39" fontSize="30" color="#ffd200" bold="true" text="4327897"/>
-    <text id="n7_suoq" name="n7" xy="291,278" size="90,39" fontSize="30" color="#ffd200" bold="true" text="28493"/>
-    <component id="n10_suoq" name="n10" src="suoq2r" xy="151,455">
+    <image id="n2_suoq" name="n2" src="gkbm19" xy="259,283" group="n13_cnqw"/>
+    <image id="n3_suoq" name="n3" src="gkbm1l" xy="255,195" group="n13_cnqw"/>
+    <text id="n4_suoq" name="n4" xy="107,192" size="139,39" group="n13_cnqw" fontSize="30" color="#55acff" bold="true" text="获得矿石:"/>
+    <text id="n5_suoq" name="n5" xy="107,278" size="139,39" group="n13_cnqw" fontSize="30" color="#55acff" bold="true" text="获得能源:"/>
+    <text id="n6_suoq" name="mine" xy="291,192" size="10,39" group="n13_cnqw" fontSize="30" color="#ffd200" bold="true" text=""/>
+    <text id="n7_suoq" name="energy" xy="291,278" size="10,39" group="n13_cnqw" fontSize="30" color="#ffd200" bold="true" text=""/>
+    <component id="n10_suoq" name="back_btn" src="suoq2r" xy="151,455" group="n13_cnqw">
       <Button title="返 回" titleFontSize="30"/>
     </component>
+    <group id="n13_cnqw" name="n13" xy="0,0" size="523,567" advanced="true">
+      <relation target="" sidePair="center-center,middle-middle"/>
+    </group>
   </displayList>
 </component>

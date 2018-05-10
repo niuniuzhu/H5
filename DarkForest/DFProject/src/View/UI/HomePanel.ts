@@ -22,7 +22,7 @@ namespace View.UI {
 			this.UpdateResources();
 
 			let tansuoBtn = this._root.getChild("tansuo_btn");
-			tansuoBtn.onClick(this, (e) => { this._owner.panelIndex = 1 });
+			tansuoBtn.onClick(this, (e) => { this._owner.panelIndex = 2 });
 
 			let juseBtn = this._root.getChild("juse_btn");
 			juseBtn.onClick(this, (e) => { this._owner.panelIndex = 3 });
@@ -62,6 +62,7 @@ namespace View.UI {
 		}
 
 		public Enter(): void {
+			this.UpdateResources();
 		}
 
 		public Exit(): void {
