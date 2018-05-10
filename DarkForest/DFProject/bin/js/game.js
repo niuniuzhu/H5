@@ -191,19 +191,19 @@ var Shared;
         Dispose() {
             this._occupied.clear();
         }
-        WorldToTile(point) {
-            let v = this._worldToLocalMat.TransformPoint(point);
-            v.x = RC.Numerics.MathUtils.Floor(v.x);
-            v.y = RC.Numerics.MathUtils.Floor(v.y);
+        WorldToLocal(worldPoint) {
+            let v = this._worldToLocalMat.TransformPoint(worldPoint);
+            v.x = RC.Numerics.MathUtils.Ceil(v.x);
+            v.y = 0;
             v.z = RC.Numerics.MathUtils.Floor(v.z);
             return v;
         }
-        TileToWorld(point) {
-            return this._localToWorldMat.TransformPoint(point);
+        LocalToWorld(localPoint) {
+            return this._localToWorldMat.TransformPoint(localPoint);
         }
-        CheckOccupies(localCenter, length, depth) {
-            let topLeftX = localCenter.x - RC.Numerics.MathUtils.Floor(length * 0.5);
-            let topLeftZ = localCenter.z - RC.Numerics.MathUtils.Floor(depth * 0.5);
+        CheckOccupies(localPoint, length, depth) {
+            let topLeftX = localPoint.x - length + 1;
+            let topLeftZ = localPoint.z;
             for (let x = 0; x < length; ++x) {
                 for (let z = 0; z < depth; ++z) {
                     if (this.IsOccupied(new RC.Numerics.Vec3(x + topLeftX, 0, z + topLeftZ)))
@@ -212,10 +212,10 @@ var Shared;
             }
             return true;
         }
-        RemoveOccupies(localCenter, length, depth) {
+        RemoveOccupies(localPoint, length, depth) {
             let keys = [];
-            let topLeftX = localCenter.x - RC.Numerics.MathUtils.Floor(length * 0.5);
-            let topLeftZ = localCenter.z - RC.Numerics.MathUtils.Floor(depth * 0.5);
+            let topLeftX = localPoint.x - length + 1;
+            let topLeftZ = localPoint.z;
             for (let x = 0; x < length; ++x) {
                 for (let z = 0; z < depth; ++z) {
                     let key = this.RemoveOccupy(new RC.Numerics.Vec3(x + topLeftX, 0, z + topLeftZ));
@@ -225,10 +225,10 @@ var Shared;
             }
             return keys;
         }
-        SetOccupies(localCenter, length, depth) {
+        SetOccupies(localPoint, length, depth) {
             let keys = [];
-            let topLeftX = localCenter.x - RC.Numerics.MathUtils.Floor(length * 0.5);
-            let topLeftZ = localCenter.z - RC.Numerics.MathUtils.Floor(depth * 0.5);
+            let topLeftX = localPoint.x - length + 1;
+            let topLeftZ = localPoint.z;
             for (let x = 0; x < length; ++x) {
                 for (let z = 0; z < depth; ++z) {
                     let key = this.SetOccupy(new RC.Numerics.Vec3(x + topLeftX, 0, z + topLeftZ));
@@ -471,7 +471,7 @@ var Shared;
                 let e = this.Get();
                 e._type = UIEvent.WIN;
                 e.i0 = team;
-                e.BeginInvoke();
+                e.Invoke();
             }
             static EntityCreated(target) {
                 let e = this.Get();
@@ -493,12 +493,24 @@ var Shared;
                 e.o0 = value;
                 e.Invoke();
             }
+            static StartLayout() {
+                let e = this.Get();
+                e._type = UIEvent.START_LAYOUT;
+                e.Invoke();
+            }
+            static EndLayout() {
+                let e = this.Get();
+                e._type = UIEvent.END_LAYOUT;
+                e.Invoke();
+            }
         }
         UIEvent.WIN = 10010;
         UIEvent.ENTITY_CREATED = 10020;
         UIEvent.ENTITY_DESTROIED = 10021;
         UIEvent.ENTITY_ATTR_CHANGED = 10023;
         UIEvent.USE_SKILL = 10030;
+        UIEvent.START_LAYOUT = 10050;
+        UIEvent.END_LAYOUT = 10051;
         UIEvent.POOL = new RC.Collections.Stack();
         Event.UIEvent = UIEvent;
     })(Event = Shared.Event || (Shared.Event = {}));
@@ -696,8 +708,6 @@ var View;
             this._graphicManager = new View.GraphicManager(this);
             this._context = new Shared.UpdateContext();
             this._camera = new View.Camera();
-            this._camera.seekerPos = new RC.Numerics.Vec3((this._data.size.x - fairygui.GRoot.inst.width) * 0.5, 0, (this._data.size.y - fairygui.GRoot.inst.height) * -0.5);
-            this._camera.position = this._camera.seekerPos;
             this._camera.cameraTRSChangedHandler = this._graphicManager.OnCameraTRSChanged.bind(this._graphicManager);
             this._graphic = this._graphicManager.CreateGraphic(View.MapGraphic);
             this._graphic.Load(this._data.model);
@@ -771,6 +781,7 @@ var View;
             this._position.CopyFrom(value);
             if (this._graphic != null)
                 this._graphic.position = this._position;
+            this.OnPositionChanged();
         }
         get footprint() { return this._data.footprint.Clone(); }
         get battle() { return this._battle; }
@@ -796,6 +807,8 @@ var View;
             this._battle = null;
             this._data = null;
         }
+        OnPositionChanged() {
+        }
         MarkToDestroy() {
             this._markToDestroy = true;
         }
@@ -811,6 +824,8 @@ var View;
             super();
             this._occupies = [];
         }
+        get tilePoint() { return this._tilePoint.Clone(); }
+        set tilePoint(value) { this._tilePoint = value.Clone(); }
         get occupies() { return this._occupies; }
         set occupies(value) {
             this._occupies.splice(0);
@@ -818,19 +833,20 @@ var View;
                 this._occupies.push(key);
             }
         }
-        ContainsPoint(worldPoint) {
-            let tileSpacePos = this._battle.tile.WorldToTile(this._position);
-            let tileSpacePoint = this._battle.tile.WorldToTile(worldPoint);
-            let halfX = RC.Numerics.MathUtils.Floor(this._data.footprint.x * 0.5);
-            let halfZ = RC.Numerics.MathUtils.Floor(this._data.footprint.z * 0.5);
-            let minX = tileSpacePos.x - halfX;
-            let maxX = minX + this._data.footprint.x;
-            let minZ = tileSpacePos.z - halfZ;
-            let maxZ = minZ + this._data.footprint.z;
-            if (tileSpacePoint.x < minX ||
-                tileSpacePoint.z < minZ ||
-                tileSpacePoint.x > maxX ||
-                tileSpacePoint.z > maxZ)
+        SnapToTile() {
+            this._tilePoint = this._battle.tile.WorldToLocal(this._position);
+            this.position = this._battle.tile.LocalToWorld(this._tilePoint);
+        }
+        ContainsPoint(tileSpaceTouchPoint) {
+            let tileSpacePos = this._battle.tile.WorldToLocal(this._position);
+            let minX = tileSpacePos.x - this._data.footprint.x + 1;
+            let maxX = tileSpacePos.x;
+            let minZ = tileSpacePos.z;
+            let maxZ = minZ + this._data.footprint.z - 1;
+            if (tileSpaceTouchPoint.x < minX ||
+                tileSpaceTouchPoint.z < minZ ||
+                tileSpaceTouchPoint.x > maxX ||
+                tileSpaceTouchPoint.z > maxZ)
                 return false;
             return true;
         }
@@ -911,30 +927,26 @@ var View;
             this._tileToEntity.clear();
         }
         CanPlace(building) {
-            let localPoint = this.WorldToTile(building.position);
             let footprint = building.footprint;
-            return this.CheckOccupies(localPoint, footprint.x, footprint.z);
+            return this.CheckOccupies(building.tilePoint, footprint.x, footprint.z);
         }
         PlaceBuilding(building) {
-            let localPoint = this.WorldToTile(building.position);
             let footprint = building.footprint;
-            if (!this.CheckOccupies(localPoint, footprint.x, footprint.z))
-                return false;
-            let keys = this.SetOccupies(localPoint, footprint.x, footprint.z);
+            let keys = this.SetOccupies(building.tilePoint, footprint.x, footprint.z);
             building.occupies = keys;
             for (let key of keys) {
                 this._tileToEntity.setValue(key, building);
             }
-            return true;
         }
         RemoveBuilding(building) {
             for (let key of building.occupies) {
                 this.RemoveOccupyByKey(key);
                 this._tileToEntity.remove(key);
             }
+            building.occupies.splice(0);
         }
         GetBuilding(worldPosition) {
-            let localPoint = this.WorldToTile(worldPosition);
+            let localPoint = this.WorldToLocal(worldPosition);
             let key = this.EncodePoint(localPoint.x, localPoint.z);
             return this._tileToEntity.getValue(key);
         }
@@ -954,16 +966,18 @@ var View;
         Steup(srcBuilding) {
             this._srcBuilding = srcBuilding;
             this._srcBuilding.graphic.visible = false;
+            this.tilePoint = this._srcBuilding.tilePoint;
+            this.position = this._srcBuilding.position;
             this._graphic.alpha = 0.6;
             this._battle.tile.RemoveBuilding(this._srcBuilding);
         }
         Apply() {
             if (this._battle.tile.CanPlace(this)) {
-                this._srcBuilding.position = this._position;
+                this._srcBuilding.tilePoint = this._tilePoint;
                 this._srcBuilding.graphic.visible = true;
+                this._srcBuilding.position = this._position;
                 this._battle.tile.PlaceBuilding(this._srcBuilding);
                 this.MarkToDestroy();
-                console.log("apply");
                 return true;
             }
             return false;
@@ -972,7 +986,6 @@ var View;
             this._srcBuilding.graphic.visible = true;
             this._battle.tile.PlaceBuilding(this._srcBuilding);
             this.MarkToDestroy();
-            console.log("cancel");
         }
     }
     View.EditingBuilding = EditingBuilding;
@@ -1124,11 +1137,12 @@ var View;
             this._owner = owner;
         }
         Enter(param) {
+            Shared.Event.UIEvent.StartLayout();
             this._owner.battle.graphic.sprite.displayObject.on(Laya.Event.MOUSE_DOWN, this, this.OnTouchBegin);
             this._dragingBuilding = false;
             this._touchMovied = false;
             let srcBuilding = param[0];
-            this._editingBuilding = this._owner.battle.CreateEditingBuilding(srcBuilding.id, srcBuilding.position);
+            this._editingBuilding = this._owner.battle.CreateEditingBuilding(srcBuilding.id);
             this._editingBuilding.Steup(srcBuilding);
             let touchPoint = param[1];
             if (touchPoint) {
@@ -1139,6 +1153,7 @@ var View;
             this._owner.battle.graphic.sprite.displayObject.off(Laya.Event.MOUSE_DOWN, this, this.OnTouchBegin);
             fairygui.GRoot.inst.displayObject.off(Laya.Event.MOUSE_MOVE, this, this.OnTouchMove);
             fairygui.GRoot.inst.displayObject.off(Laya.Event.MOUSE_UP, this, this.OnTouchEnd);
+            Shared.Event.UIEvent.EndLayout();
         }
         Update(context) {
         }
@@ -1146,8 +1161,10 @@ var View;
             fairygui.GRoot.inst.displayObject.on(Laya.Event.MOUSE_MOVE, this, this.OnTouchMove);
             fairygui.GRoot.inst.displayObject.on(Laya.Event.MOUSE_UP, this, this.OnTouchEnd);
             let worldPoint = this._owner.battle.camera.ScreenToWorld(touchPoint);
-            if (this._editingBuilding.ContainsPoint(worldPoint))
+            let tilePoint = this._owner.battle.tile.WorldToLocal(worldPoint);
+            if (this._editingBuilding.ContainsPoint(tilePoint)) {
                 this._dragingBuilding = true;
+            }
             else
                 this._owner.battle.camera.BeginMove(new RC.Numerics.Vec3(touchPoint.x, 0, -touchPoint.y));
         }
@@ -1158,9 +1175,8 @@ var View;
             this._touchMovied = true;
             if (this._dragingBuilding) {
                 let worldPoint = this._owner.battle.camera.ScreenToWorld(new RC.Numerics.Vec3(evt.stageX, evt.stageY, 0));
-                worldPoint = this._owner.battle.tile.WorldToTile(worldPoint);
-                worldPoint = this._owner.battle.tile.TileToWorld(worldPoint);
                 this._editingBuilding.position = worldPoint;
+                this._editingBuilding.SnapToTile();
             }
             else {
                 let screenPoint = new RC.Numerics.Vec3(evt.stageX, 0, -evt.stageY);
@@ -1273,11 +1289,13 @@ var View;
                     fairygui.GRoot.inst.togglePopup(this._buildPanel, fairygui.GRoot.inst);
                     this._buildPanel.center();
                 });
-                Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.WIN, this.HandleWin);
-                Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.ENTITY_CREATED, this.HandleEntityCreated);
-                Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.ENTITY_DESTROIED, this.HandleEntityDestroied);
-                Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.ENTITY_ATTR_CHANGED, this.HandleEntityAttrChanged);
-                Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.USE_SKILL, this.HandleUseSkill);
+                Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.WIN, this.HandleWin.bind(this));
+                Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.ENTITY_CREATED, this.HandleEntityCreated.bind(this));
+                Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.ENTITY_DESTROIED, this.HandleEntityDestroied.bind(this));
+                Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.ENTITY_ATTR_CHANGED, this.HandleEntityAttrChanged.bind(this));
+                Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.USE_SKILL, this.HandleUseSkill.bind(this));
+                Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.START_LAYOUT, this.HandleStartLayout.bind(this));
+                Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.END_LAYOUT, this.HandleEndLayout.bind(this));
             }
             Leave() {
                 Game.BattleManager.Dispose();
@@ -1288,11 +1306,13 @@ var View;
                 this._root.dispose();
                 this._root = null;
                 this._controller = null;
-                Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.WIN, this.HandleWin);
-                Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.ENTITY_CREATED, this.HandleEntityCreated);
-                Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.ENTITY_DESTROIED, this.HandleEntityDestroied);
-                Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.ENTITY_ATTR_CHANGED, this.HandleEntityAttrChanged);
-                Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.USE_SKILL, this.HandleUseSkill);
+                Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.WIN, this.HandleWin.bind(this));
+                Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.ENTITY_CREATED, this.HandleEntityCreated.bind(this));
+                Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.ENTITY_DESTROIED, this.HandleEntityDestroied.bind(this));
+                Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.ENTITY_ATTR_CHANGED, this.HandleEntityAttrChanged.bind(this));
+                Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.USE_SKILL, this.HandleUseSkill.bind(this));
+                Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.START_LAYOUT, this.HandleStartLayout.bind(this));
+                Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.END_LAYOUT, this.HandleEndLayout.bind(this));
             }
             HandleWin(e) {
             }
@@ -1307,15 +1327,25 @@ var View;
             }
             HandleUseSkill(e) {
             }
+            HandleStartLayout(e) {
+                this._root.getChild("c0").asCom.getController("c1").selectedIndex = 1;
+                this._root.getChild("c0").asCom.getChild("jianshe_btn").asCom.touchable = false;
+            }
+            HandleEndLayout(e) {
+                this._root.getChild("c0").asCom.getController("c1").selectedIndex = 0;
+                this._root.getChild("c0").asCom.getChild("jianshe_btn").asCom.touchable = true;
+            }
             OnBuildItemClick(sender, e) {
                 let bid = sender.asCom.name;
                 let worldPoint = Game.BattleManager.cBattle.camera.ScreenToWorld(new RC.Numerics.Vec3(e.stageX, e.stageY));
-                worldPoint = Game.BattleManager.cBattle.tile.WorldToTile(worldPoint);
-                worldPoint = Game.BattleManager.cBattle.tile.TileToWorld(worldPoint);
                 let building = Game.BattleManager.cBattle.CreateBuilding(bid, worldPoint);
+                building.SnapToTile();
                 fairygui.GRoot.inst.hidePopup();
-                if (!Game.BattleManager.cBattle.tile.PlaceBuilding(building)) {
+                if (!Game.BattleManager.cBattle.tile.CanPlace(building)) {
                     Game.BattleManager.cBattle.input.ChangeState(View.InputStateType.Layout, building);
+                }
+                else {
+                    Game.BattleManager.cBattle.tile.PlaceBuilding(building);
                 }
             }
         }

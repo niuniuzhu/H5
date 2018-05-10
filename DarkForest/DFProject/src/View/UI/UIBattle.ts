@@ -44,11 +44,13 @@ namespace View.UI {
 				this._buildPanel.center();
 			});
 
-			Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.WIN, this.HandleWin);
-			Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.ENTITY_CREATED, this.HandleEntityCreated);
-			Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.ENTITY_DESTROIED, this.HandleEntityDestroied);
-			Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.ENTITY_ATTR_CHANGED, this.HandleEntityAttrChanged);
-			Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.USE_SKILL, this.HandleUseSkill);
+			Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.WIN, this.HandleWin.bind(this));
+			Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.ENTITY_CREATED, this.HandleEntityCreated.bind(this));
+			Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.ENTITY_DESTROIED, this.HandleEntityDestroied.bind(this));
+			Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.ENTITY_ATTR_CHANGED, this.HandleEntityAttrChanged.bind(this));
+			Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.USE_SKILL, this.HandleUseSkill.bind(this));
+			Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.START_LAYOUT, this.HandleStartLayout.bind(this));
+			Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.END_LAYOUT, this.HandleEndLayout.bind(this));
 		}
 
 		public Leave(): void {
@@ -62,11 +64,13 @@ namespace View.UI {
 			this._root = null;
 			this._controller = null;
 
-			Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.WIN, this.HandleWin);
-			Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.ENTITY_CREATED, this.HandleEntityCreated);
-			Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.ENTITY_DESTROIED, this.HandleEntityDestroied);
-			Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.ENTITY_ATTR_CHANGED, this.HandleEntityAttrChanged);
-			Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.USE_SKILL, this.HandleUseSkill);
+			Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.WIN, this.HandleWin.bind(this));
+			Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.ENTITY_CREATED, this.HandleEntityCreated.bind(this));
+			Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.ENTITY_DESTROIED, this.HandleEntityDestroied.bind(this));
+			Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.ENTITY_ATTR_CHANGED, this.HandleEntityAttrChanged.bind(this));
+			Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.USE_SKILL, this.HandleUseSkill.bind(this));
+			Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.START_LAYOUT, this.HandleStartLayout.bind(this));
+			Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.END_LAYOUT, this.HandleEndLayout.bind(this));
 		}
 
 		private HandleWin(e: Shared.Event.BaseEvent): void {
@@ -87,15 +91,26 @@ namespace View.UI {
 		private HandleUseSkill(e: Shared.Event.BaseEvent): void {
 		}
 
+		private HandleStartLayout(e: Shared.Event.BaseEvent): void {
+			this._root.getChild("c0").asCom.getController("c1").selectedIndex = 1;
+			this._root.getChild("c0").asCom.getChild("jianshe_btn").asCom.touchable = false;
+		}
+
+		private HandleEndLayout(e: Shared.Event.BaseEvent): void {
+			this._root.getChild("c0").asCom.getController("c1").selectedIndex = 0;
+			this._root.getChild("c0").asCom.getChild("jianshe_btn").asCom.touchable = true;
+		}
+
 		private OnBuildItemClick(sender: fairygui.GObject, e: laya.events.Event): void {
 			let bid = sender.asCom.name;
 			let worldPoint = Game.BattleManager.cBattle.camera.ScreenToWorld(new RC.Numerics.Vec3(e.stageX, e.stageY));
-			worldPoint = Game.BattleManager.cBattle.tile.WorldToTile(worldPoint);
-			worldPoint = Game.BattleManager.cBattle.tile.TileToWorld(worldPoint);
 			let building = Game.BattleManager.cBattle.CreateBuilding(bid, worldPoint);
+			building.SnapToTile();
 			fairygui.GRoot.inst.hidePopup();
-			if (!Game.BattleManager.cBattle.tile.PlaceBuilding(building)) {
+			if (!Game.BattleManager.cBattle.tile.CanPlace(building)) {
 				Game.BattleManager.cBattle.input.ChangeState(InputStateType.Layout, building);
+			} else {
+				Game.BattleManager.cBattle.tile.PlaceBuilding(building);
 			}
 		}
 	}

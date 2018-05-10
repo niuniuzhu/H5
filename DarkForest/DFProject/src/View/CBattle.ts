@@ -32,9 +32,9 @@ namespace View {
 			this._context = new Shared.UpdateContext();
 
 			this._camera = new Camera();
-			this._camera.seekerPos = new RC.Numerics.Vec3((this._data.size.x - fairygui.GRoot.inst.width) * 0.5, 0,
-				(this._data.size.y - fairygui.GRoot.inst.height) * -0.5);
-			this._camera.position = this._camera.seekerPos;
+			// this._camera.seekerPos = new RC.Numerics.Vec3((this._data.size.x - fairygui.GRoot.inst.width) * 0.5, 0,
+			// 	(this._data.size.y - fairygui.GRoot.inst.height) * -0.5);
+			// this._camera.position = this._camera.seekerPos;
 			this._camera.cameraTRSChangedHandler = this._graphicManager.OnCameraTRSChanged.bind(this._graphicManager);
 
 			this._graphic = this._graphicManager.CreateGraphic(MapGraphic);

@@ -17,6 +17,7 @@ namespace View {
 			this._position.CopyFrom(value);
 			if (this._graphic != null)
 				this._graphic.position = this._position;
+			this.OnPositionChanged();
 		}
 
 		public get footprint(): RC.Numerics.Vec3 { return this._data.footprint.Clone(); }
@@ -51,6 +52,9 @@ namespace View {
 			this._graphic = null;
 			this._battle = null;
 			this._data = null;
+		}
+
+		protected OnPositionChanged():void{
 		}
 
 		public MarkToDestroy(): void {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<packageDescription id="c7x5i49r" jpegQuality="80" compressPNG="true">
+<packageDescription id="c7x5i49r" jpegQuality="70" compressPNG="true">
   <resources>
     <movieclip id="iqcm15" name="qtm011.jta" path="/assets/" exported="true"/>
     <sound id="lqz41s" name="click.wav" path="/assets/" exported="true"/>
@@ -23,6 +23,12 @@
     <component id="q4b72i" name="b2.xml" path="/coms/" exported="true"/>
     <component id="q4b72j" name="b3.xml" path="/coms/" exported="true"/>
     <component id="q4b72k" name="b4.xml" path="/coms/" exported="true"/>
+    <component id="suoq2l" name="b5.xml" path="/coms/" exported="true"/>
+    <component id="suoq2m" name="b6.xml" path="/coms/" exported="true"/>
+    <component id="suoq2n" name="b7.xml" path="/coms/" exported="true"/>
+    <component id="suoq2o" name="b8.xml" path="/coms/" exported="true"/>
+    <component id="suoq2p" name="b9.xml" path="/coms/" exported="true"/>
+    <component id="suoq2q" name="b10.xml" path="/coms/" exported="true"/>
   </resources>
   <publish name="global"/>
 </packageDescription>

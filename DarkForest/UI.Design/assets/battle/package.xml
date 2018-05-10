@@ -35,10 +35,10 @@
     <image id="gkbm22" name="nengyuan2.png" path="/assets/tansuo/"/>
     <image id="gkbm23" name="shangtiao.png" path="/assets/tansuo/"/>
     <image id="gkbm24" name="02探索01.jpg" path="/assets/tansuo/"/>
-    <component id="gkbm25" name="c2.xml" path="/"/>
+    <component id="gkbm25" name="c1.xml" path="/"/>
     <component id="gkbm26" name="closeBtn.xml" path="/"/>
     <component id="gkbm27" name="bigBtn.xml" path="/"/>
-    <component id="gkbm28" name="c1.xml" path="/"/>
+    <component id="gkbm28" name="c0.xml" path="/"/>
     <component id="gkbm29" name="buildPanel.xml" path="/" exported="true"/>
     <component id="gkbm2a" name="buildItem.xml" path="/"/>
     <image id="gkbm2b" name="jianshe.png" path="/assets/main/"/>
@@ -46,6 +46,18 @@
     <image id="gkbm2d" name="dui2.png" path="/assets/main/"/>
     <image id="gkbm2e" name="cuo.png" path="/assets/main/"/>
     <image id="gkbm2f" name="dui1.png" path="/assets/main/"/>
+    <component id="suoq2g" name="c2.xml" path="/"/>
+    <image id="suoq2h" name="03战斗01.jpg" path="/assets/zhandou/"/>
+    <image id="suoq2i" name="03战斗02.jpg" path="/assets/zhandou/"/>
+    <image id="suoq2j" name="03战斗03.jpg" path="/assets/zhandou/"/>
+    <image id="suoq2k" name="kuang03.png" path="/assets/zhandou/"/>
+    <image id="suoq2l" name="kuang04.png" path="/assets/zhandou/"/>
+    <image id="suoq2m" name="shengli.png" path="/assets/zhandou/"/>
+    <image id="suoq2n" name="shibai.png" path="/assets/zhandou/"/>
+    <image id="suoq2o" name="tiaoguo.png" path="/assets/zhandou/"/>
+    <image id="suoq2p" name="科幻背景.jpg" path="/assets/zhandou/"/>
+    <component id="suoq2q" name="win.xml" path="/" exported="true"/>
+    <component id="suoq2r" name="btn3.xml" path="/"/>
   </resources>
   <publish name="battle"/>
 </packageDescription>

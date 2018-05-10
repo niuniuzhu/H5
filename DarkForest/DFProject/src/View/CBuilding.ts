@@ -2,7 +2,11 @@
 
 namespace View {
 	export class CBuilding extends CEntity {
-		private _occupies: number[];
+		protected _occupies: number[];
+		protected _tilePoint: RC.Numerics.Vec3;
+
+		public get tilePoint(): RC.Numerics.Vec3 { return this._tilePoint.Clone(); }
+		public set tilePoint(value: RC.Numerics.Vec3) { this._tilePoint = value.Clone(); }
 
 		public get occupies(): number[] { return this._occupies; }
 		public set occupies(value: number[]) {
@@ -17,19 +21,21 @@ namespace View {
 			this._occupies = [];
 		}
 
-		public ContainsPoint(worldPoint: RC.Numerics.Vec3): boolean {
-			let tileSpacePos = this._battle.tile.WorldToTile(this._position);
-			let tileSpacePoint = this._battle.tile.WorldToTile(worldPoint);
-			let halfX = RC.Numerics.MathUtils.Floor(this._data.footprint.x * 0.5);
-			let halfZ = RC.Numerics.MathUtils.Floor(this._data.footprint.z * 0.5);
-			let minX = tileSpacePos.x - halfX;
-			let maxX = minX + this._data.footprint.x;
-			let minZ = tileSpacePos.z - halfZ;
-			let maxZ = minZ + this._data.footprint.z;
-			if (tileSpacePoint.x < minX ||
-				tileSpacePoint.z < minZ ||
-				tileSpacePoint.x > maxX ||
-				tileSpacePoint.z > maxZ)
+		public SnapToTile(): void {
+			this._tilePoint = this._battle.tile.WorldToLocal(this._position);
+			this.position = this._battle.tile.LocalToWorld(this._tilePoint);
+		}
+
+		public ContainsPoint(tileSpaceTouchPoint: RC.Numerics.Vec3): boolean {
+			let tileSpacePos = this._battle.tile.WorldToLocal(this._position);
+			let minX = tileSpacePos.x - this._data.footprint.x + 1;
+			let maxX = tileSpacePos.x;
+			let minZ = tileSpacePos.z;
+			let maxZ = minZ + this._data.footprint.z - 1
+			if (tileSpaceTouchPoint.x < minX ||
+				tileSpaceTouchPoint.z < minZ ||
+				tileSpaceTouchPoint.x > maxX ||
+				tileSpaceTouchPoint.z > maxZ)
 				return false;
 			return true;
 		}

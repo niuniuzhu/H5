@@ -17,21 +17,21 @@ namespace Shared {
 			this._occupied.clear();
 		}
 
-		public WorldToTile(point: RC.Numerics.Vec3): RC.Numerics.Vec3 {
-			let v = this._worldToLocalMat.TransformPoint(point);
-			v.x = RC.Numerics.MathUtils.Floor(v.x);
-			v.y = RC.Numerics.MathUtils.Floor(v.y);
+		public WorldToLocal(worldPoint: RC.Numerics.Vec3): RC.Numerics.Vec3 {
+			let v = this._worldToLocalMat.TransformPoint(worldPoint);
+			v.x = RC.Numerics.MathUtils.Ceil(v.x);
+			v.y = 0;
 			v.z = RC.Numerics.MathUtils.Floor(v.z);
 			return v;
 		}
 
-		public TileToWorld(point: RC.Numerics.Vec3): RC.Numerics.Vec3 {
-			return this._localToWorldMat.TransformPoint(point);
+		public LocalToWorld(localPoint: RC.Numerics.Vec3): RC.Numerics.Vec3 {
+			return this._localToWorldMat.TransformPoint(localPoint);
 		}
 
-		public CheckOccupies(localCenter: RC.Numerics.Vec3, length: number, depth: number): boolean {
-			let topLeftX = localCenter.x - RC.Numerics.MathUtils.Floor(length * 0.5);
-			let topLeftZ = localCenter.z - RC.Numerics.MathUtils.Floor(depth * 0.5);
+		public CheckOccupies(localPoint: RC.Numerics.Vec3, length: number, depth: number): boolean {
+			let topLeftX = localPoint.x - length + 1;
+			let topLeftZ = localPoint.z;
 			for (let x = 0; x < length; ++x) {
 				for (let z = 0; z < depth; ++z) {
 					if (this.IsOccupied(new RC.Numerics.Vec3(x + topLeftX, 0, z + topLeftZ)))
@@ -41,10 +41,10 @@ namespace Shared {
 			return true;
 		}
 
-		public RemoveOccupies(localCenter: RC.Numerics.Vec3, length: number, depth: number): number[] {
+		public RemoveOccupies(localPoint: RC.Numerics.Vec3, length: number, depth: number): number[] {
 			let keys: number[] = [];
-			let topLeftX = localCenter.x - RC.Numerics.MathUtils.Floor(length * 0.5);
-			let topLeftZ = localCenter.z - RC.Numerics.MathUtils.Floor(depth * 0.5);
+			let topLeftX = localPoint.x - length + 1;
+			let topLeftZ = localPoint.z;
 			for (let x = 0; x < length; ++x) {
 				for (let z = 0; z < depth; ++z) {
 					let key = this.RemoveOccupy(new RC.Numerics.Vec3(x + topLeftX, 0, z + topLeftZ));
@@ -55,10 +55,10 @@ namespace Shared {
 			return keys;
 		}
 
-		public SetOccupies(localCenter: RC.Numerics.Vec3, length: number, depth: number): number[] {
+		public SetOccupies(localPoint: RC.Numerics.Vec3, length: number, depth: number): number[] {
 			let keys: number[] = [];
-			let topLeftX = localCenter.x - RC.Numerics.MathUtils.Floor(length * 0.5);
-			let topLeftZ = localCenter.z - RC.Numerics.MathUtils.Floor(depth * 0.5);
+			let topLeftX = localPoint.x - length + 1;
+			let topLeftZ = localPoint.z;
 			for (let x = 0; x < length; ++x) {
 				for (let z = 0; z < depth; ++z) {
 					let key = this.SetOccupy(new RC.Numerics.Vec3(x + topLeftX, 0, z + topLeftZ));

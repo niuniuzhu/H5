@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="720,1280" designImageLayer="1">
+<component size="720,1280" designImage="ui://ytvu69qhsuoq2h" designImageLayer="1">
   <displayList>
-    <image id="n34_gkbm" name="n34" src="gkbm1x" xy="0,0"/>
-    <image id="n35_gkbm" name="n35" src="gkbm23" xy="0,0"/>
-    <component id="n36_gkbm" name="back_btn" src="gkbm26" xy="596,0"/>
-    <component id="n37_gkbm" name="n37" src="gkbm27" xy="144,459">
-      <Button icon="ui://ytvu69qhgkbm1t"/>
-    </component>
-    <component id="n38_gkbm" name="n38" src="gkbm27" xy="144,659">
-      <Button icon="ui://ytvu69qhgkbm1u"/>
-    </component>
-    <text id="n39_gkbm" name="n39" xy="25,15" size="79,47" fontSize="36" color="#ffffff" bold="true" strokeColor="#000000" text="探索"/>
+    <image id="n0_suoq" name="n0" src="suoq2p" xy="0,0"/>
+    <image id="n1_suoq" name="n1" src="suoq2k" xy="412,10"/>
+    <image id="n2_suoq" name="n2" src="suoq2k" xy="412,121"/>
+    <image id="n3_suoq" name="n3" src="suoq2o" xy="10,611"/>
+    <image id="n4_suoq" name="n4" src="suoq2k" xy="9,1055"/>
+    <image id="n5_suoq" name="n5" src="suoq2k" xy="9,1166"/>
+    <text id="n6_suoq" name="n6" xy="40,1093" size="109,35" fontSize="26" color="#55acff" text="攻击数值"/>
+    <text id="n7_suoq" name="n7" xy="40,1203" size="109,35" fontSize="26" color="#55acff" text="防御数值"/>
+    <text id="n8_suoq" name="n8" xy="444,47" size="109,35" fontSize="26" color="#55acff" text="攻击数值"/>
+    <text id="n9_suoq" name="n9" xy="444,157" size="109,35" fontSize="26" color="#55acff" text="防御数值"/>
+    <text id="n10_suoq" name="n10" xy="153,1093" size="117,35" fontSize="26" color="#55acff" text="46327632"/>
+    <text id="n11_suoq" name="n11" xy="153,1203" size="117,35" fontSize="26" color="#55acff" text="46327632"/>
+    <text id="n12_suoq" name="n12" xy="561,47" size="117,35" fontSize="26" color="#55acff" text="46327632"/>
+    <text id="n13_suoq" name="n13" xy="561,157" size="117,35" fontSize="26" color="#55acff" text="46327632"/>
   </displayList>
 </component>

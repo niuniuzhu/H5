@@ -54,6 +54,9 @@ namespace View {
 			this._touchingBuilding = null;
 			let point = new RC.Numerics.Vec3(evt.stageX, 0, -evt.stageY);
 			this._owner.battle.camera.Move(point);
+			// let p2 = this._owner.battle.camera.ScreenToWorld(new RC.Numerics.Vec3(evt.stageX, evt.stageY, 0));
+			// let p1 = this._owner.battle.tile.WorldToTile(p2);
+			// console.log(`p0:${p2.ToString()}\np1:${p1.ToString()}`);
 		}
 
 		private OnTouchEnd(evt: laya.events.Event): any {
@@ -74,12 +77,13 @@ namespace View {
 		}
 
 		public Enter(param: any[]): void {
+			Shared.Event.UIEvent.StartLayout();
 			this._owner.battle.graphic.sprite.displayObject.on(Laya.Event.MOUSE_DOWN, this, this.OnTouchBegin);
 			this._dragingBuilding = false;
 			this._touchMovied = false;
 
 			let srcBuilding = <CBuilding>param[0];
-			this._editingBuilding = this._owner.battle.CreateEditingBuilding(srcBuilding.id, srcBuilding.position);
+			this._editingBuilding = this._owner.battle.CreateEditingBuilding(srcBuilding.id);
 			this._editingBuilding.Steup(srcBuilding);
 
 			let touchPoint = <RC.Numerics.Vec3>param[1];
@@ -92,6 +96,7 @@ namespace View {
 			this._owner.battle.graphic.sprite.displayObject.off(Laya.Event.MOUSE_DOWN, this, this.OnTouchBegin);
 			fairygui.GRoot.inst.displayObject.off(Laya.Event.MOUSE_MOVE, this, this.OnTouchMove);
 			fairygui.GRoot.inst.displayObject.off(Laya.Event.MOUSE_UP, this, this.OnTouchEnd);
+			Shared.Event.UIEvent.EndLayout();
 		}
 
 		public Update(context: Shared.UpdateContext): void {
@@ -102,8 +107,10 @@ namespace View {
 			fairygui.GRoot.inst.displayObject.on(Laya.Event.MOUSE_UP, this, this.OnTouchEnd);
 
 			let worldPoint = this._owner.battle.camera.ScreenToWorld(touchPoint);
-			if (this._editingBuilding.ContainsPoint(worldPoint))
+			let tilePoint = this._owner.battle.tile.WorldToLocal(worldPoint);
+			if (this._editingBuilding.ContainsPoint(tilePoint)) {
 				this._dragingBuilding = true;
+			}
 			else
 				this._owner.battle.camera.BeginMove(new RC.Numerics.Vec3(touchPoint.x, 0, -touchPoint.y));
 		}
@@ -116,9 +123,8 @@ namespace View {
 			this._touchMovied = true;
 			if (this._dragingBuilding) {
 				let worldPoint = this._owner.battle.camera.ScreenToWorld(new RC.Numerics.Vec3(evt.stageX, evt.stageY, 0));
-				worldPoint = this._owner.battle.tile.WorldToTile(worldPoint);
-				worldPoint = this._owner.battle.tile.TileToWorld(worldPoint);
 				this._editingBuilding.position = worldPoint;
+				this._editingBuilding.SnapToTile();
 			}
 			else {
 				let screenPoint = new RC.Numerics.Vec3(evt.stageX, 0, -evt.stageY);
