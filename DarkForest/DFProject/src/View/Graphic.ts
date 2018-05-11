@@ -20,6 +20,9 @@ namespace View {
 		public get visible(): boolean { return this._root.visible; }
 		public set visible(value: boolean) { this._root.visible = value; }
 
+		public get sortingOrder(): number { return this._root.sortingOrder; }
+		public set sortingOrder(value: number) { this._root.sortingOrder = value; }
+
 		constructor(manager: GraphicManager) {
 			this._manager = manager;
 			this._root = new fairygui.GComponent();

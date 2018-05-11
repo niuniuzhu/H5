@@ -792,16 +792,26 @@ var View;
             this.position = this._owner.tile.LocalToWorld(this._tilePoint);
         }
         ContainsPoint(tileSpaceTouchPoint) {
-            let tileSpacePos = this._owner.tile.WorldToLocal(this._position);
-            let minX = tileSpacePos.x - this._data.footprint.x + 1;
-            let maxX = tileSpacePos.x;
-            let minZ = tileSpacePos.z;
+            let minX = this.tilePoint.x - this._data.footprint.x + 1;
+            let maxX = this.tilePoint.x;
+            let minZ = this.tilePoint.z;
             let maxZ = minZ + this._data.footprint.z - 1;
             if (tileSpaceTouchPoint.x < minX ||
                 tileSpaceTouchPoint.z < minZ ||
                 tileSpaceTouchPoint.x > maxX ||
                 tileSpaceTouchPoint.z > maxZ)
                 return false;
+            return true;
+        }
+        CanPlace() {
+            return this._owner.tile.CanPlace(this);
+        }
+        Place() {
+            if (!this._owner.tile.CanPlace(this)) {
+                return false;
+            }
+            this._owner.tile.PlaceBuilding(this);
+            this._owner.graphicManager.SortGraphics(this._graphic);
             return true;
         }
     }
@@ -973,14 +983,15 @@ var View;
             this.tilePoint = this._srcBuilding.tilePoint;
             this.position = this._srcBuilding.position;
             this._graphic.alpha = 0.6;
+            this._graphic.sortingOrder = 999;
             this._owner.tile.RemoveBuilding(this._srcBuilding);
         }
         Apply() {
-            if (this._owner.tile.CanPlace(this)) {
+            if (this.CanPlace()) {
                 this._srcBuilding.tilePoint = this._tilePoint;
                 this._srcBuilding.graphic.visible = true;
                 this._srcBuilding.position = this._position;
-                this._owner.tile.PlaceBuilding(this._srcBuilding);
+                this._srcBuilding.Place();
                 this.MarkToDestroy();
                 return true;
             }
@@ -988,7 +999,7 @@ var View;
         }
         Cancel() {
             this._srcBuilding.graphic.visible = true;
-            this._owner.tile.PlaceBuilding(this._srcBuilding);
+            this._srcBuilding.Place();
             this.MarkToDestroy();
         }
     }
@@ -1016,6 +1027,8 @@ var View;
         set alpha(value) { this._root.alpha = value; }
         get visible() { return this._root.visible; }
         set visible(value) { this._root.visible = value; }
+        get sortingOrder() { return this._root.sortingOrder; }
+        set sortingOrder(value) { this._root.sortingOrder = value; }
         Dispose() {
             this._root.dispose();
         }
@@ -1050,7 +1063,6 @@ var View;
         constructor(owner) {
             this._owner = owner;
             this._root = new fairygui.GComponent();
-            fairygui.GRoot.inst.addChild(this._root);
             this._graphics = [];
         }
         get battle() { return this._owner; }
@@ -1074,6 +1086,7 @@ var View;
         CreateGraphic(c) {
             let graphic = new c(this);
             this._graphics.push(graphic);
+            this.SortGraphics(graphic);
             return graphic;
         }
         DestroyGraphic(graphic) {
@@ -1083,6 +1096,18 @@ var View;
             graphic.Dispose();
             this._graphics.splice(pos, 1);
             return true;
+        }
+        SortGraphics(graphic) {
+            this._graphics.sort(this.SortFunc.bind(this));
+            let count = this._graphics.length;
+            for (let i = 1; i < count; ++i) {
+                this._graphics[i].sortingOrder = i + 100;
+            }
+        }
+        SortFunc(a, b) {
+            if (a == this._graphics[0] || b == this._graphics[0])
+                return 0;
+            return a.position.z > b.position.z ? -1 : 1;
         }
     }
     View.GraphicManager = GraphicManager;
@@ -1564,11 +1589,11 @@ var View;
                 let worldPoint = this._home.camera.ScreenToWorld(new RC.Numerics.Vec3(e.stageX, e.stageY));
                 let building = this._home.CreateBuilding(bid, worldPoint);
                 building.SnapToTile();
-                if (!this._home.tile.CanPlace(building)) {
+                if (!building.CanPlace()) {
                     this._home.input.ChangeState(View.InputStateType.Layout, building);
                 }
                 else {
-                    this._home.tile.PlaceBuilding(building);
+                    building.Place();
                     this.UpdateBuildings();
                 }
                 fairygui.GRoot.inst.hidePopup();

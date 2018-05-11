@@ -34,6 +34,7 @@
 			],
 			"lvl": [
 				{
+					"build_time":15,
 					"mine": -30,
 					"energy": -20,
 					"power": 50,
@@ -52,6 +53,7 @@
 			],
 			"lvl": [
 				{
+					"build_time":15,
 					"mine": -30,
 					"energy": -20,
 					"power": -10,
@@ -70,6 +72,7 @@
 			],
 			"lvl": [
 				{
+					"build_time":15,
 					"mine": -30,
 					"energy": -20,
 					"power": -6,
@@ -88,6 +91,7 @@
 			],
 			"lvl": [
 				{
+					"build_time":15,
 					"mine": -30,
 					"energy": -20,
 					"power": -4,
@@ -106,6 +110,7 @@
 			],
 			"lvl": [
 				{
+					"build_time":15,
 					"mine": -30,
 					"energy": -20,
 					"power": -4,
@@ -124,6 +129,7 @@
 			],
 			"lvl": [
 				{
+					"build_time":15,
 					"mine": -30,
 					"energy": -20,
 					"power": -4,
@@ -142,6 +148,7 @@
 			],
 			"lvl": [
 				{
+					"build_time":15,
 					"mine": -30,
 					"energy": -20,
 					"power": -4,
@@ -160,6 +167,7 @@
 			],
 			"lvl": [
 				{
+					"build_time":15,
 					"mine": -30,
 					"energy": -20,
 					"power": -4,
@@ -178,6 +186,7 @@
 			],
 			"lvl": [
 				{
+					"build_time":15,
 					"mine": -30,
 					"energy": -20,
 					"power": -4,
@@ -196,6 +205,7 @@
 			],
 			"lvl": [
 				{
+					"build_time":15,
 					"mine": -30,
 					"energy": -20,
 					"power": -4,
@@ -214,6 +224,7 @@
 			],
 			"lvl": [
 				{
+					"build_time":15,
 					"mine": -30,
 					"energy": -20,
 					"power": -4,

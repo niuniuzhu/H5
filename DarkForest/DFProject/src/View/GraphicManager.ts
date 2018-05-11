@@ -13,7 +13,6 @@ namespace View {
 		constructor(owner: Home) {
 			this._owner = owner;
 			this._root = new fairygui.GComponent();
-			fairygui.GRoot.inst.addChild(this._root);
 			this._graphics = [];
 		}
 
@@ -37,6 +36,7 @@ namespace View {
 		public CreateGraphic<T extends Graphic>(c: new (manager: GraphicManager) => T): T {
 			let graphic: Graphic = new c(this);
 			this._graphics.push(graphic);
+			this.SortGraphics(graphic);
 			return <T>graphic;
 		}
 
@@ -47,6 +47,20 @@ namespace View {
 			graphic.Dispose();
 			this._graphics.splice(pos, 1);
 			return true;
+		}
+
+		public SortGraphics(graphic: Graphic): void {
+			this._graphics.sort(this.SortFunc.bind(this));
+			let count = this._graphics.length;
+			for (let i = 1; i < count; ++i) {
+				this._graphics[i].sortingOrder = i + 100;
+			}
+		}
+
+		private SortFunc(a: Graphic, b: Graphic): number {
+			if (a == this._graphics[0] || b == this._graphics[0])
+				return 0;
+			return a.position.z > b.position.z ? -1 : 1;
 		}
 	}
 }

@@ -40,16 +40,28 @@ namespace View {
 		}
 
 		public ContainsPoint(tileSpaceTouchPoint: RC.Numerics.Vec3): boolean {
-			let tileSpacePos = this._owner.tile.WorldToLocal(this._position);
-			let minX = tileSpacePos.x - this._data.footprint.x + 1;
-			let maxX = tileSpacePos.x;
-			let minZ = tileSpacePos.z;
+			let minX = this.tilePoint.x - this._data.footprint.x + 1;
+			let maxX = this.tilePoint.x;
+			let minZ = this.tilePoint.z;
 			let maxZ = minZ + this._data.footprint.z - 1
 			if (tileSpaceTouchPoint.x < minX ||
 				tileSpaceTouchPoint.z < minZ ||
 				tileSpaceTouchPoint.x > maxX ||
 				tileSpaceTouchPoint.z > maxZ)
 				return false;
+			return true;
+		}
+
+		public CanPlace(): boolean {
+			return this._owner.tile.CanPlace(this);
+		}
+
+		public Place(): boolean {
+			if (!this._owner.tile.CanPlace(this)) {
+				return false
+			}
+			this._owner.tile.PlaceBuilding(this);
+			this._owner.graphicManager.SortGraphics(this._graphic);
 			return true;
 		}
 	}

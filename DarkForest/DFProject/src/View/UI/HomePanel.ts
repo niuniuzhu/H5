@@ -1,5 +1,5 @@
 namespace View.UI {
-	export class HomePanel implements IMainPanel{
+	export class HomePanel implements IMainPanel {
 		private _owner: UIMain;
 		private _root: fairygui.GComponent;
 		private _buildPanel: fairygui.GComponent;
@@ -81,10 +81,10 @@ namespace View.UI {
 			let worldPoint = this._home.camera.ScreenToWorld(new RC.Numerics.Vec3(e.stageX, e.stageY));
 			let building = this._home.CreateBuilding(bid, worldPoint);
 			building.SnapToTile();
-			if (!this._home.tile.CanPlace(building)) {
+			if (!building.CanPlace()) {
 				this._home.input.ChangeState(InputStateType.Layout, building);
 			} else {
-				this._home.tile.PlaceBuilding(building);
+				building.Place();
 				this.UpdateBuildings();
 			}
 			fairygui.GRoot.inst.hidePopup();
