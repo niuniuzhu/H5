@@ -51,7 +51,14 @@ namespace View {
 		}
 
 		public GetBuildings(): CBuilding[] {
-			return <CBuilding[]>this._typeToEntity.getValue(CBuilding);
+			let result: CBuilding[] = [];
+			let buildings = <CBuilding[]>this._typeToEntity.getValue(CBuilding);
+			for (let building of buildings) {
+				if (building.markToDestroy || building.underConstruction )
+					continue;
+				result.push(building);
+			}
+			return result;
 		}
 
 		public GetEntity(rid: string): CEntity {

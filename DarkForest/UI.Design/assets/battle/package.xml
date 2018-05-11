@@ -88,6 +88,8 @@
     <component id="suoq3k" name="c5.xml" path="/"/>
     <component id="m44e3l" name="hp_bar.xml" path="/"/>
     <component id="cnqw3m" name="skip_btn.xml" path="/"/>
+    <component id="kq5h3n" name="building_progress_bar.xml" path="/"/>
+    <component id="kq5h3o" name="building_hud.xml" path="/" exported="true"/>
   </resources>
   <publish name="battle"/>
 </packageDescription>

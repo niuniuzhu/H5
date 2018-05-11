@@ -25,6 +25,7 @@ namespace Shared.Model {
 	}
 
 	export class Level {
+		public readonly buildTime:number;
 		public readonly mine: number;
 		public readonly energy: number;
 		public readonly power: number;
@@ -32,6 +33,7 @@ namespace Shared.Model {
 		public readonly def: number;
 
 		constructor(lvl: { [k: string]: any }) {
+			this.buildTime = lvl["build_time"];
 			this.mine = lvl["mine"];
 			this.energy = lvl["energy"];
 			this.power = lvl["power"];

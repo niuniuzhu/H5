@@ -97,12 +97,30 @@ namespace View {
 			return <EditingBuilding>entity;
 		}
 
-		public StartLayout(): any {
+		public NewBuilding(id: string, position: RC.Numerics.Vec3): boolean {
+			let building = this.CreateBuilding(id, position);
+			building.SnapToTile();
+			if (!building.CanPlace()) {
+				this.input.ChangeState(InputStateType.Layout, building, null, true);
+				return false;
+			}
+			building.Place();
+			building.BeginBuild();
+			this.NotifyEndLayout();
+			this.NotifyUpdateBuilding();
+			return true;
+		}
+
+		public NotifyStartLayout(): void {
 			Shared.Event.UIEvent.StartLayout();
 		}
 
-		public EndLayout(): any {
+		public NotifyEndLayout(): void {
 			Shared.Event.UIEvent.EndLayout();
+		}
+
+		public NotifyUpdateBuilding(): void {
+			Shared.Event.UIEvent.UpdateBuilding();
 		}
 	}
 }

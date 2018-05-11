@@ -38,9 +38,7 @@ namespace View {
 			this._rid = param.rid;
 			this._data = Shared.Model.ModelFactory.GetEntityData(Shared.Utils.GetIDFromRID(this.rid));
 			this.position = param.position;
-			this._graphic = this._owner.graphicManager.CreateGraphic(EntityGraphic);
-			this._graphic.Load(this._data.model);
-			this._graphic.position = this.position;
+			this.CreateGraphic();
 		}
 
 		public OnAddedToBattle(): void {
@@ -54,7 +52,7 @@ namespace View {
 			this._data = null;
 		}
 
-		protected OnPositionChanged():void{
+		protected OnPositionChanged(): void {
 		}
 
 		public MarkToDestroy(): void {
@@ -62,6 +60,12 @@ namespace View {
 		}
 
 		public OnUpdateState(context: Shared.UpdateContext): void {
+		}
+
+		protected CreateGraphic(): void {
+			this._graphic = this._owner.graphicManager.CreateGraphic(EntityGraphic);
+			this._graphic.Load(this._data.model);
+			this._graphic.position = this.position;
 		}
 	}
 }

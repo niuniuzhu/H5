@@ -10,6 +10,7 @@ namespace Shared.Event {
 
 		public static readonly START_LAYOUT: number = 10050;
 		public static readonly END_LAYOUT: number = 10051;
+		public static readonly UPDATE_BUILDING: number = 10052;
 
 
 		private static readonly POOL: RC.Collections.Stack<UIEvent> = new RC.Collections.Stack<UIEvent>();
@@ -67,6 +68,12 @@ namespace Shared.Event {
 		public static EndLayout(): void {
 			let e = this.Get();
 			e._type = UIEvent.END_LAYOUT;
+			e.Invoke();
+		}
+
+		public static UpdateBuilding(): void {
+			let e = this.Get();
+			e._type = UIEvent.UPDATE_BUILDING;
 			e.Invoke();
 		}
 

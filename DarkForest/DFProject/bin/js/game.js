@@ -481,6 +481,11 @@ var Shared;
                 e._type = UIEvent.END_LAYOUT;
                 e.Invoke();
             }
+            static UpdateBuilding() {
+                let e = this.Get();
+                e._type = UIEvent.UPDATE_BUILDING;
+                e.Invoke();
+            }
         }
         UIEvent.WIN = 10010;
         UIEvent.ENTITY_CREATED = 10020;
@@ -489,6 +494,7 @@ var Shared;
         UIEvent.USE_SKILL = 10030;
         UIEvent.START_LAYOUT = 10050;
         UIEvent.END_LAYOUT = 10051;
+        UIEvent.UPDATE_BUILDING = 10052;
         UIEvent.POOL = new RC.Collections.Stack();
         Event.UIEvent = UIEvent;
     })(Event = Shared.Event || (Shared.Event = {}));
@@ -514,6 +520,7 @@ var Shared;
         Model.EntityData = EntityData;
         class Level {
             constructor(lvl) {
+                this.buildTime = lvl["build_time"];
                 this.mine = lvl["mine"];
                 this.energy = lvl["energy"];
                 this.power = lvl["power"];
@@ -617,6 +624,104 @@ var Shared;
         Model.UserData = UserData;
     })(Model = Shared.Model || (Shared.Model = {}));
 })(Shared || (Shared = {}));
+var View;
+(function (View) {
+    class Graphic {
+        constructor(manager) {
+            this._manager = manager;
+            this._root = new fairygui.GComponent();
+            this._manager.root.addChild(this._root);
+            this._position = RC.Numerics.Vec3.zero;
+            this.UpdatePosition();
+        }
+        get root() { return this._root; }
+        get position() { return this._position.Clone(); }
+        set position(value) {
+            if (value.EqualsTo(this._position))
+                return;
+            this._position.CopyFrom(value);
+            this.UpdatePosition();
+        }
+        get alpha() { return this._root.alpha; }
+        set alpha(value) { this._root.alpha = value; }
+        get visible() { return this._root.visible; }
+        set visible(value) { this._root.visible = value; }
+        get sortingOrder() { return this._root.sortingOrder; }
+        set sortingOrder(value) { this._root.sortingOrder = value; }
+        Dispose() {
+            this._root.dispose();
+        }
+        UpdatePosition() {
+            let localPos = this._manager.battle.camera.WorldToScreen(this._position);
+            this._root.setXY(localPos.x, localPos.y);
+        }
+    }
+    View.Graphic = Graphic;
+})(View || (View = {}));
+var View;
+(function (View) {
+    class EntityGraphic extends View.Graphic {
+        constructor(manager) {
+            super(manager);
+        }
+        Dispose() {
+            this._sprite.dispose();
+            super.Dispose();
+        }
+        Load(id) {
+            this._sprite = fairygui.UIPackage.createObject("global", id).asCom;
+            this._root.addChild(this._sprite);
+            this._sprite.touchable = false;
+            this.OnLoadComplete();
+        }
+        OnLoadComplete() {
+        }
+    }
+    View.EntityGraphic = EntityGraphic;
+})(View || (View = {}));
+var View;
+(function (View) {
+    class BuildingGraphic extends View.EntityGraphic {
+        constructor(manager) {
+            super(manager);
+        }
+        OnLoadComplete() {
+        }
+        BeginBuild(buildTime) {
+            if (this._hud == null) {
+                this._hud = fairygui.UIPackage.createObject("battle", "building_hud").asCom;
+                this._hud.touchable = false;
+                this._hud.y = -300;
+                this._time = this._hud.getChild("n1").asTextField;
+                this._progressBar = this._hud.getChild("n0").asProgress;
+                this._root.addChild(this._hud);
+            }
+            this._hud.visible = true;
+            this._progressBar.max = buildTime;
+            this.UpdateBuildInfo(buildTime);
+        }
+        FinishBuild() {
+            this._hud.visible = false;
+        }
+        UpdateBuildInfo(buildTime) {
+            this._progressBar.value = buildTime;
+            let hour = RC.Numerics.MathUtils.Floor(buildTime * 0.001);
+            this._time.text = BuildingGraphic.FormatMillisecond(buildTime);
+        }
+        static FormatMillisecond(msd) {
+            let time = msd / 1000;
+            if (time > 60 && time < 60 * 60) {
+                return RC.Numerics.MathUtils.Floor(time / 60.0) + "分钟" + RC.Numerics.MathUtils.Floor(((time / 60.0) -
+                    RC.Numerics.MathUtils.Floor(time / 60.0)) * 60) + "秒";
+            }
+            return RC.Numerics.MathUtils.Floor(time / 3600.0) + "小时" + RC.Numerics.MathUtils.Floor(((time / 3600.0) -
+                RC.Numerics.MathUtils.Floor(time / 3600.0)) * 60) + "分钟" +
+                RC.Numerics.MathUtils.Floor(((((time / 3600.0) - RC.Numerics.MathUtils.Floor(time / 3600.0)) * 60) -
+                    RC.Numerics.MathUtils.Floor(((time / 3600.0) - RC.Numerics.MathUtils.Floor(time / 3600.0)) * 60)) * 60) + "秒";
+        }
+    }
+    View.BuildingGraphic = BuildingGraphic;
+})(View || (View = {}));
 var View;
 (function (View) {
     class Camera {
@@ -738,9 +843,7 @@ var View;
             this._rid = param.rid;
             this._data = Shared.Model.ModelFactory.GetEntityData(Shared.Utils.GetIDFromRID(this.rid));
             this.position = param.position;
-            this._graphic = this._owner.graphicManager.CreateGraphic(View.EntityGraphic);
-            this._graphic.Load(this._data.model);
-            this._graphic.position = this.position;
+            this.CreateGraphic();
         }
         OnAddedToBattle() {
         }
@@ -757,6 +860,11 @@ var View;
             this._markToDestroy = true;
         }
         OnUpdateState(context) {
+        }
+        CreateGraphic() {
+            this._graphic = this._owner.graphicManager.CreateGraphic(View.EntityGraphic);
+            this._graphic.Load(this._data.model);
+            this._graphic.position = this.position;
         }
     }
     View.CEntity = CEntity;
@@ -777,7 +885,9 @@ var View;
                 this._occupies.push(key);
             }
         }
+        get underConstruction() { return this._underConstruction; }
         get lvl() { return this._lvl; }
+        get buildTime() { return this._data.lvl[this.lvl].buildTime; }
         get mine() { return this._data.lvl[this.lvl].mine; }
         get energy() { return this._data.lvl[this.lvl].energy; }
         get power() { return this._data.lvl[this.lvl].power; }
@@ -786,6 +896,20 @@ var View;
         OnCreated(owner, param) {
             super.OnCreated(owner, param);
             this._lvl = 0;
+        }
+        OnUpdateState(context) {
+            if (this._underConstruction) {
+                this._finishTime -= context.deltaTime;
+                this._bGraphic.UpdateBuildInfo(this._finishTime);
+                if (this._finishTime <= 0)
+                    this.FinishBuild();
+            }
+        }
+        CreateGraphic() {
+            this._graphic = this._owner.graphicManager.CreateGraphic(View.BuildingGraphic);
+            this._graphic.Load(this._data.model);
+            this._graphic.position = this.position;
+            this._bGraphic = this._graphic;
         }
         SnapToTile() {
             this._tilePoint = this._owner.tile.WorldToLocal(this._position);
@@ -813,6 +937,21 @@ var View;
             this._owner.tile.PlaceBuilding(this);
             this._owner.graphicManager.SortGraphics(this._graphic);
             return true;
+        }
+        BeginBuild() {
+            View.CUser.B_MINE += this.mine;
+            View.CUser.B_ENERGY += this.energy;
+            this._bGraphic.BeginBuild(this.buildTime);
+            this._underConstruction = true;
+            this._finishTime = this.buildTime;
+        }
+        FinishBuild() {
+            View.CUser.B_POWER += this.power;
+            View.CUser.B_ATK += this.atk;
+            View.CUser.B_DEF += this.def;
+            this._bGraphic.FinishBuild();
+            this._underConstruction = false;
+            this._owner.NotifyUpdateBuilding();
         }
     }
     View.CBuilding = CBuilding;
@@ -861,7 +1000,14 @@ var View;
             return entity;
         }
         GetBuildings() {
-            return this._typeToEntity.getValue(View.CBuilding);
+            let result = [];
+            let buildings = this._typeToEntity.getValue(View.CBuilding);
+            for (let building of buildings) {
+                if (building.markToDestroy || building.underConstruction)
+                    continue;
+                result.push(building);
+            }
+            return result;
         }
         GetEntity(rid) {
             if (rid == null || rid == undefined)
@@ -943,20 +1089,6 @@ var View;
         static get def() {
             return CUser.B_DEF;
         }
-        static CalcBuildingContribution(buildings) {
-            CUser.B_POWER = 0;
-            CUser.B_ATK = 0;
-            CUser.B_DEF = 0;
-            CUser.B_MINE = 0;
-            CUser.B_ENERGY = 0;
-            for (let building of buildings) {
-                CUser.B_POWER += building.power;
-                CUser.B_ATK += building.atk;
-                CUser.B_DEF += building.def;
-                CUser.B_MINE += building.mine;
-                CUser.B_ENERGY += building.energy;
-            }
-        }
     }
     CUser.B_ATK = 0;
     CUser.B_DEF = 0;
@@ -977,7 +1109,8 @@ var View;
             super.OnRemoveFromBattle();
             this._srcBuilding = null;
         }
-        Steup(srcBuilding) {
+        Steup(srcBuilding, isNew) {
+            this._isNew = isNew;
             this._srcBuilding = srcBuilding;
             this._srcBuilding.graphic.visible = false;
             this.tilePoint = this._srcBuilding.tilePoint;
@@ -992,70 +1125,24 @@ var View;
                 this._srcBuilding.graphic.visible = true;
                 this._srcBuilding.position = this._position;
                 this._srcBuilding.Place();
+                if (this._isNew)
+                    this._srcBuilding.BeginBuild();
                 this.MarkToDestroy();
                 return true;
             }
             return false;
         }
         Cancel() {
-            this._srcBuilding.graphic.visible = true;
-            this._srcBuilding.Place();
+            if (this._isNew)
+                this._srcBuilding.MarkToDestroy();
+            else {
+                this._srcBuilding.graphic.visible = true;
+                this._srcBuilding.Place();
+            }
             this.MarkToDestroy();
         }
     }
     View.EditingBuilding = EditingBuilding;
-})(View || (View = {}));
-var View;
-(function (View) {
-    class Graphic {
-        constructor(manager) {
-            this._manager = manager;
-            this._root = new fairygui.GComponent();
-            this._manager.root.addChild(this._root);
-            this._position = RC.Numerics.Vec3.zero;
-            this.UpdatePosition();
-        }
-        get root() { return this._root; }
-        get position() { return this._position.Clone(); }
-        set position(value) {
-            if (value.EqualsTo(this._position))
-                return;
-            this._position.CopyFrom(value);
-            this.UpdatePosition();
-        }
-        get alpha() { return this._root.alpha; }
-        set alpha(value) { this._root.alpha = value; }
-        get visible() { return this._root.visible; }
-        set visible(value) { this._root.visible = value; }
-        get sortingOrder() { return this._root.sortingOrder; }
-        set sortingOrder(value) { this._root.sortingOrder = value; }
-        Dispose() {
-            this._root.dispose();
-        }
-        UpdatePosition() {
-            let localPos = this._manager.battle.camera.WorldToScreen(this._position);
-            this._root.setXY(localPos.x, localPos.y);
-        }
-    }
-    View.Graphic = Graphic;
-})(View || (View = {}));
-var View;
-(function (View) {
-    class EntityGraphic extends View.Graphic {
-        constructor(manager) {
-            super(manager);
-        }
-        Dispose() {
-            this._sprite.dispose();
-            super.Dispose();
-        }
-        Load(id) {
-            this._sprite = fairygui.UIPackage.createObject("global", id).asCom;
-            this._root.addChild(this._sprite);
-            this._sprite.touchable = false;
-        }
-    }
-    View.EntityGraphic = EntityGraphic;
 })(View || (View = {}));
 var View;
 (function (View) {
@@ -1185,11 +1272,27 @@ var View;
             let entity = this._entityManager.Create(View.EditingBuilding, param);
             return entity;
         }
-        StartLayout() {
+        NewBuilding(id, position) {
+            let building = this.CreateBuilding(id, position);
+            building.SnapToTile();
+            if (!building.CanPlace()) {
+                this.input.ChangeState(View.InputStateType.Layout, building, null, true);
+                return false;
+            }
+            building.Place();
+            building.BeginBuild();
+            this.NotifyEndLayout();
+            this.NotifyUpdateBuilding();
+            return true;
+        }
+        NotifyStartLayout() {
             Shared.Event.UIEvent.StartLayout();
         }
-        EndLayout() {
+        NotifyEndLayout() {
             Shared.Event.UIEvent.EndLayout();
+        }
+        NotifyUpdateBuilding() {
+            Shared.Event.UIEvent.UpdateBuilding();
         }
     }
     View.Home = Home;
@@ -1213,7 +1316,7 @@ var View;
             if (this._touchingBuilding != null) {
                 this._touchTime += context.deltaTime;
                 if (this._touchTime >= InputIdleState.TOUCH_TIME_TO_EDIT_MODE) {
-                    this._owner.ChangeState(InputStateType.Layout, this._touchingBuilding, new RC.Numerics.Vec3(Laya.stage.mouseX, Laya.stage.mouseY, 0));
+                    this._owner.ChangeState(InputStateType.Layout, this._touchingBuilding, new RC.Numerics.Vec3(Laya.stage.mouseX, Laya.stage.mouseY, 0), false);
                     this.OnTouchEnd(null);
                 }
             }
@@ -1249,14 +1352,15 @@ var View;
             this._startDragPosition = RC.Numerics.Vec3.zero;
         }
         Enter(param) {
-            this._owner.battle.StartLayout();
+            this._owner.battle.NotifyStartLayout();
             this._owner.battle.graphic.sprite.displayObject.on(Laya.Event.MOUSE_DOWN, this, this.OnTouchBegin);
             this._dragingBuilding = false;
             this._touchMovied = false;
             let srcBuilding = param[0];
-            this._editingBuilding = this._owner.battle.CreateEditingBuilding(srcBuilding.id);
-            this._editingBuilding.Steup(srcBuilding);
             let touchPoint = param[1];
+            let isNew = param[2];
+            this._editingBuilding = this._owner.battle.CreateEditingBuilding(srcBuilding.id);
+            this._editingBuilding.Steup(srcBuilding, isNew);
             if (touchPoint) {
                 this.TouchBegin(touchPoint);
             }
@@ -1265,7 +1369,8 @@ var View;
             this._owner.battle.graphic.sprite.displayObject.off(Laya.Event.MOUSE_DOWN, this, this.OnTouchBegin);
             fairygui.GRoot.inst.displayObject.off(Laya.Event.MOUSE_MOVE, this, this.OnTouchMove);
             fairygui.GRoot.inst.displayObject.off(Laya.Event.MOUSE_UP, this, this.OnTouchEnd);
-            this._owner.battle.EndLayout();
+            this._owner.battle.NotifyEndLayout();
+            this._owner.battle.NotifyUpdateBuilding();
         }
         Update(context) {
         }
@@ -1561,12 +1666,14 @@ var View;
                 });
                 Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.START_LAYOUT, this.HandleStartLayout.bind(this));
                 Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.END_LAYOUT, this.HandleEndLayout.bind(this));
+                Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.UPDATE_BUILDING, this.HandleUpdateBuilding.bind(this));
                 this._home = new View.Home(param);
                 this._home.SetGraphicRoot(this._root.getChild("n37").asCom);
             }
             Dispose() {
                 Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.START_LAYOUT, this.HandleStartLayout.bind(this));
                 Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.END_LAYOUT, this.HandleEndLayout.bind(this));
+                Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.UPDATE_BUILDING, this.HandleUpdateBuilding.bind(this));
                 if (this._buildPanel != null) {
                     this._buildPanel.dispose();
                     this._buildPanel = null;
@@ -1587,15 +1694,7 @@ var View;
             OnBuildItemClick(sender, e) {
                 let bid = sender.asCom.name;
                 let worldPoint = this._home.camera.ScreenToWorld(new RC.Numerics.Vec3(e.stageX, e.stageY));
-                let building = this._home.CreateBuilding(bid, worldPoint);
-                building.SnapToTile();
-                if (!building.CanPlace()) {
-                    this._home.input.ChangeState(View.InputStateType.Layout, building);
-                }
-                else {
-                    building.Place();
-                    this.UpdateBuildings();
-                }
+                this._home.NewBuilding(bid, worldPoint);
                 fairygui.GRoot.inst.hidePopup();
             }
             HandleStartLayout(e) {
@@ -1605,10 +1704,8 @@ var View;
             HandleEndLayout(e) {
                 this._root.getController("c1").selectedIndex = 0;
                 this._root.getChild("jianshe_btn").asCom.touchable = true;
-                this.UpdateBuildings();
             }
-            UpdateBuildings() {
-                View.CUser.CalcBuildingContribution(this._home.entityManager.GetBuildings());
+            HandleUpdateBuilding(e) {
                 this.UpdateResources();
             }
             UpdateResources() {

@@ -5,6 +5,9 @@ namespace View {
 		protected _occupies: number[];
 		protected _tilePoint: RC.Numerics.Vec3;
 		protected _lvl: number;
+		protected _bGraphic: BuildingGraphic;
+		protected _underConstruction: boolean
+		protected _finishTime: number;
 
 		public get tilePoint(): RC.Numerics.Vec3 { return this._tilePoint.Clone(); }
 		public set tilePoint(value: RC.Numerics.Vec3) { this._tilePoint = value.Clone(); }
@@ -17,7 +20,10 @@ namespace View {
 			}
 		}
 
+		public get underConstruction(): boolean { return this._underConstruction; }
+
 		public get lvl(): number { return this._lvl; }
+		public get buildTime(): number { return this._data.lvl[this.lvl].buildTime; }
 		public get mine(): number { return this._data.lvl[this.lvl].mine; }
 		public get energy(): number { return this._data.lvl[this.lvl].energy; }
 		public get power(): number { return this._data.lvl[this.lvl].power; }
@@ -32,6 +38,22 @@ namespace View {
 		public OnCreated(owner: Home, param: Shared.Model.EntityParam): void {
 			super.OnCreated(owner, param);
 			this._lvl = 0;
+		}
+
+		public OnUpdateState(context: Shared.UpdateContext): void {
+			if (this._underConstruction) {
+				this._finishTime -= context.deltaTime;
+				this._bGraphic.UpdateBuildInfo(this._finishTime);
+				if (this._finishTime <= 0)
+					this.FinishBuild();
+			}
+		}
+
+		protected CreateGraphic(): void {
+			this._graphic = this._owner.graphicManager.CreateGraphic(BuildingGraphic);
+			this._graphic.Load(this._data.model);
+			this._graphic.position = this.position;
+			this._bGraphic = <BuildingGraphic>this._graphic;
 		}
 
 		public SnapToTile(): void {
@@ -63,6 +85,23 @@ namespace View {
 			this._owner.tile.PlaceBuilding(this);
 			this._owner.graphicManager.SortGraphics(this._graphic);
 			return true;
+		}
+
+		public BeginBuild(): void {
+			CUser.B_MINE += this.mine;
+			CUser.B_ENERGY += this.energy;
+			this._bGraphic.BeginBuild(this.buildTime);
+			this._underConstruction = true;
+			this._finishTime = this.buildTime;
+		}
+
+		private FinishBuild(): void {
+			CUser.B_POWER += this.power;
+			CUser.B_ATK += this.atk;
+			CUser.B_DEF += this.def;
+			this._bGraphic.FinishBuild();
+			this._underConstruction = false;
+			this._owner.NotifyUpdateBuilding();
 		}
 	}
 }

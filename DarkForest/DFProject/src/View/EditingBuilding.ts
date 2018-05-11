@@ -2,6 +2,7 @@
 
 namespace View {
 	export class EditingBuilding extends CBuilding {
+		private _isNew: boolean;
 		private _srcBuilding: CBuilding;
 
 		constructor() {
@@ -13,7 +14,8 @@ namespace View {
 			this._srcBuilding = null;
 		}
 
-		public Steup(srcBuilding: CBuilding): void {
+		public Steup(srcBuilding: CBuilding, isNew: boolean): void {
+			this._isNew = isNew;
 			this._srcBuilding = srcBuilding;
 			this._srcBuilding.graphic.visible = false;
 			this.tilePoint = this._srcBuilding.tilePoint;
@@ -29,6 +31,8 @@ namespace View {
 				this._srcBuilding.graphic.visible = true;
 				this._srcBuilding.position = this._position;
 				this._srcBuilding.Place();
+				if (this._isNew)
+					this._srcBuilding.BeginBuild();
 				this.MarkToDestroy();
 				return true;
 			}
@@ -36,8 +40,12 @@ namespace View {
 		}
 
 		public Cancel(): void {
-			this._srcBuilding.graphic.visible = true;
-			this._srcBuilding.Place();
+			if (this._isNew)
+				this._srcBuilding.MarkToDestroy();
+			else {
+				this._srcBuilding.graphic.visible = true;
+				this._srcBuilding.Place();
+			}
 			this.MarkToDestroy();
 		}
 	}

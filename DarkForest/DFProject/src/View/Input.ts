@@ -31,7 +31,7 @@ namespace View {
 				this._touchTime += context.deltaTime;
 				if (this._touchTime >= InputIdleState.TOUCH_TIME_TO_EDIT_MODE) {
 					this._owner.ChangeState(InputStateType.Layout, this._touchingBuilding,
-						new RC.Numerics.Vec3(Laya.stage.mouseX, Laya.stage.mouseY, 0));
+						new RC.Numerics.Vec3(Laya.stage.mouseX, Laya.stage.mouseY, 0), false);
 					this.OnTouchEnd(null);
 				}
 			}
@@ -81,16 +81,17 @@ namespace View {
 		}
 
 		public Enter(param: any[]): void {
-			this._owner.battle.StartLayout();
+			this._owner.battle.NotifyStartLayout();
 			this._owner.battle.graphic.sprite.displayObject.on(Laya.Event.MOUSE_DOWN, this, this.OnTouchBegin);
 			this._dragingBuilding = false;
 			this._touchMovied = false;
 
 			let srcBuilding = <CBuilding>param[0];
-			this._editingBuilding = this._owner.battle.CreateEditingBuilding(srcBuilding.id);
-			this._editingBuilding.Steup(srcBuilding);
-
 			let touchPoint = <RC.Numerics.Vec3>param[1];
+			let isNew = <boolean>param[2];
+
+			this._editingBuilding = this._owner.battle.CreateEditingBuilding(srcBuilding.id);
+			this._editingBuilding.Steup(srcBuilding, isNew);
 			if (touchPoint) {
 				this.TouchBegin(touchPoint);
 			}
@@ -100,7 +101,8 @@ namespace View {
 			this._owner.battle.graphic.sprite.displayObject.off(Laya.Event.MOUSE_DOWN, this, this.OnTouchBegin);
 			fairygui.GRoot.inst.displayObject.off(Laya.Event.MOUSE_MOVE, this, this.OnTouchMove);
 			fairygui.GRoot.inst.displayObject.off(Laya.Event.MOUSE_UP, this, this.OnTouchEnd);
-			this._owner.battle.EndLayout();
+			this._owner.battle.NotifyEndLayout();
+			this._owner.battle.NotifyUpdateBuilding();
 		}
 
 		public Update(context: Shared.UpdateContext): void {

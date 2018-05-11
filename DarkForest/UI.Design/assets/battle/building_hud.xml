@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1,1">
+  <displayList>
+    <component id="n0_kq5h" name="n0" src="kq5h3n" xy="-107,-7">
+      <ProgressBar value="100" max="100"/>
+    </component>
+    <text id="n1_kq5h" name="n1" xy="-107,-24" size="214,31" fontSize="24" color="#ffffff" align="center" autoSize="height" strokeColor="#000000" text="00小时00分00秒"/>
+  </displayList>
+</component>

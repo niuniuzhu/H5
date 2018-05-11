@@ -17,6 +17,10 @@ namespace View {
 			this._sprite = fairygui.UIPackage.createObject("global", id).asCom;
 			this._root.addChild(this._sprite);
 			this._sprite.touchable = false;
+			this.OnLoadComplete();
+		}
+
+		protected OnLoadComplete(): void {
 		}
 	}
 }

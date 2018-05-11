@@ -45,6 +45,7 @@ namespace View.UI {
 
 			Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.START_LAYOUT, this.HandleStartLayout.bind(this));
 			Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.END_LAYOUT, this.HandleEndLayout.bind(this));
+			Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.UPDATE_BUILDING, this.HandleUpdateBuilding.bind(this));
 
 			this._home = new View.Home(param);
 			this._home.SetGraphicRoot(this._root.getChild("n37").asCom);
@@ -53,6 +54,7 @@ namespace View.UI {
 		public Dispose(): void {
 			Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.START_LAYOUT, this.HandleStartLayout.bind(this));
 			Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.END_LAYOUT, this.HandleEndLayout.bind(this));
+			Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.UPDATE_BUILDING, this.HandleUpdateBuilding.bind(this));
 
 			if (this._buildPanel != null) {
 				this._buildPanel.dispose();
@@ -79,14 +81,7 @@ namespace View.UI {
 		private OnBuildItemClick(sender: fairygui.GObject, e: laya.events.Event): void {
 			let bid = sender.asCom.name;
 			let worldPoint = this._home.camera.ScreenToWorld(new RC.Numerics.Vec3(e.stageX, e.stageY));
-			let building = this._home.CreateBuilding(bid, worldPoint);
-			building.SnapToTile();
-			if (!building.CanPlace()) {
-				this._home.input.ChangeState(InputStateType.Layout, building);
-			} else {
-				building.Place();
-				this.UpdateBuildings();
-			}
+			this._home.NewBuilding(bid, worldPoint);
 			fairygui.GRoot.inst.hidePopup();
 		}
 
@@ -98,11 +93,9 @@ namespace View.UI {
 		private HandleEndLayout(e: Shared.Event.BaseEvent): void {
 			this._root.getController("c1").selectedIndex = 0;
 			this._root.getChild("jianshe_btn").asCom.touchable = true;
-			this.UpdateBuildings();
 		}
 
-		private UpdateBuildings(): void {
-			View.CUser.CalcBuildingContribution(this._home.entityManager.GetBuildings());
+		private HandleUpdateBuilding(e: Shared.Event.BaseEvent): void {
 			this.UpdateResources();
 		}
 
