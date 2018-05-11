@@ -7,7 +7,6 @@ var Game;
             Laya.stage.alignH = Laya.Stage.ALIGN_LEFT;
             Laya.stage.alignV = Laya.Stage.ALIGN_TOP;
             Laya.stage.screenMode = Laya.Stage.SCREEN_VERTICAL;
-            laya.utils.Stat.show(0, 0);
             this.LoadDefs();
         }
         LoadDefs() {
@@ -105,6 +104,14 @@ var Shared;
                 result = {};
             RC.Utils.Hashtable.Concat(result, defaultHt);
             return result;
+        }
+        static GetTask() {
+            let arr = RC.Utils.Hashtable.GetArray(Defs._defs, "task");
+            return arr;
+        }
+        static GetMessage() {
+            let arr = RC.Utils.Hashtable.GetArray(Defs._defs, "message");
+            return arr;
         }
     }
     Shared.Defs = Defs;
@@ -1516,6 +1523,10 @@ var View;
                 this.PlayRecord();
             }
             Exit() {
+                if (this._timer != null) {
+                    this._timer.clear(this, this.PlayAni);
+                    this._timer = null;
+                }
                 this._p1Records.clear();
                 this._p2Records.clear();
             }
@@ -1561,8 +1572,8 @@ var View;
                     this.Settlement();
                 }
                 else {
-                    let timer = new laya.utils.Timer();
-                    timer.once(FightPanel.REPLAY_INTERVAL, this, this.PlayAni);
+                    this._timer = new laya.utils.Timer();
+                    this._timer.once(FightPanel.REPLAY_INTERVAL, this, this.PlayAni);
                 }
             }
             PlayAni() {
@@ -1648,7 +1659,7 @@ var View;
                 this._def = this._root.getChild("def").asTextField;
                 this.UpdateResources();
                 let tansuoBtn = this._root.getChild("tansuo_btn");
-                tansuoBtn.onClick(this, (e) => { this._owner.panelIndex = 2; });
+                tansuoBtn.onClick(this, (e) => { this._owner.panelIndex = 1; });
                 let juseBtn = this._root.getChild("juse_btn");
                 juseBtn.onClick(this, (e) => { this._owner.panelIndex = 3; });
                 let renwuBtn = this._root.getChild("renwu_btn");
@@ -1733,18 +1744,37 @@ var View;
             constructor(owner) {
                 this._owner = owner;
                 this._root = owner.root.getChild("c5").asCom;
+                this._atk = this._root.getChild("atk").asTextField;
+                this._def = this._root.getChild("def").asTextField;
                 let backBtn = this._root.getChild("back_btn");
                 backBtn.onClick(this, (e) => { this._owner.panelIndex = 0; });
+                Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.UPDATE_BUILDING, this.HandleUpdateBuilding.bind(this));
             }
             Dispose() {
+                Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.UPDATE_BUILDING, this.HandleUpdateBuilding.bind(this));
             }
             Enter() {
+                let tasksDef = Shared.Defs.GetMessage();
+                let list = this._root.getChild("list").asList;
+                for (let taskDef of tasksDef) {
+                    let com = list.addItemFromPool().asCom;
+                    com.getChild("n6").asTextField.text = taskDef;
+                }
             }
             Exit() {
+                let list = this._root.getChild("list").asList;
+                list.removeChildrenToPool();
             }
             Update(deltaTime) {
             }
             OnResize(e) {
+            }
+            HandleUpdateBuilding(e) {
+                this.UpdateResources();
+            }
+            UpdateResources() {
+                this._atk.text = View.CUser.atk.toString();
+                this._def.text = View.CUser.def.toString();
             }
         }
         UI.MsgPanel = MsgPanel;
@@ -1802,22 +1832,39 @@ var View;
             constructor(owner) {
                 this._owner = owner;
                 this._root = owner.root.getChild("c1").asCom;
-                let searchBtn = this._root.getChild("search_btn");
-                searchBtn.onClick(this, (e) => { this._owner.panelIndex = 2; });
                 let backBtn = this._root.getChild("back_btn");
                 backBtn.onClick(this, (e) => { this._owner.panelIndex = 0; });
             }
             Dispose() {
             }
             Enter() {
+                let backBtn = this._root.getChild("back_btn");
+                backBtn.touchable = true;
+                backBtn.alpha = 1;
+                let m = this._root.getChild("n40").asMovieClip;
+                m.alpha = 1;
+                m.playing = true;
+                this._timer = new laya.utils.Timer();
+                this._timer.once(Math.random() * 1000 - 500 + SearchPanel.WAIT_TIME, this, this.Matched);
             }
             Exit() {
+                this._timer.clear(this, this.Matched);
             }
             Update(deltaTime) {
             }
             OnResize(e) {
             }
+            Matched() {
+                let backBtn = this._root.getChild("back_btn");
+                backBtn.touchable = false;
+                let t = this._root.getTransition("t0");
+                t.play(new laya.utils.Handler(this, this.OnTransitionComplete));
+            }
+            OnTransitionComplete() {
+                this._owner.panelIndex = 2;
+            }
         }
+        SearchPanel.WAIT_TIME = 2000;
         UI.SearchPanel = SearchPanel;
     })(UI = View.UI || (View.UI = {}));
 })(View || (View = {}));
@@ -1829,18 +1876,37 @@ var View;
             constructor(owner) {
                 this._owner = owner;
                 this._root = owner.root.getChild("c4").asCom;
+                this._atk = this._root.getChild("atk").asTextField;
+                this._def = this._root.getChild("def").asTextField;
                 let backBtn = this._root.getChild("back_btn");
                 backBtn.onClick(this, (e) => { this._owner.panelIndex = 0; });
+                Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.UPDATE_BUILDING, this.HandleUpdateBuilding.bind(this));
             }
             Dispose() {
+                Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.UPDATE_BUILDING, this.HandleUpdateBuilding.bind(this));
             }
             Enter() {
+                let tasksDef = Shared.Defs.GetTask();
+                let list = this._root.getChild("list").asList;
+                for (let taskDef of tasksDef) {
+                    let com = list.addItemFromPool().asCom;
+                    com.getChild("n6").asTextField.text = taskDef;
+                }
             }
             Exit() {
+                let list = this._root.getChild("list").asList;
+                list.removeChildrenToPool();
             }
             Update(deltaTime) {
             }
             OnResize(e) {
+            }
+            HandleUpdateBuilding(e) {
+                this.UpdateResources();
+            }
+            UpdateResources() {
+                this._atk.text = View.CUser.atk.toString();
+                this._def.text = View.CUser.def.toString();
             }
         }
         UI.TaskPanel = TaskPanel;
@@ -1884,7 +1950,7 @@ var View;
             set panelIndex(value) {
                 if (this._controller.selectedIndex == value)
                     return;
-                this._panels[value].Exit();
+                this._panels[this._controller.selectedIndex].Exit();
                 this._panels[value].Enter();
                 this._controller.selectedIndex = value;
             }

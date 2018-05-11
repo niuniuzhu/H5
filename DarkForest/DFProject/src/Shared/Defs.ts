@@ -37,5 +37,15 @@ namespace Shared {
 			RC.Utils.Hashtable.Concat(result, defaultHt);
 			return result;
 		}
+
+		public static GetTask(): string[] {
+			let arr = RC.Utils.Hashtable.GetArray(Defs._defs, "task");
+			return arr;
+		}
+
+		public static GetMessage(): string[] {
+			let arr = RC.Utils.Hashtable.GetArray(Defs._defs, "message");
+			return arr;
+		}
 	}
 }

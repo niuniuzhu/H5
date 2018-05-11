@@ -2,7 +2,6 @@
 <component size="680,146">
   <displayList>
     <image id="n5_suoq" name="n5" src="suoq3i" xy="0,0"/>
-    <text id="n6_suoq" name="n6" xy="9,9" size="581,130" fontSize="26" color="#55acff" vAlign="middle" autoSize="none" text=""/>
-    <text id="n7_suoq" name="n7" xy="605,9" size="60,130" fontSize="26" color="#ffffff" align="center" vAlign="middle" autoSize="none" text=""/>
+    <richtext id="n8_dkp7" name="n6" xy="16,8" size="648,130" fontSize="26" color="#55acff" autoSize="none" text=""/>
   </displayList>
 </component>

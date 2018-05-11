@@ -29,6 +29,7 @@
     <text id="n34_suoq" name="def" xy="540,1206" size="124,29" group="n35_suoq" fontSize="26" color="#ffffff" autoSize="none" text="0"/>
     <group id="n35_suoq" name="n35" xy="0,1158" size="720,122" advanced="true" collapsed="true">
       <gearXY controller="c1" pages="1" values="0,1283" default="0,1158" tween="true" duration="0.2"/>
+      <relation target="" sidePair="bottom-bottom"/>
     </group>
   </displayList>
 </component>

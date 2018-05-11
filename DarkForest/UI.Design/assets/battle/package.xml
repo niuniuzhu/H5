@@ -90,6 +90,7 @@
     <component id="cnqw3m" name="skip_btn.xml" path="/"/>
     <component id="kq5h3n" name="building_progress_bar.xml" path="/"/>
     <component id="kq5h3o" name="building_hud.xml" path="/" exported="true"/>
+    <movieclip id="dkp73p" name="雷达.jta" path="/assets/tansuo/"/>
   </resources>
   <publish name="battle"/>
 </packageDescription>

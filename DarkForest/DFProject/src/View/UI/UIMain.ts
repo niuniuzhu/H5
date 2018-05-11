@@ -19,7 +19,7 @@ namespace View.UI {
 		public set panelIndex(value: number) {
 			if (this._controller.selectedIndex == value)
 				return;
-			this._panels[value].Exit();
+			this._panels[this._controller.selectedIndex].Exit();
 			this._panels[value].Enter();
 			this._controller.selectedIndex = value;
 		}

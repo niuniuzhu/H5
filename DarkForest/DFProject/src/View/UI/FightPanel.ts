@@ -20,6 +20,7 @@ namespace View.UI {
 		private readonly _p1Records: RC.Collections.Queue<number>;
 		private readonly _p2Records: RC.Collections.Queue<number>;
 		private _currRecord: FightRecord;
+		private _timer: laya.utils.Timer;
 
 		constructor(owner: UIMain) {
 			this._owner = owner;
@@ -64,6 +65,10 @@ namespace View.UI {
 		}
 
 		public Exit(): void {
+			if (this._timer != null) {
+				this._timer.clear(this, this.PlayAni);
+				this._timer = null;
+			}
 			this._p1Records.clear();
 			this._p2Records.clear();
 		}
@@ -101,10 +106,10 @@ namespace View.UI {
 		}
 
 		private Skip(): void {
-			while(this._p1Records.size()>0){
+			while (this._p1Records.size() > 0) {
 				this.PreformP1();
 			}
-			while(this._p2Records.size()>0){
+			while (this._p2Records.size() > 0) {
 				this.PreformP2();
 			}
 			this.Settlement();
@@ -115,8 +120,8 @@ namespace View.UI {
 				this.Settlement();
 			}
 			else {
-				let timer = new laya.utils.Timer();
-				timer.once(FightPanel.REPLAY_INTERVAL, this, this.PlayAni);
+				this._timer = new laya.utils.Timer();
+				this._timer.once(FightPanel.REPLAY_INTERVAL, this, this.PlayAni);
 			}
 		}
 
