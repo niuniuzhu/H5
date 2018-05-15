@@ -36,6 +36,23 @@
 			"problemMatcher": [
 				"$tsc"
 			]
+		},
+		{
+			"label": "Build DRZG",
+			"type": "shell",
+			"command": "tsc-plus",
+			"args": [
+				"-p",
+				"./DRZG/Code"
+			],
+			"group": "build",
+			"presentation": {
+				"panel": "dedicated",
+				"reveal": "silent"
+			},
+			"problemMatcher": [
+				"$tsc"
+			]
 		}
 	]
 }

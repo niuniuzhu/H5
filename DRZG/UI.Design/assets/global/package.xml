@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="evwornmp" jpegQuality="80" compressPNG="true">
+  <resources>
+    <image id="k6nj0" name="anniu02.png" path="/assets/"/>
+    <image id="k6nj1" name="anniu01.png" path="/assets/"/>
+    <component id="k6nj2" name="button1.xml" path="/coms/" exported="true"/>
+    <component id="k6nj3" name="button2.xml" path="/coms/" exported="true"/>
+    <image id="k6nj4" name="bg01.png" path="/assets/" exported="true"/>
+    <image id="k6nj5" name="kuang01.png" path="/assets/" scale="9grid" scale9grid="215,281,263,522"/>
+    <image id="k6nj6" name="kuang02.png" path="/assets/" scale="9grid" scale9grid="155,90,310,180"/>
+    <component id="k6nj7" name="panel1.xml" path="/coms/" exported="true"/>
+    <component id="k6nj8" name="panel2.xml" path="/coms/" exported="true"/>
+    <movieclip id="k6njb" name="qtm011.jta" path="/assets/" exported="true"/>
+    <sound id="k6njc" name="click.wav" path="/assets/" exported="true"/>
+  </resources>
+  <publish name="global"/>
+</packageDescription>

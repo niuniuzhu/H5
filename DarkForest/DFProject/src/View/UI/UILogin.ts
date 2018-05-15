@@ -22,6 +22,8 @@ namespace View.UI {
 		}
 
 		public Leave(): void {
+			this._root.dispose();
+			this._root = null;
 		}
 
 		public Update(deltaTime: number): void {

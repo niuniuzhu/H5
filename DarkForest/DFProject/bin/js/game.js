@@ -1930,6 +1930,8 @@ var View;
                 this._root.getChild("reg_btn").onClick(this, this.OnRegBtnClick);
             }
             Leave() {
+                this._root.dispose();
+                this._root = null;
             }
             Update(deltaTime) {
             }

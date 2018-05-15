@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="emrbwnx2" jpegQuality="80" compressPNG="true">
+  <resources>
+    <image id="k6nj0" name="anniuwenzi01.png" path="/assets/"/>
+    <image id="k6nj1" name="anniuwenzi02.png" path="/assets/"/>
+    <image id="k6nj2" name="anniuwenzi03.png" path="/assets/"/>
+    <image id="k6nj3" name="anniuwenzi04.png" path="/assets/"/>
+    <image id="k6nj4" name="anniuwenzi05.png" path="/assets/"/>
+    <image id="k6nj5" name="anniuwenzi06.png" path="/assets/"/>
+    <image id="k6nj7" name="biaoti01.png" path="/assets/"/>
+    <image id="k6nj8" name="biaoti02.png" path="/assets/"/>
+    <image id="k6nj9" name="biaoti03.png" path="/assets/"/>
+    <image id="k6nja" name="dikuang01.png" path="/assets/"/>
+    <image id="k6njb" name="dikuang02.png" path="/assets/"/>
+    <image id="k6njc" name="dikuang03.png" path="/assets/"/>
+    <image id="k6njf" name="01登录03.jpg" path="/assets/"/>
+    <image id="k6njg" name="01登录01.jpg" path="/assets/"/>
+    <image id="k6njh" name="01登录02.jpg" path="/assets/"/>
+    <component id="k6nji" name="Main.xml" path="/coms/" exported="true"/>
+    <component id="10cuij" name="area_btn.xml" path="/coms/"/>
+  </resources>
+  <publish name="login"/>
+</packageDescription>
