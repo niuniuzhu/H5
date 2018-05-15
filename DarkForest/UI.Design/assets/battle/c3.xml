@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="720,1280" designImageLayer="1">
   <displayList>
-    <image id="n4_suoq" name="n4" src="gkbm1x" xy="0,0"/>
+    <image id="n4_suoq" name="n4" src="kqy52r" pkg="c7x5i49r" xy="0,0"/>
     <image id="n5_suoq" name="n5" src="gkbm23" xy="0,0"/>
     <component id="n6_suoq" name="back_btn" src="gkbm26" xy="596,0"/>
     <text id="n7_suoq" name="n7" xy="25,15" size="79,47" fontSize="36" color="#ffffff" bold="true" strokeColor="#000000" text="角色"/>

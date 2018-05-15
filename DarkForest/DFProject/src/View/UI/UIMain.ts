@@ -34,7 +34,6 @@ namespace View.UI {
 
 		public Enter(param: any): void {
 			this._root = fairygui.UIPackage.createObject("battle", "Main").asCom;
-			this._root.displayObject.name = "Battle";
 			this._root.opaque = false;
 			this._root.getChild("c0").asCom.opaque = false;
 			fairygui.GRoot.inst.addChild(this._root);

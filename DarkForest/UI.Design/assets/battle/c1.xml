@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="720,1280" designImageLayer="1">
   <displayList>
-    <image id="n34_gkbm" name="n34" src="gkbm1x" xy="0,0"/>
+    <image id="n34_gkbm" name="n34" src="kqy52r" pkg="c7x5i49r" xy="0,0"/>
     <image id="n35_gkbm" name="n35" src="gkbm23" xy="0,0"/>
     <text id="n39_gkbm" name="n39" xy="25,15" size="79,47" fontSize="36" color="#ffffff" bold="true" strokeColor="#000000" text="探索"/>
     <component id="n38_gkbm" name="back_btn" src="gkbm27" xy="144,730">

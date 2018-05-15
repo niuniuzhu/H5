@@ -29,6 +29,7 @@
     <component id="suoq2o" name="b8.xml" path="/coms/" exported="true"/>
     <component id="suoq2p" name="b9.xml" path="/coms/" exported="true"/>
     <component id="suoq2q" name="b10.xml" path="/coms/" exported="true"/>
+    <image id="kqy52r" name="bg01.png" path="/assets/" exported="true"/>
   </resources>
   <publish name="global"/>
 </packageDescription>

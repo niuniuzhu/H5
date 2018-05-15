@@ -43,20 +43,7 @@ namespace Game {
 			fairygui.GRoot.inst.on(fairygui.Events.SIZE_CHANGED, this, this.OnResize);
 			Laya.timer.frameLoop(1, this, this.Update);
 
-			let param = new Shared.Model.BattleParams();
-			param.framesPerKeyFrame = 4;
-			param.frameRate = 20;
-			param.uid = "user";
-			param.id = "m0";
-			param.rndSeed = RC.Utils.Timer.utcTime;
-
-			let building = new Shared.Model.Building();
-			building.uid = "user";
-			building.id = "b0";
-
-			param.buildings = [building];
-
-			View.UI.UIManager.EnterBattle(param);
+			View.UI.UIManager.EnterLogin();
 		}
 
 		private Update(): void {
