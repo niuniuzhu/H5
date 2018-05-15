@@ -1299,6 +1299,7 @@ var View;
     class InputIdleState {
         constructor(owner) {
             this._owner = owner;
+            this._lastTouchPoint = RC.Numerics.Vec3.zero;
         }
         Enter(param) {
             this._owner.battle.graphic.sprite.displayObject.on(Laya.Event.MOUSE_DOWN, this, this.OnTouchBegin);
@@ -1313,8 +1314,11 @@ var View;
             if (this._touchingBuilding != null) {
                 this._touchTime += context.deltaTime;
                 if (this._touchTime >= InputIdleState.TOUCH_TIME_TO_EDIT_MODE) {
-                    this._owner.ChangeState(InputStateType.Layout, this._touchingBuilding, new RC.Numerics.Vec3(Laya.stage.mouseX, Laya.stage.mouseY, 0), false);
-                    this.OnTouchEnd(null);
+                    let touchPoing = new RC.Numerics.Vec3(Laya.stage.mouseX, Laya.stage.mouseY, 0);
+                    if (RC.Numerics.Vec3.DistanceSquared(touchPoing, this._lastTouchPoint) < InputIdleState.TOUCHING_DISTANCE_THRESHOLD) {
+                        this._owner.ChangeState(InputStateType.Layout, this._touchingBuilding, touchPoing, false);
+                        this.OnTouchEnd(null);
+                    }
                 }
             }
         }
@@ -1322,7 +1326,9 @@ var View;
             fairygui.GRoot.inst.displayObject.on(Laya.Event.MOUSE_MOVE, this, this.OnTouchMove);
             fairygui.GRoot.inst.displayObject.on(Laya.Event.MOUSE_UP, this, this.OnTouchEnd);
             this._owner.battle.camera.BeginMove(new RC.Numerics.Vec3(evt.stageX, 0, -evt.stageY));
-            let worldPoint = this._owner.battle.camera.ScreenToWorld(new RC.Numerics.Vec3(evt.stageX, evt.stageY, 0));
+            let touchPoint = new RC.Numerics.Vec3(evt.stageX, evt.stageY, 0);
+            this._lastTouchPoint.CopyFrom(touchPoint);
+            let worldPoint = this._owner.battle.camera.ScreenToWorld(touchPoint);
             let building = this._owner.battle.tile.GetBuilding(worldPoint);
             if (building != null) {
                 this._touchingBuilding = building;
@@ -1330,7 +1336,6 @@ var View;
             }
         }
         OnTouchMove(evt) {
-            this._touchingBuilding = null;
             let point = new RC.Numerics.Vec3(evt.stageX, 0, -evt.stageY);
             this._owner.battle.camera.Move(point);
         }
@@ -1340,7 +1345,8 @@ var View;
             fairygui.GRoot.inst.displayObject.off(Laya.Event.MOUSE_UP, this, this.OnTouchEnd);
         }
     }
-    InputIdleState.TOUCH_TIME_TO_EDIT_MODE = 300;
+    InputIdleState.TOUCH_TIME_TO_EDIT_MODE = 500;
+    InputIdleState.TOUCHING_DISTANCE_THRESHOLD = 40 * 40;
     View.InputIdleState = InputIdleState;
     class InputLayoutState {
         constructor(owner) {

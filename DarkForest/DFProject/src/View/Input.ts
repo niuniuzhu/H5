@@ -6,13 +6,16 @@ namespace View {
 	}
 
 	export class InputIdleState implements IInputState {
-		private static readonly TOUCH_TIME_TO_EDIT_MODE: number = 300;
+		private static readonly TOUCH_TIME_TO_EDIT_MODE: number = 500;
+		private static readonly TOUCHING_DISTANCE_THRESHOLD: number = 40 * 40;
 		private readonly _owner: Input;
 		private _touchTime: number;
 		private _touchingBuilding: CBuilding;
+		private _lastTouchPoint: RC.Numerics.Vec3;
 
 		constructor(owner: Input) {
 			this._owner = owner;
+			this._lastTouchPoint = RC.Numerics.Vec3.zero;
 		}
 
 		public Enter(param: any[]): void {
@@ -30,9 +33,11 @@ namespace View {
 			if (this._touchingBuilding != null) {
 				this._touchTime += context.deltaTime;
 				if (this._touchTime >= InputIdleState.TOUCH_TIME_TO_EDIT_MODE) {
-					this._owner.ChangeState(InputStateType.Layout, this._touchingBuilding,
-						new RC.Numerics.Vec3(Laya.stage.mouseX, Laya.stage.mouseY, 0), false);
-					this.OnTouchEnd(null);
+					let touchPoing = new RC.Numerics.Vec3(Laya.stage.mouseX, Laya.stage.mouseY, 0);
+					if (RC.Numerics.Vec3.DistanceSquared(touchPoing, this._lastTouchPoint) < InputIdleState.TOUCHING_DISTANCE_THRESHOLD) {
+						this._owner.ChangeState(InputStateType.Layout, this._touchingBuilding, touchPoing, false);
+						this.OnTouchEnd(null);
+					}
 				}
 			}
 		}
@@ -40,9 +45,12 @@ namespace View {
 		private OnTouchBegin(evt: laya.events.Event): any {
 			fairygui.GRoot.inst.displayObject.on(Laya.Event.MOUSE_MOVE, this, this.OnTouchMove);
 			fairygui.GRoot.inst.displayObject.on(Laya.Event.MOUSE_UP, this, this.OnTouchEnd);
-			this._owner.battle.camera.BeginMove(new RC.Numerics.Vec3(evt.stageX, 0, -evt.stageY));
 
-			let worldPoint = this._owner.battle.camera.ScreenToWorld(new RC.Numerics.Vec3(evt.stageX, evt.stageY, 0));
+			this._owner.battle.camera.BeginMove(new RC.Numerics.Vec3(evt.stageX, 0, -evt.stageY));
+			let touchPoint = new RC.Numerics.Vec3(evt.stageX, evt.stageY, 0);
+			this._lastTouchPoint.CopyFrom(touchPoint);
+
+			let worldPoint = this._owner.battle.camera.ScreenToWorld(touchPoint);
 			let building = this._owner.battle.tile.GetBuilding(worldPoint);
 			if (building != null) {
 				this._touchingBuilding = building;
@@ -51,7 +59,6 @@ namespace View {
 		}
 
 		private OnTouchMove(evt: laya.events.Event): any {
-			this._touchingBuilding = null;
 			let point = new RC.Numerics.Vec3(evt.stageX, 0, -evt.stageY);
 			this._owner.battle.camera.Move(point);
 			// let p2 = this._owner.battle.camera.ScreenToWorld(new RC.Numerics.Vec3(evt.stageX, evt.stageY, 0));
