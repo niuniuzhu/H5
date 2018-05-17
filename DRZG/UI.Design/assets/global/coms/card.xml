@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="116,152" extention="Label">
+  <displayList>
+    <image id="n0_f15t" name="n0" src="f15tm" xy="0,0"/>
+    <loader id="n1_f15t" name="icon" xy="0,0" size="116,152" align="center" vAlign="middle"/>
+  </displayList>
+</component>

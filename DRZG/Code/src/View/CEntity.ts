@@ -2,16 +2,16 @@
 
 namespace View {
 	export class CEntity extends Shared.GPoolObject {
-		protected _position: RC.Numerics.Vec3;
-		protected _owner: View.Home;
+		protected _owner: View.CBattle;
+		protected _position: RC.Numerics.Vec2;
 		protected _markToDestroy: boolean;
 		protected _graphic: EntityGraphic;
 		protected _data: Shared.Model.EntityData = null;
 
 		public get id(): string { return this._data.id; }
 
-		public get position(): RC.Numerics.Vec3 { return this._position.Clone(); }
-		public set position(value: RC.Numerics.Vec3) {
+		public get position(): RC.Numerics.Vec2 { return this._position.Clone(); }
+		public set position(value: RC.Numerics.Vec2) {
 			if (this._position.EqualsTo(value))
 				return;
 			this._position.CopyFrom(value);
@@ -20,24 +20,22 @@ namespace View {
 			this.OnPositionChanged();
 		}
 
-		public get footprint(): RC.Numerics.Vec3 { return this._data.footprint.Clone(); }
-		public get battle(): View.Home { return this._owner; }
+		public get battle(): View.CBattle { return this._owner; }
 		public get graphic(): EntityGraphic { return this._graphic; }
 		public get markToDestroy(): boolean { return this._markToDestroy; }
 
 		constructor() {
 			super();
-			this._position = RC.Numerics.Vec3.zero;
+			this._position = RC.Numerics.Vec2.zero;
 		}
 
 		protected InternalDispose(): void {
 		}
 
-		public OnCreated(owner: Home, param: Shared.Model.EntityParam): void {
+		public OnCreated(owner: CBattle, param: Shared.Model.EntityParam): void {
 			this._owner = owner;
 			this._rid = param.rid;
-			this._data = Shared.Model.ModelFactory.GetEntityData(Shared.Utils.GetIDFromRID(this.rid));
-			this.position = param.position;
+			this._data = Shared.Model.ModelFactory.GetEntityData(Shared.Utils.GetIDFromRID(this._rid));
 			this.CreateGraphic();
 		}
 
@@ -55,6 +53,9 @@ namespace View {
 		protected OnPositionChanged(): void {
 		}
 
+		protected OnDirectionChanged(): void {
+		}
+
 		public MarkToDestroy(): void {
 			this._markToDestroy = true;
 		}
@@ -65,7 +66,6 @@ namespace View {
 		protected CreateGraphic(): void {
 			this._graphic = this._owner.graphicManager.CreateGraphic(EntityGraphic);
 			this._graphic.Load(this._data.model);
-			this._graphic.position = this.position;
 		}
 	}
 }

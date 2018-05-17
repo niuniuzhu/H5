@@ -1,17 +1,19 @@
 namespace View {
 	export class CEntityManager {
-		private readonly _owner: Home;
+		private readonly _owner: CBattle;
 		private readonly _gPool: Shared.GPool;
 		private readonly _entities: CEntity[];
 		private readonly _idToEntity: RC.Collections.Dictionary<string, CEntity>;
 		private readonly _typeToEntity: RC.Collections.Dictionary<new () => CEntity, CEntity[]>;
 
-		constructor(owner: Home) {
+		constructor(owner: CBattle) {
 			this._owner = owner;
 			this._gPool = new Shared.GPool();
 			this._entities = [];
 			this._idToEntity = new RC.Collections.Dictionary<string, CEntity>();
 			this._typeToEntity = new RC.Collections.Dictionary<new () => CEntity, CEntity[]>();
+			this._typeToEntity.setValue(CChampion, []);
+			this._typeToEntity.setValue(CTower, []);
 		}
 
 		public Dispose(): void {

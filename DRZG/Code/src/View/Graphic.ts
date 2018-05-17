@@ -2,12 +2,13 @@ namespace View {
 	export abstract class Graphic {
 		protected readonly _manager: GraphicManager;
 		protected readonly _root: fairygui.GComponent;
-		protected _position: RC.Numerics.Vec3;
-
+		protected readonly _localToWorldMat: RC.Numerics.Mat3;
+		protected readonly _worldToLocalMat: RC.Numerics.Mat3;
+		protected _position: RC.Numerics.Vec2;
 		public get root(): fairygui.GComponent { return this._root; }
 
-		public get position(): RC.Numerics.Vec3 { return this._position.Clone(); }
-		public set position(value: RC.Numerics.Vec3) {
+		public get position(): RC.Numerics.Vec2 { return this._position.Clone(); }
+		public set position(value: RC.Numerics.Vec2) {
 			if (value.EqualsTo(this._position))
 				return;
 			this._position.CopyFrom(value);
@@ -27,7 +28,13 @@ namespace View {
 			this._manager = manager;
 			this._root = new fairygui.GComponent();
 			this._manager.root.addChild(this._root);
-			this._position = RC.Numerics.Vec3.zero;
+			this._position = RC.Numerics.Vec2.zero;
+			this._worldToLocalMat = RC.Numerics.Mat3.identity;
+			this._worldToLocalMat.x.x = this._manager.battle.tileSize;
+			this._worldToLocalMat.y.y = this._manager.battle.tileSize;
+			this._worldToLocalMat.z.x = -this._manager.battle.tileSize * 0.5;
+			this._worldToLocalMat.z.y = -this._manager.battle.tileSize * 0.5;
+			this._localToWorldMat = RC.Numerics.Mat3.Invert(this._worldToLocalMat);
 			this.UpdatePosition();
 		}
 
@@ -38,8 +45,19 @@ namespace View {
 		}
 
 		public UpdatePosition(): void {
-			let localPos = this._manager.battle.camera.WorldToScreen(this._position);
-			this._root.setXY(localPos.x, localPos.y);
+			let v = this._worldToLocalMat.TransformPoint(this._position);
+			this._root.setXY(v.x, v.y);
+		}
+
+		public UpdateDirection(): void {
+		}
+
+		public WorldToLocal(point: RC.Numerics.Vec2): RC.Numerics.Vec2 {
+			return this._worldToLocalMat.TransformPoint(point);
+		}
+
+		public LocalToWorld(point: RC.Numerics.Vec2): RC.Numerics.Vec2 {
+			return this._localToWorldMat.TransformPoint(point);
 		}
 	}
 }

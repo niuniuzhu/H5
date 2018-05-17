@@ -12,6 +12,22 @@
     <component id="k6nj8" name="panel2.xml" path="/coms/" exported="true"/>
     <movieclip id="k6njb" name="qtm011.jta" path="/assets/" exported="true"/>
     <sound id="k6njc" name="click.wav" path="/assets/" exported="true"/>
+    <image id="f15td" name="tile.jpg" path="/assets/" scale="tile" scale9grid="11,11,22,22"/>
+    <component id="f15te" name="m0.xml" path="/game/" exported="true"/>
+    <component id="f15tf" name="t0.xml" path="/game/" exported="true"/>
+    <component id="f15tg" name="t1.xml" path="/game/" exported="true"/>
+    <image id="f15th" name="c5.png" path="/assets/skill/" exported="true"/>
+    <image id="f15ti" name="c6.png" path="/assets/skill/" exported="true"/>
+    <image id="f15tj" name="c7.png" path="/assets/skill/" exported="true"/>
+    <image id="f15tk" name="c8.png" path="/assets/skill/" exported="true"/>
+    <image id="f15tl" name="c9.png" path="/assets/skill/" exported="true"/>
+    <image id="f15tm" name="jinengkuang.png" path="/assets/skill/"/>
+    <image id="f15tn" name="c0.png" path="/assets/skill/" exported="true"/>
+    <image id="f15to" name="c1.png" path="/assets/skill/" exported="true"/>
+    <image id="f15tp" name="c2.png" path="/assets/skill/" exported="true"/>
+    <image id="f15tq" name="c3.png" path="/assets/skill/" exported="true"/>
+    <image id="f15tr" name="c4.png" path="/assets/skill/" exported="true"/>
+    <component id="f15ts" name="card.xml" path="/coms/" exported="true"/>
   </resources>
   <publish name="global"/>
 </packageDescription>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="dhvv3tkx" jpegQuality="80" compressPNG="true">
+  <resources>
+    <image id="e2800" name="03副本01.jpg" path="/assets/"/>
+    <image id="e2801" name="02主界面01.jpg" path="/assets/"/>
+    <image id="e2802" name="z_0.png" path="/assets/"/>
+    <image id="e2803" name="z_1.png" path="/assets/"/>
+    <image id="e2804" name="z_2.png" path="/assets/"/>
+    <image id="e2805" name="z_3.png" path="/assets/"/>
+    <image id="e2806" name="z_4.png" path="/assets/"/>
+    <image id="e2807" name="z_5.png" path="/assets/"/>
+    <image id="e2808" name="z_6.png" path="/assets/"/>
+    <image id="e2809" name="z_7.png" path="/assets/"/>
+    <image id="e280a" name="z_8.png" path="/assets/"/>
+    <image id="e280b" name="z_9.png" path="/assets/"/>
+    <image id="e280c" name="zhucheng.png" path="/assets/"/>
+    <image id="e280d" name="bg02.png" path="/assets/"/>
+    <image id="e280e" name="dengjikuang.png" path="/assets/"/>
+    <image id="e280f" name="fubeng.png" path="/assets/"/>
+    <image id="e280g" name="jineng.png" path="/assets/"/>
+    <image id="e280h" name="kuang03.png" path="/assets/"/>
+    <image id="e280i" name="shanglang.png" path="/assets/"/>
+    <image id="e280j" name="touxiangkuang.png" path="/assets/"/>
+    <image id="e280k" name="xialang.png" path="/assets/"/>
+    <component id="e280l" name="Main.xml" path="/coms/" exported="true"/>
+    <component id="e280m" name="zhucheng_btn.xml" path="/coms/"/>
+    <component id="e280n" name="fuben_btn.xml" path="/coms/"/>
+    <component id="e280o" name="jineng_btn.xml" path="/coms/"/>
+    <font id="e280p" name="Font1.fnt" path="/coms/" exported="true"/>
+  </resources>
+  <publish name="main"/>
+</packageDescription>

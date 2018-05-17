@@ -144,7 +144,7 @@ namespace RC.Numerics {
 				);
 		}
 
-		public TransformPoint(v: Vec3): Vec2 {
+		public TransformPoint(v: Vec2): Vec2 {
 			return new Vec2
 				(
 				v.x * this.x.x + v.y * this.y.x + this.z.x,

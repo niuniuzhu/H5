@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="684,1080">
+  <displayList>
+    <image id="n8_f15t" name="n8" src="f15td" xy="0,0" size="684,1080" alpha="0.3"/>
+    <graph id="n10_f15t" name="n10" xy="0,504" size="684,72" alpha="0.6" type="rect" lineSize="0" fillColor="#ff66cc33"/>
+    <graph id="n1_f15t" name="n1" xy="0,0" size="20,20" type="rect"/>
+    <graph id="n2_f15t" name="n2" xy="664,0" size="20,20" type="rect"/>
+    <graph id="n4_f15t" name="n4" xy="0,1060" size="20,20" type="rect"/>
+    <graph id="n5_f15t" name="n5" xy="664,1060" size="20,20" type="rect"/>
+    <graph id="n11_f15t" name="n11" xy="108,72" size="36,936" alpha="0.6" type="rect" lineSize="0" fillColor="#ff666633"/>
+    <graph id="n13_f15t" name="n13" xy="144,72" size="396,36" alpha="0.6" type="rect" lineSize="0" fillColor="#ff666633"/>
+    <graph id="n12_f15t" name="n12" xy="540,72" size="36,936" alpha="0.6" type="rect" lineSize="0" fillColor="#ff666633"/>
+    <graph id="n3_f15t" name="n3" xy="332,530" size="20,20" type="rect"/>
+    <graph id="n14_f15t" name="n14" xy="144,972" size="396,36" alpha="0.6" type="rect" lineSize="0" fillColor="#ff666633"/>
+  </displayList>
+</component>

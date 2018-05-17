@@ -1,16 +1,16 @@
 namespace View {
 	export class GraphicManager {
-		private readonly _owner: Home;
+		private readonly _owner: CBattle;
 		private readonly _graphics: Graphic[];
 
 		private _root: fairygui.GComponent;
 
-		public get battle(): Home { return this._owner; }
+		public get battle(): CBattle { return this._owner; }
 
 		public get root(): fairygui.GComponent { return this._root; }
 		public set root(value: fairygui.GComponent) { this._root = value; }
 
-		constructor(owner: Home) {
+		constructor(owner: CBattle) {
 			this._owner = owner;
 			this._root = new fairygui.GComponent();
 			this._graphics = [];
@@ -60,7 +60,7 @@ namespace View {
 		private SortFunc(a: Graphic, b: Graphic): number {
 			if (a == this._graphics[0] || b == this._graphics[0])
 				return 0;
-			return a.position.z > b.position.z ? -1 : 1;
+			return a.position.y < b.position.y ? -1 : 1;
 		}
 	}
 }

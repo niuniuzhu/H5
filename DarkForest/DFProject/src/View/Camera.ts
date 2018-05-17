@@ -52,7 +52,7 @@ namespace View {
 			this._direction = RC.Numerics.Vec3.forward;
 			this._seekerPos = this._position.Clone();
 			this._seekerDir = this._direction.Clone();
-			this._restriMin = RC.Numerics.Vec3.zero;
+			this._restriMin = new RC.Numerics.Vec3(-RC.Numerics.MathUtils.MAX_VALUE, -RC.Numerics.MathUtils.MAX_VALUE, -RC.Numerics.MathUtils.MAX_VALUE);
 			this._restriMax = new RC.Numerics.Vec3(RC.Numerics.MathUtils.MAX_VALUE, RC.Numerics.MathUtils.MAX_VALUE, RC.Numerics.MathUtils.MAX_VALUE);
 			this._localToWorldMat = RC.Numerics.Mat4.FromTRS(this._position,
 				RC.Numerics.Quat.Euler(new RC.Numerics.Vec3(90, 0, 0)),

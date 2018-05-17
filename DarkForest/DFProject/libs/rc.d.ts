@@ -451,7 +451,7 @@ declare namespace RC.Numerics {
         DivN(n: number): Mat3;
         DivN2(n: number): Mat3;
         Transform(v: Vec3): Vec3;
-        TransformPoint(v: Vec3): Vec2;
+        TransformPoint(v: Vec2): Vec2;
         TransformVector(v: Vec2): Vec2;
         Identity(): Mat3;
         Euler(): Vec3;

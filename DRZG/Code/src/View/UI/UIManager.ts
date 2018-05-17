@@ -2,10 +2,10 @@ namespace View.UI {
 	export class UIManager {
 		private static _login: UILogin;
 		private static _main: UIMain;
+		private static _battle: UIBattle;
 		private static _currModule: IUIModule;
 
 		public static get login(): UILogin { return this._login; }
-
 		public static get battle(): UIMain { return this._main; }
 
 		public static Init(resolution: RC.Numerics.Vec2): void {
@@ -18,6 +18,7 @@ namespace View.UI {
 
 			this._login = new UILogin();
 			this._main = new UIMain();
+			this._battle = new UIBattle();
 		}
 
 		public static Dispose(): void {
@@ -54,8 +55,12 @@ namespace View.UI {
 			this.EnterModule(this._login);
 		}
 
+		public static EnterMain(): void {
+			this.EnterModule(this._main);
+		}
+
 		public static EnterBattle(param: Shared.Model.BattleParams): void {
-			this.EnterModule(this._main, param);
+			this.EnterModule(this._battle, param);
 		}
 	}
 }
