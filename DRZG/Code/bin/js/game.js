@@ -1128,6 +1128,58 @@ var View;
 (function (View) {
     var UI;
     (function (UI) {
+        class PHBPanel {
+            constructor(owner) {
+                this._owner = owner;
+                this._root = owner.root.getChild("c3").asCom;
+                this._list = this._root.getChild("list").asList;
+            }
+            Dispose() {
+            }
+            Enter() {
+                let atks = [];
+                for (let i = 0; i < 50; ++i) {
+                    atks.push(Math.round(Math.random() * 25000 + 5000));
+                }
+                atks.sort();
+                for (let i = 0; i < 50; ++i) {
+                    let item = this._list.addItemFromPool().asCom;
+                    item.getChild("name").asTextField.text = btoa(RC.Utils.GUID.Generate().ToString(RC.Utils.GuidFormat.DASHES));
+                    let rank;
+                    switch (i) {
+                        case 0:
+                            rank = "a";
+                            break;
+                        case 1:
+                            rank = "b";
+                            break;
+                        case 2:
+                            rank = "c";
+                            break;
+                        default:
+                            rank = "" + (i + 1);
+                            break;
+                    }
+                    item.getChild("rank").asTextField.text = rank;
+                    item.getChild("atk").asTextField.text = "" + atks[i];
+                    item.getChild("lvl").asTextField.text = "" + Math.round(Math.random() * 30 + 20);
+                }
+            }
+            Exit() {
+                this._list.removeChildrenToPool();
+            }
+            Update(deltaTime) {
+            }
+            OnResize(e) {
+            }
+        }
+        UI.PHBPanel = PHBPanel;
+    })(UI = View.UI || (View.UI = {}));
+})(View || (View = {}));
+var View;
+(function (View) {
+    var UI;
+    (function (UI) {
         class SkillPanel {
             constructor(owner) {
                 this._owner = owner;
@@ -1271,6 +1323,7 @@ var View;
             get zcPanel() { return this._zcPanel; }
             get fbPanel() { return this._fbPanel; }
             get skillPanel() { return this._skillPanel; }
+            get phbPanel() { return this._phbPanel; }
             set panelIndex(value) {
                 if (this._controller.selectedIndex == value)
                     return;
@@ -1289,10 +1342,12 @@ var View;
                 this._zcPanel = new UI.ZCPanel(this);
                 this._fbPanel = new UI.FBPanel(this);
                 this._skillPanel = new UI.SkillPanel(this);
+                this._phbPanel = new UI.PHBPanel(this);
                 this._controller = this._root.getController("c1");
                 this._panels.push(this._zcPanel);
                 this._panels.push(this._fbPanel);
                 this._panels.push(this._skillPanel);
+                this._panels.push(this._phbPanel);
                 this._root.getChild("main_btn").onClick(this, this.OnMainBtnClick);
                 this._root.getChild("fuben_btn").onClick(this, this.OnFubenBtnClick);
                 this._root.getChild("skill_btn").onClick(this, this.OnSkillBtnClick);
@@ -1451,6 +1506,7 @@ var View;
             OnJJCBtnClick() {
             }
             OnPHBBtnClick() {
+                this._owner.panelIndex = 3;
             }
             OnQDBtnClick() {
             }

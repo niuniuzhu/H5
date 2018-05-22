@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="720,1280" designImageAlpha="91" designImageLayer="1">
-  <controller name="c1" pages="0,,1,,2," selected="0"/>
+<component size="720,1280" designImageAlpha="37" designImageLayer="1">
+  <controller name="c1" pages="0,主城,1,副本,2,技能,3,排行榜" selected="3"/>
   <displayList>
     <image id="n1_e280" name="n1" src="e280d" fileName="assets/bg02.png" xy="0,0"/>
     <image id="n2_e280" name="n2" src="e280i" fileName="assets/shanglang.png" xy="0,0"/>
     <image id="n3_e280" name="n3" src="e280j" fileName="assets/touxiangkuang.png" xy="20,26"/>
-    <loader id="n4_e280" name="n4" xy="23,29" size="94,94"/>
+    <loader id="n4_e280" name="n4" xy="23,29" size="94,94" url="ui://dhvv3tkxyer11y"/>
     <image id="n16_e280" name="n16" src="e280e" fileName="assets/dengjikuang.png" xy="23,103"/>
     <text id="n5_e280" name="n5" xy="18,102" size="36,25" font="ui://dhvv3tkxe280p" fontSize="20" color="#ffeebb" align="center" autoSize="none" text="1"/>
     <text id="n6_e280" name="n6" xy="178,33" size="20,25" font="ui://dhvv3tkxe280p" fontSize="24" color="#ffeebb" text="0"/>
@@ -31,6 +31,9 @@
     </component>
     <component id="n21_yer1" name="c2" src="yer1x" fileName="coms/c2.xml" xy="20,230">
       <gearDisplay controller="c1" pages="2"/>
+    </component>
+    <component id="n22_yer1" name="c3" src="yer11v" fileName="coms/c3.xml" xy="20,228">
+      <gearDisplay controller="c1" pages="3"/>
     </component>
   </displayList>
 </component>

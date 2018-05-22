@@ -32,7 +32,7 @@
     <image id="yer1s" name="副本选关卡.png" path="/assets/"/>
     <component id="yer1t" name="c1.xml" path="/coms/"/>
     <component id="yer1u" name="place.xml" path="/coms/"/>
-    <image id="yer1v" name="05技能01.jpg" path="/assets/"/>
+    <image id="yer1v" name="05技能01.jpg" path="/assets/skill/"/>
     <component id="yer1x" name="c2.xml" path="/coms/"/>
     <image id="yer1y" name="biaoti05.png" path="/assets/skill/"/>
     <image id="yer1z" name="dikuang08.png" path="/assets/skill/"/>
@@ -49,6 +49,28 @@
     <image id="yer11a" name="jinengkuang.png" path="/assets/skill/"/>
     <image id="yer11b" name="kuang05.png" path="/assets/skill/" scale="9grid" scale9grid="162,52,324,104"/>
     <component id="yer11c" name="skill_item.xml" path="/coms/"/>
+    <image id="yer11d" name="06排行榜01.jpg" path="/assets/phb/"/>
+    <image id="yer11e" name="biaoti06.png" path="/assets/phb/"/>
+    <image id="yer11f" name="jin.png" path="/assets/phb/"/>
+    <image id="yer11g" name="kuang06.png" path="/assets/phb/"/>
+    <image id="yer11h" name="p_0.png" path="/assets/phb/"/>
+    <image id="yer11i" name="p_1.png" path="/assets/phb/"/>
+    <image id="yer11j" name="p_2.png" path="/assets/phb/"/>
+    <image id="yer11k" name="p_3.png" path="/assets/phb/"/>
+    <image id="yer11l" name="p_4.png" path="/assets/phb/"/>
+    <image id="yer11m" name="p_5.png" path="/assets/phb/"/>
+    <image id="yer11n" name="p_6.png" path="/assets/phb/"/>
+    <image id="yer11o" name="p_7.png" path="/assets/phb/"/>
+    <image id="yer11p" name="p_8.png" path="/assets/phb/"/>
+    <image id="yer11q" name="p_9.png" path="/assets/phb/"/>
+    <image id="yer11r" name="ton.png" path="/assets/phb/"/>
+    <image id="yer11s" name="yin.png" path="/assets/phb/"/>
+    <image id="yer11t" name="zhanli01.png" path="/assets/phb/"/>
+    <component id="yer11v" name="c3.xml" path="/coms/"/>
+    <component id="yer11w" name="phb_item.xml" path="/coms/"/>
+    <font id="yer11x" name="Font2.fnt" path="/coms/" exported="true"/>
+    <image id="yer11y" name="头像1.png" path="/assets/"/>
+    <image id="yer11z" name="头像2.png" path="/assets/"/>
   </resources>
   <publish name="main"/>
 </packageDescription>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="648,135" designImage="ui://dhvv3tkxyer11d" designImageOffsetX="-36" designImageOffsetY="-320" designImageLayer="1">
+  <displayList>
+    <image id="n23_yer1" name="n23" src="yer11g" fileName="assets/phb/kuang06.png" xy="0,0"/>
+    <text id="n25_yer1" name="rank" xy="20,22" size="81,83" font="ui://dhvv3tkxyer11x" fontSize="24" color="#613717" align="center" vAlign="middle" autoSize="none" bold="true" text="a"/>
+    <image id="n26_yer1" name="n26" src="yer11t" fileName="assets/phb/zhanli01.png" xy="540,27"/>
+    <text id="n27_yer1" name="atk" xy="518,70" size="113,35" fontSize="28" color="#8e4a15" align="center" vAlign="middle" autoSize="none" bold="true" text="0"/>
+    <text id="n28_yer1" name="lvl" xy="307,76" size="18,33" fontSize="24" color="#8e4a15" align="center" vAlign="middle" bold="true" text="0"/>
+    <text id="n29_yer1" name="n29" xy="240,76" size="62,33" fontSize="24" color="#8e4a15" align="center" vAlign="middle" bold="true" text="等级:"/>
+    <image id="n30_yer1" name="n30" src="e280j" fileName="assets/touxiangkuang.png" xy="118,17"/>
+    <text id="n31_yer1" name="name" xy="234,21" size="30,33" fontSize="24" color="#ffffff" align="center" vAlign="middle" bold="true" text="空"/>
+    <loader id="n32_yer1" name="icon" xy="121,20" size="94,94" url="ui://dhvv3tkxyer11y"/>
+  </displayList>
+</component>

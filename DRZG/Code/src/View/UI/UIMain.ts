@@ -5,12 +5,14 @@ namespace View.UI {
 		private _zcPanel: ZCPanel;
 		private _fbPanel: FBPanel;
 		private _skillPanel: SkillPanel;
+		private _phbPanel: PHBPanel;
 		private readonly _panels: IMainPanel[];
 
 		public get root(): fairygui.GComponent { return this._root; }
 		public get zcPanel(): ZCPanel { return this._zcPanel; }
 		public get fbPanel(): FBPanel { return this._fbPanel; }
 		public get skillPanel(): SkillPanel { return this._skillPanel; }
+		public get phbPanel(): PHBPanel { return this._phbPanel; }
 
 		public set panelIndex(value: number) {
 			if (this._controller.selectedIndex == value)
@@ -38,11 +40,13 @@ namespace View.UI {
 			this._zcPanel = new ZCPanel(this);
 			this._fbPanel = new FBPanel(this);
 			this._skillPanel = new SkillPanel(this);
+			this._phbPanel = new PHBPanel(this);
 
 			this._controller = this._root.getController("c1");
 			this._panels.push(this._zcPanel);
 			this._panels.push(this._fbPanel);
 			this._panels.push(this._skillPanel);
+			this._panels.push(this._phbPanel);
 
 			this._root.getChild("main_btn").onClick(this, this.OnMainBtnClick);
 			this._root.getChild("fuben_btn").onClick(this, this.OnFubenBtnClick);

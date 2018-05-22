@@ -32,6 +32,7 @@ namespace View.UI {
 		}
 
 		private OnPHBBtnClick(): any {
+			this._owner.panelIndex = 3;
 		}
 
 		private OnQDBtnClick(): any {
