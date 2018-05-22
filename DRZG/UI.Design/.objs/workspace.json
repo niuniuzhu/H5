@@ -1,4 +1,8 @@
 {
+	"active_doc": [
+		"nwaone9f",
+		"bsdg7"
+	],
 	"hidden_packages": [],
 	"docs": [
 		"nwaone9f",
@@ -13,9 +17,5 @@
 		"/",
 		"dhvv3tkx",
 		"/"
-	],
-	"active_doc": [
-		"nwaone9f",
-		"bsdg7"
 	]
 }

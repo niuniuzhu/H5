@@ -1,0 +1,11 @@
+{
+	"compilerOptions": {
+		"module": "amd",
+		"target": "es6",
+		"inlineSourceMap": false,
+		"inlineSources": false,
+		"sourceMap": true,
+		"removeComments": true,
+		"outFile": "./bin/js/game.js"
+	}
+}

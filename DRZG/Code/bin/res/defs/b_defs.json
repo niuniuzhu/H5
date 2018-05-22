@@ -66,6 +66,58 @@
 			"mhp": 2000
 		}
 	},
+	"skills": {
+		"s0": {
+			"cmp": 0,
+			"gmp": 0,
+			"fx": ""
+		},
+		"s1": {
+			"cmp": 0,
+			"gmp": 0,
+			"fx": ""
+		},
+		"s2": {
+			"cmp": 0,
+			"gmp": 0,
+			"fx": ""
+		},
+		"s3": {
+			"cmp": 0,
+			"gmp": 0,
+			"fx": ""
+		},
+		"s4": {
+			"cmp": 0,
+			"gmp": 0,
+			"fx": ""
+		},
+		"s5": {
+			"cmp": 0,
+			"gmp": 0,
+			"fx": ""
+		},
+		"s6": {
+			"cmp": 0,
+			"gmp": 0,
+			"fx": ""
+		},
+		"s7": {
+			"cmp": 0,
+			"gmp": 0,
+			"fx": ""
+		},
+		"s8": {
+			"cmp": 0,
+			"gmp": 0,
+			"fx": ""
+		},
+		"s9": {
+			"cmp": 0,
+			"gmp": 0,
+			"fx": ""
+		}
+	},
 	"task": [
 		"建造一个发电场&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color=\"#ffffff\">0/1</font><br><br>任务奖励：<font color=\"#ffff00\">获得矿石1000，能源1000。</font>",
 		"建造一个交易所&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color=\"#ffffff\">0/1</font><br><br>任务奖励：<font color=\"#ffff00\">获得矿石4000，能源4000。</font>",

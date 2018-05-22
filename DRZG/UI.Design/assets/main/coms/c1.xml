@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="656,820">
+  <displayList>
+    <image id="n19_yer1" name="n19" src="yer1s" fileName="assets/副本选关卡.png" xy="0,0"/>
+    <component id="n20_yer1" name="b0" src="yer1u" fileName="coms/place.xml" xy="437,4" size="139,139"/>
+    <component id="n21_yer1" name="b1" src="yer1u" fileName="coms/place.xml" xy="217,167" size="174,169"/>
+    <component id="n24_yer1" name="b2" src="yer1u" fileName="coms/place.xml" xy="398,338" size="204,195"/>
+    <component id="n25_yer1" name="b3" src="yer1u" fileName="coms/place.xml" xy="197,482" size="174,169"/>
+    <component id="n26_yer1" name="b4" src="yer1u" fileName="coms/place.xml" xy="47,640" size="174,169"/>
+  </displayList>
+</component>

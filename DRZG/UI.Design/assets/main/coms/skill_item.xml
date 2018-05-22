@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="116,152" extention="Label">
+  <displayList>
+    <image id="n29_yer1" name="n29" src="yer11a" fileName="assets/skill/jinengkuang.png" xy="0,0"/>
+    <loader id="n31_yer1" name="icon" xy="0,0" size="116,152" touchable="false" align="center" vAlign="middle"/>
+  </displayList>
+</component>

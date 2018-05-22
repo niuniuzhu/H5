@@ -53,6 +53,23 @@
 			"problemMatcher": [
 				"$tsc"
 			]
+		},
+		{
+			"label": "Build GLTest",
+			"type": "shell",
+			"command": "tsc-plus",
+			"args": [
+				"-p",
+				"./GLTest/Code"
+			],
+			"group": "build",
+			"presentation": {
+				"panel": "dedicated",
+				"reveal": "silent"
+			},
+			"problemMatcher": [
+				"$tsc"
+			]
 		}
 	]
 }

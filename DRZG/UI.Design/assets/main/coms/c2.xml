@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="680,850" designImage="ui://dhvv3tkxyer1v" designImageOffsetX="-21" designImageOffsetY="-226" designImageAlpha="41" designImageLayer="1">
+  <displayList>
+    <component id="n21_yer1" name="n21" src="k6nj7" fileName="coms/panel1.xml" pkg="evwornmp" xy="0,0">
+      <Label icon="ui://dhvv3tkxyer1y"/>
+    </component>
+    <image id="n22_yer1" name="n22" src="yer1z" fileName="assets/skill/dikuang08.png" xy="198,91"/>
+    <image id="n23_yer1" name="n23" src="yer1z" fileName="assets/skill/dikuang08.png" xy="198,559"/>
+    <text id="n24_yer1" name="n24" xy="287,101" size="105,33" fontSize="24" color="#613717" bold="true" text="已有技能"/>
+    <text id="n25_yer1" name="n25" xy="262,569" size="155,33" fontSize="24" color="#613717" bold="true" text="当前装备技能"/>
+    <image id="n26_yer1" name="n26" src="yer11b" fileName="assets/skill/kuang05.png" xy="17,155" size="646,380"/>
+    <image id="n27_yer1" name="n27" src="yer11b" fileName="assets/skill/kuang05.png" xy="17,621" size="646,212"/>
+    <list id="n28_yer1" name="list" xy="28,180" size="621,333" layout="flow_hz" lineGap="25" colGap="9" defaultItem="ui://dhvv3tkxyer11c">
+      <item icon="ui://dhvv3tkxyer110" name="s0"/>
+      <item icon="ui://dhvv3tkxyer111" name="s1"/>
+      <item icon="ui://dhvv3tkxyer112" name="s2"/>
+      <item icon="ui://dhvv3tkxyer113" name="s3"/>
+      <item icon="ui://dhvv3tkxyer114" name="s4"/>
+      <item icon="ui://dhvv3tkxyer115" name="s5"/>
+      <item icon="ui://dhvv3tkxyer116" name="s6"/>
+      <item icon="ui://dhvv3tkxyer117" name="s7"/>
+      <item icon="ui://dhvv3tkxyer118" name="s8"/>
+      <item icon="ui://dhvv3tkxyer119" name="s9"/>
+    </list>
+    <list id="n30_yer1" name="list2" xy="28,653" size="621,164" layout="flow_hz" lineGap="25" colGap="9" defaultItem="ui://dhvv3tkxyer11c">
+      <item icon="ui://dhvv3tkxyer110" name="s0"/>
+      <item icon="ui://dhvv3tkxyer111" name="s1"/>
+      <item icon="ui://dhvv3tkxyer112" name="s2"/>
+      <item icon="ui://dhvv3tkxyer113" name="s3"/>
+      <item icon="ui://dhvv3tkxyer114" name="s4"/>
+    </list>
+  </displayList>
+</component>

@@ -1085,6 +1085,112 @@ var View;
 (function (View) {
     var UI;
     (function (UI) {
+        class FBPanel {
+            constructor(owner) {
+                this._owner = owner;
+                this._root = owner.root.getChild("c1").asCom;
+                this._root.getChild("b0").onClick(this, this.OnB0BtnClick);
+                this._root.getChild("b1").onClick(this, this.OnB1BtnClick);
+                this._root.getChild("b2").onClick(this, this.OnB2BtnClick);
+                this._root.getChild("b3").onClick(this, this.OnB3BtnClick);
+                this._root.getChild("b4").onClick(this, this.OnB4BtnClick);
+            }
+            Dispose() {
+            }
+            Enter() {
+            }
+            Exit() {
+            }
+            Update(deltaTime) {
+            }
+            OnResize(e) {
+            }
+            OnB0BtnClick() {
+                this._owner.EnterBattle();
+            }
+            OnB1BtnClick() {
+                this._owner.EnterBattle();
+            }
+            OnB2BtnClick() {
+                this._owner.EnterBattle();
+            }
+            OnB3BtnClick() {
+                this._owner.EnterBattle();
+            }
+            OnB4BtnClick() {
+                this._owner.EnterBattle();
+            }
+        }
+        UI.FBPanel = FBPanel;
+    })(UI = View.UI || (View.UI = {}));
+})(View || (View = {}));
+var View;
+(function (View) {
+    var UI;
+    (function (UI) {
+        class SkillPanel {
+            constructor(owner) {
+                this._owner = owner;
+                this._root = owner.root.getChild("c2").asCom;
+                this._list = this._root.getChild("list").asList;
+                this._list2 = this._root.getChild("list2").asList;
+                let count = this._list.numItems;
+                for (let i = 0; i < count; ++i) {
+                    let item = this._list.getChildAt(i);
+                    item.draggable = true;
+                    item.on(fairygui.Events.DRAG_START, this, this.OnItemDragStart);
+                }
+                count = this._list2.numItems;
+                for (let i = 0; i < count; ++i) {
+                    let item = this._list2.getChildAt(i);
+                    item.data = item.name;
+                    item.on(fairygui.Events.DROP, this, this.OnItemDrop);
+                }
+            }
+            Dispose() {
+            }
+            Enter() {
+            }
+            Exit() {
+            }
+            Update(deltaTime) {
+            }
+            OnResize(e) {
+            }
+            OnJJCBtnClick() {
+            }
+            OnPHBBtnClick() {
+            }
+            OnQDBtnClick() {
+            }
+            OnYXBtnClick() {
+            }
+            OnItemDragStart(e) {
+                let item = fairygui.GObject.cast(e.currentTarget);
+                item.stopDrag();
+                fairygui.DragDropManager.inst.startDrag(item, item.icon, [item.icon, item.name]);
+            }
+            OnItemDrop(data, e) {
+                let item = fairygui.GObject.cast(e.currentTarget);
+                item.icon = data[0];
+                item.data = data[1];
+            }
+            GetSkills() {
+                let count = this._list2.numItems;
+                let skills = [];
+                for (let i = 0; i < count; ++i) {
+                    skills.push(this._list2.getChildAt(i).data);
+                }
+                return skills;
+            }
+        }
+        UI.SkillPanel = SkillPanel;
+    })(UI = View.UI || (View.UI = {}));
+})(View || (View = {}));
+var View;
+(function (View) {
+    var UI;
+    (function (UI) {
         class UIBattle {
             constructor() {
                 fairygui.UIPackage.addPackage("res/ui/battle");
@@ -1159,6 +1265,18 @@ var View;
         class UIMain {
             constructor() {
                 fairygui.UIPackage.addPackage("res/ui/main");
+                this._panels = [];
+            }
+            get root() { return this._root; }
+            get zcPanel() { return this._zcPanel; }
+            get fbPanel() { return this._fbPanel; }
+            get skillPanel() { return this._skillPanel; }
+            set panelIndex(value) {
+                if (this._controller.selectedIndex == value)
+                    return;
+                this._panels[this._controller.selectedIndex].Exit();
+                this._panels[value].Enter();
+                this._controller.selectedIndex = value;
             }
             Dispose() {
             }
@@ -1168,21 +1286,40 @@ var View;
                 this._root.width = fairygui.GRoot.inst.width;
                 this._root.height = fairygui.GRoot.inst.height;
                 this._root.addRelation(fairygui.GRoot.inst, fairygui.RelationType.Size);
+                this._zcPanel = new UI.ZCPanel(this);
+                this._fbPanel = new UI.FBPanel(this);
+                this._skillPanel = new UI.SkillPanel(this);
+                this._controller = this._root.getController("c1");
+                this._panels.push(this._zcPanel);
+                this._panels.push(this._fbPanel);
+                this._panels.push(this._skillPanel);
                 this._root.getChild("main_btn").onClick(this, this.OnMainBtnClick);
                 this._root.getChild("fuben_btn").onClick(this, this.OnFubenBtnClick);
                 this._root.getChild("skill_btn").onClick(this, this.OnSkillBtnClick);
             }
             Leave() {
+                for (let p of this._panels)
+                    p.Dispose();
+                this._panels.splice(0);
                 this._root.dispose();
                 this._root = null;
+                this._controller = null;
             }
             Update(deltaTime) {
+                for (let p of this._panels)
+                    p.Update(deltaTime);
             }
             OnResize(e) {
+                for (let p of this._panels)
+                    p.OnResize(e);
             }
             OnMainBtnClick() {
             }
             OnFubenBtnClick() {
+            }
+            OnSkillBtnClick() {
+            }
+            EnterBattle() {
                 let param = new Shared.Model.BattleParams();
                 param.framesPerKeyFrame = 4;
                 param.frameRate = 20;
@@ -1191,11 +1328,11 @@ var View;
                 param.rndSeed = RC.Utils.Timer.utcTime;
                 param.team0 = new Shared.Model.TeamParam();
                 param.team0.mp = 5;
-                param.team0.skills = [];
+                param.team0.skills = this._skillPanel.GetSkills();
                 param.team0.towers = [];
                 param.team1 = new Shared.Model.TeamParam();
                 param.team1.mp = 5;
-                param.team1.skills = [];
+                param.team1.skills = this._skillPanel.GetSkills();
                 param.team1.towers = [];
                 let tower = new Shared.Model.EntityParam();
                 tower.uid = "user";
@@ -1228,8 +1365,6 @@ var View;
                 tower.team = 1;
                 param.team1.towers.push(tower);
                 UI.UIManager.EnterBattle(param);
-            }
-            OnSkillBtnClick() {
             }
         }
         UI.UIMain = UIMain;
@@ -1288,6 +1423,41 @@ var View;
             }
         }
         UI.UIManager = UIManager;
+    })(UI = View.UI || (View.UI = {}));
+})(View || (View = {}));
+var View;
+(function (View) {
+    var UI;
+    (function (UI) {
+        class ZCPanel {
+            constructor(owner) {
+                this._owner = owner;
+                this._root = owner.root.getChild("c0").asCom;
+                this._root.getChild("jjc_btn").onClick(this, this.OnJJCBtnClick);
+                this._root.getChild("phb_btn").onClick(this, this.OnPHBBtnClick);
+                this._root.getChild("qd_btn").onClick(this, this.OnQDBtnClick);
+                this._root.getChild("yx_btn").onClick(this, this.OnYXBtnClick);
+            }
+            Dispose() {
+            }
+            Enter() {
+            }
+            Exit() {
+            }
+            Update(deltaTime) {
+            }
+            OnResize(e) {
+            }
+            OnJJCBtnClick() {
+            }
+            OnPHBBtnClick() {
+            }
+            OnQDBtnClick() {
+            }
+            OnYXBtnClick() {
+            }
+        }
+        UI.ZCPanel = ZCPanel;
     })(UI = View.UI || (View.UI = {}));
 })(View || (View = {}));
 //# sourceMappingURL=game.js.map

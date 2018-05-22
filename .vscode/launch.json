@@ -40,6 +40,19 @@
 			"sourceMaps": true,
 			"webRoot": "${workspaceRoot}",
 			"disableNetworkCache": true,
+		},
+		{
+			"name": "gltest",
+			"type": "chrome",
+			"request": "launch",
+			"file": "${workspaceRoot}/GLTest/Code/bin/index.html",
+			"runtimeArgs": [
+				"--allow-file-access-from-files",
+				"--auto-open-devtools-for-tabs"
+			],
+			"sourceMaps": true,
+			"webRoot": "${workspaceRoot}",
+			"disableNetworkCache": true,
 		}
 	]
 }

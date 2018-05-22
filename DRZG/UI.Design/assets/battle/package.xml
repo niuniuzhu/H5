@@ -12,6 +12,8 @@
     <component id="bsdg8" name="mp_bar.xml" path="/coms/"/>
     <component id="bsdg9" name="mp_bar_top.xml" path="/coms/"/>
     <component id="f15ta" name="battle_root.xml" path="/coms/"/>
+    <movieclip id="yer1b" name="出兵1.jta" path="/assets/"/>
+    <movieclip id="yer1c" name="出兵2.jta" path="/assets/"/>
   </resources>
   <publish name="battle"/>
 </packageDescription>

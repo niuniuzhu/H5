@@ -1,9 +1,28 @@
 namespace View.UI {
 	export class UIMain implements IUIModule {
 		private _root: fairygui.GComponent;
+		private _controller: fairygui.Controller;
+		private _zcPanel: ZCPanel;
+		private _fbPanel: FBPanel;
+		private _skillPanel: SkillPanel;
+		private readonly _panels: IMainPanel[];
+
+		public get root(): fairygui.GComponent { return this._root; }
+		public get zcPanel(): ZCPanel { return this._zcPanel; }
+		public get fbPanel(): FBPanel { return this._fbPanel; }
+		public get skillPanel(): SkillPanel { return this._skillPanel; }
+
+		public set panelIndex(value: number) {
+			if (this._controller.selectedIndex == value)
+				return;
+			this._panels[this._controller.selectedIndex].Exit();
+			this._panels[value].Enter();
+			this._controller.selectedIndex = value;
+		}
 
 		constructor() {
 			fairygui.UIPackage.addPackage("res/ui/main");
+			this._panels = [];
 		}
 
 		public Dispose(): void {
@@ -16,27 +35,50 @@ namespace View.UI {
 			this._root.height = fairygui.GRoot.inst.height;
 			this._root.addRelation(fairygui.GRoot.inst, fairygui.RelationType.Size);
 
+			this._zcPanel = new ZCPanel(this);
+			this._fbPanel = new FBPanel(this);
+			this._skillPanel = new SkillPanel(this);
+
+			this._controller = this._root.getController("c1");
+			this._panels.push(this._zcPanel);
+			this._panels.push(this._fbPanel);
+			this._panels.push(this._skillPanel);
+
 			this._root.getChild("main_btn").onClick(this, this.OnMainBtnClick);
 			this._root.getChild("fuben_btn").onClick(this, this.OnFubenBtnClick);
 			this._root.getChild("skill_btn").onClick(this, this.OnSkillBtnClick);
 		}
 
 		public Leave(): void {
+			for (let p of this._panels)
+				p.Dispose();
+			this._panels.splice(0);
+
 			this._root.dispose();
 			this._root = null;
+			this._controller = null;
 		}
 
 		public Update(deltaTime: number): void {
+			for (let p of this._panels)
+				p.Update(deltaTime);
 		}
 
 		public OnResize(e: laya.events.Event): void {
+			for (let p of this._panels)
+				p.OnResize(e);
 		}
 
 		private OnMainBtnClick(): void {
-
 		}
 
 		private OnFubenBtnClick(): void {
+		}
+
+		private OnSkillBtnClick(): void {
+		}
+
+		public EnterBattle(): void {
 			let param = new Shared.Model.BattleParams();
 			param.framesPerKeyFrame = 4;
 			param.frameRate = 20;
@@ -45,11 +87,11 @@ namespace View.UI {
 			param.rndSeed = RC.Utils.Timer.utcTime;
 			param.team0 = new Shared.Model.TeamParam();
 			param.team0.mp = 5;
-			param.team0.skills = [];
+			param.team0.skills = this._skillPanel.GetSkills();
 			param.team0.towers = [];
 			param.team1 = new Shared.Model.TeamParam();
 			param.team1.mp = 5;
-			param.team1.skills = [];
+			param.team1.skills = this._skillPanel.GetSkills();
 			param.team1.towers = [];
 
 			// team 0
@@ -91,10 +133,6 @@ namespace View.UI {
 			param.team1.towers.push(tower);
 
 			UIManager.EnterBattle(param);
-		}
-
-		private OnSkillBtnClick(): void {
-
 		}
 	}
 }

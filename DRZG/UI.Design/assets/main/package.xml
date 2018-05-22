@@ -27,6 +27,28 @@
     <component id="e280n" name="fuben_btn.xml" path="/coms/"/>
     <component id="e280o" name="jineng_btn.xml" path="/coms/"/>
     <font id="e280p" name="Font1.fnt" path="/coms/" exported="true"/>
+    <image id="yer1q" name="主界面.png" path="/assets/"/>
+    <component id="yer1r" name="c0.xml" path="/coms/"/>
+    <image id="yer1s" name="副本选关卡.png" path="/assets/"/>
+    <component id="yer1t" name="c1.xml" path="/coms/"/>
+    <component id="yer1u" name="place.xml" path="/coms/"/>
+    <image id="yer1v" name="05技能01.jpg" path="/assets/"/>
+    <component id="yer1x" name="c2.xml" path="/coms/"/>
+    <image id="yer1y" name="biaoti05.png" path="/assets/skill/"/>
+    <image id="yer1z" name="dikuang08.png" path="/assets/skill/"/>
+    <image id="yer110" name="jineng01.png" path="/assets/skill/"/>
+    <image id="yer111" name="jineng02.png" path="/assets/skill/"/>
+    <image id="yer112" name="jineng03.png" path="/assets/skill/"/>
+    <image id="yer113" name="jineng04.png" path="/assets/skill/"/>
+    <image id="yer114" name="jineng05.png" path="/assets/skill/"/>
+    <image id="yer115" name="jineng06.png" path="/assets/skill/"/>
+    <image id="yer116" name="jineng07.png" path="/assets/skill/"/>
+    <image id="yer117" name="jineng08.png" path="/assets/skill/"/>
+    <image id="yer118" name="jineng09.png" path="/assets/skill/"/>
+    <image id="yer119" name="jineng10.png" path="/assets/skill/"/>
+    <image id="yer11a" name="jinengkuang.png" path="/assets/skill/"/>
+    <image id="yer11b" name="kuang05.png" path="/assets/skill/" scale="9grid" scale9grid="162,52,324,104"/>
+    <component id="yer11c" name="skill_item.xml" path="/coms/"/>
   </resources>
   <publish name="main"/>
 </packageDescription>
