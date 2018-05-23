@@ -2,7 +2,7 @@
 
 namespace View {
 	export class CTower extends CEntity {
-		private _team: number;
+		protected _team: number;
 
 		public get team(): number { return this._team; }
 

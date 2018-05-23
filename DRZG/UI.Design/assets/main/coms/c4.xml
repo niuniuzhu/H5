@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="680,850" designImage="ui://dhvv3tkxd7xv24" designImageOffsetX="-19" designImageOffsetY="-227" designImageLayer="1">
+  <displayList>
+    <component id="n0_d7xv" name="n0" src="k6nj7" fileName="coms/panel1.xml" pkg="evwornmp" xy="0,0"/>
+    <image id="n2_d7xv" name="n2" src="d7xv2d" fileName="assets/fb/dikuang05.png" xy="166,185"/>
+    <image id="n3_d7xv" name="n3" src="d7xv2d" fileName="assets/fb/dikuang05.png" xy="166,626"/>
+    <text id="n4_d7xv" name="n4" xy="176,192" size="142,40" fontSize="32" color="#ffffff" text="敌方战力:"/>
+    <text id="n5_d7xv" name="n5" xy="176,633" size="142,40" fontSize="32" color="#ffffff" text="我方战力:"/>
+    <text id="n6_d7xv" name="atk2" xy="332,192" size="113,40" fontSize="32" color="#ffdd1e" text="324325"/>
+    <text id="n7_d7xv" name="atk1" xy="332,633" size="113,40" fontSize="32" color="#ffdd1e" text="386954"/>
+    <loader id="n8_d7xv" name="icon" xy="205,295" size="270,260" url="ui://dhvv3tkxd7xv2l" autoSize="true"/>
+    <component id="n9_d7xv" name="fight_btn" src="k6nj2" fileName="coms/button1.xml" pkg="evwornmp" xy="386,755">
+      <Button icon="ui://dhvv3tkxd7xv26"/>
+    </component>
+    <component id="n10_d7xv" name="cancel_btn" src="k6nj3" fileName="coms/button2.xml" pkg="evwornmp" xy="105,755">
+      <Button icon="ui://dhvv3tkxd7xv2q"/>
+    </component>
+  </displayList>
+</component>

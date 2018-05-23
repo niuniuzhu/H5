@@ -6,7 +6,7 @@ namespace View {
 		protected _position: RC.Numerics.Vec2;
 		protected _markToDestroy: boolean;
 		protected _graphic: EntityGraphic;
-		protected _data: Shared.Model.EntityData = null;
+		protected _data: Shared.Model.EntityData;
 
 		public get id(): string { return this._data.id; }
 

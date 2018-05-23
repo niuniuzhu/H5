@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="720,1280" designImageLayer="1">
+  <controller name="c1" pages="0,,1," selected="0"/>
+  <displayList>
+    <graph id="n11_d7xv" name="n11" xy="0,0" size="720,1280" type="rect" lineSize="0" fillColor="#cc000000"/>
+    <image id="n1_d7xv" name="n1" src="d7xvg" fileName="assets/dikuang06.png" xy="0,786"/>
+    <component id="n8_d7xv" name="n8" src="k6nj2" fileName="coms/button1.xml" pkg="evwornmp" xy="264,1071">
+      <Button icon="ui://evwornmpd7xvx"/>
+    </component>
+    <text id="n9_d7xv" name="n9" xy="227,851" size="147,41" fontSize="32" color="#ffffff" align="center" vAlign="middle" bold="true" text="获得经验:"/>
+    <text id="n10_d7xv" name="n10" xy="380,851" size="95,41" fontSize="32" color="#ffdd1e" align="center" vAlign="middle" bold="true" text="57834"/>
+    <image id="n6_d7xv" name="n6" src="d7xvi" fileName="assets/shenglidi.png" xy="0,82" group="n12_d7xv"/>
+    <image id="n7_d7xv" name="n7" src="d7xvm" fileName="assets/胜利结算页面上的人物.png" xy="220,198" group="n12_d7xv"/>
+    <image id="n2_d7xv" name="n2" src="d7xvh" fileName="assets/shengli.png" xy="219,366" group="n12_d7xv"/>
+    <image id="n3_d7xv" name="n3" src="d7xvk" fileName="assets/xingxing01.png" xy="213,508" group="n12_d7xv"/>
+    <image id="n4_d7xv" name="n4" src="d7xvk" fileName="assets/xingxing01.png" xy="300,508" group="n12_d7xv"/>
+    <image id="n5_d7xv" name="n5" src="d7xvk" fileName="assets/xingxing01.png" xy="387,508" group="n12_d7xv"/>
+    <group id="n12_d7xv" name="n12" xy="0,82" size="720,545" advanced="true">
+      <gearDisplay controller="c1" pages="0"/>
+    </group>
+    <image id="n13_d7xv" name="n13" src="d7xvj" fileName="assets/shibai.png" xy="163,365" group="n17_d7xv"/>
+    <image id="n14_d7xv" name="n14" src="d7xvk" fileName="assets/xingxing01.png" xy="213,508" group="n17_d7xv"/>
+    <image id="n15_d7xv" name="n15" src="d7xvl" fileName="assets/xingxing02.png" xy="300,508" group="n17_d7xv"/>
+    <image id="n16_d7xv" name="n16" src="d7xvl" fileName="assets/xingxing02.png" xy="386,508" group="n17_d7xv"/>
+    <group id="n17_d7xv" name="n17" xy="163,365" size="394,262" advanced="true">
+      <gearDisplay controller="c1" pages="1"/>
+    </group>
+  </displayList>
+</component>

@@ -1,8 +1,8 @@
 namespace View.UI {
 	export class PHBPanel implements IMainPanel {
-		private _owner: UIMain;
-		private _root: fairygui.GComponent;
-		private _list: fairygui.GList;
+		private readonly _owner: UIMain;
+		private readonly _root: fairygui.GComponent;
+		private readonly _list: fairygui.GList;
 
 		constructor(owner: UIMain) {
 			this._owner = owner;
@@ -20,6 +20,7 @@ namespace View.UI {
 				atks.push(Math.round(Math.random() * 25000 + 5000));
 			}
 			atks.sort();
+			atks.reverse();
 
 			for (let i = 0; i < 50; ++i) {
 				let item = this._list.addItemFromPool().asCom;

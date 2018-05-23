@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="680,850" designImage="ui://dhvv3tkxyer11d" designImageOffsetX="-22" designImageOffsetY="-230" designImageLayer="1">
+<component size="680,850" designImageOffsetX="-22" designImageOffsetY="-230" designImageLayer="1">
   <displayList>
     <component id="n22_yer1" name="n22" src="k6nj7" fileName="coms/panel1.xml" pkg="evwornmp" xy="0,0">
       <Label icon="ui://dhvv3tkxyer11e"/>

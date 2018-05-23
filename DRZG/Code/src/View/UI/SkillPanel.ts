@@ -1,9 +1,9 @@
 namespace View.UI {
 	export class SkillPanel implements IMainPanel {
-		private _owner: UIMain;
-		private _root: fairygui.GComponent;
-		private _list: fairygui.GList;
-		private _list2: fairygui.GList;
+		private readonly _owner: UIMain;
+		private readonly _root: fairygui.GComponent;
+		private readonly _list: fairygui.GList;
+		private readonly _list2: fairygui.GList;
 
 		constructor(owner: UIMain) {
 			this._owner = owner;

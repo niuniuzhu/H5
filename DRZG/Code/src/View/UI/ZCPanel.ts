@@ -1,7 +1,7 @@
 namespace View.UI {
 	export class ZCPanel implements IMainPanel {
-		private _owner: UIMain;
-		private _root: fairygui.GComponent;
+		private readonly _owner: UIMain;
+		private readonly _root: fairygui.GComponent;
 
 		constructor(owner: UIMain) {
 			this._owner = owner;

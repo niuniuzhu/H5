@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="680,850" designImage="ui://dhvv3tkxd7xv2r" designImageOffsetX="-19" designImageOffsetY="-227" designImageLayer="1">
+  <displayList>
+    <component id="n25_d7xv" name="n25" src="k6nj7" fileName="coms/panel1.xml" pkg="evwornmp" xy="0,0">
+      <Label icon="ui://dhvv3tkxd7xv20"/>
+    </component>
+    <image id="n26_d7xv" name="n26" src="d7xv22" fileName="assets/user/kuang04.png" xy="135,193"/>
+    <image id="n27_d7xv" name="n27" src="e280j" fileName="assets/zc/touxiangkuang.png" xy="290,249"/>
+    <loader id="n28_d7xv" name="icon" xy="293,252" size="94,94" url="ui://evwornmpd7xvv"/>
+    <image id="n29_d7xv" name="n29" src="d7xv21" fileName="assets/user/dikuang07.png" xy="201,373"/>
+    <image id="n30_d7xv" name="n30" src="d7xv21" fileName="assets/user/dikuang07.png" xy="201,436"/>
+    <image id="n31_d7xv" name="n31" src="d7xv21" fileName="assets/user/dikuang07.png" xy="201,499"/>
+    <image id="n32_d7xv" name="n32" src="d7xv21" fileName="assets/user/dikuang07.png" xy="201,562"/>
+    <image id="n33_d7xv" name="n33" src="d7xv21" fileName="assets/user/dikuang07.png" xy="201,625"/>
+    <text id="n34_d7xv" name="n34" xy="207,379" size="155,33" fontSize="24" color="#ffffff" align="center" vAlign="middle" bold="true" text="孤独的流浪者"/>
+    <text id="n35_d7xv" name="n35" xy="207,443" size="88,33" fontSize="24" color="#ffffff" align="center" vAlign="middle" bold="true" text="等级:32"/>
+    <text id="n36_d7xv" name="n36" xy="207,506" size="140,33" fontSize="24" color="#ffffff" align="center" vAlign="middle" bold="true" text="经验:432532"/>
+    <text id="n37_d7xv" name="n37" xy="207,568" size="75,33" fontSize="24" color="#ffffff" align="center" vAlign="middle" bold="true" text="排名:3"/>
+    <text id="n38_d7xv" name="n38" xy="207,631" size="127,33" fontSize="24" color="#ffffff" align="center" vAlign="middle" bold="true" text="战力:48394"/>
+  </displayList>
+</component>

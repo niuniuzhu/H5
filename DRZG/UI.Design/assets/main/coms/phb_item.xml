@@ -7,8 +7,9 @@
     <text id="n27_yer1" name="atk" xy="518,70" size="113,35" fontSize="28" color="#8e4a15" align="center" vAlign="middle" autoSize="none" bold="true" text="0"/>
     <text id="n28_yer1" name="lvl" xy="307,76" size="18,33" fontSize="24" color="#8e4a15" align="center" vAlign="middle" bold="true" text="0"/>
     <text id="n29_yer1" name="n29" xy="240,76" size="62,33" fontSize="24" color="#8e4a15" align="center" vAlign="middle" bold="true" text="等级:"/>
-    <image id="n30_yer1" name="n30" src="e280j" fileName="assets/touxiangkuang.png" xy="118,17"/>
+    <image id="n30_yer1" name="n30" src="e280j" fileName="assets/zc/touxiangkuang.png" xy="118,17"/>
+    <image id="n33_d7xv" name="n33" src="d7xv21" fileName="assets/user/dikuang07.png" xy="228,17"/>
     <text id="n31_yer1" name="name" xy="234,21" size="30,33" fontSize="24" color="#ffffff" align="center" vAlign="middle" bold="true" text="空"/>
-    <loader id="n32_yer1" name="icon" xy="121,20" size="94,94" url="ui://dhvv3tkxyer11y"/>
+    <loader id="n32_yer1" name="icon" xy="121,20" size="94,94" url="ui://evwornmpd7xvw"/>
   </displayList>
 </component>

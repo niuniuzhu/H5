@@ -55,14 +55,24 @@
 		}
 	},
 	"entities": {
-		"t0": {
-			"name": "t0",
-			"model": "t0",
+		"e0": {
+			"name": "e0",
+			"model": "e0",
 			"mhp": 2000
 		},
-		"t1": {
-			"name": "t1",
-			"model": "t1",
+		"e1": {
+			"name": "e1",
+			"model": "e1",
+			"mhp": 2000
+		},
+		"e2": {
+			"name": "e2",
+			"model": "e2",
+			"mhp": 2000
+		},
+		"e3": {
+			"name": "e3",
+			"model": "e3",
 			"mhp": 2000
 		}
 	},

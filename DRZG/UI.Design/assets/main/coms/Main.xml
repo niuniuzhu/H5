@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="720,1280" designImageAlpha="37" designImageLayer="1">
-  <controller name="c1" pages="0,主城,1,副本,2,技能,3,排行榜" selected="3"/>
+  <controller name="c1" pages="0,主城,1,副本,2,技能,3,排行榜,4,副本信息,5,玩家信息" selected="0"/>
   <displayList>
-    <image id="n1_e280" name="n1" src="e280d" fileName="assets/bg02.png" xy="0,0"/>
-    <image id="n2_e280" name="n2" src="e280i" fileName="assets/shanglang.png" xy="0,0"/>
-    <image id="n3_e280" name="n3" src="e280j" fileName="assets/touxiangkuang.png" xy="20,26"/>
-    <loader id="n4_e280" name="n4" xy="23,29" size="94,94" url="ui://dhvv3tkxyer11y"/>
-    <image id="n16_e280" name="n16" src="e280e" fileName="assets/dengjikuang.png" xy="23,103"/>
+    <image id="n1_e280" name="n1" src="e280d" fileName="assets/zc/bg02.png" xy="0,0"/>
+    <image id="n2_e280" name="n2" src="e280i" fileName="assets/zc/shanglang.png" xy="0,0"/>
+    <component id="n3_e280" name="n3" src="d7xv2t" fileName="coms/头像.xml" xy="20,26">
+      <Button controller="c1" page="5"/>
+    </component>
+    <image id="n16_e280" name="n16" src="e280e" fileName="assets/zc/dengjikuang.png" xy="23,103"/>
     <text id="n5_e280" name="n5" xy="18,102" size="36,25" font="ui://dhvv3tkxe280p" fontSize="20" color="#ffeebb" align="center" autoSize="none" text="1"/>
     <text id="n6_e280" name="n6" xy="178,33" size="20,25" font="ui://dhvv3tkxe280p" fontSize="24" color="#ffeebb" text="0"/>
     <text id="n7_e280" name="n7" xy="338,33" size="20,25" font="ui://dhvv3tkxe280p" fontSize="24" color="#ffeebb" text="0"/>
@@ -14,6 +15,9 @@
     <text id="n9_e280" name="n9" xy="156,95" size="173,31" fontSize="24" color="#ffeebb" align="center" autoSize="none" text=""/>
     <text id="n10_e280" name="n10" xy="431,98" size="20,25" font="ui://dhvv3tkxe280p" fontSize="24" color="#ffeebb" align="center" text="0"/>
     <text id="n11_e280" name="n11" xy="602,93" size="95,31" font="ui://dhvv3tkxe280p" fontSize="24" color="#ffeebb" align="center" autoSize="none" text="0"/>
+    <image id="n23_d7xv" name="n23" src="e280h" fileName="assets/zc/kuang03.png" xy="20,230">
+      <gearDisplay controller="c1" pages="0,1"/>
+    </image>
     <component id="n12_e280" name="main_btn" src="e280m" fileName="coms/zhucheng_btn.xml" xy="119,1156">
       <Button controller="c1" page="0"/>
     </component>
@@ -23,10 +27,10 @@
     <component id="n14_e280" name="skill_btn" src="e280o" fileName="coms/jineng_btn.xml" xy="497,1156">
       <Button controller="c1" page="2"/>
     </component>
-    <component id="n18_yer1" name="c0" src="yer1r" fileName="coms/c0.xml" xy="32,240">
+    <component id="n18_yer1" name="c0" src="yer1r" fileName="coms/c0.xml" xy="32,245">
       <gearDisplay controller="c1" pages="0"/>
     </component>
-    <component id="n19_yer1" name="c1" src="yer1t" fileName="coms/c1.xml" xy="32,240">
+    <component id="n19_yer1" name="c1" src="yer1t" fileName="coms/c1.xml" xy="32,245">
       <gearDisplay controller="c1" pages="1"/>
     </component>
     <component id="n21_yer1" name="c2" src="yer1x" fileName="coms/c2.xml" xy="20,230">
@@ -34,6 +38,12 @@
     </component>
     <component id="n22_yer1" name="c3" src="yer11v" fileName="coms/c3.xml" xy="20,228">
       <gearDisplay controller="c1" pages="3"/>
+    </component>
+    <component id="n24_d7xv" name="c4" src="d7xv23" fileName="coms/c4.xml" xy="20,228">
+      <gearDisplay controller="c1" pages="4"/>
+    </component>
+    <component id="n25_d7xv" name="c5" src="d7xv2s" fileName="coms/c5.xml" xy="20,228">
+      <gearDisplay controller="c1" pages="5"/>
     </component>
   </displayList>
 </component>

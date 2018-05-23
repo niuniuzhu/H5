@@ -1,35 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <packageDescription id="dhvv3tkx" jpegQuality="80" compressPNG="true">
   <resources>
-    <image id="e2800" name="03副本01.jpg" path="/assets/"/>
-    <image id="e2801" name="02主界面01.jpg" path="/assets/"/>
-    <image id="e2802" name="z_0.png" path="/assets/"/>
-    <image id="e2803" name="z_1.png" path="/assets/"/>
-    <image id="e2804" name="z_2.png" path="/assets/"/>
-    <image id="e2805" name="z_3.png" path="/assets/"/>
-    <image id="e2806" name="z_4.png" path="/assets/"/>
-    <image id="e2807" name="z_5.png" path="/assets/"/>
-    <image id="e2808" name="z_6.png" path="/assets/"/>
-    <image id="e2809" name="z_7.png" path="/assets/"/>
-    <image id="e280a" name="z_8.png" path="/assets/"/>
-    <image id="e280b" name="z_9.png" path="/assets/"/>
-    <image id="e280c" name="zhucheng.png" path="/assets/"/>
-    <image id="e280d" name="bg02.png" path="/assets/"/>
-    <image id="e280e" name="dengjikuang.png" path="/assets/"/>
-    <image id="e280f" name="fubeng.png" path="/assets/"/>
-    <image id="e280g" name="jineng.png" path="/assets/"/>
-    <image id="e280h" name="kuang03.png" path="/assets/"/>
-    <image id="e280i" name="shanglang.png" path="/assets/"/>
-    <image id="e280j" name="touxiangkuang.png" path="/assets/"/>
-    <image id="e280k" name="xialang.png" path="/assets/"/>
+    <image id="e2800" name="03副本01.jpg" path="/assets/fb/"/>
+    <image id="e2801" name="02主界面01.jpg" path="/assets/zc/"/>
+    <image id="e2802" name="z_0.png" path="/assets/zc/"/>
+    <image id="e2803" name="z_1.png" path="/assets/zc/"/>
+    <image id="e2804" name="z_2.png" path="/assets/zc/"/>
+    <image id="e2805" name="z_3.png" path="/assets/zc/"/>
+    <image id="e2806" name="z_4.png" path="/assets/zc/"/>
+    <image id="e2807" name="z_5.png" path="/assets/zc/"/>
+    <image id="e2808" name="z_6.png" path="/assets/zc/"/>
+    <image id="e2809" name="z_7.png" path="/assets/zc/"/>
+    <image id="e280a" name="z_8.png" path="/assets/zc/"/>
+    <image id="e280b" name="z_9.png" path="/assets/zc/"/>
+    <image id="e280c" name="zhucheng.png" path="/assets/zc/"/>
+    <image id="e280d" name="bg02.png" path="/assets/zc/"/>
+    <image id="e280e" name="dengjikuang.png" path="/assets/zc/"/>
+    <image id="e280f" name="fubeng.png" path="/assets/zc/"/>
+    <image id="e280g" name="jineng.png" path="/assets/zc/"/>
+    <image id="e280h" name="kuang03.png" path="/assets/zc/"/>
+    <image id="e280i" name="shanglang.png" path="/assets/zc/"/>
+    <image id="e280j" name="touxiangkuang.png" path="/assets/zc/"/>
+    <image id="e280k" name="xialang.png" path="/assets/zc/"/>
     <component id="e280l" name="Main.xml" path="/coms/" exported="true"/>
     <component id="e280m" name="zhucheng_btn.xml" path="/coms/"/>
     <component id="e280n" name="fuben_btn.xml" path="/coms/"/>
     <component id="e280o" name="jineng_btn.xml" path="/coms/"/>
     <font id="e280p" name="Font1.fnt" path="/coms/" exported="true"/>
-    <image id="yer1q" name="主界面.png" path="/assets/"/>
+    <image id="yer1q" name="主界面.png" path="/assets/zc/"/>
     <component id="yer1r" name="c0.xml" path="/coms/"/>
-    <image id="yer1s" name="副本选关卡.png" path="/assets/"/>
     <component id="yer1t" name="c1.xml" path="/coms/"/>
     <component id="yer1u" name="place.xml" path="/coms/"/>
     <image id="yer1v" name="05技能01.jpg" path="/assets/skill/"/>
@@ -69,8 +68,36 @@
     <component id="yer11v" name="c3.xml" path="/coms/"/>
     <component id="yer11w" name="phb_item.xml" path="/coms/"/>
     <font id="yer11x" name="Font2.fnt" path="/coms/" exported="true"/>
-    <image id="yer11y" name="头像1.png" path="/assets/"/>
-    <image id="yer11z" name="头像2.png" path="/assets/"/>
+    <image id="d7xv20" name="biaoti04.png" path="/assets/user/"/>
+    <image id="d7xv21" name="dikuang07.png" path="/assets/user/"/>
+    <image id="d7xv22" name="kuang04.png" path="/assets/user/"/>
+    <component id="d7xv23" name="c4.xml" path="/coms/"/>
+    <image id="d7xv24" name="03副本02.jpg" path="/assets/fb/" scale=""/>
+    <image id="d7xv25" name="副本选关卡.png" path="/assets/zc/"/>
+    <image id="d7xv26" name="anniuwenzi07.png" path="/assets/fb/"/>
+    <image id="d7xv27" name="anniuwenzi08.png" path="/assets/fb/"/>
+    <image id="d7xv28" name="biaoqian01.png" path="/assets/fb/"/>
+    <image id="d7xv29" name="biaoqian02.png" path="/assets/fb/"/>
+    <image id="d7xv2a" name="biaoqian03.png" path="/assets/fb/"/>
+    <image id="d7xv2b" name="biaoqian04.png" path="/assets/fb/"/>
+    <image id="d7xv2c" name="dikuang04.png" path="/assets/fb/"/>
+    <image id="d7xv2d" name="dikuang05.png" path="/assets/fb/"/>
+    <image id="d7xv2e" name="dikuang06.png" path="/assets/fb/"/>
+    <image id="d7xv2f" name="shengli.png" path="/assets/fb/"/>
+    <image id="d7xv2g" name="shenglidi.png" path="/assets/fb/"/>
+    <image id="d7xv2h" name="shibai.png" path="/assets/fb/"/>
+    <image id="d7xv2i" name="xingxing01.png" path="/assets/fb/"/>
+    <image id="d7xv2j" name="xingxing02.png" path="/assets/fb/"/>
+    <image id="d7xv2k" name="竞技场.png" path="/assets/fb/"/>
+    <image id="d7xv2l" name="fb0.png" path="/assets/fb/" exported="true"/>
+    <image id="d7xv2m" name="fb1.png" path="/assets/fb/" exported="true"/>
+    <image id="d7xv2n" name="fb2.png" path="/assets/fb/" exported="true"/>
+    <image id="d7xv2o" name="fb3.png" path="/assets/fb/" exported="true"/>
+    <image id="d7xv2p" name="fb4.png" path="/assets/fb/" exported="true"/>
+    <image id="d7xv2q" name="anniuwenzi04.png" path="/assets/fb/"/>
+    <image id="d7xv2r" name="04玩家信息01.jpg" path="/assets/user/"/>
+    <component id="d7xv2s" name="c5.xml" path="/coms/"/>
+    <component id="d7xv2t" name="头像.xml" path="/coms/"/>
   </resources>
   <publish name="main"/>
 </packageDescription>

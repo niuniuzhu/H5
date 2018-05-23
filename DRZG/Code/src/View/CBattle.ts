@@ -34,7 +34,7 @@ namespace View {
 
 			this._graphic = new MapGraphic(this._data.model);
 
-			this.CreatePlayers(param);
+			this.CreateTowers(param);
 		}
 
 		public Dispose(): void {
@@ -65,7 +65,7 @@ namespace View {
 			graphicRoot.addChild(this.graphicManager.root);
 		}
 
-		private CreatePlayers(param: Shared.Model.BattleParams): void {
+		private CreateTowers(param: Shared.Model.BattleParams): void {
 			this._player0 = new CPlayer(this, 0, param.team0.skills, param.team0.mp);
 			this._player1 = new CPlayer(this, 1, param.team1.skills, param.team1.mp);
 			for (let i = 0; i < param.team0.towers.length; ++i) {
@@ -84,6 +84,12 @@ namespace View {
 			param.rid = Shared.Utils.MakeRIDFromID(param.id);
 			let tower = this._entityManager.Create(CTower, param);
 			return <CTower>tower;
+		}
+
+		public CreateChampion(param: Shared.Model.EntityParam): CChampion {
+			param.rid = Shared.Utils.MakeRIDFromID(param.id);
+			let champion = this._entityManager.Create(CChampion, param);
+			return <CChampion>champion;
 		}
 	}
 }

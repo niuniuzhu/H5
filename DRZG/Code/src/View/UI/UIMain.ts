@@ -2,17 +2,21 @@ namespace View.UI {
 	export class UIMain implements IUIModule {
 		private _root: fairygui.GComponent;
 		private _controller: fairygui.Controller;
+		private readonly _panels: IMainPanel[];
 		private _zcPanel: ZCPanel;
 		private _fbPanel: FBPanel;
 		private _skillPanel: SkillPanel;
 		private _phbPanel: PHBPanel;
-		private readonly _panels: IMainPanel[];
+		private _fbInfoPanel: FBInfoPanel;
+		private _userInfoPanel: UserInfoPanel;
 
 		public get root(): fairygui.GComponent { return this._root; }
 		public get zcPanel(): ZCPanel { return this._zcPanel; }
 		public get fbPanel(): FBPanel { return this._fbPanel; }
 		public get skillPanel(): SkillPanel { return this._skillPanel; }
 		public get phbPanel(): PHBPanel { return this._phbPanel; }
+		public get fbInfoPanel(): FBInfoPanel { return this._fbInfoPanel; }
+		public get userInfoPanel(): UserInfoPanel { return this._userInfoPanel; }
 
 		public set panelIndex(value: number) {
 			if (this._controller.selectedIndex == value)
@@ -41,12 +45,16 @@ namespace View.UI {
 			this._fbPanel = new FBPanel(this);
 			this._skillPanel = new SkillPanel(this);
 			this._phbPanel = new PHBPanel(this);
+			this._fbInfoPanel = new FBInfoPanel(this);
+			this._userInfoPanel = new UserInfoPanel(this);
 
 			this._controller = this._root.getController("c1");
 			this._panels.push(this._zcPanel);
 			this._panels.push(this._fbPanel);
 			this._panels.push(this._skillPanel);
 			this._panels.push(this._phbPanel);
+			this._panels.push(this._fbInfoPanel);
+			this._panels.push(this._userInfoPanel);
 
 			this._root.getChild("main_btn").onClick(this, this.OnMainBtnClick);
 			this._root.getChild("fuben_btn").onClick(this, this.OnFubenBtnClick);
@@ -101,38 +109,38 @@ namespace View.UI {
 			// team 0
 			let tower = new Shared.Model.EntityParam();
 			tower.uid = "user";
-			tower.id = "t0";
+			tower.id = "e0";
 			tower.team = 0;
 			param.team0.towers.push(tower);
 
 			tower = new Shared.Model.EntityParam();
 			tower.uid = "user";
-			tower.id = "t1";
+			tower.id = "e1";
 			tower.team = 0;
 			param.team0.towers.push(tower);
 
 			tower = new Shared.Model.EntityParam();
 			tower.uid = "user";
-			tower.id = "t1";
+			tower.id = "e1";
 			tower.team = 0;
 			param.team0.towers.push(tower);
 
 			// team 1
 			tower = new Shared.Model.EntityParam();
 			tower.uid = "xxx";
-			tower.id = "t0";
+			tower.id = "e0";
 			tower.team = 1;
 			param.team1.towers.push(tower);
 
 			tower = new Shared.Model.EntityParam();
 			tower.uid = "xxx";
-			tower.id = "t1";
+			tower.id = "e1";
 			tower.team = 1;
 			param.team1.towers.push(tower);
 
 			tower = new Shared.Model.EntityParam();
 			tower.uid = "xxx";
-			tower.id = "t1";
+			tower.id = "e1";
 			tower.team = 1;
 			param.team1.towers.push(tower);
 
