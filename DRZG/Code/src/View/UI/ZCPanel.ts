@@ -29,6 +29,8 @@ namespace View.UI {
 		}
 
 		private OnJJCBtnClick(): any {
+			this._owner.panelIndex = 4;
+			this._owner.fbInfoPanel.fbID = "fb5";
 		}
 
 		private OnPHBBtnClick(): any {
@@ -36,6 +38,7 @@ namespace View.UI {
 		}
 
 		private OnQDBtnClick(): any {
+			this._owner.panelIndex = 6;
 		}
 
 		private OnYXBtnClick(): any {

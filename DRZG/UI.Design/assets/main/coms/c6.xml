@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="680,850" designImage="ui://dhvv3tkxd7xv2v" designImageOffsetX="-20" designImageOffsetY="-229" designImageLayer="1">
+  <displayList>
+    <component id="n1_d7xv" name="n1" src="k6nj7" fileName="coms/panel1.xml" pkg="evwornmp" xy="0,0">
+      <Label icon="ui://dhvv3tkxd7xv2y"/>
+    </component>
+    <list id="n2_d7xv" name="list" xy="15,89" size="653,738" overflow="scroll" lineGap="15" defaultItem="ui://dhvv3tkxd7xv32" autoClearItems="true">
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+    </list>
+    <text id="n3_d7xv" name="n3" xy="51,868" size="578,33" fontSize="24" color="#8e4a15" align="center" ubb="true" autoSize="none" bold="true" text="本月已累计签到[color=#e25c1b]20[/color]次"/>
+  </displayList>
+</component>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="720,1280" designImageAlpha="37" designImageLayer="1">
-  <controller name="c1" pages="0,主城,1,副本,2,技能,3,排行榜,4,副本信息,5,玩家信息" selected="0"/>
+<component size="720,1280" designImage="ui://dhvv3tkxe2801" designImageAlpha="37" designImageLayer="1">
+  <controller name="c1" pages="0,主城,1,副本,2,技能,3,排行榜,4,副本信息,5,玩家信息,6,签到" selected="0"/>
   <displayList>
     <image id="n1_e280" name="n1" src="e280d" fileName="assets/zc/bg02.png" xy="0,0"/>
     <image id="n2_e280" name="n2" src="e280i" fileName="assets/zc/shanglang.png" xy="0,0"/>
@@ -12,7 +12,7 @@
     <text id="n6_e280" name="n6" xy="178,33" size="20,25" font="ui://dhvv3tkxe280p" fontSize="24" color="#ffeebb" text="0"/>
     <text id="n7_e280" name="n7" xy="338,33" size="20,25" font="ui://dhvv3tkxe280p" fontSize="24" color="#ffeebb" text="0"/>
     <text id="n8_e280" name="n8" xy="490,33" size="20,25" font="ui://dhvv3tkxe280p" fontSize="24" color="#ffeebb" text="0"/>
-    <text id="n9_e280" name="n9" xy="156,95" size="173,31" fontSize="24" color="#ffeebb" align="center" autoSize="none" text=""/>
+    <text id="n9_e280" name="n9" xy="156,95" size="173,31" fontSize="24" color="#ffeebb" align="center" autoSize="none" text="邪恶的天使"/>
     <text id="n10_e280" name="n10" xy="431,98" size="20,25" font="ui://dhvv3tkxe280p" fontSize="24" color="#ffeebb" align="center" text="0"/>
     <text id="n11_e280" name="n11" xy="602,93" size="95,31" font="ui://dhvv3tkxe280p" fontSize="24" color="#ffeebb" align="center" autoSize="none" text="0"/>
     <image id="n23_d7xv" name="n23" src="e280h" fileName="assets/zc/kuang03.png" xy="20,230">
@@ -44,6 +44,9 @@
     </component>
     <component id="n25_d7xv" name="c5" src="d7xv2s" fileName="coms/c5.xml" xy="20,228">
       <gearDisplay controller="c1" pages="5"/>
+    </component>
+    <component id="n26_d7xv" name="c6" src="d7xv31" fileName="coms/c6.xml" xy="20,228">
+      <gearDisplay controller="c1" pages="6"/>
     </component>
   </displayList>
 </component>

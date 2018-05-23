@@ -24,7 +24,7 @@ namespace View.UI {
 
 			for (let i = 0; i < 50; ++i) {
 				let item = this._list.addItemFromPool().asCom;
-				item.getChild("name").asTextField.text = btoa(RC.Utils.GUID.Generate().ToString(RC.Utils.GuidFormat.DASHES));
+				item.getChild("name").asTextField.text = (btoa(RC.Utils.GUID.Generate().ToString(RC.Utils.GuidFormat.DASHES))).substring(0, 8);
 				let rank: string;
 				switch (i) {
 					case 0:

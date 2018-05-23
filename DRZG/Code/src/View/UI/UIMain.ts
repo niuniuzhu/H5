@@ -9,6 +9,7 @@ namespace View.UI {
 		private _phbPanel: PHBPanel;
 		private _fbInfoPanel: FBInfoPanel;
 		private _userInfoPanel: UserInfoPanel;
+		private _qdPanel: QDPanel;
 
 		public get root(): fairygui.GComponent { return this._root; }
 		public get zcPanel(): ZCPanel { return this._zcPanel; }
@@ -17,6 +18,7 @@ namespace View.UI {
 		public get phbPanel(): PHBPanel { return this._phbPanel; }
 		public get fbInfoPanel(): FBInfoPanel { return this._fbInfoPanel; }
 		public get userInfoPanel(): UserInfoPanel { return this._userInfoPanel; }
+		public get qdPanel(): QDPanel { return this._qdPanel; }
 
 		public set panelIndex(value: number) {
 			if (this._controller.selectedIndex == value)
@@ -47,6 +49,7 @@ namespace View.UI {
 			this._phbPanel = new PHBPanel(this);
 			this._fbInfoPanel = new FBInfoPanel(this);
 			this._userInfoPanel = new UserInfoPanel(this);
+			this._qdPanel = new QDPanel(this);
 
 			this._controller = this._root.getController("c1");
 			this._panels.push(this._zcPanel);
@@ -55,10 +58,18 @@ namespace View.UI {
 			this._panels.push(this._phbPanel);
 			this._panels.push(this._fbInfoPanel);
 			this._panels.push(this._userInfoPanel);
+			this._panels.push(this._qdPanel);
 
 			this._root.getChild("main_btn").onClick(this, this.OnMainBtnClick);
 			this._root.getChild("fuben_btn").onClick(this, this.OnFubenBtnClick);
 			this._root.getChild("skill_btn").onClick(this, this.OnSkillBtnClick);
+
+			this._root.getChild("n5").asTextField.text = "" + Math.round(Math.random() * 30 + 5);
+			this._root.getChild("n6").asTextField.text = "" + Math.round(Math.random() * 10000 + 3000);
+			this._root.getChild("n7").asTextField.text = "" + Math.round(Math.random() * 10000 + 3000);
+			this._root.getChild("n8").asTextField.text = "" + Math.round(Math.random() * 10000 + 3000);
+			this._root.getChild("n10").asTextField.text = "" + Math.round(Math.random() * 10000 + 3000);
+			this._root.getChild("n11").asTextField.text = "" + Math.round(Math.random() * 3000 + 1000);
 		}
 
 		public Leave(): void {

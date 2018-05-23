@@ -5,6 +5,28 @@ namespace View.UI {
 
 		public set fbID(id: string) {
 			this._root.getChild("icon").asLoader.url = fairygui.UIPackage.getItemURL("main", id);
+			let title: string;
+			switch (id) {
+				case "fb0":
+					title = "第一章";
+					break;
+				case "fb1":
+					title = "第二章";
+					break;
+				case "fb2":
+					title = "第三章";
+					break;
+				case "fb3":
+					title = "第四章";
+					break;
+				case "fb4":
+					title = "第五章";
+					break;
+				case "fb5":
+					title = "竞技场";
+					break;
+			}
+			this._root.getChild("n0").asLabel.title = title;
 		}
 
 		constructor(owner: UIMain) {

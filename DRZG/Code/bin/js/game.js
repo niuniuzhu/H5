@@ -1113,6 +1113,28 @@ var View;
             }
             set fbID(id) {
                 this._root.getChild("icon").asLoader.url = fairygui.UIPackage.getItemURL("main", id);
+                let title;
+                switch (id) {
+                    case "fb0":
+                        title = "第一章";
+                        break;
+                    case "fb1":
+                        title = "第二章";
+                        break;
+                    case "fb2":
+                        title = "第三章";
+                        break;
+                    case "fb3":
+                        title = "第四章";
+                        break;
+                    case "fb4":
+                        title = "第五章";
+                        break;
+                    case "fb5":
+                        title = "竞技场";
+                        break;
+                }
+                this._root.getChild("n0").asLabel.title = title;
             }
             Dispose() {
             }
@@ -1188,7 +1210,7 @@ var View;
                 atks.reverse();
                 for (let i = 0; i < 50; ++i) {
                     let item = this._list.addItemFromPool().asCom;
-                    item.getChild("name").asTextField.text = btoa(RC.Utils.GUID.Generate().ToString(RC.Utils.GuidFormat.DASHES));
+                    item.getChild("name").asTextField.text = (btoa(RC.Utils.GUID.Generate().ToString(RC.Utils.GuidFormat.DASHES))).substring(0, 8);
                     let rank;
                     switch (i) {
                         case 0:
@@ -1218,6 +1240,36 @@ var View;
             }
         }
         UI.PHBPanel = PHBPanel;
+    })(UI = View.UI || (View.UI = {}));
+})(View || (View = {}));
+var View;
+(function (View) {
+    var UI;
+    (function (UI) {
+        class QDPanel {
+            constructor(owner) {
+                this._owner = owner;
+                this._root = owner.root.getChild("c6").asCom;
+                this._list = this._root.getChild("list").asList;
+            }
+            Dispose() {
+            }
+            Enter() {
+                for (let i = 0; i < 20; ++i) {
+                    let item = this._list.addItemFromPool().asCom;
+                    item.getController("c1").selectedIndex = Math.round(Math.random() * 2);
+                    item.getChild("exp").asTextField.text = "" + Math.round(Math.random() * 3000 + 1500);
+                }
+            }
+            Exit() {
+                this._list.removeChildrenToPool();
+            }
+            Update(deltaTime) {
+            }
+            OnResize(e) {
+            }
+        }
+        UI.QDPanel = QDPanel;
     })(UI = View.UI || (View.UI = {}));
 })(View || (View = {}));
 var View;
@@ -1370,6 +1422,7 @@ var View;
             get phbPanel() { return this._phbPanel; }
             get fbInfoPanel() { return this._fbInfoPanel; }
             get userInfoPanel() { return this._userInfoPanel; }
+            get qdPanel() { return this._qdPanel; }
             set panelIndex(value) {
                 if (this._controller.selectedIndex == value)
                     return;
@@ -1391,6 +1444,7 @@ var View;
                 this._phbPanel = new UI.PHBPanel(this);
                 this._fbInfoPanel = new UI.FBInfoPanel(this);
                 this._userInfoPanel = new UI.UserInfoPanel(this);
+                this._qdPanel = new UI.QDPanel(this);
                 this._controller = this._root.getController("c1");
                 this._panels.push(this._zcPanel);
                 this._panels.push(this._fbPanel);
@@ -1398,9 +1452,16 @@ var View;
                 this._panels.push(this._phbPanel);
                 this._panels.push(this._fbInfoPanel);
                 this._panels.push(this._userInfoPanel);
+                this._panels.push(this._qdPanel);
                 this._root.getChild("main_btn").onClick(this, this.OnMainBtnClick);
                 this._root.getChild("fuben_btn").onClick(this, this.OnFubenBtnClick);
                 this._root.getChild("skill_btn").onClick(this, this.OnSkillBtnClick);
+                this._root.getChild("n5").asTextField.text = "" + Math.round(Math.random() * 30 + 5);
+                this._root.getChild("n6").asTextField.text = "" + Math.round(Math.random() * 10000 + 3000);
+                this._root.getChild("n7").asTextField.text = "" + Math.round(Math.random() * 10000 + 3000);
+                this._root.getChild("n8").asTextField.text = "" + Math.round(Math.random() * 10000 + 3000);
+                this._root.getChild("n10").asTextField.text = "" + Math.round(Math.random() * 10000 + 3000);
+                this._root.getChild("n11").asTextField.text = "" + Math.round(Math.random() * 3000 + 1000);
             }
             Leave() {
                 for (let p of this._panels)
@@ -1577,11 +1638,14 @@ var View;
             OnResize(e) {
             }
             OnJJCBtnClick() {
+                this._owner.panelIndex = 4;
+                this._owner.fbInfoPanel.fbID = "fb5";
             }
             OnPHBBtnClick() {
                 this._owner.panelIndex = 3;
             }
             OnQDBtnClick() {
+                this._owner.panelIndex = 6;
             }
             OnYXBtnClick() {
             }

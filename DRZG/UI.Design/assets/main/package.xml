@@ -88,7 +88,7 @@
     <image id="d7xv2h" name="shibai.png" path="/assets/fb/"/>
     <image id="d7xv2i" name="xingxing01.png" path="/assets/fb/"/>
     <image id="d7xv2j" name="xingxing02.png" path="/assets/fb/"/>
-    <image id="d7xv2k" name="竞技场.png" path="/assets/fb/"/>
+    <image id="d7xv2k" name="fb5.png" path="/assets/fb/" exported="true"/>
     <image id="d7xv2l" name="fb0.png" path="/assets/fb/" exported="true"/>
     <image id="d7xv2m" name="fb1.png" path="/assets/fb/" exported="true"/>
     <image id="d7xv2n" name="fb2.png" path="/assets/fb/" exported="true"/>
@@ -98,6 +98,14 @@
     <image id="d7xv2r" name="04玩家信息01.jpg" path="/assets/user/"/>
     <component id="d7xv2s" name="c5.xml" path="/coms/"/>
     <component id="d7xv2t" name="头像.xml" path="/coms/"/>
+    <image id="d7xv2v" name="08签到01.jpg" path="/assets/qd/"/>
+    <image id="d7xv2w" name="anniuwenzi10.png" path="/assets/qd/"/>
+    <image id="d7xv2x" name="anniuwenzi11.png" path="/assets/qd/"/>
+    <image id="d7xv2y" name="biaoti08.png" path="/assets/qd/"/>
+    <image id="d7xv2z" name="exp.png" path="/assets/qd/"/>
+    <image id="d7xv30" name="yiqiandao.png" path="/assets/qd/"/>
+    <component id="d7xv31" name="c6.xml" path="/coms/"/>
+    <component id="d7xv32" name="qd_item.xml" path="/coms/"/>
   </resources>
   <publish name="main"/>
 </packageDescription>
