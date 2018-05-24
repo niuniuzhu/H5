@@ -1,9 +1,9 @@
 namespace View {
 	export class FightHandler {
-		private _fightContexts: FightContext[];
+		private readonly _fightContexts: FightContext[];
 
 		constructor() {
-
+			this._fightContexts = [];
 		}
 
 		public Dispose(): void {

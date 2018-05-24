@@ -108,52 +108,52 @@ namespace View.UI {
 			param.uid = "user";
 			param.id = "m0";
 			param.rndSeed = RC.Utils.Timer.utcTime;
-			param.team0 = new Shared.Model.TeamParam();
-			param.team0.mp = 5;
-			param.team0.skills = this._skillPanel.GetSkills();
-			param.team0.towers = [];
-			param.team1 = new Shared.Model.TeamParam();
-			param.team1.mp = 5;
-			param.team1.skills = this._skillPanel.GetSkills();
-			param.team1.towers = [];
+			param.team0 = [];
+			param.team1 =[];
 
 			// team 0
 			let tower = new Shared.Model.EntityParam();
 			tower.uid = "user";
 			tower.id = "e0";
 			tower.team = 0;
-			param.team0.towers.push(tower);
+			tower.skills = this._skillPanel.GetSkills();
+			param.team0.push(tower);
 
 			tower = new Shared.Model.EntityParam();
 			tower.uid = "user";
 			tower.id = "e1";
 			tower.team = 0;
-			param.team0.towers.push(tower);
+			tower.skills = [];
+			param.team0.push(tower);
 
 			tower = new Shared.Model.EntityParam();
 			tower.uid = "user";
 			tower.id = "e1";
 			tower.team = 0;
-			param.team0.towers.push(tower);
+			tower.skills = [];
+			param.team0.push(tower);
 
 			// team 1
 			tower = new Shared.Model.EntityParam();
 			tower.uid = "xxx";
 			tower.id = "e0";
 			tower.team = 1;
-			param.team1.towers.push(tower);
+			tower.skills = this._skillPanel.GetSkills();
+			param.team1.push(tower);
 
 			tower = new Shared.Model.EntityParam();
 			tower.uid = "xxx";
 			tower.id = "e1";
 			tower.team = 1;
-			param.team1.towers.push(tower);
+			tower.skills = [];
+			param.team1.push(tower);
 
 			tower = new Shared.Model.EntityParam();
 			tower.uid = "xxx";
 			tower.id = "e1";
 			tower.team = 1;
-			param.team1.towers.push(tower);
+			tower.skills = [];
+			param.team1.push(tower);
 
 			UIManager.EnterBattle(param);
 		}

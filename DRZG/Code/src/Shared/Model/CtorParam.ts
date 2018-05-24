@@ -5,14 +5,8 @@ namespace Shared.Model {
 		public uid: string;
 		public id: string;
 		public rndSeed: number;
-		public team0: TeamParam;
-		public team1: TeamParam;
-	}
-
-	export class TeamParam {
-		public mp: number;
-		public skills: string[];
-		public towers: EntityParam[];
+		public team0: EntityParam[];
+		public team1: EntityParam[];
 	}
 
 	export class EntityParam {
@@ -20,5 +14,6 @@ namespace Shared.Model {
 		public id: string;
 		public rid: string;
 		public team: number;
+		public skills: string[];
 	}
 }

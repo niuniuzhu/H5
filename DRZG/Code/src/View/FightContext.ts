@@ -1,6 +1,6 @@
 namespace View {
 	export class FightContext {
-		constructor(attacker: number, target: string, skill: string) {
+		constructor(skill: CSkill, attacker: CEntity, target: CEntity ) {
 
 		}
 	}

@@ -18,8 +18,8 @@ namespace View.UI {
 			this._root.addRelation(fairygui.GRoot.inst, fairygui.RelationType.Size);
 
 			let p = <Shared.Model.BattleParams>param;
-			for (let i = 0; i < p.team0.skills.length; ++i) {
-				this._root.getChild("c" + i).icon = fairygui.UIPackage.getItemURL("global", p.team0.skills[i]);
+			for (let i = 0; i < p.team0[0].skills.length; ++i) {
+				this._root.getChild("c" + i).icon = fairygui.UIPackage.getItemURL("global", p.team0[0].skills[i]);
 			}
 
 			this._battle = new View.CBattle(p);
@@ -34,6 +34,7 @@ namespace View.UI {
 		}
 
 		public Update(deltaTime: number): void {
+			this._battle.Update(deltaTime);
 		}
 
 		public OnResize(e: laya.events.Event): void {

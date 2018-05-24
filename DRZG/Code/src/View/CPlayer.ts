@@ -35,10 +35,5 @@ namespace View {
 			let skill = this.GetSkill(skillId);
 			return this._mp >= skill.cmp;
 		}
-
-		public UseSkill(skillId: string, targetId: string): void {
-			let fightContext = new FightContext(this._team, targetId, skillId);
-			this._owner.fightHandler.Add(fightContext);
-		}
 	}
 }

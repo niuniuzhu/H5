@@ -60,84 +60,99 @@
 			"name": "e0",
 			"model": "",
 			"mhp": 2000,
+			"mmp": 10,
+			"mp": 5,
+			"gmp": 1,
 			"skills": [
-				"s0"
-			]
+			],
+			"ai":""
 		},
 		"e1": {
 			"name": "e1",
 			"model": "",
 			"mhp": 2000,
+			"mmp": 10,
+			"mp": 5,
+			"gmp": 1,
 			"skills": [
-				"s0"
-			]
+				"s1"
+			],
+			"ai":"tower"
 		},
 		"e2": {
 			"name": "e2",
 			"model": "e2",
 			"mhp": 2000,
+			"mmp": 10,
+			"mp": 5,
+			"gmp": 1,
 			"skills": [
-				"s0"
-			]
+				"s2"
+			],
+			"ai":"champion"
 		},
 		"e3": {
 			"name": "e3",
 			"model": "e3",
 			"mhp": 2000,
+			"mmp": 10,
+			"mp": 5,
+			"gmp": 1,
 			"skills": [
-				"s0"
-			]
+				"s2"
+			],
+			"ai":"champion"
 		}
 	},
 	"skills": {
 		"s0": {
 			"cmp": 0,
-			"gmp": 0,
+			"damage": 0,
 			"fx": ""
 		},
 		"s1": {
 			"cmp": 0,
-			"gmp": 0,
+			"damage": 0,
 			"fx": ""
 		},
 		"s2": {
 			"cmp": 0,
-			"gmp": 0,
+			"damage": 0,
 			"fx": ""
 		},
 		"s3": {
 			"cmp": 0,
-			"gmp": 0,
+			"damage": 0,
 			"fx": ""
 		},
 		"s4": {
 			"cmp": 0,
-			"gmp": 0,
+			"damage": 0,
 			"fx": ""
 		},
 		"s5": {
 			"cmp": 0,
-			"gmp": 0,
+			"damage": 0,
 			"fx": ""
 		},
 		"s6": {
 			"cmp": 0,
-			"gmp": 0,
+			"damage": 0,
 			"fx": ""
 		},
 		"s7": {
 			"cmp": 0,
-			"gmp": 0,
+			"damage": 0,
 			"fx": ""
 		},
 		"s8": {
 			"cmp": 0,
-			"gmp": 0,
+			"damage": 0,
 			"fx": ""
 		},
 		"s9": {
 			"cmp": 0,
-			"gmp": 0,
+			"damage": 0,
 			"fx": ""
 		}
 	},

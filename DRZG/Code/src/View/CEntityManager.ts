@@ -57,6 +57,17 @@ namespace View {
 			return entity;
 		}
 
+		public GetTowersByTeam(team: number): CTower[] {
+			let towers: CTower[] = [];
+			for (let entity of this._entities) {
+				let tower: CTower = entity as CTower;
+				if (tower == null || tower.team != team)
+					continue;
+				towers.push(tower);
+			}
+			return towers;
+		}
+
 		public GetEntityAt(index: number): CEntity {
 			if (index < 0 ||
 				index > this._entities.length - 1)

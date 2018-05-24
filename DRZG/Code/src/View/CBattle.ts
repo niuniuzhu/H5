@@ -11,9 +11,6 @@ namespace View {
 		private readonly _fihgtHandler: FightHandler;
 		private readonly _graphic: MapGraphic;
 
-		private _player0: CPlayer;
-		private _player1: CPlayer;
-
 		public get frame(): number { return this._frame; }
 		public get deltaTime(): number { return this._deltaTime; }
 		public get time(): number { return this._time; }
@@ -64,15 +61,13 @@ namespace View {
 		}
 
 		private CreateTowers(param: Shared.Model.BattleParams): void {
-			this._player0 = new CPlayer(this, 0, param.team0.skills, param.team0.mp);
-			this._player1 = new CPlayer(this, 1, param.team1.skills, param.team1.mp);
-			for (let i = 0; i < param.team0.towers.length; ++i) {
-				let tower = this.CreateTower(param.team0.towers[i]);
+			for (let i = 0; i < param.team0.length; ++i) {
+				let tower = this.CreateTower(param.team0[i]);
 				let arr: number[] = this._data.towerPos[0][i];
 				tower.position = new RC.Numerics.Vec2(arr[0], arr[1]);
 			}
-			for (let i = 0; i < param.team1.towers.length; ++i) {
-				let tower = this.CreateTower(param.team1.towers[i]);
+			for (let i = 0; i < param.team1.length; ++i) {
+				let tower = this.CreateTower(param.team1[i]);
 				let arr: number[] = this._data.towerPos[1][i];
 				tower.position = new RC.Numerics.Vec2(arr[0], arr[1]);
 			}
