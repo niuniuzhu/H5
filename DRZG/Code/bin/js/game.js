@@ -552,6 +552,7 @@ var Shared;
                 this.name = RC.Utils.Hashtable.GetString(def, "name");
                 this.model = RC.Utils.Hashtable.GetString(def, "model");
                 this.mhp = RC.Utils.Hashtable.GetNumber(def, "mhp");
+                this.skills = RC.Utils.Hashtable.GetStringArray(def, "skills");
             }
         }
         Model.EntityData = EntityData;
@@ -712,7 +713,7 @@ var View;
                 tower.position = new RC.Numerics.Vec2(arr[0], arr[1]);
             }
             for (let i = 0; i < param.team1.towers.length; ++i) {
-                let tower = this.CreateTower(param.team0.towers[i]);
+                let tower = this.CreateTower(param.team1.towers[i]);
                 let arr = this._data.towerPos[1][i];
                 tower.position = new RC.Numerics.Vec2(arr[0], arr[1]);
             }
@@ -790,6 +791,15 @@ var View;
         OnCreated(owner, param) {
             super.OnCreated(owner, param);
             this._team = param.team;
+            this._skills = new Map();
+            for (let skillId of this._data.skills) {
+                let skill = new View.CSkill(skillId);
+                this._skills.set(skillId, skill);
+            }
+        }
+        UseSkill(skillId, targetId) {
+            let fightContext = new View.FightContext(this._team, targetId, skillId);
+            this._owner.fightHandler.Add(fightContext);
         }
     }
     View.CTower = CTower;
@@ -995,6 +1005,8 @@ var View;
             super.Dispose();
         }
         Load(id) {
+            if (id == null || id == "")
+                return;
             this._sprite = fairygui.UIPackage.createObject("global", id).asCom;
             this._root.addChild(this._sprite);
             this._sprite.touchable = false;
@@ -1351,7 +1363,11 @@ var View;
                 this._root.width = fairygui.GRoot.inst.width;
                 this._root.height = fairygui.GRoot.inst.height;
                 this._root.addRelation(fairygui.GRoot.inst, fairygui.RelationType.Size);
-                this._battle = new View.CBattle(param);
+                let p = param;
+                for (let i = 0; i < p.team0.skills.length; ++i) {
+                    this._root.getChild("c" + i).icon = fairygui.UIPackage.getItemURL("global", p.team0.skills[i]);
+                }
+                this._battle = new View.CBattle(p);
                 this._battle.SetGraphicRoot(this._root.getChild("n3").asCom);
             }
             Leave() {

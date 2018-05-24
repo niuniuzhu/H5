@@ -6,6 +6,7 @@
 	"preloads": [
 		"global.fui,0",
 		"global@atlas0.png,1",
+		"global@atlas0_1.png,1",
 		"login.fui,0",
 		"login@atlas0.png,1",
 		"main.fui,0",
@@ -16,7 +17,7 @@
 	"maps": {
 		"m0": {
 			"name": "test",
-			"model": "m0",
+			"model": "m1",
 			"size": [
 				684,
 				1080
@@ -57,23 +58,35 @@
 	"entities": {
 		"e0": {
 			"name": "e0",
-			"model": "e0",
-			"mhp": 2000
+			"model": "",
+			"mhp": 2000,
+			"skills": [
+				"s0"
+			]
 		},
 		"e1": {
 			"name": "e1",
-			"model": "e1",
-			"mhp": 2000
+			"model": "",
+			"mhp": 2000,
+			"skills": [
+				"s0"
+			]
 		},
 		"e2": {
 			"name": "e2",
 			"model": "e2",
-			"mhp": 2000
+			"mhp": 2000,
+			"skills": [
+				"s0"
+			]
 		},
 		"e3": {
 			"name": "e3",
 			"model": "e3",
-			"mhp": 2000
+			"mhp": 2000,
+			"skills": [
+				"s0"
+			]
 		}
 	},
 	"skills": {

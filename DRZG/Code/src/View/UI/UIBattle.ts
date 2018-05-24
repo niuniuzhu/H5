@@ -17,7 +17,12 @@ namespace View.UI {
 			this._root.height = fairygui.GRoot.inst.height;
 			this._root.addRelation(fairygui.GRoot.inst, fairygui.RelationType.Size);
 
-			this._battle = new View.CBattle(<Shared.Model.BattleParams>param);
+			let p = <Shared.Model.BattleParams>param;
+			for (let i = 0; i < p.team0.skills.length; ++i) {
+				this._root.getChild("c" + i).icon = fairygui.UIPackage.getItemURL("global", p.team0.skills[i]);
+			}
+
+			this._battle = new View.CBattle(p);
 			this._battle.SetGraphicRoot(this._root.getChild("n3").asCom);
 		}
 

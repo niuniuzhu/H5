@@ -31,9 +31,7 @@ namespace View {
 			this._entityManager = new CEntityManager(this);
 			this._graphicManager = new GraphicManager(this);
 			this._fihgtHandler = new FightHandler();
-
 			this._graphic = new MapGraphic(this._data.model);
-
 			this.CreateTowers(param);
 		}
 
@@ -74,7 +72,7 @@ namespace View {
 				tower.position = new RC.Numerics.Vec2(arr[0], arr[1]);
 			}
 			for (let i = 0; i < param.team1.towers.length; ++i) {
-				let tower = this.CreateTower(param.team0.towers[i]);
+				let tower = this.CreateTower(param.team1.towers[i]);
 				let arr: number[] = this._data.towerPos[1][i];
 				tower.position = new RC.Numerics.Vec2(arr[0], arr[1]);
 			}

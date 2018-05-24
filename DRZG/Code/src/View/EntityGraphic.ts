@@ -15,6 +15,8 @@ namespace View {
 		}
 
 		public Load(id: string): void {
+			if (id == null || id == "")
+				return;
 			this._sprite = fairygui.UIPackage.createObject("global", id).asCom;
 			this._root.addChild(this._sprite);
 			this._sprite.touchable = false;

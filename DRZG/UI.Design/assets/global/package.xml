@@ -16,17 +16,17 @@
     <component id="f15te" name="m0.xml" path="/game/" exported="true"/>
     <component id="f15tf" name="e0.xml" path="/game/" exported="true"/>
     <component id="f15tg" name="e1.xml" path="/game/" exported="true"/>
-    <image id="f15th" name="c5.png" path="/assets/skill/" exported="true"/>
-    <image id="f15ti" name="c6.png" path="/assets/skill/" exported="true"/>
-    <image id="f15tj" name="c7.png" path="/assets/skill/" exported="true"/>
-    <image id="f15tk" name="c8.png" path="/assets/skill/" exported="true"/>
-    <image id="f15tl" name="c9.png" path="/assets/skill/" exported="true"/>
+    <image id="f15th" name="s5.png" path="/assets/skill/" exported="true"/>
+    <image id="f15ti" name="s6.png" path="/assets/skill/" exported="true"/>
+    <image id="f15tj" name="s7.png" path="/assets/skill/" exported="true"/>
+    <image id="f15tk" name="s8.png" path="/assets/skill/" exported="true"/>
+    <image id="f15tl" name="s9.png" path="/assets/skill/" exported="true"/>
     <image id="f15tm" name="jinengkuang.png" path="/assets/skill/"/>
-    <image id="f15tn" name="c0.png" path="/assets/skill/" exported="true"/>
-    <image id="f15to" name="c1.png" path="/assets/skill/" exported="true"/>
-    <image id="f15tp" name="c2.png" path="/assets/skill/" exported="true"/>
-    <image id="f15tq" name="c3.png" path="/assets/skill/" exported="true"/>
-    <image id="f15tr" name="c4.png" path="/assets/skill/" exported="true"/>
+    <image id="f15tn" name="s0.png" path="/assets/skill/" exported="true"/>
+    <image id="f15to" name="s1.png" path="/assets/skill/" exported="true"/>
+    <image id="f15tp" name="s2.png" path="/assets/skill/" exported="true"/>
+    <image id="f15tq" name="s3.png" path="/assets/skill/" exported="true"/>
+    <image id="f15tr" name="s4.png" path="/assets/skill/" exported="true"/>
     <component id="f15ts" name="card.xml" path="/coms/" exported="true"/>
     <movieclip id="d7xvt" name="e2.jta" path="/game/" exported="true"/>
     <movieclip id="d7xvu" name="e3.jta" path="/game/" exported="true"/>
@@ -34,6 +34,14 @@
     <image id="d7xvw" name="头像2.png" path="/assets/" exported="true"/>
     <image id="d7xvx" name="anniuwenzi08.png" path="/assets/" exported="true"/>
     <image id="d7xvy" name="anniuwenzi07.png" path="/assets/" exported="true"/>
+    <movieclip id="mb8nz" name="箭.jta" path="/game/"/>
+    <movieclip id="mb8n10" name="箭击.jta" path="/game/"/>
+    <movieclip id="mb8n11" name="召唤.jta" path="/game/"/>
+    <movieclip id="mb8n12" name="祝福.jta" path="/game/"/>
+    <component id="oeew13" name="m1.xml" path="/game/" exported="true"/>
+    <image id="oeew14" name="战斗界面.png" path="/assets/"/>
+    <image id="oeew15" name="战场上的人物1.png" path="/assets/"/>
+    <image id="oeew16" name="战场上的人物2.png" path="/assets/"/>
   </resources>
   <publish name="global"/>
 </packageDescription>

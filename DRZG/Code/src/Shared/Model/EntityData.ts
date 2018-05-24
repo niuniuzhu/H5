@@ -7,6 +7,7 @@ namespace Shared.Model {
 
 		// champion
 		public readonly mhp: number;
+		public readonly skills: string[];
 
 		constructor(id: string) {
 			this.id = id;
@@ -15,7 +16,7 @@ namespace Shared.Model {
 			this.model = RC.Utils.Hashtable.GetString(def, "model");
 
 			this.mhp = RC.Utils.Hashtable.GetNumber(def, "mhp");
-
+			this.skills = RC.Utils.Hashtable.GetStringArray(def, "skills");
 		}
 	}
 }
