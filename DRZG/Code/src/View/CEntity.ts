@@ -4,6 +4,7 @@ namespace View {
 	export class CEntity extends Shared.GPoolObject {
 		protected _owner: View.CBattle;
 		protected _position: RC.Numerics.Vec2;
+		protected _direction: RC.Numerics.Vec2;
 		protected _markToDestroy: boolean;
 		protected _graphic: EntityGraphic;
 		protected _data: Shared.Model.EntityData;
@@ -20,6 +21,16 @@ namespace View {
 			this.OnPositionChanged();
 		}
 
+		public get direction(): RC.Numerics.Vec2 { return this._direction.Clone(); }
+		public set direction(value: RC.Numerics.Vec2) {
+			if (this._direction.EqualsTo(value))
+				return;
+			this._direction.CopyFrom(value);
+			if (this._graphic != null)
+				this._graphic.direction = this._direction;
+			this.OnDirectionChanged();
+		}
+
 		public get battle(): View.CBattle { return this._owner; }
 		public get graphic(): EntityGraphic { return this._graphic; }
 		public get markToDestroy(): boolean { return this._markToDestroy; }
@@ -27,6 +38,7 @@ namespace View {
 		constructor() {
 			super();
 			this._position = RC.Numerics.Vec2.zero;
+			this._direction = RC.Numerics.Vec2.down;
 		}
 
 		protected InternalDispose(): void {
@@ -66,6 +78,8 @@ namespace View {
 		protected CreateGraphic(): void {
 			this._graphic = this._owner.graphicManager.CreateGraphic(EntityGraphic);
 			this._graphic.Load(this._data.model);
+			this._graphic.position = this._position;
+			this._graphic.direction = this._direction;
 		}
 	}
 }

@@ -75,14 +75,26 @@ namespace View {
 
 		public CreateTower(param: Shared.Model.EntityParam): CTower {
 			param.rid = Shared.Utils.MakeRIDFromID(param.id);
-			let tower = this._entityManager.Create(CTower, param);
-			return <CTower>tower;
+			let entity = this._entityManager.Create(CTower, param);
+			return <CTower>entity;
 		}
 
 		public CreateChampion(param: Shared.Model.EntityParam): CChampion {
 			param.rid = Shared.Utils.MakeRIDFromID(param.id);
-			let champion = this._entityManager.Create(CChampion, param);
-			return <CChampion>champion;
+			let entity = this._entityManager.Create(CChampion, param);
+			return <CChampion>entity;
+		}
+
+		public CreateMissile(param: Shared.Model.EntityParam): Missile {
+			param.rid = Shared.Utils.MakeRIDFromID(param.id);
+			let entity = this._entityManager.Create(Missile, param);
+			return <Missile>entity;
+		}
+
+		public CreateEffect(param: Shared.Model.EntityParam): CEffect {
+			param.rid = Shared.Utils.MakeRIDFromID(param.id);
+			let entity = this._entityManager.Create(CEffect, param);
+			return <CEffect>entity;
 		}
 	}
 }

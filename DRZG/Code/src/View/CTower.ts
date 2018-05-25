@@ -17,6 +17,7 @@ namespace View {
 		public OnCreated(owner: CBattle, param: Shared.Model.EntityParam): void {
 			super.OnCreated(owner, param);
 			this._team = param.team;
+			this.direction = this._team == 0 ? RC.Numerics.Vec2.down : RC.Numerics.Vec2.up;
 			this._mp = this._data.mp;
 			this._skills = new Map<string, CSkill>();
 			for (let skillId of this._data.skills) {
@@ -72,8 +73,17 @@ namespace View {
 
 		public UseSkill(skillId: string, target: CEntity): void {
 			let skill = this._skills.get(skillId);
-			let fightContext = new FightContext(skill, this, target);
-			this._owner.fightHandler.Add(fightContext);
+			if (skill.missile == null || skill.missile == "") {
+				let fightContext = new FightContext(skill, this, target);
+				this._owner.fightHandler.Add(fightContext);
+			}
+			else {
+				let param = new Shared.Model.EntityParam();
+				param.id = skill.missile;
+				param.team = this.team;
+				let missile = this._owner.CreateMissile(param);
+				missile.Begin(skill, this, target);
+			}
 		}
 	}
 }

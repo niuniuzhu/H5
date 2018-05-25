@@ -10,7 +10,6 @@ namespace Shared.Model {
 	}
 
 	export class EntityParam {
-		public uid: string;
 		public id: string;
 		public rid: string;
 		public team: number;

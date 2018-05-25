@@ -34,10 +34,10 @@
     <image id="d7xvw" name="头像2.png" path="/assets/" exported="true"/>
     <image id="d7xvx" name="anniuwenzi08.png" path="/assets/" exported="true"/>
     <image id="d7xvy" name="anniuwenzi07.png" path="/assets/" exported="true"/>
-    <movieclip id="mb8nz" name="箭.jta" path="/game/"/>
-    <movieclip id="mb8n10" name="箭击.jta" path="/game/"/>
-    <movieclip id="mb8n11" name="召唤.jta" path="/game/"/>
-    <movieclip id="mb8n12" name="祝福.jta" path="/game/"/>
+    <movieclip id="mb8nz" name="e4.jta" path="/game/" exported="true"/>
+    <movieclip id="mb8n10" name="e5.jta" path="/game/" exported="true"/>
+    <movieclip id="mb8n11" name="e6.jta" path="/game/" exported="true"/>
+    <movieclip id="mb8n12" name="e7.jta" path="/game/" exported="true"/>
     <component id="oeew13" name="m1.xml" path="/game/" exported="true"/>
     <image id="oeew14" name="战斗界面.png" path="/assets/"/>
     <image id="oeew15" name="战场上的人物1.png" path="/assets/"/>

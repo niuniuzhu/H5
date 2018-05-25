@@ -69,10 +69,6 @@ var Shared;
         static Init(json) {
             Defs._defs = json;
         }
-        static GetPlayer() {
-            let ht = RC.Utils.Hashtable.GetMap(Defs._defs, "player");
-            return ht;
-        }
         static GetPreloads() {
             let arr = RC.Utils.Hashtable.GetArray(Defs._defs, "preloads");
             return arr;
@@ -106,6 +102,15 @@ var Shared;
         }
         static GetEntity(id) {
             let ht = RC.Utils.Hashtable.GetMap(Defs._defs, "entities");
+            let defaultHt = RC.Utils.Hashtable.GetMap(ht, "default");
+            let result = RC.Utils.Hashtable.GetMap(ht, id);
+            if (result == null)
+                result = {};
+            RC.Utils.Hashtable.Concat(result, defaultHt);
+            return result;
+        }
+        static GetMissile(id) {
+            let ht = RC.Utils.Hashtable.GetMap(Defs._defs, "missiles");
             let defaultHt = RC.Utils.Hashtable.GetMap(ht, "default");
             let result = RC.Utils.Hashtable.GetMap(ht, id);
             if (result == null)
@@ -530,18 +535,6 @@ var Shared;
 (function (Shared) {
     var Model;
     (function (Model) {
-        class EffectData {
-            constructor(id) {
-                let def = Shared.Defs.GetEffect(id);
-            }
-        }
-        Model.EffectData = EffectData;
-    })(Model = Shared.Model || (Shared.Model = {}));
-})(Shared || (Shared = {}));
-var Shared;
-(function (Shared) {
-    var Model;
-    (function (Model) {
         class EntityData {
             constructor(id) {
                 this.id = id;
@@ -554,6 +547,10 @@ var Shared;
                 this.gmp = RC.Utils.Hashtable.GetNumber(def, "gmp");
                 this.skills = RC.Utils.Hashtable.GetStringArray(def, "skills");
                 this.ai = RC.Utils.Hashtable.GetString(def, "ai");
+                this.speed = RC.Utils.Hashtable.GetNumber(def, "speed");
+                this.dfx = RC.Utils.Hashtable.GetString(def, "dfx");
+                this.duration = RC.Utils.Hashtable.GetNumber(def, "duration");
+                this.followMode = RC.Utils.Hashtable.GetNumber(def, "follow_mode");
             }
         }
         Model.EntityData = EntityData;
@@ -582,26 +579,12 @@ var Shared;
     var Model;
     (function (Model) {
         class ModelFactory {
-            static GetPlayerData() {
-                if (this.PLAYER_DATA != null)
-                    return this.PLAYER_DATA;
-                this.PLAYER_DATA = new Model.PlayerData();
-                return this.PLAYER_DATA;
-            }
             static GetSkillData(id) {
                 let data = this.SKILL_DATA.getValue(id);
                 if (data != null)
                     return data;
                 data = new Model.SkillData(id);
                 this.SKILL_DATA.setValue(id, data);
-                return data;
-            }
-            static GetEffectData(id) {
-                let data = this.EFFECT_DATA.getValue(id);
-                if (data != null)
-                    return data;
-                data = new Model.EffectData(id);
-                this.EFFECT_DATA.setValue(id, data);
                 return data;
             }
             static GetMapData(id) {
@@ -623,23 +606,8 @@ var Shared;
         }
         ModelFactory.MAP_DATA = new RC.Collections.Dictionary();
         ModelFactory.SKILL_DATA = new RC.Collections.Dictionary();
-        ModelFactory.EFFECT_DATA = new RC.Collections.Dictionary();
         ModelFactory.ENTITY_DATA = new RC.Collections.Dictionary();
         Model.ModelFactory = ModelFactory;
-    })(Model = Shared.Model || (Shared.Model = {}));
-})(Shared || (Shared = {}));
-var Shared;
-(function (Shared) {
-    var Model;
-    (function (Model) {
-        class PlayerData {
-            constructor() {
-                let def = Shared.Defs.GetPlayer();
-                this.mmp = RC.Utils.Hashtable.GetNumber(def, "mmp");
-                this.gmp = RC.Utils.Hashtable.GetNumber(def, "gmp");
-            }
-        }
-        Model.PlayerData = PlayerData;
     })(Model = Shared.Model || (Shared.Model = {}));
 })(Shared || (Shared = {}));
 var Shared;
@@ -653,6 +621,7 @@ var Shared;
                 this.cmp = RC.Utils.Hashtable.GetNumber(def, "cmp");
                 this.damage = RC.Utils.Hashtable.GetNumber(def, "damage");
                 this.fx = RC.Utils.Hashtable.GetString(def, "fx");
+                this.missile = RC.Utils.Hashtable.GetString(def, "missile");
             }
         }
         Model.SkillData = SkillData;
@@ -720,13 +689,23 @@ var View;
         }
         CreateTower(param) {
             param.rid = Shared.Utils.MakeRIDFromID(param.id);
-            let tower = this._entityManager.Create(View.CTower, param);
-            return tower;
+            let entity = this._entityManager.Create(View.CTower, param);
+            return entity;
         }
         CreateChampion(param) {
             param.rid = Shared.Utils.MakeRIDFromID(param.id);
-            let champion = this._entityManager.Create(View.CChampion, param);
-            return champion;
+            let entity = this._entityManager.Create(View.CChampion, param);
+            return entity;
+        }
+        CreateMissile(param) {
+            param.rid = Shared.Utils.MakeRIDFromID(param.id);
+            let entity = this._entityManager.Create(View.Missile, param);
+            return entity;
+        }
+        CreateEffect(param) {
+            param.rid = Shared.Utils.MakeRIDFromID(param.id);
+            let entity = this._entityManager.Create(View.CEffect, param);
+            return entity;
         }
     }
     View.CBattle = CBattle;
@@ -737,6 +716,7 @@ var View;
         constructor() {
             super();
             this._position = RC.Numerics.Vec2.zero;
+            this._direction = RC.Numerics.Vec2.down;
         }
         get id() { return this._data.id; }
         get position() { return this._position.Clone(); }
@@ -747,6 +727,15 @@ var View;
             if (this._graphic != null)
                 this._graphic.position = this._position;
             this.OnPositionChanged();
+        }
+        get direction() { return this._direction.Clone(); }
+        set direction(value) {
+            if (this._direction.EqualsTo(value))
+                return;
+            this._direction.CopyFrom(value);
+            if (this._graphic != null)
+                this._graphic.direction = this._direction;
+            this.OnDirectionChanged();
         }
         get battle() { return this._owner; }
         get graphic() { return this._graphic; }
@@ -780,6 +769,8 @@ var View;
         CreateGraphic() {
             this._graphic = this._owner.graphicManager.CreateGraphic(View.EntityGraphic);
             this._graphic.Load(this._data.model);
+            this._graphic.position = this._position;
+            this._graphic.direction = this._direction;
         }
     }
     View.CEntity = CEntity;
@@ -795,6 +786,7 @@ var View;
         OnCreated(owner, param) {
             super.OnCreated(owner, param);
             this._team = param.team;
+            this.direction = this._team == 0 ? RC.Numerics.Vec2.down : RC.Numerics.Vec2.up;
             this._mp = this._data.mp;
             this._skills = new Map();
             for (let skillId of this._data.skills) {
@@ -843,8 +835,17 @@ var View;
         }
         UseSkill(skillId, target) {
             let skill = this._skills.get(skillId);
-            let fightContext = new View.FightContext(skill, this, target);
-            this._owner.fightHandler.Add(fightContext);
+            if (skill.missile == null || skill.missile == "") {
+                let fightContext = new View.FightContext(skill, this, target);
+                this._owner.fightHandler.Add(fightContext);
+            }
+            else {
+                let param = new Shared.Model.EntityParam();
+                param.id = skill.missile;
+                param.team = this.team;
+                let missile = this._owner.CreateMissile(param);
+                missile.Begin(skill, this, target);
+            }
         }
     }
     View.CTower = CTower;
@@ -879,11 +880,28 @@ var View;
 })(View || (View = {}));
 var View;
 (function (View) {
-    class CEffect {
-        constructor(id) {
-            this._data = Shared.Model.ModelFactory.GetEffectData(id);
+    class CEffect extends View.CEntity {
+        Begin(position) {
+            this.position = position;
+            if (this._data.duration <= 0)
+                this._graphic.Play(0, -1, 1, -1, new laya.utils.Handler(this, this.OnPlayComplete));
+            else {
+                this._graphic.Play(0, -1, 0);
+                this._endTime = this._owner.time + this._data.duration;
+            }
         }
-        get id() { return this._id; }
+        OnPlayComplete() {
+            this._graphic.Stop();
+            this.MarkToDestroy();
+        }
+        OnUpdateState(context) {
+            super.OnUpdateState(context);
+            if (this._data.duration <= 0)
+                return;
+            if (context.time < this._endTime)
+                return;
+            this.OnPlayComplete();
+        }
     }
     View.CEffect = CEffect;
 })(View || (View = {}));
@@ -898,6 +916,8 @@ var View;
             this._typeToEntity = new RC.Collections.Dictionary();
             this._typeToEntity.setValue(View.CChampion, []);
             this._typeToEntity.setValue(View.CTower, []);
+            this._typeToEntity.setValue(View.Missile, []);
+            this._typeToEntity.setValue(View.CEffect, []);
         }
         Dispose() {
             this._entities.forEach((entity) => {
@@ -966,37 +986,6 @@ var View;
 })(View || (View = {}));
 var View;
 (function (View) {
-    class CPlayer {
-        constructor(owner, team, initSKills, initMp) {
-            this._owner = owner;
-            this._data = Shared.Model.ModelFactory.GetPlayerData();
-            this._team = team;
-            this._skills = new Map();
-            for (let skillId of initSKills) {
-                let skill = new View.CSkill(skillId);
-                this._skills.set(skillId, skill);
-            }
-            this._mp = initMp;
-        }
-        Dispose() {
-            this._skills.clear();
-        }
-        Update(context) {
-            this._mp += this._data.gmp * context.deltaTime * 0.001;
-            this._mp = RC.Numerics.MathUtils.Max(this._mp, this._data.mmp);
-        }
-        GetSkill(skillId) {
-            return this._skills.get(skillId);
-        }
-        CanUseSkill(skillId) {
-            let skill = this.GetSkill(skillId);
-            return this._mp >= skill.cmp;
-        }
-    }
-    View.CPlayer = CPlayer;
-})(View || (View = {}));
-var View;
-(function (View) {
     class CSkill {
         constructor(id) {
             this._data = Shared.Model.ModelFactory.GetSkillData(id);
@@ -1005,6 +994,7 @@ var View;
         get cmp() { return this._data.cmp; }
         get damage() { return this._data.damage; }
         get fx() { return this._data.fx; }
+        get missile() { return this._data.missile; }
     }
     View.CSkill = CSkill;
 })(View || (View = {}));
@@ -1013,7 +1003,7 @@ var View;
     class CTowerAI {
         constructor(owner) {
             this._owner = owner;
-            this._nextUseSkillTime = this._owner.battle.time + Math.floor(Math.random() * 1.8 + 1.2) * 1000;
+            this._nextUseSkillTime = this._owner.battle.time + Math.floor(Math.random() * 3 + 1) * 1000;
         }
         Update(context) {
             if (context.time < this._nextUseSkillTime)
@@ -1025,8 +1015,7 @@ var View;
             let targets = this._owner.battle.entityManager.GetTowersByTeam(1 - this._owner.team);
             let r2 = Math.floor(Math.random() * targets.length);
             this._owner.UseSkill(skills[r].id, targets[r2]);
-            console.log(skills[r].id);
-            this._nextUseSkillTime = context.time + Math.floor(Math.random() * 1.8 + 1.2) * 1000;
+            this._nextUseSkillTime = context.time + Math.floor(Math.random() * 2.8 + 2) * 1000;
         }
     }
     View.CTowerAI = CTowerAI;
@@ -1039,6 +1028,7 @@ var View;
             this._root = new fairygui.GComponent();
             this._manager.root.addChild(this._root);
             this._position = RC.Numerics.Vec2.zero;
+            this._direction = RC.Numerics.Vec2.down;
             this._worldToLocalMat = RC.Numerics.Mat3.identity;
             this._worldToLocalMat.x.x = this._manager.battle.tileSize;
             this._worldToLocalMat.y.y = this._manager.battle.tileSize;
@@ -1055,6 +1045,13 @@ var View;
             this._position.CopyFrom(value);
             this.UpdatePosition();
         }
+        get direction() { return this._direction.Clone(); }
+        set direction(value) {
+            if (value.EqualsTo(this._direction))
+                return;
+            this._direction.CopyFrom(value);
+            this.UpdateDirection();
+        }
         get alpha() { return this._root.alpha; }
         set alpha(value) { this._root.alpha = value; }
         get visible() { return this._root.visible; }
@@ -1069,6 +1066,10 @@ var View;
             this._root.setXY(v.x, v.y);
         }
         UpdateDirection() {
+            let angle = RC.Numerics.Vec2.Dot(RC.Numerics.Vec2.down, this._direction);
+            angle = RC.Numerics.MathUtils.Clamp(angle, -1, 1);
+            angle = this._direction.x < 0 ? -angle : angle;
+            this._root.rotation = RC.Numerics.MathUtils.RadToDeg(RC.Numerics.MathUtils.Acos(angle));
         }
         WorldToLocal(point) {
             return this._worldToLocalMat.TransformPoint(point);
@@ -1095,6 +1096,7 @@ var View;
             this._sprite = fairygui.UIPackage.createObject("global", id).asCom;
             this._root.addChild(this._sprite);
             this._sprite.touchable = false;
+            this._sprite.setPivot(0.5, 0.5, true);
             this._mc = this._sprite.asMovieClip;
             this.OnLoadComplete();
         }
@@ -1102,6 +1104,10 @@ var View;
         }
         Play(start, end, times, endAt, endHandler) {
             this._mc.setPlaySettings(start, end, times, endAt, endHandler);
+            this._mc.playing = true;
+        }
+        Stop() {
+            this._mc.playing = false;
         }
     }
     View.EntityGraphic = EntityGraphic;
@@ -1197,6 +1203,46 @@ var View;
         }
     }
     View.MapGraphic = MapGraphic;
+})(View || (View = {}));
+var View;
+(function (View) {
+    class Missile extends View.CEntity {
+        PlayAni() {
+            this._graphic.Play(0, -1, 0);
+        }
+        Begin(skill, caster, target) {
+            this._caster = caster;
+            this._target = target;
+            this.position = this._caster.position;
+            this.PlayAni();
+        }
+        End() {
+            this._graphic.Stop();
+            this.MarkToDestroy();
+            if (this._data.dfx != null && this._data.dfx != "") {
+                let param = new Shared.Model.EntityParam();
+                param.id = this._data.dfx;
+                let fx = this._owner.CreateEffect(param);
+                fx.Begin(this.position);
+            }
+            let fightContext = new View.FightContext(this._skill, this._caster, this._target);
+            this._owner.fightHandler.Add(fightContext);
+        }
+        OnUpdateState(context) {
+            super.OnUpdateState(context);
+            if (this._target == null)
+                return;
+            let dir = RC.Numerics.Vec2.Sub(this._target.position, this.position);
+            dir.Normalize();
+            let pos = RC.Numerics.Vec2.Add(this.position, RC.Numerics.Vec2.MulN(dir, this._data.speed * context.deltaTime * 0.001));
+            this.position = pos;
+            this.direction = dir;
+            if (RC.Numerics.Vec2.DistanceSquared(pos, this._target.position) < 5) {
+                this.End();
+            }
+        }
+    }
+    View.Missile = Missile;
 })(View || (View = {}));
 var View;
 (function (View) {
@@ -1598,37 +1644,31 @@ var View;
                 param.team0 = [];
                 param.team1 = [];
                 let tower = new Shared.Model.EntityParam();
-                tower.uid = "user";
                 tower.id = "e0";
                 tower.team = 0;
                 tower.skills = this._skillPanel.GetSkills();
                 param.team0.push(tower);
                 tower = new Shared.Model.EntityParam();
-                tower.uid = "user";
                 tower.id = "e1";
                 tower.team = 0;
                 tower.skills = [];
                 param.team0.push(tower);
                 tower = new Shared.Model.EntityParam();
-                tower.uid = "user";
                 tower.id = "e1";
                 tower.team = 0;
                 tower.skills = [];
                 param.team0.push(tower);
                 tower = new Shared.Model.EntityParam();
-                tower.uid = "xxx";
                 tower.id = "e0";
                 tower.team = 1;
                 tower.skills = this._skillPanel.GetSkills();
                 param.team1.push(tower);
                 tower = new Shared.Model.EntityParam();
-                tower.uid = "xxx";
                 tower.id = "e1";
                 tower.team = 1;
                 tower.skills = [];
                 param.team1.push(tower);
                 tower = new Shared.Model.EntityParam();
-                tower.uid = "xxx";
                 tower.id = "e1";
                 tower.team = 1;
                 tower.skills = [];

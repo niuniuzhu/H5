@@ -20,6 +20,7 @@ namespace View {
 			this._sprite = fairygui.UIPackage.createObject("global", id).asCom;
 			this._root.addChild(this._sprite);
 			this._sprite.touchable = false;
+			this._sprite.setPivot(0.5, 0.5, true);
 			this._mc = this._sprite.asMovieClip;
 			this.OnLoadComplete();
 		}
@@ -29,6 +30,11 @@ namespace View {
 
 		public Play(start?: number, end?: number, times?: number, endAt?: number, endHandler?: laya.utils.Handler): void {
 			this._mc.setPlaySettings(start, end, times, endAt, endHandler);
+			this._mc.playing = true;
+		}
+
+		public Stop() {
+			this._mc.playing = false;
 		}
 	}
 }

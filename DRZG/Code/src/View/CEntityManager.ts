@@ -14,6 +14,8 @@ namespace View {
 			this._typeToEntity = new RC.Collections.Dictionary<new () => CEntity, CEntity[]>();
 			this._typeToEntity.setValue(CChampion, []);
 			this._typeToEntity.setValue(CTower, []);
+			this._typeToEntity.setValue(Missile, []);
+			this._typeToEntity.setValue(CEffect, []);
 		}
 
 		public Dispose(): void {

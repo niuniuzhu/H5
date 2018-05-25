@@ -1,12 +1,9 @@
 {
-	"player": {
-		"mmp": 10,
-		"gmp": 1
-	},
 	"preloads": [
 		"global.fui,0",
 		"global@atlas0.png,1",
 		"global@atlas0_1.png,1",
+		"global@atlas0_2.png,1",
 		"login.fui,0",
 		"login@atlas0.png,1",
 		"main.fui,0",
@@ -27,29 +24,29 @@
 				[
 					[
 						10,
-						28
+						27
 					],
 					[
 						4,
-						25
+						28
 					],
 					[
-						16,
-						25
+						17,
+						28
 					]
 				],
 				[
 					[
 						10,
-						3
+						4
 					],
 					[
 						4,
-						6
+						3
 					],
 					[
-						16,
-						6
+						17,
+						3
 					]
 				]
 			]
@@ -58,18 +55,17 @@
 	"entities": {
 		"e0": {
 			"name": "e0",
-			"model": "",
+			"model": "e0",
 			"mhp": 2000,
 			"mmp": 10,
 			"mp": 5,
 			"gmp": 1,
-			"skills": [
-			],
-			"ai":""
+			"skills": [],
+			"ai": ""
 		},
 		"e1": {
 			"name": "e1",
-			"model": "",
+			"model": "e1",
 			"mhp": 2000,
 			"mmp": 10,
 			"mp": 5,
@@ -77,7 +73,7 @@
 			"skills": [
 				"s1"
 			],
-			"ai":"tower"
+			"ai": "tower"
 		},
 		"e2": {
 			"name": "e2",
@@ -89,7 +85,7 @@
 			"skills": [
 				"s2"
 			],
-			"ai":"champion"
+			"ai": "champion"
 		},
 		"e3": {
 			"name": "e3",
@@ -101,7 +97,18 @@
 			"skills": [
 				"s2"
 			],
-			"ai":"champion"
+			"ai": "champion"
+		},
+		"e4": {
+			"name": "e4",
+			"model": "e4",
+			"speed": 40,
+			"dfx": "e5"
+		},
+		"e5": {
+			"model": "e5",
+			"duration": 0,
+			"follow_mode": 0
 		}
 	},
 	"skills": {
@@ -113,7 +120,8 @@
 		"s1": {
 			"cmp": 0,
 			"damage": 0,
-			"fx": ""
+			"fx": "",
+			"missile": "e4"
 		},
 		"s2": {
 			"cmp": 0,
@@ -155,23 +163,5 @@
 			"damage": 0,
 			"fx": ""
 		}
-	},
-	"task": [
-		"建造一个发电场&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color=\"#ffffff\">0/1</font><br><br>任务奖励：<font color=\"#ffff00\">获得矿石1000，能源1000。</font>",
-		"建造一个交易所&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color=\"#ffffff\">0/1</font><br><br>任务奖励：<font color=\"#ffff00\">获得矿石4000，能源4000。</font>",
-		"建造一个科研所&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color=\"#ffffff\">0/1</font><br><br>任务奖励：<font color=\"#ffff00\">获得矿石3000，能源3000。</font>",
-		"攻击一个星球&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color=\"#ffffff\">0/1</font><br><br>任务奖励：<font color=\"#ffff00\">获得矿石5000，能源2000。</font>",
-		"获得矿石10000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color=\"#ffffff\">0/1</font><br><br>任务奖励：<font color=\"#ffff00\">获得矿石5000，能源3000。</font>",
-		"建造一个空间站&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color=\"#ffffff\">0/1</font><br><br>任务奖励：<font color=\"#ffff00\">获得矿石4000，能源3000。</font>",
-		"建造一个军工厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color=\"#ffffff\">0/1</font><br><br>任务奖励：<font color=\"#ffff00\">获得矿石4000，能源3000。</font>"
-	],
-	"message": [
-		"你获得进阶礼包<br><br>恭喜你获得进阶礼包，<font color=\"#ffff00\">矿石+8000，能源+8000。</font>",
-		"你获得新手礼包<br><br>恭喜你获得新手礼包，<font color=\"#ffff00\">矿石+3000，能源+2000。</font>",
-		"系统公告<br><br>庆贺黑暗森林内测，将有一系列狂欢活动，切勿错过。",
-		"你攻击敌方星球<br><br>你成功突破敌方星球的防御，成功缴获<font color=\"#ffff00\">矿石+3400，能源+3200。</font>",
-		"你被敌方星球攻击<br><br>你成功抵御敌方星球的防御，没有任何损失。",
-		"你被敌方星球攻击<br><br>敌方星球的成功突破你的防线，损失<font color=\"#ffff00\">矿石4000，能源+3000。</font>",
-		"欢迎进入黑暗森林<br><br>欢迎进入黑暗森林的星际世界，祝您游戏愉快。"
-	]
+	}
 }

@@ -8,11 +8,6 @@ namespace Shared {
 			Defs._defs = json;
 		}
 
-		public static GetPlayer(): pair {
-			let ht = RC.Utils.Hashtable.GetMap(Defs._defs, "player");
-			return ht;
-		}
-
 		public static GetPreloads(): string[] {
 			let arr = RC.Utils.Hashtable.GetArray(Defs._defs, "preloads");
 			return arr;
@@ -50,6 +45,16 @@ namespace Shared {
 
 		public static GetEntity(id: string): pair {
 			let ht = RC.Utils.Hashtable.GetMap(Defs._defs, "entities");
+			let defaultHt = RC.Utils.Hashtable.GetMap(ht, "default");
+			let result = RC.Utils.Hashtable.GetMap(ht, id);
+			if (result == null)
+				result = {};
+			RC.Utils.Hashtable.Concat(result, defaultHt);
+			return result;
+		}
+
+		public static GetMissile(id: string): pair {
+			let ht = RC.Utils.Hashtable.GetMap(Defs._defs, "missiles");
 			let defaultHt = RC.Utils.Hashtable.GetMap(ht, "default");
 			let result = RC.Utils.Hashtable.GetMap(ht, id);
 			if (result == null)

@@ -113,21 +113,18 @@ namespace View.UI {
 
 			// team 0
 			let tower = new Shared.Model.EntityParam();
-			tower.uid = "user";
 			tower.id = "e0";
 			tower.team = 0;
 			tower.skills = this._skillPanel.GetSkills();
 			param.team0.push(tower);
 
 			tower = new Shared.Model.EntityParam();
-			tower.uid = "user";
 			tower.id = "e1";
 			tower.team = 0;
 			tower.skills = [];
 			param.team0.push(tower);
 
 			tower = new Shared.Model.EntityParam();
-			tower.uid = "user";
 			tower.id = "e1";
 			tower.team = 0;
 			tower.skills = [];
@@ -135,21 +132,18 @@ namespace View.UI {
 
 			// team 1
 			tower = new Shared.Model.EntityParam();
-			tower.uid = "xxx";
 			tower.id = "e0";
 			tower.team = 1;
 			tower.skills = this._skillPanel.GetSkills();
 			param.team1.push(tower);
 
 			tower = new Shared.Model.EntityParam();
-			tower.uid = "xxx";
 			tower.id = "e1";
 			tower.team = 1;
 			tower.skills = [];
 			param.team1.push(tower);
 
 			tower = new Shared.Model.EntityParam();
-			tower.uid = "xxx";
 			tower.id = "e1";
 			tower.team = 1;
 			tower.skills = [];

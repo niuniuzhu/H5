@@ -5,6 +5,7 @@ namespace View {
 		protected readonly _localToWorldMat: RC.Numerics.Mat3;
 		protected readonly _worldToLocalMat: RC.Numerics.Mat3;
 		protected _position: RC.Numerics.Vec2;
+		protected _direction: RC.Numerics.Vec2;
 		public get root(): fairygui.GComponent { return this._root; }
 
 		public get position(): RC.Numerics.Vec2 { return this._position.Clone(); }
@@ -13,6 +14,14 @@ namespace View {
 				return;
 			this._position.CopyFrom(value);
 			this.UpdatePosition();
+		}
+
+		public get direction(): RC.Numerics.Vec2 { return this._direction.Clone(); }
+		public set direction(value: RC.Numerics.Vec2) {
+			if (value.EqualsTo(this._direction))
+				return;
+			this._direction.CopyFrom(value);
+			this.UpdateDirection();
 		}
 
 		public get alpha(): number { return this._root.alpha; }
@@ -29,6 +38,7 @@ namespace View {
 			this._root = new fairygui.GComponent();
 			this._manager.root.addChild(this._root);
 			this._position = RC.Numerics.Vec2.zero;
+			this._direction = RC.Numerics.Vec2.down;
 			this._worldToLocalMat = RC.Numerics.Mat3.identity;
 			this._worldToLocalMat.x.x = this._manager.battle.tileSize;
 			this._worldToLocalMat.y.y = this._manager.battle.tileSize;
@@ -40,6 +50,8 @@ namespace View {
 
 		public abstract Load(id: string): void;
 
+		protected abstract OnLoadComplete(): void;
+
 		public Dispose(): void {
 			this._root.dispose();
 		}
@@ -50,6 +62,10 @@ namespace View {
 		}
 
 		public UpdateDirection(): void {
+			let angle = RC.Numerics.Vec2.Dot(RC.Numerics.Vec2.down, this._direction);
+			angle = RC.Numerics.MathUtils.Clamp(angle, -1, 1);
+			angle = this._direction.x < 0 ? -angle : angle;
+			this._root.rotation = RC.Numerics.MathUtils.RadToDeg(RC.Numerics.MathUtils.Acos(angle));
 		}
 
 		public WorldToLocal(point: RC.Numerics.Vec2): RC.Numerics.Vec2 {
