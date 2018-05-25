@@ -171,8 +171,10 @@ var Shared;
 (function (Shared) {
     class GPoolObject {
         get rid() { return this._rid; }
+        get disposed() { return this._disposed; }
         Dispose() {
             this.InternalDispose();
+            this._disposed = true;
         }
     }
     Shared.GPoolObject = GPoolObject;
@@ -527,6 +529,9 @@ var Shared;
         }
         Model.BattleParams = BattleParams;
         class EntityParam {
+            constructor() {
+                this.team = -1;
+            }
         }
         Model.EntityParam = EntityParam;
     })(Model = Shared.Model || (Shared.Model = {}));
@@ -660,6 +665,8 @@ var View;
             this.fightHandler.Dispose();
         }
         Update(deltaTime) {
+            if (this._finish)
+                return;
             ++this._frame;
             this._deltaTime = deltaTime;
             this._time += this.deltaTime;
@@ -667,13 +674,37 @@ var View;
             this._context.time = this.time;
             this._context.frame = this.frame;
             this._entityManager.Update(this._context);
-            this._fihgtHandler.Update(this._context);
+            this._fihgtHandler.ProcessFight(this._context);
+            this._entityManager.UpdateAgterFight(this._context);
+            let winTeam = this.CheckWin();
+            if (winTeam != -1) {
+                this._finish = true;
+                this.winHandler(winTeam);
+            }
         }
         OnResize(e) {
         }
         SetGraphicRoot(graphicRoot) {
             graphicRoot.addChild(this._graphic.root);
             graphicRoot.addChild(this.graphicManager.root);
+        }
+        CheckWin() {
+            let team0Win = true;
+            let team1Win = true;
+            this._entityManager.Foreach((entity) => {
+                let tower = entity;
+                if (tower == null)
+                    return;
+                if (tower.team == 0)
+                    team1Win = false;
+                else if (tower.team == 1)
+                    team0Win = false;
+            });
+            if (team0Win)
+                return 0;
+            if (team1Win)
+                return 1;
+            return -1;
         }
         CreateTowers(param) {
             for (let i = 0; i < param.team0.length; ++i) {
@@ -778,15 +809,19 @@ var View;
 var View;
 (function (View) {
     class CTower extends View.CEntity {
-        constructor() {
-            super();
+        get hp() { return this._hp; }
+        ;
+        set hp(value) {
+            if (value == this._hp)
+                return;
+            this._hp = value;
+            this.graphic.SetHP(this._data.mhp, this.hp);
         }
         get team() { return this._team; }
         get numSkills() { return this._skills.size; }
         OnCreated(owner, param) {
             super.OnCreated(owner, param);
             this._team = param.team;
-            this.direction = this._team == 0 ? RC.Numerics.Vec2.down : RC.Numerics.Vec2.up;
             this._mp = this._data.mp;
             this._skills = new Map();
             for (let skillId of this._data.skills) {
@@ -807,6 +842,9 @@ var View;
                     this._ai = new View.CChampionAI(this);
                     break;
             }
+            this.direction = this._team == 0 ? RC.Numerics.Vec2.down : RC.Numerics.Vec2.up;
+            this.graphic.ShowHUD();
+            this.hp = this._data.mhp;
         }
         OnUpdateState(context) {
             super.OnUpdateState(context);
@@ -926,6 +964,10 @@ var View;
             this.DestroyEnties();
             this._gPool.Dispose();
         }
+        Foreach(handle) {
+            for (let e of this._entities)
+                handle(e);
+        }
         DestroyEnties() {
             let count = this._entities.length;
             for (let i = 0; i < count; i++) {
@@ -974,6 +1016,8 @@ var View;
         }
         Update(context) {
             this.UpdateState(context);
+        }
+        UpdateAgterFight(context) {
             this.DestroyEnties();
         }
         UpdateState(context) {
@@ -1003,7 +1047,7 @@ var View;
     class CTowerAI {
         constructor(owner) {
             this._owner = owner;
-            this._nextUseSkillTime = this._owner.battle.time + Math.floor((Math.random() * 3 + 1) * 1000);
+            this._nextUseSkillTime = this._owner.battle.time + Math.floor((Math.random() * 1) * 1000);
         }
         Update(context) {
             if (context.time < this._nextUseSkillTime)
@@ -1015,7 +1059,7 @@ var View;
             let targets = this._owner.battle.entityManager.GetTowersByTeam(1 - this._owner.team);
             let r2 = Math.floor(Math.random() * targets.length);
             this._owner.UseSkill(skills[r].id, targets[r2]);
-            this._nextUseSkillTime = context.time + Math.floor((Math.random() * 2.8 + 2) * 1000);
+            this._nextUseSkillTime = context.time + Math.floor((Math.random() * 1) * 1000);
         }
     }
     View.CTowerAI = CTowerAI;
@@ -1026,7 +1070,10 @@ var View;
         constructor(manager) {
             this._manager = manager;
             this._root = new fairygui.GComponent();
+            this._root.touchable = false;
             this._manager.root.addChild(this._root);
+            this._modelContainer = new fairygui.GComponent();
+            this._root.addChild(this._modelContainer);
             this._position = RC.Numerics.Vec2.zero;
             this._direction = RC.Numerics.Vec2.down;
             this._worldToLocalMat = RC.Numerics.Mat3.identity;
@@ -1069,7 +1116,7 @@ var View;
             let angle = RC.Numerics.Vec2.Dot(RC.Numerics.Vec2.down, this._direction);
             angle = RC.Numerics.MathUtils.Clamp(angle, -1, 1);
             let sign = this._direction.x < 0 ? -1 : 1;
-            this._root.rotation = RC.Numerics.MathUtils.RadToDeg(RC.Numerics.MathUtils.Acos(angle)) * sign;
+            this._modelContainer.rotation = RC.Numerics.MathUtils.RadToDeg(RC.Numerics.MathUtils.Acos(angle)) * sign;
         }
         WorldToLocal(point) {
             return this._worldToLocalMat.TransformPoint(point);
@@ -1085,19 +1132,24 @@ var View;
     class EntityGraphic extends View.Graphic {
         constructor(manager) {
             super(manager);
+            this._hud = fairygui.UIPackage.createObject("global", "hud").asProgress;
+            this._hud.visible = false;
+            this._hud.setPivot(0.5, 0.5, true);
+            this._root.addChild(this._hud);
         }
         Dispose() {
             this._sprite.dispose();
+            this._hud.dispose();
             super.Dispose();
         }
         Load(id) {
             if (id == null || id == "")
                 return;
             this._sprite = fairygui.UIPackage.createObject("global", id).asCom;
-            this._root.addChild(this._sprite);
-            this._sprite.touchable = false;
+            this._modelContainer.addChild(this._sprite);
             this._sprite.setPivot(0.5, 0.5, true);
             this._mc = this._sprite.asMovieClip;
+            this._hud.y = -this._sprite.height * 0.5 - this._sprite.height * 0.25;
             this.OnLoadComplete();
         }
         OnLoadComplete() {
@@ -1109,6 +1161,16 @@ var View;
         Stop() {
             this._mc.playing = false;
         }
+        ShowHUD() {
+            this._hud.visible = true;
+        }
+        HideHUD() {
+            this._hud.visible = false;
+        }
+        SetHP(mhp, hp) {
+            this._hud.max = mhp;
+            this._hud.value = hp;
+        }
     }
     View.EntityGraphic = EntityGraphic;
 })(View || (View = {}));
@@ -1116,7 +1178,13 @@ var View;
 (function (View) {
     class FightContext {
         constructor(skill, attacker, target) {
+            this._skill = skill;
+            this._attacker = attacker;
+            this._target = target;
         }
+        get skill() { return this._skill; }
+        get atacker() { return this._attacker; }
+        get target() { return this._target; }
     }
     View.FightContext = FightContext;
 })(View || (View = {}));
@@ -1124,14 +1192,22 @@ var View;
 (function (View) {
     class FightHandler {
         constructor() {
-            this._fightContexts = [];
+            this._fightContexts = new RC.Collections.Queue();
         }
         Dispose() {
+            this._fightContexts.clear();
         }
-        Update(context) {
+        ProcessFight(context) {
+            while (this._fightContexts.size() > 0) {
+                let fightContext = this._fightContexts.dequeue();
+                fightContext.target.hp -= fightContext.skill.damage;
+                fightContext.target.hp = RC.Numerics.MathUtils.Max(0, fightContext.target.hp);
+                if (fightContext.target.hp == 0)
+                    fightContext.target.MarkToDestroy();
+            }
         }
         Add(fightContext) {
-            this._fightContexts.push(fightContext);
+            this._fightContexts.enqueue(fightContext);
         }
     }
     View.FightHandler = FightHandler;
@@ -1142,6 +1218,7 @@ var View;
         constructor(owner) {
             this._owner = owner;
             this._root = new fairygui.GComponent();
+            this._root.touchable = false;
             this._graphics = [];
         }
         get battle() { return this._owner; }
@@ -1211,6 +1288,7 @@ var View;
             this._graphic.Play(0, -1, 0);
         }
         Begin(skill, caster, target) {
+            this._skill = skill;
             this._caster = caster;
             this._target = target;
             this.position = this._caster.position;
@@ -1230,8 +1308,6 @@ var View;
         }
         OnUpdateState(context) {
             super.OnUpdateState(context);
-            if (this._target == null)
-                return;
             let dir = RC.Numerics.Vec2.Sub(this._target.position, this.position);
             dir.Normalize();
             let pos = RC.Numerics.Vec2.Add(this.position, RC.Numerics.Vec2.MulN(dir, this._data.speed * context.deltaTime * 0.001));
@@ -1495,16 +1571,23 @@ var View;
                 this._root.width = fairygui.GRoot.inst.width;
                 this._root.height = fairygui.GRoot.inst.height;
                 this._root.addRelation(fairygui.GRoot.inst, fairygui.RelationType.Size);
+                this._result = fairygui.UIPackage.createObject("battle", "result").asCom;
+                this._result.getChild("n8").onClick(this, () => {
+                    UI.UIManager.EnterMain();
+                });
                 let p = param;
                 for (let i = 0; i < p.team0[0].skills.length; ++i) {
                     this._root.getChild("c" + i).icon = fairygui.UIPackage.getItemURL("global", p.team0[0].skills[i]);
                 }
                 this._battle = new View.CBattle(p);
+                this._battle.winHandler = this.HandleBattleWin.bind(this);
                 this._battle.SetGraphicRoot(this._root.getChild("n3").asCom);
             }
             Leave() {
                 this._battle.Dispose();
                 this._battle = null;
+                this._result.dispose();
+                this._result = null;
                 this._root.dispose();
                 this._root = null;
             }
@@ -1512,6 +1595,10 @@ var View;
                 this._battle.Update(deltaTime);
             }
             OnResize(e) {
+            }
+            HandleBattleWin(winTeam) {
+                this._result.getController("c1").selectedIndex = winTeam == 0 ? 0 : 1;
+                fairygui.GRoot.inst.addChild(this._result);
             }
         }
         UI.UIBattle = UIBattle;

@@ -26,6 +26,11 @@ namespace View {
 			this._gPool.Dispose();
 		}
 
+		public Foreach(handle: (entity: CEntity) => void): void {
+			for (let e of this._entities)
+				handle(e);
+		}
+
 		private DestroyEnties(): void {
 			let count = this._entities.length;
 			for (let i = 0; i < count; i++) {
@@ -78,9 +83,10 @@ namespace View {
 		}
 
 		public Update(context: Shared.UpdateContext): void {
-			// 更新状态
 			this.UpdateState(context);
-			// 清理实体
+		}
+
+		public UpdateAgterFight(context: Shared.UpdateContext): void {
 			this.DestroyEnties();
 		}
 

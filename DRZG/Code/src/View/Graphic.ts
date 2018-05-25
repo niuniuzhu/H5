@@ -2,6 +2,7 @@ namespace View {
 	export abstract class Graphic {
 		protected readonly _manager: GraphicManager;
 		protected readonly _root: fairygui.GComponent;
+		protected readonly _modelContainer: fairygui.GComponent;
 		protected readonly _localToWorldMat: RC.Numerics.Mat3;
 		protected readonly _worldToLocalMat: RC.Numerics.Mat3;
 		protected _position: RC.Numerics.Vec2;
@@ -36,7 +37,10 @@ namespace View {
 		constructor(manager: GraphicManager) {
 			this._manager = manager;
 			this._root = new fairygui.GComponent();
+			this._root.touchable = false;
 			this._manager.root.addChild(this._root);
+			this._modelContainer = new fairygui.GComponent();
+			this._root.addChild(this._modelContainer);
 			this._position = RC.Numerics.Vec2.zero;
 			this._direction = RC.Numerics.Vec2.down;
 			this._worldToLocalMat = RC.Numerics.Mat3.identity;
@@ -65,7 +69,7 @@ namespace View {
 			let angle = RC.Numerics.Vec2.Dot(RC.Numerics.Vec2.down, this._direction);
 			angle = RC.Numerics.MathUtils.Clamp(angle, -1, 1);
 			let sign = this._direction.x < 0 ? -1 : 1;
-			this._root.rotation = RC.Numerics.MathUtils.RadToDeg(RC.Numerics.MathUtils.Acos(angle)) * sign;
+			this._modelContainer.rotation = RC.Numerics.MathUtils.RadToDeg(RC.Numerics.MathUtils.Acos(angle)) * sign;
 		}
 
 		public WorldToLocal(point: RC.Numerics.Vec2): RC.Numerics.Vec2 {

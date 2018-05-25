@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="108,108" pivot="0.5,0.5" anchor="true">
-  <displayList>
-    <graph id="n1_m7f7" name="n1" xy="41,-19" size="25,38" type="rect" fillColor="#ffff9900"/>
-    <graph id="n0_f15t" name="n0" xy="0,0" size="108,108" type="rect" fillColor="#ffff9900"/>
-  </displayList>
+  <displayList/>
 </component>

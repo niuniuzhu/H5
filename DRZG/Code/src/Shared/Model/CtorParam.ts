@@ -12,7 +12,7 @@ namespace Shared.Model {
 	export class EntityParam {
 		public id: string;
 		public rid: string;
-		public team: number;
+		public team: number = -1;
 		public skills: string[];
 	}
 }

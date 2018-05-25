@@ -10,6 +10,7 @@ namespace View {
 		private readonly _graphicManager: GraphicManager;
 		private readonly _fihgtHandler: FightHandler;
 		private readonly _graphic: MapGraphic;
+		private _finish: boolean;
 
 		public get frame(): number { return this._frame; }
 		public get deltaTime(): number { return this._deltaTime; }
@@ -21,6 +22,8 @@ namespace View {
 		public get fightHandler(): FightHandler { return this._fihgtHandler; }
 
 		public get graphic(): MapGraphic { return this._graphic };
+
+		public winHandler: (winTeam: number) => void;
 
 		constructor(param: Shared.Model.BattleParams) {
 			this._data = Shared.Model.ModelFactory.GetMapData(Shared.Utils.GetIDFromRID(param.id));
@@ -40,6 +43,8 @@ namespace View {
 		}
 
 		public Update(deltaTime: number): void {
+			if (this._finish)
+				return;
 			++this._frame;
 			this._deltaTime = deltaTime;
 			this._time += this.deltaTime;
@@ -49,7 +54,14 @@ namespace View {
 			this._context.frame = this.frame;
 
 			this._entityManager.Update(this._context);
-			this._fihgtHandler.Update(this._context);
+			this._fihgtHandler.ProcessFight(this._context);
+			this._entityManager.UpdateAgterFight(this._context);
+
+			let winTeam = this.CheckWin();
+			if (winTeam != -1) {
+				this._finish = true;
+				this.winHandler(winTeam);
+			}
 		}
 
 		public OnResize(e: laya.events.Event): any {
@@ -58,6 +70,25 @@ namespace View {
 		public SetGraphicRoot(graphicRoot: fairygui.GComponent): void {
 			graphicRoot.addChild(this._graphic.root);
 			graphicRoot.addChild(this.graphicManager.root);
+		}
+
+		private CheckWin(): number {
+			let team0Win = true;
+			let team1Win = true;
+			this._entityManager.Foreach((entity) => {
+				let tower = entity as CTower;
+				if (tower == null)
+					return;
+				if (tower.team == 0)
+					team1Win = false;
+				else if (tower.team == 1)
+					team0Win = false;
+			})
+			if (team0Win)
+				return 0;
+			if (team1Win)
+				return 1;
+			return -1;
 		}
 
 		private CreateTowers(param: Shared.Model.BattleParams): void {

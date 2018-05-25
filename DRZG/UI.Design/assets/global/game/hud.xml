@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="104,10" extention="ProgressBar" initName="hud">
+  <displayList>
+    <graph id="n19_m7f7" name="n19" xy="0,0" size="104,10" type="rect" fillColor="#ff666666">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <graph id="n20_m7f7" name="bar" xy="1,1" size="102,8" type="rect" lineSize="0" lineColor="#ff990000" fillColor="#ff990000">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+  </displayList>
+  <ProgressBar/>
+</component>

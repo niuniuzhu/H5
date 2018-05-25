@@ -6,18 +6,22 @@ namespace View {
 		protected _skills: Map<string, CSkill>;
 		protected _mp: number;
 		protected _ai: IEntityAI;
+		protected _hp: number;
+
+		public get hp(): number { return this._hp; };
+		public set hp(value: number) {
+			if (value == this._hp)
+				return;
+			this._hp = value;
+			this.graphic.SetHP(this._data.mhp, this.hp);
+		}
 
 		public get team(): number { return this._team; }
 		public get numSkills(): number { return this._skills.size; }
 
-		constructor() {
-			super();
-		}
-
 		public OnCreated(owner: CBattle, param: Shared.Model.EntityParam): void {
 			super.OnCreated(owner, param);
 			this._team = param.team;
-			this.direction = this._team == 0 ? RC.Numerics.Vec2.down : RC.Numerics.Vec2.up;
 			this._mp = this._data.mp;
 			this._skills = new Map<string, CSkill>();
 			for (let skillId of this._data.skills) {
@@ -39,6 +43,9 @@ namespace View {
 					this._ai = new CChampionAI(this);
 					break;
 			}
+			this.direction = this._team == 0 ? RC.Numerics.Vec2.down : RC.Numerics.Vec2.up;
+			this.graphic.ShowHUD();
+			this.hp = this._data.mhp;
 		}
 
 		public OnUpdateState(context: Shared.UpdateContext): void {
@@ -71,7 +78,7 @@ namespace View {
 			return skills;
 		}
 
-		public UseSkill(skillId: string, target: CEntity): void {
+		public UseSkill(skillId: string, target: CTower): void {
 			let skill = this._skills.get(skillId);
 			if (skill.missile == null || skill.missile == "") {
 				let fightContext = new FightContext(skill, this, target);

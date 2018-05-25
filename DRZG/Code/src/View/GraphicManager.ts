@@ -13,6 +13,7 @@ namespace View {
 		constructor(owner: CBattle) {
 			this._owner = owner;
 			this._root = new fairygui.GComponent();
+			this._root.touchable = false;
 			this._graphics = [];
 		}
 
