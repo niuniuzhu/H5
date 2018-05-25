@@ -1003,7 +1003,7 @@ var View;
     class CTowerAI {
         constructor(owner) {
             this._owner = owner;
-            this._nextUseSkillTime = this._owner.battle.time + Math.floor(Math.random() * 3 + 1) * 1000;
+            this._nextUseSkillTime = this._owner.battle.time + Math.floor((Math.random() * 3 + 1) * 1000);
         }
         Update(context) {
             if (context.time < this._nextUseSkillTime)
@@ -1015,7 +1015,7 @@ var View;
             let targets = this._owner.battle.entityManager.GetTowersByTeam(1 - this._owner.team);
             let r2 = Math.floor(Math.random() * targets.length);
             this._owner.UseSkill(skills[r].id, targets[r2]);
-            this._nextUseSkillTime = context.time + Math.floor(Math.random() * 2.8 + 2) * 1000;
+            this._nextUseSkillTime = context.time + Math.floor((Math.random() * 2.8 + 2) * 1000);
         }
     }
     View.CTowerAI = CTowerAI;
@@ -1068,8 +1068,8 @@ var View;
         UpdateDirection() {
             let angle = RC.Numerics.Vec2.Dot(RC.Numerics.Vec2.down, this._direction);
             angle = RC.Numerics.MathUtils.Clamp(angle, -1, 1);
-            angle = this._direction.x < 0 ? -angle : angle;
-            this._root.rotation = RC.Numerics.MathUtils.RadToDeg(RC.Numerics.MathUtils.Acos(angle));
+            let sign = this._direction.x < 0 ? -1 : 1;
+            this._root.rotation = RC.Numerics.MathUtils.RadToDeg(RC.Numerics.MathUtils.Acos(angle)) * sign;
         }
         WorldToLocal(point) {
             return this._worldToLocalMat.TransformPoint(point);

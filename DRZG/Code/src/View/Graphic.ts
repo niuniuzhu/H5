@@ -64,8 +64,8 @@ namespace View {
 		public UpdateDirection(): void {
 			let angle = RC.Numerics.Vec2.Dot(RC.Numerics.Vec2.down, this._direction);
 			angle = RC.Numerics.MathUtils.Clamp(angle, -1, 1);
-			angle = this._direction.x < 0 ? -angle : angle;
-			this._root.rotation = RC.Numerics.MathUtils.RadToDeg(RC.Numerics.MathUtils.Acos(angle));
+			let sign = this._direction.x < 0 ? -1 : 1;
+			this._root.rotation = RC.Numerics.MathUtils.RadToDeg(RC.Numerics.MathUtils.Acos(angle)) * sign;
 		}
 
 		public WorldToLocal(point: RC.Numerics.Vec2): RC.Numerics.Vec2 {
