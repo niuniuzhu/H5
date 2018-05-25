@@ -1,18 +1,25 @@
 namespace View {
 	export class Missile extends CEntity {
-		private _skill: CSkill;
-		private _caster: CTower;
-		private _target: CTower;
+		private _skill: string;
+		private _caster: string;
+		private _target: string;
+		private readonly _lastPos: RC.Numerics.Vec2;
+
+		constructor() {
+			super();
+			this._lastPos = RC.Numerics.Vec2.zero;
+		}
 
 		public PlayAni(): void {
 			this._graphic.Play(0, -1, 0);
 		}
 
 		public Begin(skill: CSkill, caster: CTower, target: CTower): void {
-			this._skill = skill;
-			this._caster = caster;
-			this._target = target;
-			this.position = this._caster.position;
+			this._skill = skill.id;
+			this._caster = caster.rid;
+			this._target = target.rid;
+			this._lastPos.CopyFrom(target.position);
+			this.position = caster.position;
 			this.PlayAni();
 		}
 
@@ -31,14 +38,17 @@ namespace View {
 
 		public OnUpdateState(context: Shared.UpdateContext): void {
 			super.OnUpdateState(context);
-			let dir = RC.Numerics.Vec2.Sub(this._target.position, this.position);
+			let dir = RC.Numerics.Vec2.Sub(this._lastPos, this.position);
 			dir.Normalize();
 			let pos = RC.Numerics.Vec2.Add(this.position, RC.Numerics.Vec2.MulN(dir, this._data.speed * context.deltaTime * 0.001));
 			this.position = pos;
 			this.direction = dir;
-			if (RC.Numerics.Vec2.DistanceSquared(pos, this._target.position) < 5) {
+			if (RC.Numerics.Vec2.DistanceSquared(pos, this._lastPos) < 5) {
 				this.End();
 			}
+			let target = this._owner.entityManager.GetEntity(this._target);
+			if (target != null)
+				this._lastPos.CopyFrom(target.position);
 		}
 	}
 }

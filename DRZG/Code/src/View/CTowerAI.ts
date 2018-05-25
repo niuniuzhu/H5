@@ -5,7 +5,7 @@ namespace View {
 
 		constructor(owner: CTower) {
 			this._owner = owner;
-			this._nextUseSkillTime = this._owner.battle.time + Math.floor((Math.random() * 1) * 1000);
+			this._nextUseSkillTime = this._owner.battle.time + Math.floor((Math.random() * 1.8 + 1) * 1000);
 		}
 
 		public Update(context: Shared.UpdateContext): void {
@@ -18,7 +18,7 @@ namespace View {
 			let targets = this._owner.battle.entityManager.GetTowersByTeam(1 - this._owner.team);
 			let r2 = Math.floor(Math.random() * targets.length);
 			this._owner.UseSkill(skills[r].id, targets[r2]);
-			this._nextUseSkillTime = context.time + Math.floor((Math.random() * 1) * 1000);
+			this._nextUseSkillTime = context.time + Math.floor((Math.random() * 2.5 + 1.2) * 1000);
 		}
 	}
 }

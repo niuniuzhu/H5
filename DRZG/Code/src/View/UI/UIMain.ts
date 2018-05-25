@@ -64,12 +64,12 @@ namespace View.UI {
 			this._root.getChild("fuben_btn").onClick(this, this.OnFubenBtnClick);
 			this._root.getChild("skill_btn").onClick(this, this.OnSkillBtnClick);
 
-			this._root.getChild("n5").asTextField.text = "" + Math.round(Math.random() * 30 + 5);
-			this._root.getChild("n6").asTextField.text = "" + Math.round(Math.random() * 10000 + 3000);
-			this._root.getChild("n7").asTextField.text = "" + Math.round(Math.random() * 10000 + 3000);
-			this._root.getChild("n8").asTextField.text = "" + Math.round(Math.random() * 10000 + 3000);
-			this._root.getChild("n10").asTextField.text = "" + Math.round(Math.random() * 10000 + 3000);
-			this._root.getChild("n11").asTextField.text = "" + Math.round(Math.random() * 3000 + 1000);
+			this._root.getChild("n5").asTextField.text = "" + Math.floor(Math.random() * 30 + 5);
+			this._root.getChild("n6").asTextField.text = "" + Math.floor(Math.random() * 10000 + 3000);
+			this._root.getChild("n7").asTextField.text = "" + Math.floor(Math.random() * 10000 + 3000);
+			this._root.getChild("n8").asTextField.text = "" + Math.floor(Math.random() * 10000 + 3000);
+			this._root.getChild("n10").asTextField.text = "" + Math.floor(Math.random() * 10000 + 3000);
+			this._root.getChild("n11").asTextField.text = "" + Math.floor(Math.random() * 3000 + 1000);
 		}
 
 		public Leave(): void {

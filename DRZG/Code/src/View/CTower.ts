@@ -81,7 +81,7 @@ namespace View {
 		public UseSkill(skillId: string, target: CTower): void {
 			let skill = this._skills.get(skillId);
 			if (skill.missile == null || skill.missile == "") {
-				let fightContext = new FightContext(skill, this, target);
+				let fightContext = new FightContext(skill.id, this.rid, target.rid);
 				this._owner.fightHandler.Add(fightContext);
 			}
 			else {

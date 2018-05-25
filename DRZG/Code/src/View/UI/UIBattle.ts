@@ -19,7 +19,7 @@ namespace View.UI {
 			this._root.addRelation(fairygui.GRoot.inst, fairygui.RelationType.Size);
 
 			this._result = fairygui.UIPackage.createObject("battle", "result").asCom;
-			this._result.getChild("n8").onClick(this, ()=>{
+			this._result.getChild("n8").onClick(this, () => {
 				UIManager.EnterMain();
 			})
 
@@ -51,6 +51,7 @@ namespace View.UI {
 
 		private HandleBattleWin(winTeam: number): void {
 			this._result.getController("c1").selectedIndex = winTeam == 0 ? 0 : 1;
+			this._result.getChild("n10").asTextField.text = winTeam == 0 ? "" + Math.floor(Math.random() * 3000 + 1200) : "" + Math.floor(Math.random() * 500 + 800);
 			fairygui.GRoot.inst.addChild(this._result);
 		}
 	}

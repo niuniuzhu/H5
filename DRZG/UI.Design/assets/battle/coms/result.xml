@@ -8,7 +8,7 @@
       <Button icon="ui://evwornmpd7xvx"/>
     </component>
     <text id="n9_d7xv" name="n9" xy="227,851" size="147,41" fontSize="32" color="#ffffff" align="center" vAlign="middle" bold="true" text="获得经验:"/>
-    <text id="n10_d7xv" name="n10" xy="380,851" size="95,41" fontSize="32" color="#ffdd1e" align="center" vAlign="middle" bold="true" text="57834"/>
+    <text id="n10_d7xv" name="n10" xy="380,851" size="23,42" fontSize="32" color="#ffdd1e" align="center" vAlign="middle" bold="true" text="0&#xA;"/>
     <image id="n6_d7xv" name="n6" src="d7xvi" fileName="assets/shenglidi.png" xy="0,82" group="n12_d7xv"/>
     <image id="n7_d7xv" name="n7" src="d7xvm" fileName="assets/胜利结算页面上的人物.png" xy="220,198" group="n12_d7xv"/>
     <image id="n2_d7xv" name="n2" src="d7xvh" fileName="assets/shengli.png" xy="219,366" group="n12_d7xv"/>

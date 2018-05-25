@@ -41,6 +41,8 @@ namespace View.UI {
 		}
 
 		public Enter(): void {
+			this._root.getChild("atk1").asTextField.text = "" + Math.floor(Math.random() * 10000 + 3000);
+			this._root.getChild("atk2").asTextField.text = "" + Math.floor(Math.random() * 10000 + 3000);
 		}
 
 		public Exit(): void {

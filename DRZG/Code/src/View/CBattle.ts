@@ -30,7 +30,7 @@ namespace View {
 			this._context = new Shared.UpdateContext();
 			this._entityManager = new CEntityManager(this);
 			this._graphicManager = new GraphicManager(this);
-			this._fihgtHandler = new FightHandler();
+			this._fihgtHandler = new FightHandler(this);
 			this._graphic = new MapGraphic(this._data.model);
 			this.CreateTowers(param);
 		}

@@ -643,7 +643,7 @@ var View;
             this._context = new Shared.UpdateContext();
             this._entityManager = new View.CEntityManager(this);
             this._graphicManager = new View.GraphicManager(this);
-            this._fihgtHandler = new View.FightHandler();
+            this._fihgtHandler = new View.FightHandler(this);
             this._graphic = new View.MapGraphic(this._data.model);
             this.CreateTowers(param);
         }
@@ -874,7 +874,7 @@ var View;
         UseSkill(skillId, target) {
             let skill = this._skills.get(skillId);
             if (skill.missile == null || skill.missile == "") {
-                let fightContext = new View.FightContext(skill, this, target);
+                let fightContext = new View.FightContext(skill.id, this.rid, target.rid);
                 this._owner.fightHandler.Add(fightContext);
             }
             else {
@@ -1047,7 +1047,7 @@ var View;
     class CTowerAI {
         constructor(owner) {
             this._owner = owner;
-            this._nextUseSkillTime = this._owner.battle.time + Math.floor((Math.random() * 1) * 1000);
+            this._nextUseSkillTime = this._owner.battle.time + Math.floor((Math.random() * 1.8 + 1) * 1000);
         }
         Update(context) {
             if (context.time < this._nextUseSkillTime)
@@ -1059,7 +1059,7 @@ var View;
             let targets = this._owner.battle.entityManager.GetTowersByTeam(1 - this._owner.team);
             let r2 = Math.floor(Math.random() * targets.length);
             this._owner.UseSkill(skills[r].id, targets[r2]);
-            this._nextUseSkillTime = context.time + Math.floor((Math.random() * 1) * 1000);
+            this._nextUseSkillTime = context.time + Math.floor((Math.random() * 2.5 + 1.2) * 1000);
         }
     }
     View.CTowerAI = CTowerAI;
@@ -1191,7 +1191,8 @@ var View;
 var View;
 (function (View) {
     class FightHandler {
-        constructor() {
+        constructor(owner) {
+            this._owner = owner;
             this._fightContexts = new RC.Collections.Queue();
         }
         Dispose() {
@@ -1200,10 +1201,17 @@ var View;
         ProcessFight(context) {
             while (this._fightContexts.size() > 0) {
                 let fightContext = this._fightContexts.dequeue();
-                fightContext.target.hp -= fightContext.skill.damage;
-                fightContext.target.hp = RC.Numerics.MathUtils.Max(0, fightContext.target.hp);
-                if (fightContext.target.hp == 0)
-                    fightContext.target.MarkToDestroy();
+                let target = this._owner.entityManager.GetEntity(fightContext.target);
+                if (target == null)
+                    continue;
+                let attacker = this._owner.entityManager.GetEntity(fightContext.atacker);
+                if (attacker == null)
+                    continue;
+                let skill = attacker.GetSkill(fightContext.skill);
+                target.hp -= skill.damage;
+                target.hp = RC.Numerics.MathUtils.Max(0, target.hp);
+                if (target.hp == 0)
+                    target.MarkToDestroy();
             }
         }
         Add(fightContext) {
@@ -1284,14 +1292,19 @@ var View;
 var View;
 (function (View) {
     class Missile extends View.CEntity {
+        constructor() {
+            super();
+            this._lastPos = RC.Numerics.Vec2.zero;
+        }
         PlayAni() {
             this._graphic.Play(0, -1, 0);
         }
         Begin(skill, caster, target) {
-            this._skill = skill;
-            this._caster = caster;
-            this._target = target;
-            this.position = this._caster.position;
+            this._skill = skill.id;
+            this._caster = caster.rid;
+            this._target = target.rid;
+            this._lastPos.CopyFrom(target.position);
+            this.position = caster.position;
             this.PlayAni();
         }
         End() {
@@ -1308,14 +1321,17 @@ var View;
         }
         OnUpdateState(context) {
             super.OnUpdateState(context);
-            let dir = RC.Numerics.Vec2.Sub(this._target.position, this.position);
+            let dir = RC.Numerics.Vec2.Sub(this._lastPos, this.position);
             dir.Normalize();
             let pos = RC.Numerics.Vec2.Add(this.position, RC.Numerics.Vec2.MulN(dir, this._data.speed * context.deltaTime * 0.001));
             this.position = pos;
             this.direction = dir;
-            if (RC.Numerics.Vec2.DistanceSquared(pos, this._target.position) < 5) {
+            if (RC.Numerics.Vec2.DistanceSquared(pos, this._lastPos) < 5) {
                 this.End();
             }
+            let target = this._owner.entityManager.GetEntity(this._target);
+            if (target != null)
+                this._lastPos.CopyFrom(target.position);
         }
     }
     View.Missile = Missile;
@@ -1359,6 +1375,8 @@ var View;
             Dispose() {
             }
             Enter() {
+                this._root.getChild("atk1").asTextField.text = "" + Math.floor(Math.random() * 10000 + 3000);
+                this._root.getChild("atk2").asTextField.text = "" + Math.floor(Math.random() * 10000 + 3000);
             }
             Exit() {
             }
@@ -1598,6 +1616,7 @@ var View;
             }
             HandleBattleWin(winTeam) {
                 this._result.getController("c1").selectedIndex = winTeam == 0 ? 0 : 1;
+                this._result.getChild("n10").asTextField.text = winTeam == 0 ? "" + Math.floor(Math.random() * 3000 + 1200) : "" + Math.floor(Math.random() * 500 + 800);
                 fairygui.GRoot.inst.addChild(this._result);
             }
         }
@@ -1692,12 +1711,12 @@ var View;
                 this._root.getChild("main_btn").onClick(this, this.OnMainBtnClick);
                 this._root.getChild("fuben_btn").onClick(this, this.OnFubenBtnClick);
                 this._root.getChild("skill_btn").onClick(this, this.OnSkillBtnClick);
-                this._root.getChild("n5").asTextField.text = "" + Math.round(Math.random() * 30 + 5);
-                this._root.getChild("n6").asTextField.text = "" + Math.round(Math.random() * 10000 + 3000);
-                this._root.getChild("n7").asTextField.text = "" + Math.round(Math.random() * 10000 + 3000);
-                this._root.getChild("n8").asTextField.text = "" + Math.round(Math.random() * 10000 + 3000);
-                this._root.getChild("n10").asTextField.text = "" + Math.round(Math.random() * 10000 + 3000);
-                this._root.getChild("n11").asTextField.text = "" + Math.round(Math.random() * 3000 + 1000);
+                this._root.getChild("n5").asTextField.text = "" + Math.floor(Math.random() * 30 + 5);
+                this._root.getChild("n6").asTextField.text = "" + Math.floor(Math.random() * 10000 + 3000);
+                this._root.getChild("n7").asTextField.text = "" + Math.floor(Math.random() * 10000 + 3000);
+                this._root.getChild("n8").asTextField.text = "" + Math.floor(Math.random() * 10000 + 3000);
+                this._root.getChild("n10").asTextField.text = "" + Math.floor(Math.random() * 10000 + 3000);
+                this._root.getChild("n11").asTextField.text = "" + Math.floor(Math.random() * 3000 + 1000);
             }
             Leave() {
                 for (let p of this._panels)
