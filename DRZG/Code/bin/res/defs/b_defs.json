@@ -54,24 +54,24 @@
 	},
 	"entities": {
 		"e0": {
-			"name": "e0",
+			"name": "英雄",
 			"model": "e0",
 			"mhp": 580,
 			"mmp": 10,
-			"mp": 5,
-			"gmp": 1,
+			"mp": 3,
+			"gmp": 0.6,
 			"skills": [],
-			"ai": ""
+			"ai": "tower"
 		},
 		"e1": {
-			"name": "e1",
+			"name": "塔",
 			"model": "e1",
 			"mhp": 400,
 			"mmp": 10,
-			"mp": 5,
-			"gmp": 1,
+			"mp": 3,
+			"gmp": 0.6,
 			"skills": [
-				"s1"
+				"s10"
 			],
 			"ai": "tower"
 		},
@@ -80,8 +80,8 @@
 			"model": "e2",
 			"mhp": 200,
 			"mmp": 10,
-			"mp": 5,
-			"gmp": 1,
+			"mp": 3,
+			"gmp": 0.6,
 			"skills": [
 				"s2"
 			],
@@ -92,8 +92,8 @@
 			"model": "e3",
 			"mhp": 200,
 			"mmp": 10,
-			"mp": 5,
-			"gmp": 1,
+			"mp": 3,
+			"gmp": 0.6,
 			"skills": [
 				"s2"
 			],
@@ -113,55 +113,67 @@
 	},
 	"skills": {
 		"s0": {
-			"cmp": 0,
-			"damage": 0,
-			"fx": ""
-		},
-		"s1": {
-			"cmp": 0,
-			"damage": 30,
+			"cmp": 1,
+			"damage": 32,
 			"fx": "",
 			"missile": "e4"
 		},
+		"s1": {
+			"cmp": 2,
+			"damage": 0,
+			"fx": ""
+		},
 		"s2": {
-			"cmp": 0,
+			"cmp": 3,
 			"damage": 0,
 			"fx": ""
 		},
 		"s3": {
-			"cmp": 0,
+			"cmp": 6,
 			"damage": 0,
 			"fx": ""
 		},
 		"s4": {
-			"cmp": 0,
+			"cmp": 5,
 			"damage": 0,
 			"fx": ""
 		},
 		"s5": {
-			"cmp": 0,
+			"cmp": 4,
 			"damage": 0,
 			"fx": ""
 		},
 		"s6": {
-			"cmp": 0,
+			"cmp": 9,
 			"damage": 0,
 			"fx": ""
 		},
 		"s7": {
-			"cmp": 0,
+			"cmp": 8,
 			"damage": 0,
 			"fx": ""
 		},
 		"s8": {
-			"cmp": 0,
+			"cmp": 7,
 			"damage": 0,
 			"fx": ""
 		},
 		"s9": {
-			"cmp": 0,
+			"cmp": 5,
 			"damage": 0,
 			"fx": ""
+		},
+		"s10": {
+			"cmp": 0,
+			"damage": 32,
+			"fx": "",
+			"missile": "e4"
+		},
+		"s11": {
+			"cmp": 0,
+			"damage": 40,
+			"fx": "",
+			"missile": ""
 		}
 	}
 }

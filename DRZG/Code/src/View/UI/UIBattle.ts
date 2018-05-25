@@ -2,10 +2,13 @@ namespace View.UI {
 	export class UIBattle implements IUIModule {
 		private _root: fairygui.GComponent;
 		private _result: fairygui.GComponent;
+		private _mpBar: fairygui.GProgressBar;
+		private readonly _skillGrids: fairygui.GComponent[];
 		private _battle: CBattle;
 
 		constructor() {
 			fairygui.UIPackage.addPackage("res/ui/battle");
+			this._skillGrids = [];
 		}
 
 		public Dispose(): void {
@@ -23,9 +26,16 @@ namespace View.UI {
 				UIManager.EnterMain();
 			})
 
+			this._mpBar = this._root.getChild("n2").asProgress;
+
 			let p = <Shared.Model.BattleParams>param;
 			for (let i = 0; i < p.team0[0].skills.length; ++i) {
-				this._root.getChild("c" + i).icon = fairygui.UIPackage.getItemURL("global", p.team0[0].skills[i]);
+				let skillGrid = this._root.getChild("c" + i).asCom;
+				let skillId = p.team0[0].skills[i];
+				skillGrid.icon = fairygui.UIPackage.getItemURL("global", skillId);
+				skillGrid.name = skillId;
+				skillGrid.onClick(this, this.OnSkillGridClick);
+				this._skillGrids.push(skillGrid);
 			}
 
 			this._battle = new View.CBattle(p);
@@ -34,6 +44,7 @@ namespace View.UI {
 		}
 
 		public Leave(): void {
+			this._skillGrids.splice(0);
 			this._battle.Dispose();
 			this._battle = null;
 			this._result.dispose();
@@ -44,6 +55,14 @@ namespace View.UI {
 
 		public Update(deltaTime: number): void {
 			this._battle.Update(deltaTime);
+			this._mpBar.max = CTower.player.mmp;
+			this._mpBar.value = CTower.player.mp;
+
+			for (let skillGrid of this._skillGrids) {
+				let skillId = skillGrid.name;
+				skillGrid.grayed = !CTower.player.CanUseSkill(skillId);
+				skillGrid.touchable = !skillGrid.grayed;
+			}
 		}
 
 		public OnResize(e: laya.events.Event): void {
@@ -53,6 +72,12 @@ namespace View.UI {
 			this._result.getController("c1").selectedIndex = winTeam == 0 ? 0 : 1;
 			this._result.getChild("n10").asTextField.text = winTeam == 0 ? "" + Math.floor(Math.random() * 3000 + 1200) : "" + Math.floor(Math.random() * 500 + 800);
 			fairygui.GRoot.inst.addChild(this._result);
+		}
+
+		private OnSkillGridClick(e: laya.events.Event): void {
+			let skillGrid = <fairygui.GComponent>fairygui.GObject.cast(e.currentTarget);
+			let skillId = skillGrid.name;
+			CTower.player.UseSkill(skillId);
 		}
 	}
 }

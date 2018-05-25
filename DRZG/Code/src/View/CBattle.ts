@@ -36,6 +36,7 @@ namespace View {
 		}
 
 		public Dispose(): void {
+			CTower.player = null;
 			this._graphic.Dispose();
 			this._graphicManager.Dispose();
 			this._entityManager.Dispose();
@@ -96,11 +97,16 @@ namespace View {
 				let tower = this.CreateTower(param.team0[i]);
 				let arr: number[] = this._data.towerPos[0][i];
 				tower.position = new RC.Numerics.Vec2(arr[0], arr[1]);
+				if (i == 0)
+					CTower.player = tower;
+				else
+					tower.CreateAI();
 			}
 			for (let i = 0; i < param.team1.length; ++i) {
 				let tower = this.CreateTower(param.team1[i]);
 				let arr: number[] = this._data.towerPos[1][i];
 				tower.position = new RC.Numerics.Vec2(arr[0], arr[1]);
+				tower.CreateAI();
 			}
 		}
 

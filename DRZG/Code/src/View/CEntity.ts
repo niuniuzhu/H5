@@ -31,7 +31,7 @@ namespace View {
 			this.OnDirectionChanged();
 		}
 
-		public get battle(): View.CBattle { return this._owner; }
+		public get owner(): View.CBattle { return this._owner; }
 		public get graphic(): EntityGraphic { return this._graphic; }
 		public get markToDestroy(): boolean { return this._markToDestroy; }
 

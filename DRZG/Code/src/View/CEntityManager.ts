@@ -75,6 +75,12 @@ namespace View {
 			return towers;
 		}
 
+		public RandomGetTarget(team: number): CTower {
+			let targets = this.GetTowersByTeam(team);
+			let r2 = Math.floor(Math.random() * targets.length);
+			return targets[r2];
+		}
+
 		public GetEntityAt(index: number): CEntity {
 			if (index < 0 ||
 				index > this._entities.length - 1)

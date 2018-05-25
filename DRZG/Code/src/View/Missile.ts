@@ -32,8 +32,10 @@ namespace View {
 				let fx = this._owner.CreateEffect(param);
 				fx.Begin(this.position);
 			}
-			let fightContext = new FightContext(this._skill, this._caster, this._target);
-			this._owner.fightHandler.Add(fightContext);
+			let caster = <CTower>this._owner.entityManager.GetEntity(this._caster);
+			if (caster == null)
+				return;
+			caster.MakeFightContext(this._skill, this._target);
 		}
 
 		public OnUpdateState(context: Shared.UpdateContext): void {

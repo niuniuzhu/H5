@@ -2,12 +2,16 @@
 
 namespace View {
 	export class CTower extends CEntity {
+		public static player: CTower;
+
 		protected _team: number;
 		protected _skills: Map<string, CSkill>;
 		protected _mp: number;
 		protected _ai: IEntityAI;
 		protected _hp: number;
 
+		public get mmp(): number { return this._data.mmp; }
+		public get mp(): number { return this._mp; }
 		public get hp(): number { return this._hp; };
 		public set hp(value: number) {
 			if (value == this._hp)
@@ -34,6 +38,20 @@ namespace View {
 				let skill = new CSkill(skillId);
 				this._skills.set(skillId, skill);
 			}
+			this.direction = this._team == 0 ? RC.Numerics.Vec2.down : RC.Numerics.Vec2.up;
+			this.graphic.ShowHUD();
+			this.hp = this._data.mhp;
+		}
+
+		public OnUpdateState(context: Shared.UpdateContext): void {
+			super.OnUpdateState(context);
+			this._mp += this._data.gmp * context.deltaTime * 0.001;
+			this._mp = RC.Numerics.MathUtils.Min(this._mp, this._data.mmp);
+			if (this._ai != null)
+				this._ai.Update(context);
+		}
+
+		public CreateAI(): void {
 			switch (this._data.ai) {
 				case "tower":
 					this._ai = new CTowerAI(this);
@@ -43,17 +61,6 @@ namespace View {
 					this._ai = new CChampionAI(this);
 					break;
 			}
-			this.direction = this._team == 0 ? RC.Numerics.Vec2.down : RC.Numerics.Vec2.up;
-			this.graphic.ShowHUD();
-			this.hp = this._data.mhp;
-		}
-
-		public OnUpdateState(context: Shared.UpdateContext): void {
-			super.OnUpdateState(context);
-			this._mp += this._data.gmp * context.deltaTime * 0.001;
-			this._mp = RC.Numerics.MathUtils.Max(this._mp, this._data.mmp);
-			if (this._ai != null)
-				this._ai.Update(context);
 		}
 
 		public GetSkill(skillId: string): CSkill {
@@ -78,11 +85,22 @@ namespace View {
 			return skills;
 		}
 
-		public UseSkill(skillId: string, target: CTower): void {
+		public RandomGetUsableSkill(): CSkill {
+			let skills = this.GetUsableSkills();
+			if (skills.length == 0)
+				return null;
+			let r = Math.floor(Math.random() * skills.length);
+			return skills[r];
+		}
+
+		public UseSkill(skillId: string, target?: CTower): void {
+			if (target == null) {
+				target = this._owner.entityManager.RandomGetTarget(1 - this.team);
+			}
 			let skill = this._skills.get(skillId);
+			this._mp -= skill.cmp;
 			if (skill.missile == null || skill.missile == "") {
-				let fightContext = new FightContext(skill.id, this.rid, target.rid);
-				this._owner.fightHandler.Add(fightContext);
+				this.MakeFightContext(skillId, target.rid);
 			}
 			else {
 				let param = new Shared.Model.EntityParam();
@@ -91,6 +109,12 @@ namespace View {
 				let missile = this._owner.CreateMissile(param);
 				missile.Begin(skill, this, target);
 			}
+		}
+
+		public MakeFightContext(skillId: string, target: string): void {
+			let skill = this.GetSkill(skillId);
+			let fightContext = new FightContext(skillId, this.rid, target);
+			this._owner.fightHandler.Add(fightContext);
 		}
 	}
 }
