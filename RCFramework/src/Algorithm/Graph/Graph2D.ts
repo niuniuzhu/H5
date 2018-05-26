@@ -18,7 +18,7 @@ namespace RC.Algorithm.Graph {
 			return this.GetNodeAt(row * this.col + col);
 		}
 
-		public static CreateFullDigraph(row: number, col: number, rndFunc?: () => number): Graph2D {
+		public static CreateFullDigraph(row: number, col: number, rndFunc?: (index: number) => number): Graph2D {
 			let graph = new Graph2D(row, col);
 			let r = graph.row;
 			let c = graph.col;
@@ -27,9 +27,9 @@ namespace RC.Algorithm.Graph {
 					let cur = i * c + j;
 					let node = graph.GetNodeAt(cur);
 					if (j < c - 1)
-						node.AddEdge(cur, cur + 1, rndFunc == null ? 0 : rndFunc());
+						node.AddEdge(cur, cur + 1, rndFunc == null ? 0 : rndFunc(cur + 1));
 					if (j > 0)
-						node.AddEdge(cur, cur - 1, rndFunc == null ? 0 : rndFunc());
+						node.AddEdge(cur, cur - 1, rndFunc == null ? 0 : rndFunc(cur - 1));
 				}
 			}
 			for (let i = 0; i < c; i++) {
@@ -37,9 +37,9 @@ namespace RC.Algorithm.Graph {
 					let cur = j * c + i;
 					let node = graph.GetNodeAt(cur);
 					if (j < r - 1)
-						node.AddEdge(cur, cur + c, rndFunc == null ? 0 : rndFunc());
+						node.AddEdge(cur, cur + c, rndFunc == null ? 0 : rndFunc(cur + c));
 					if (j > 0)
-						node.AddEdge(cur, cur - c, rndFunc == null ? 0 : rndFunc());
+						node.AddEdge(cur, cur - c, rndFunc == null ? 0 : rndFunc(cur - c));
 				}
 			}
 			return graph;

@@ -5,7 +5,6 @@
     <image id="k6nj1" name="anniu01.png" path="/assets/"/>
     <component id="k6nj2" name="button1.xml" path="/coms/" exported="true"/>
     <component id="k6nj3" name="button2.xml" path="/coms/" exported="true"/>
-    <image id="k6nj4" name="bg01.png" path="/assets/" exported="true"/>
     <image id="k6nj5" name="kuang01.png" path="/assets/" scale="9grid" scale9grid="215,281,263,522"/>
     <image id="k6nj6" name="kuang02.png" path="/assets/" scale="9grid" scale9grid="155,90,310,180"/>
     <component id="k6nj7" name="panel1.xml" path="/coms/" exported="true"/>
@@ -39,10 +38,23 @@
     <movieclip id="mb8n11" name="e6.jta" path="/game/" exported="true"/>
     <movieclip id="mb8n12" name="e7.jta" path="/game/" exported="true"/>
     <component id="oeew13" name="m1.xml" path="/game/" exported="true"/>
-    <image id="oeew14" name="战斗界面.png" path="/assets/"/>
+    <image id="oeew14" name="战斗界面.png" path="/assets/" scale="" qualityOption="custom" quality="70"/>
     <image id="oeew15" name="战场上的人物1.png" path="/assets/"/>
     <image id="oeew16" name="战场上的人物2.png" path="/assets/"/>
     <component id="m7f717" name="hud.xml" path="/game/" exported="true"/>
+    <image id="k2mt18" name="m1_data.jpg" path="/game/" exported="true" scale="" qualityOption="custom" quality="100" smoothing="false" atlas="alone_npot"/>
   </resources>
-  <publish name="global"/>
+  <publish name="global" npot="true">
+    <atlas compression="true" index="0"/>
+    <atlas compression="true" index="1"/>
+    <atlas compression="true" index="2"/>
+    <atlas compression="true" index="3"/>
+    <atlas compression="true" index="4"/>
+    <atlas compression="true" index="5"/>
+    <atlas compression="true" index="6"/>
+    <atlas compression="true" index="7"/>
+    <atlas compression="true" index="8"/>
+    <atlas compression="true" index="9"/>
+    <atlas compression="true" index="10"/>
+  </publish>
 </packageDescription>

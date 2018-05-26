@@ -14,7 +14,7 @@
     <image id="e280a" name="z_8.png" path="/assets/zc/"/>
     <image id="e280b" name="z_9.png" path="/assets/zc/"/>
     <image id="e280c" name="zhucheng.png" path="/assets/zc/"/>
-    <image id="e280d" name="bg02.png" path="/assets/zc/"/>
+    <image id="e280d" name="bg02.png" path="/assets/zc/" scale="" qualityOption="custom" quality="70"/>
     <image id="e280e" name="dengjikuang.png" path="/assets/zc/"/>
     <image id="e280f" name="fubeng.png" path="/assets/zc/"/>
     <image id="e280g" name="jineng.png" path="/assets/zc/"/>
@@ -72,7 +72,7 @@
     <image id="d7xv21" name="dikuang07.png" path="/assets/user/"/>
     <image id="d7xv22" name="kuang04.png" path="/assets/user/"/>
     <component id="d7xv23" name="c4.xml" path="/coms/"/>
-    <image id="d7xv24" name="03副本02.jpg" path="/assets/fb/" scale=""/>
+    <image id="d7xv24" name="03副本02.jpg" path="/assets/fb/"/>
     <image id="d7xv25" name="副本选关卡.png" path="/assets/zc/"/>
     <image id="d7xv26" name="anniuwenzi07.png" path="/assets/fb/"/>
     <image id="d7xv27" name="anniuwenzi08.png" path="/assets/fb/"/>
@@ -107,5 +107,17 @@
     <component id="d7xv31" name="c6.xml" path="/coms/"/>
     <component id="d7xv32" name="qd_item.xml" path="/coms/"/>
   </resources>
-  <publish name="main"/>
+  <publish name="main" npot="true">
+    <atlas compression="true" index="0"/>
+    <atlas compression="true" index="1"/>
+    <atlas compression="true" index="2"/>
+    <atlas compression="true" index="3"/>
+    <atlas compression="true" index="4"/>
+    <atlas compression="true" index="5"/>
+    <atlas compression="true" index="6"/>
+    <atlas compression="true" index="7"/>
+    <atlas compression="true" index="8"/>
+    <atlas compression="true" index="9"/>
+    <atlas compression="true" index="10"/>
+  </publish>
 </packageDescription>

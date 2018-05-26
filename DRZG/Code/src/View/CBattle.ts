@@ -10,6 +10,7 @@ namespace View {
 		private readonly _graphicManager: GraphicManager;
 		private readonly _fihgtHandler: FightHandler;
 		private readonly _graphic: MapGraphic;
+		private readonly _tileMap: CTileMap;
 		private _finish: boolean;
 
 		public get frame(): number { return this._frame; }
@@ -32,6 +33,7 @@ namespace View {
 			this._graphicManager = new GraphicManager(this);
 			this._fihgtHandler = new FightHandler(this);
 			this._graphic = new MapGraphic(this._data.model);
+			this._tileMap = new CTileMap(this._data.model);
 			this.CreateTowers(param);
 		}
 

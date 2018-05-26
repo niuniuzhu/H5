@@ -3,16 +3,258 @@ var RC;
 (function (RC) {
     class Test {
         constructor() {
-            let m1 = RC.Numerics.Mat4.FromTRS(new RC.Numerics.Vec3(1, -2, 3), RC.Numerics.Quat.Euler(new RC.Numerics.Vec3(90, 0, 0)), new RC.Numerics.Vec3(2, 3, 4));
-            console.log(m1);
-            let m4 = RC.Numerics.Mat3.FromOuterProduct(new RC.Numerics.Vec3(1, -2, 3), new RC.Numerics.Vec3(93, 44, 32));
-            let m5 = RC.Numerics.Mat3.FromCross(new RC.Numerics.Vec3(2.5, 3, 4));
-            let m6 = RC.Numerics.Mat3.Mul2(m4, m5);
-            m6.RotateAround(33, new RC.Numerics.Vec3(2, 3, 4));
-            console.log(m6);
+            this._i = 0;
+            let graph = RC.Algorithm.Graph.Graph2D.CreateFullDigraph(10, 10, this.F.bind(this));
+            let path = RC.Algorithm.Graph.GraphSearcher.AStarSearch(graph, 0, 99);
+            console.log(path);
+            let queue = new RC.Collections.PriorityQueue(RC.Algorithm.Graph.NumberPair.NumberCompare);
+            queue.add(new RC.Algorithm.Graph.NumberPair(1, 4));
+            queue.add(new RC.Algorithm.Graph.NumberPair(2, 3));
+            queue.add(new RC.Algorithm.Graph.NumberPair(3, 2));
+            queue.add(new RC.Algorithm.Graph.NumberPair(4, 1));
+            while (!queue.isEmpty())
+                console.log(queue.dequeue());
+        }
+        F(index) {
+            return this._i++;
         }
     }
     RC.Test = Test;
+})(RC || (RC = {}));
+var RC;
+(function (RC) {
+    var Algorithm;
+    (function (Algorithm) {
+        var Graph;
+        (function (Graph) {
+            class GraphBase {
+                constructor(size) {
+                    this._idToNodes = new RC.Collections.Dictionary();
+                    let ns = [];
+                    for (let i = 0; i < size; i++)
+                        ns[i] = new Graph.GraphNode(i);
+                    this.nodes = ns;
+                }
+                get size() { return this._nodes.length; }
+                set nodes(value) {
+                    this._nodes = value;
+                    this._idToNodes.clear();
+                    for (let node of this._nodes) {
+                        this._idToNodes.setValue(node.index, node);
+                    }
+                }
+                GetNodeAt(index) {
+                    return this._idToNodes.getValue(index);
+                }
+                Foreach(loopFunc) {
+                    for (let node of this._nodes)
+                        loopFunc(node);
+                }
+            }
+            Graph.GraphBase = GraphBase;
+        })(Graph = Algorithm.Graph || (Algorithm.Graph = {}));
+    })(Algorithm = RC.Algorithm || (RC.Algorithm = {}));
+})(RC || (RC = {}));
+var RC;
+(function (RC) {
+    var Algorithm;
+    (function (Algorithm) {
+        var Graph;
+        (function (Graph) {
+            class Graph2D extends Graph.GraphBase {
+                constructor(row, col) {
+                    super(row * col);
+                    this._row = row;
+                    this._col = col;
+                }
+                get row() { return this._row; }
+                get col() { return this._col; }
+                GetNode(row, col) {
+                    return this.GetNodeAt(row * this.col + col);
+                }
+                static CreateFullDigraph(row, col, rndFunc) {
+                    let graph = new Graph2D(row, col);
+                    let r = graph.row;
+                    let c = graph.col;
+                    for (let i = 0; i < r; i++) {
+                        for (let j = 0; j < c; j++) {
+                            let cur = i * c + j;
+                            let node = graph.GetNodeAt(cur);
+                            if (j < c - 1)
+                                node.AddEdge(cur, cur + 1, rndFunc == null ? 0 : rndFunc(cur + 1));
+                            if (j > 0)
+                                node.AddEdge(cur, cur - 1, rndFunc == null ? 0 : rndFunc(cur - 1));
+                        }
+                    }
+                    for (let i = 0; i < c; i++) {
+                        for (let j = 0; j < r; j++) {
+                            let cur = j * c + i;
+                            let node = graph.GetNodeAt(cur);
+                            if (j < r - 1)
+                                node.AddEdge(cur, cur + c, rndFunc == null ? 0 : rndFunc(cur + c));
+                            if (j > 0)
+                                node.AddEdge(cur, cur - c, rndFunc == null ? 0 : rndFunc(cur - c));
+                        }
+                    }
+                    return graph;
+                }
+                CoordToIndex(x, y) {
+                    return y * this.col + x;
+                }
+                IndexToCoord(index) {
+                    let coord = [];
+                    coord[0] = index % this.col;
+                    coord[1] = index / this.col;
+                    return coord;
+                }
+            }
+            Graph.Graph2D = Graph2D;
+        })(Graph = Algorithm.Graph || (Algorithm.Graph = {}));
+    })(Algorithm = RC.Algorithm || (RC.Algorithm = {}));
+})(RC || (RC = {}));
+var RC;
+(function (RC) {
+    var Algorithm;
+    (function (Algorithm) {
+        var Graph;
+        (function (Graph) {
+            class GraphEdge {
+                constructor(from, to, cost = 0) {
+                    this._from = from;
+                    this._to = to;
+                    this._cost = cost;
+                }
+                get from() { return this._from; }
+                get to() { return this._to; }
+                get cost() { return this._cost; }
+                static Compare(a, b) {
+                    if (a._cost > b._cost) {
+                        return -1;
+                    }
+                    if (a._cost < b._cost) {
+                        return 1;
+                    }
+                    return 0;
+                }
+            }
+            Graph.GraphEdge = GraphEdge;
+        })(Graph = Algorithm.Graph || (Algorithm.Graph = {}));
+    })(Algorithm = RC.Algorithm || (RC.Algorithm = {}));
+})(RC || (RC = {}));
+var RC;
+(function (RC) {
+    var Algorithm;
+    (function (Algorithm) {
+        var Graph;
+        (function (Graph) {
+            class GraphNode {
+                constructor(index) {
+                    this._index = index;
+                    this._edges = [];
+                }
+                get index() { return this._index; }
+                get edges() { return this._edges; }
+                AddEdge(from, to, cost) {
+                    let edge = new Graph.GraphEdge(from, to, cost);
+                    this.edges.push(edge);
+                    return edge;
+                }
+            }
+            Graph.GraphNode = GraphNode;
+        })(Graph = Algorithm.Graph || (Algorithm.Graph = {}));
+    })(Algorithm = RC.Algorithm || (RC.Algorithm = {}));
+})(RC || (RC = {}));
+var RC;
+(function (RC) {
+    var Algorithm;
+    (function (Algorithm) {
+        var Graph;
+        (function (Graph) {
+            class GraphSearcher {
+                static PrimSearch(graph, start) {
+                    let shortestPathPredecessors = [];
+                    let visitedNodes = new Set();
+                    let nodeQueue = new RC.Collections.PriorityQueue(Graph.GraphEdge.Compare);
+                    let node = graph.GetNodeAt(start);
+                    while (node != null) {
+                        visitedNodes.add(node.index);
+                        for (let edge of node.edges)
+                            nodeQueue.enqueue(edge);
+                        let edage = nodeQueue.dequeue();
+                        while (edage != null && visitedNodes.has(edage.to)) {
+                            edage = nodeQueue.dequeue();
+                        }
+                        if (edage == null)
+                            break;
+                        shortestPathPredecessors.push(edage);
+                        node = graph.GetNodeAt(edage.to);
+                    }
+                    return shortestPathPredecessors;
+                }
+                static AStarSearch(graph, start, end) {
+                    let shortestPathPredecessors = new RC.Collections.Dictionary();
+                    let frontierPredecessors = new RC.Collections.Dictionary();
+                    let nodeQueue = new RC.Collections.PriorityQueue(NumberPair.NumberCompare);
+                    let costToNode = new RC.Collections.Dictionary();
+                    costToNode.setValue(start, 0);
+                    frontierPredecessors.setValue(start, null);
+                    nodeQueue.enqueue(new NumberPair(start, 0));
+                    while (nodeQueue.size() > 0) {
+                        let nextClosestNode = nodeQueue.dequeue();
+                        let predecessor = frontierPredecessors.getValue(nextClosestNode.first);
+                        shortestPathPredecessors.setValue(nextClosestNode.first, predecessor);
+                        if (end == nextClosestNode.first)
+                            break;
+                        let edages = graph.GetNodeAt(nextClosestNode.first).edges;
+                        for (let edge of edages) {
+                            let totalCost = costToNode.getValue(nextClosestNode.first) + edge.cost;
+                            let estimatedTotalCostViaNode = totalCost + 0;
+                            if (!frontierPredecessors.containsKey(edge.to)) {
+                                costToNode.setValue(edge.to, totalCost);
+                                frontierPredecessors.setValue(edge.to, edge);
+                                nodeQueue.enqueue(new NumberPair(edge.to, estimatedTotalCostViaNode));
+                            }
+                            else if (totalCost < costToNode.getValue(edge.to) &&
+                                !shortestPathPredecessors.containsKey(edge.to)) {
+                                costToNode.setValue(edge.to, totalCost);
+                                frontierPredecessors.setValue(edge.to, edge);
+                                nodeQueue.forEach((element) => {
+                                    if (element.first == edge.to) {
+                                        element.second = estimatedTotalCostViaNode;
+                                        return;
+                                    }
+                                });
+                                nodeQueue.update();
+                            }
+                        }
+                    }
+                    let pathList = [];
+                    for (let node = end; shortestPathPredecessors.getValue(node) != null; node = shortestPathPredecessors.getValue(node).from)
+                        pathList.push(node);
+                    pathList.push(start);
+                    pathList.reverse();
+                    return pathList;
+                }
+            }
+            Graph.GraphSearcher = GraphSearcher;
+            class NumberPair {
+                constructor(first, second) {
+                    this.first = first;
+                    this.second = second;
+                }
+                static NumberCompare(a, b) {
+                    if (a.second > b.second) {
+                        return -1;
+                    }
+                    if (a.second < b.second) {
+                        return 1;
+                    }
+                    return 0;
+                }
+            }
+            Graph.NumberPair = NumberPair;
+        })(Graph = Algorithm.Graph || (Algorithm.Graph = {}));
+    })(Algorithm = RC.Algorithm || (RC.Algorithm = {}));
 })(RC || (RC = {}));
 var RC;
 (function (RC) {
@@ -693,6 +935,10 @@ var RC;
             }
             forEach(callback) {
                 Collections.Arrays.forEach(this.data, callback);
+            }
+            update() {
+                if (this.data.length > 0)
+                    this.siftDown(0);
             }
         }
         Collections.Heap = Heap;
@@ -1564,6 +1810,9 @@ var RC;
             }
             forEach(callback) {
                 this.heap.forEach(callback);
+            }
+            update() {
+                this.heap.update();
             }
         }
         Collections.PriorityQueue = PriorityQueue;

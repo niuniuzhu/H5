@@ -651,6 +651,7 @@ var View;
             this._graphicManager = new View.GraphicManager(this);
             this._fihgtHandler = new View.FightHandler(this);
             this._graphic = new View.MapGraphic(this._data.model);
+            this._tileMap = new View.CTileMap(this._data.model);
             this.CreateTowers(param);
         }
         get frame() { return this._frame; }
@@ -1106,6 +1107,39 @@ var View;
         get summonFx() { return this._data.summonFx; }
     }
     View.CSkill = CSkill;
+})(View || (View = {}));
+var View;
+(function (View) {
+    class CTileMap {
+        constructor(id) {
+            id = id + "_data";
+            this._mapData = [];
+            let image = fairygui.UIPackage.createObject("global", id);
+            let texture = image.image.tex;
+            let pixels = texture.getPixels(0, 0, texture.width, texture.height);
+            for (let i = 0; i < pixels.length; i += 4) {
+                this._mapData.push(pixels[i]);
+            }
+            console.log(this._mapData);
+            image.dispose();
+            this._graph = RC.Algorithm.Graph.Graph2D.CreateFullDigraph(texture.height, texture.width, this.GetCost.bind(this));
+            let path = RC.Algorithm.Graph.GraphSearcher.AStarSearch(this._graph, 180, 433);
+            console.log(path);
+        }
+        GetCost(index) {
+            return this._mapData[index];
+        }
+        AStarSearch(from, to) {
+            return RC.Algorithm.Graph.GraphSearcher.AStarSearch(this._graph, from, to);
+        }
+        CoordToIndex(x, y) {
+            return this._graph.CoordToIndex(x, y);
+        }
+        IndexToCoord(index) {
+            return this._graph.IndexToCoord(index);
+        }
+    }
+    View.CTileMap = CTileMap;
 })(View || (View = {}));
 var View;
 (function (View) {

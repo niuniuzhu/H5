@@ -1,6 +1,66 @@
 declare namespace RC {
     class Test {
         constructor();
+        private _i;
+        private F(index);
+    }
+}
+declare namespace RC.Algorithm.Graph {
+    class GraphBase {
+        private _nodes;
+        private readonly _idToNodes;
+        readonly size: number;
+        nodes: GraphNode[];
+        constructor(size: number);
+        GetNodeAt(index: number): GraphNode;
+        Foreach(loopFunc: (node: GraphNode) => void): void;
+    }
+}
+declare namespace RC.Algorithm.Graph {
+    class Graph2D extends GraphBase {
+        private _row;
+        private _col;
+        readonly row: number;
+        readonly col: number;
+        constructor(row: number, col: number);
+        GetNode(row: number, col: number): GraphNode | undefined;
+        static CreateFullDigraph(row: number, col: number, rndFunc?: (index: number) => number): Graph2D;
+        CoordToIndex(x: number, y: number): number;
+        IndexToCoord(index: number): number[];
+    }
+}
+declare namespace RC.Algorithm.Graph {
+    class GraphEdge {
+        private _from;
+        private _to;
+        private _cost;
+        readonly from: number;
+        readonly to: number;
+        readonly cost: number;
+        constructor(from: number, to: number, cost?: number);
+        static Compare(a: GraphEdge, b: GraphEdge): number;
+    }
+}
+declare namespace RC.Algorithm.Graph {
+    class GraphNode {
+        private _index;
+        private readonly _edges;
+        readonly index: number;
+        readonly edges: GraphEdge[];
+        constructor(index: number);
+        AddEdge(from: number, to: number, cost: number): GraphEdge;
+    }
+}
+declare namespace RC.Algorithm.Graph {
+    class GraphSearcher {
+        static PrimSearch(graph: GraphBase, start: number): GraphEdge[];
+        static AStarSearch(graph: GraphBase, start: number, end: number): number[];
+    }
+    class NumberPair {
+        first: number;
+        second: number;
+        constructor(first: number, second: number);
+        static NumberCompare(a: NumberPair, b: NumberPair): number;
     }
 }
 declare namespace RC.Collections {
@@ -127,6 +187,7 @@ declare namespace RC.Collections {
         isEmpty(): boolean;
         clear(): void;
         forEach(callback: ILoopFunction<T>): void;
+        update(): void;
     }
 }
 declare namespace RC.Collections {
@@ -270,6 +331,7 @@ declare namespace RC.Collections {
         size(): number;
         clear(): void;
         forEach(callback: ILoopFunction<T>): void;
+        update(): void;
     }
 }
 declare namespace RC.Collections {

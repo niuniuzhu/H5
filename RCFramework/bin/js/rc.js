@@ -15,7 +15,7 @@ var RC;
             while (!queue.isEmpty())
                 console.log(queue.dequeue());
         }
-        F() {
+        F(index) {
             return this._i++;
         }
     }
@@ -81,9 +81,9 @@ var RC;
                             let cur = i * c + j;
                             let node = graph.GetNodeAt(cur);
                             if (j < c - 1)
-                                node.AddEdge(cur, cur + 1, rndFunc == null ? 0 : rndFunc());
+                                node.AddEdge(cur, cur + 1, rndFunc == null ? 0 : rndFunc(cur + 1));
                             if (j > 0)
-                                node.AddEdge(cur, cur - 1, rndFunc == null ? 0 : rndFunc());
+                                node.AddEdge(cur, cur - 1, rndFunc == null ? 0 : rndFunc(cur - 1));
                         }
                     }
                     for (let i = 0; i < c; i++) {
@@ -91,9 +91,9 @@ var RC;
                             let cur = j * c + i;
                             let node = graph.GetNodeAt(cur);
                             if (j < r - 1)
-                                node.AddEdge(cur, cur + c, rndFunc == null ? 0 : rndFunc());
+                                node.AddEdge(cur, cur + c, rndFunc == null ? 0 : rndFunc(cur + c));
                             if (j > 0)
-                                node.AddEdge(cur, cur - c, rndFunc == null ? 0 : rndFunc());
+                                node.AddEdge(cur, cur - c, rndFunc == null ? 0 : rndFunc(cur - c));
                         }
                     }
                     return graph;

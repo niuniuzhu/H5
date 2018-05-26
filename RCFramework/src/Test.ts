@@ -14,7 +14,7 @@ namespace RC {
 		}
 
 		private _i: number = 0;
-		private F(): number {
+		private F(index:number): number {
 			return this._i++;
 		}
 	}
