@@ -115,5 +115,8 @@ namespace RC.Collections {
 			this.heap.forEach(callback);
 		}
 
+		public update(){
+			this.heap.update();
+		}
 	}
 }

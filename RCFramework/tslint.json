@@ -26,7 +26,7 @@
         ],
         "no-empty-interface":true,// 不允许空接口
         //"no-parameter-reassignment":true,// 不允许修改方法输入参数
-        "prefer-for-of":true,// 如果for循环中没有使用索引，建议是使用for-of
+        //"prefer-for-of":true,// 如果for循环中没有使用索引，建议是使用for-of
 
         // 功能特性
         "await-promise":true,// 不允许没有Promise的情况下使用await

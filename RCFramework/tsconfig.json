@@ -7,9 +7,9 @@
 	  "sourceMap": true,
 	  "removeComments": true,
 	  "alwaysStrict": true,
-	  "strict": true,
+	//   "strict": true,
 	  "outFile": "./bin/js/rc.js",
-	  "noImplicitReturns": true,
+	//   "noImplicitReturns": true,
 	  "declaration": true
 	},
     "include": [

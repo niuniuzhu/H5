@@ -228,5 +228,10 @@ namespace RC.Collections {
 		public forEach(callback: ILoopFunction<T>) {
 			Arrays.forEach(this.data, callback);
 		}
+
+		public update() {
+			if (this.data.length > 0)
+				this.siftDown(0);
+		}
 	}
 }

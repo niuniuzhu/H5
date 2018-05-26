@@ -1,15 +1,21 @@
 namespace RC {
 	export class Test {
 		constructor() {
-			let m1 = RC.Numerics.Mat4.FromTRS(new RC.Numerics.Vec3(1, -2, 3),
-				RC.Numerics.Quat.Euler(new RC.Numerics.Vec3(90, 0, 0)), new RC.Numerics.Vec3(2, 3, 4));
-			console.log(m1);
+			let graph = RC.Algorithm.Graph.Graph2D.CreateFullDigraph(10, 10, this.F.bind(this));
+			let path = RC.Algorithm.Graph.GraphSearcher.AStarSearch(graph, 0, 99);
+			console.log(path);
+			let queue = new RC.Collections.PriorityQueue<RC.Algorithm.Graph.NumberPair>(RC.Algorithm.Graph.NumberPair.NumberCompare);
+			queue.add(new RC.Algorithm.Graph.NumberPair(1, 4));
+			queue.add(new RC.Algorithm.Graph.NumberPair(2, 3));
+			queue.add(new RC.Algorithm.Graph.NumberPair(3, 2));
+			queue.add(new RC.Algorithm.Graph.NumberPair(4, 1));
+			while (!queue.isEmpty())
+				console.log(queue.dequeue());
+		}
 
-			let m4 = RC.Numerics.Mat3.FromOuterProduct(new RC.Numerics.Vec3(1, -2, 3), new RC.Numerics.Vec3(93, 44, 32));
-			let m5 = RC.Numerics.Mat3.FromCross(new RC.Numerics.Vec3(2.5, 3, 4));
-			let m6 = RC.Numerics.Mat3.Mul2(m4, m5);
-			m6.RotateAround(33, new RC.Numerics.Vec3(2, 3, 4));
-			console.log(m6);
+		private _i: number = 0;
+		private F(): number {
+			return this._i++;
 		}
 	}
 }
