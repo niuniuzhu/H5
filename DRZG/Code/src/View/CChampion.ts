@@ -2,7 +2,6 @@
 
 namespace View {
 	export class CChampion extends CTower {
-
 		public OnCreated(owner: CBattle, param: Shared.Model.EntityParam): void {
 			super.OnCreated(owner, param);
 			this._graphic.Stop();

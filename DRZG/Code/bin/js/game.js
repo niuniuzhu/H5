@@ -523,6 +523,232 @@ var Shared;
 })(Shared || (Shared = {}));
 var Shared;
 (function (Shared) {
+    var FSM;
+    (function (FSM) {
+        class AbsActionAbsAction {
+            get enabled() { return this._enabled; }
+            set enabled(value) {
+                if (this._enabled == value)
+                    return;
+                this._enabled = value;
+                if (this._enabled)
+                    this.OnEnable();
+                else
+                    this.OnDisable();
+            }
+            OnEnable() {
+            }
+            OnDisable() {
+            }
+            Enter(param) {
+                if (!this._enabled)
+                    return;
+                this.OnEnter(param);
+            }
+            Exit() {
+                if (!this._enabled)
+                    return;
+                this.OnExit();
+            }
+            Update(context) {
+                if (!this.enabled)
+                    return;
+                this.OnUpdate(context);
+            }
+            OnEnter(param) {
+            }
+            OnExit() {
+            }
+            OnUpdate(context) {
+            }
+        }
+        FSM.AbsActionAbsAction = AbsActionAbsAction;
+    })(FSM = Shared.FSM || (Shared.FSM = {}));
+})(Shared || (Shared = {}));
+var Shared;
+(function (Shared) {
+    var FSM;
+    (function (FSM_1) {
+        class FSM {
+            constructor(owner) {
+                this._states = new RC.Collections.Dictionary();
+                this._subFSMList = [];
+                this._owner = owner;
+                this.enabled = true;
+            }
+            get previousState() { return this._previousState; }
+            get globalState() { return this._globalState; }
+            get currState() { return this._currState; }
+            get owner() { return this._owner; }
+            get enabled() { return this._enabled; }
+            set enabled(value) {
+                if (this._enabled == value)
+                    return;
+                this._enabled = value;
+                if (this._enabled)
+                    this.OnEnable();
+                else
+                    this.OnDisable();
+            }
+            get parent() { return this._parent; }
+            get isRunning() { return this._isRunning; }
+            get disposed() { return this._disposed; }
+            OnEnable() {
+                for (let subFSM of this._subFSMList)
+                    subFSM.OnEnable();
+            }
+            OnDisable() {
+                for (let subFSM of this._subFSMList)
+                    subFSM.OnDisable();
+            }
+            Start() {
+                if (this._isRunning)
+                    return;
+                this._isRunning = true;
+                for (let subFSM of this._subFSMList)
+                    subFSM.Start();
+                if (this._globalState != null)
+                    this._globalState.Enter(null);
+            }
+            Stop() {
+                if (!this._isRunning)
+                    return;
+                this._isRunning = false;
+                if (this._globalState != null)
+                    this._globalState.Exit();
+                if (this._currState != null)
+                    this._currState.Exit();
+                for (let subFSM of this._subFSMList)
+                    subFSM.Stop();
+            }
+            CreateState(type) {
+                if (this._states.containsKey(type))
+                    console.error(`Specified name '${type}' of component already exists`);
+                let state = new FSM_1.FSMState(type, this);
+                this._states.setValue(type, state);
+                return state;
+            }
+            DestroyState(type) {
+                this._states.remove(type);
+            }
+            CreateGlobalState(type) {
+                if (this.globalState != null)
+                    console.error("A global state already exist.");
+                if (this._states.containsKey(type))
+                    console.error(`Specified name '${type}' of component already exists`);
+                this._globalState = new FSM_1.FSMState(type, this);
+                if (this._isRunning)
+                    this._globalState.Enter(null);
+                return this._globalState;
+            }
+            DestroyGlobalState() {
+                this._globalState = null;
+            }
+            ChangeState(type, force = false, ...param) {
+                let state = this._states.getValue(type);
+                if (state != null)
+                    return this.InternalChangeState(state, force, param);
+                console.warn(`State '${type}' not exist.`);
+                return false;
+            }
+            InternalChangeState(state, force = false, param = null) {
+                if (!force && this._currState == state)
+                    return false;
+                this._previousState = this._currState;
+                if (this._currState != null)
+                    this._currState.Exit();
+                this._currState = state;
+                if (this._currState != null)
+                    this._currState.Enter(param);
+                return true;
+            }
+            RevertToPreviousState() {
+                if (this._previousState != null)
+                    this.InternalChangeState(this._previousState);
+            }
+            AddSubFSM(subFSM) {
+                subFSM._owner = this._owner;
+                subFSM._parent = this;
+                subFSM.enabled = this._enabled;
+                this._subFSMList.push(subFSM);
+            }
+            DestroyAllSubFSM() {
+                this._subFSMList.splice(0);
+            }
+            DestroySubFSM(subFSM) {
+                this._subFSMList.splice(this._subFSMList.indexOf(subFSM), 1);
+            }
+            SubFSMCount() {
+                return this._subFSMList.length;
+            }
+            GetSubFsm(index) {
+                return this._subFSMList[index];
+            }
+            GetState(type) {
+                return this._states.getValue(type);
+            }
+            StateCount() {
+                return this._states.size();
+            }
+            Update(context) {
+                if (!this._isRunning || !this._enabled)
+                    return;
+                if (this._globalState != null)
+                    this._globalState.Update(context);
+                if (this._currState != null)
+                    this._currState.Update(context);
+                for (let subFSM of this._subFSMList)
+                    subFSM.Update(context);
+            }
+        }
+        FSM_1.FSM = FSM;
+    })(FSM = Shared.FSM || (Shared.FSM = {}));
+})(Shared || (Shared = {}));
+var Shared;
+(function (Shared) {
+    var FSM;
+    (function (FSM) {
+        class FSMState {
+            constructor(type, fsm) {
+                this._actions = [];
+                this._typeToAction = new RC.Collections.Dictionary();
+                this._type = type;
+                this._fsm = fsm;
+            }
+            get type() { return this._type; }
+            get fsm() { return this._fsm; }
+            Enter(param) {
+                for (let action of this._actions)
+                    action.Enter(param);
+            }
+            Exit() {
+                for (let action of this._actions)
+                    action.Exit();
+            }
+            Update(context) {
+                for (let action of this._actions)
+                    action.Update(context);
+            }
+            CreateAction(c) {
+                let action = new c();
+                action.state = this;
+                this._actions.push(action);
+                this._typeToAction.setValue(c, action);
+                return action;
+            }
+            GetAction(c) {
+                return this._typeToAction.getValue(c);
+            }
+            DestroyAction(c) {
+                let action = this._typeToAction.remove(c);
+                this._actions.splice(this._actions.indexOf(action), 1);
+            }
+        }
+        FSM.FSMState = FSMState;
+    })(FSM = Shared.FSM || (Shared.FSM = {}));
+})(Shared || (Shared = {}));
+var Shared;
+(function (Shared) {
     var Model;
     (function (Model) {
         class BattleParams {
@@ -949,6 +1175,10 @@ var View;
 var View;
 (function (View) {
     class CChampion extends View.CTower {
+        OnCreated(owner, param) {
+            super.OnCreated(owner, param);
+            this._graphic.Stop();
+        }
         PlayRun() {
             this._graphic.Play(6, 13, -1, 6);
         }
@@ -1120,11 +1350,8 @@ var View;
             for (let i = 0; i < pixels.length; i += 4) {
                 this._mapData.push(pixels[i]);
             }
-            console.log(this._mapData);
             image.dispose();
             this._graph = RC.Algorithm.Graph.Graph2D.CreateFullDigraph(texture.height, texture.width, this.GetCost.bind(this));
-            let path = RC.Algorithm.Graph.GraphSearcher.AStarSearch(this._graph, 180, 433);
-            console.log(path);
         }
         GetCost(index) {
             return this._mapData[index];
@@ -1318,6 +1545,12 @@ var View;
         }
     }
     View.FightHandler = FightHandler;
+})(View || (View = {}));
+var View;
+(function (View) {
+    class FSMStateType {
+    }
+    View.FSMStateType = FSMStateType;
 })(View || (View = {}));
 var View;
 (function (View) {
