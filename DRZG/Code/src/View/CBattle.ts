@@ -94,41 +94,56 @@ namespace View {
 
 		private CreateTowers(param: Shared.Model.BattleParams): void {
 			for (let i = 0; i < param.team0.length; ++i) {
-				let tower = this.CreateTower(param.team0[i]);
+				let team0 = param.team0[i];
+				let tower = this.CreateTower(team0.id, team0.team, team0.skills);
 				let arr: number[] = this._data.towerPos[0][i];
 				tower.position = new RC.Numerics.Vec2(arr[0], arr[1]);
 				if (i == 0)
-					CTower.player = tower;
+					CTower.player = tower.rid;
 				else
 					tower.CreateAI();
 			}
 			for (let i = 0; i < param.team1.length; ++i) {
-				let tower = this.CreateTower(param.team1[i]);
+				let team1 = param.team1[i];
+				let tower = this.CreateTower(team1.id, team1.team, team1.skills);
 				let arr: number[] = this._data.towerPos[1][i];
 				tower.position = new RC.Numerics.Vec2(arr[0], arr[1]);
 				tower.CreateAI();
 			}
 		}
 
-		public CreateTower(param: Shared.Model.EntityParam): CTower {
+		public CreateTower(id: string, team: number, skills?: string[]): CTower {
+			let param = new Shared.Model.EntityParam();
+			param.id = id;
 			param.rid = Shared.Utils.MakeRIDFromID(param.id);
+			param.team = team;
+			param.skills = skills;
 			let entity = this._entityManager.Create(CTower, param);
 			return <CTower>entity;
 		}
 
-		public CreateChampion(param: Shared.Model.EntityParam): CChampion {
+		public CreateChampion(id: string, team: number, skills?: string[]): CChampion {
+			let param = new Shared.Model.EntityParam();
+			param.id = id;
+			param.rid = Shared.Utils.MakeRIDFromID(param.id);
+			param.team = team;
+			param.skills = skills;
 			param.rid = Shared.Utils.MakeRIDFromID(param.id);
 			let entity = this._entityManager.Create(CChampion, param);
 			return <CChampion>entity;
 		}
 
-		public CreateMissile(param: Shared.Model.EntityParam): Missile {
+		public CreateMissile(id: string): Missile {
+			let param = new Shared.Model.EntityParam();
+			param.id = id;
 			param.rid = Shared.Utils.MakeRIDFromID(param.id);
 			let entity = this._entityManager.Create(Missile, param);
 			return <Missile>entity;
 		}
 
-		public CreateEffect(param: Shared.Model.EntityParam): CEffect {
+		public CreateEffect(id: string): CEffect {
+			let param = new Shared.Model.EntityParam();
+			param.id = id;
 			param.rid = Shared.Utils.MakeRIDFromID(param.id);
 			let entity = this._entityManager.Create(CEffect, param);
 			return <CEffect>entity;

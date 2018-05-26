@@ -78,6 +78,7 @@ namespace View {
 		protected CreateGraphic(): void {
 			this._graphic = this._owner.graphicManager.CreateGraphic(EntityGraphic);
 			this._graphic.Load(this._data.model);
+			this._graphic.scale = this._data.scale;
 			this._graphic.position = this._position;
 			this._graphic.direction = this._direction;
 		}

@@ -40,18 +40,57 @@ namespace RC.Utils {
 			return this.GetArray(map, key) as boolean[];
 		}
 
-		public static GetVec2(map: { [k: string]: any }, key: string): RC.Numerics.Vec2 {
+		public static GetVec2Array(map: { [k: string]: any }, key: string): RC.Numerics.Vec2[] | null {
+			let arrs: number[][] = this.GetArray(map, key);
+			if (arrs == null)
+				return null;
+			let result: RC.Numerics.Vec2[] = [];
+			for (let arr of arrs) {
+				result.push(new RC.Numerics.Vec2(arr[0], arr[1]));
+			}
+			return result;
+		}
+
+		public static GetVec3Array(map: { [k: string]: any }, key: string): RC.Numerics.Vec3[] | null {
+			let arrs: number[][] = this.GetArray(map, key);
+			if (arrs == null)
+				return null;
+			let result: RC.Numerics.Vec3[] = [];
+			for (let arr of arrs) {
+				result.push(new RC.Numerics.Vec3(arr[0], arr[1], arr[2]));
+			}
+			return result;
+		}
+
+		public static GetVec4Array(map: { [k: string]: any }, key: string): RC.Numerics.Vec4[] | null {
+			let arrs: number[][] = this.GetArray(map, key);
+			if (arrs == null)
+				return null;
+			let result: RC.Numerics.Vec4[] = [];
+			for (let arr of arrs) {
+				result.push(new RC.Numerics.Vec4(arr[0], arr[1], arr[2], arr[3]));
+			}
+			return result;
+		}
+
+		public static GetVec2(map: { [k: string]: any }, key: string): RC.Numerics.Vec2 | null {
 			let arr: any[] = this.GetArray(map, key);
+			if (arr == null)
+				return null;
 			return new RC.Numerics.Vec2(arr[0], arr[1]);
 		}
 
-		public static GetVec3(map: { [k: string]: any }, key: string): RC.Numerics.Vec3 {
+		public static GetVec3(map: { [k: string]: any }, key: string): RC.Numerics.Vec3 | null {
 			let arr: any[] = this.GetArray(map, key);
+			if (arr == null)
+				return null;
 			return new RC.Numerics.Vec3(arr[0], arr[1], arr[2]);
 		}
 
-		public static GetVec4(map: { [k: string]: any }, key: string): RC.Numerics.Vec4 {
+		public static GetVec4(map: { [k: string]: any }, key: string): RC.Numerics.Vec4 | null {
 			let arr: any[] = this.GetArray(map, key);
+			if (arr == null)
+				return null;
 			return new RC.Numerics.Vec4(arr[0], arr[1], arr[2], arr[3]);
 		}
 	}

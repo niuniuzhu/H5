@@ -4,6 +4,7 @@ namespace Shared.Model {
 		public readonly id: string;
 		public readonly name: string;
 		public readonly model: string;
+		public readonly scale: RC.Numerics.Vec2;
 
 		// champion
 		public readonly mhp: number;
@@ -26,6 +27,9 @@ namespace Shared.Model {
 			let def = Defs.GetEntity(this.id);
 			this.name = RC.Utils.Hashtable.GetString(def, "name");
 			this.model = RC.Utils.Hashtable.GetString(def, "model");
+			this.scale = RC.Utils.Hashtable.GetVec2(def, "scale");
+			if (this.scale == null)
+				this.scale = RC.Numerics.Vec2.one;
 
 			this.mhp = RC.Utils.Hashtable.GetNumber(def, "mhp");
 			this.mmp = RC.Utils.Hashtable.GetNumber(def, "mmp");

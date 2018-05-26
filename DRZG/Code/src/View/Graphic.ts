@@ -34,6 +34,9 @@ namespace View {
 		public get sortingOrder(): number { return this._root.sortingOrder; }
 		public set sortingOrder(value: number) { this._root.sortingOrder = value; }
 
+		public get scale(): RC.Numerics.Vec2 { return new RC.Numerics.Vec2(this._modelContainer.scaleX, this._modelContainer.scaleY); }
+		public set scale(value: RC.Numerics.Vec2) { this._modelContainer.setScale(value.x, value.y); }
+
 		constructor(manager: GraphicManager) {
 			this._manager = manager;
 			this._root = new fairygui.GComponent();

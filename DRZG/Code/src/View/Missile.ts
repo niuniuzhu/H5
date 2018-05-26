@@ -27,9 +27,7 @@ namespace View {
 			this._graphic.Stop();
 			this.MarkToDestroy();
 			if (this._data.dfx != null && this._data.dfx != "") {
-				let param = new Shared.Model.EntityParam();
-				param.id = this._data.dfx;
-				let fx = this._owner.CreateEffect(param);
+				let fx = this._owner.CreateEffect(this._data.dfx);
 				fx.Begin(this.position);
 			}
 			let caster = <CTower>this._owner.entityManager.GetEntity(this._caster);

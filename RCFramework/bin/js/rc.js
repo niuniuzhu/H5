@@ -5487,16 +5487,52 @@ var RC;
             static GetBoolArray(map, key) {
                 return this.GetArray(map, key);
             }
+            static GetVec2Array(map, key) {
+                let arrs = this.GetArray(map, key);
+                if (arrs == null)
+                    return null;
+                let result = [];
+                for (let arr of arrs) {
+                    result.push(new RC.Numerics.Vec2(arr[0], arr[1]));
+                }
+                return result;
+            }
+            static GetVec3Array(map, key) {
+                let arrs = this.GetArray(map, key);
+                if (arrs == null)
+                    return null;
+                let result = [];
+                for (let arr of arrs) {
+                    result.push(new RC.Numerics.Vec3(arr[0], arr[1], arr[2]));
+                }
+                return result;
+            }
+            static GetVec4Array(map, key) {
+                let arrs = this.GetArray(map, key);
+                if (arrs == null)
+                    return null;
+                let result = [];
+                for (let arr of arrs) {
+                    result.push(new RC.Numerics.Vec4(arr[0], arr[1], arr[2], arr[3]));
+                }
+                return result;
+            }
             static GetVec2(map, key) {
                 let arr = this.GetArray(map, key);
+                if (arr == null)
+                    return null;
                 return new RC.Numerics.Vec2(arr[0], arr[1]);
             }
             static GetVec3(map, key) {
                 let arr = this.GetArray(map, key);
+                if (arr == null)
+                    return null;
                 return new RC.Numerics.Vec3(arr[0], arr[1], arr[2]);
             }
             static GetVec4(map, key) {
                 let arr = this.GetArray(map, key);
+                if (arr == null)
+                    return null;
                 return new RC.Numerics.Vec4(arr[0], arr[1], arr[2], arr[3]);
             }
         }

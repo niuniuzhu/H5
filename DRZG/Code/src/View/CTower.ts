@@ -2,7 +2,7 @@
 
 namespace View {
 	export class CTower extends CEntity {
-		public static player: CTower;
+		public static player: string;
 
 		protected _team: number;
 		protected _skills: Map<string, CSkill>;
@@ -12,7 +12,7 @@ namespace View {
 
 		public get mmp(): number { return this._data.mmp; }
 		public get mp(): number { return this._mp; }
-		public get hp(): number { return this._hp; };
+		public get hp(): number { return this._hp; }
 		public set hp(value: number) {
 			if (value == this._hp)
 				return;
@@ -32,11 +32,13 @@ namespace View {
 				let skill = new CSkill(skillId);
 				this._skills.set(skillId, skill);
 			}
-			for (let skillId of param.skills) {
-				if (this._skills.has(skillId))
-					continue;
-				let skill = new CSkill(skillId);
-				this._skills.set(skillId, skill);
+			if (param.skills != null) {
+				for (let skillId of param.skills) {
+					if (this._skills.has(skillId))
+						continue;
+					let skill = new CSkill(skillId);
+					this._skills.set(skillId, skill);
+				}
 			}
 			this.direction = this._team == 0 ? RC.Numerics.Vec2.down : RC.Numerics.Vec2.up;
 			this.graphic.ShowHUD();
@@ -99,15 +101,24 @@ namespace View {
 			}
 			let skill = this._skills.get(skillId);
 			this._mp -= skill.cmp;
+			if (skill.fx != null && skill.fx != "") {
+				let fx = this._owner.CreateEffect(skill.fx);
+				fx.Begin(this.position);
+			}
 			if (skill.missile == null || skill.missile == "") {
 				this.MakeFightContext(skillId, target.rid);
 			}
 			else {
-				let param = new Shared.Model.EntityParam();
-				param.id = skill.missile;
-				param.team = this.team;
-				let missile = this._owner.CreateMissile(param);
+				let missile = this._owner.CreateMissile(skill.missile);
 				missile.Begin(skill, this, target);
+			}
+			if (skill.summon != null && skill.summon != "") {
+				let summon = this._owner.CreateChampion(skill.summon, this.team);
+				summon.position = skill.summonPos[Math.floor(Math.random() * skill.summonPos.length)];
+				if (skill.summonFx != null && skill.summonFx != "") {
+					let fx = this._owner.CreateEffect(skill.summonFx);
+					fx.Begin(summon.position);
+				}
 			}
 		}
 

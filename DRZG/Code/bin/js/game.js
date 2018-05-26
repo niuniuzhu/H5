@@ -546,6 +546,9 @@ var Shared;
                 let def = Shared.Defs.GetEntity(this.id);
                 this.name = RC.Utils.Hashtable.GetString(def, "name");
                 this.model = RC.Utils.Hashtable.GetString(def, "model");
+                this.scale = RC.Utils.Hashtable.GetVec2(def, "scale");
+                if (this.scale == null)
+                    this.scale = RC.Numerics.Vec2.one;
                 this.mhp = RC.Utils.Hashtable.GetNumber(def, "mhp");
                 this.mmp = RC.Utils.Hashtable.GetNumber(def, "mmp");
                 this.mp = RC.Utils.Hashtable.GetNumber(def, "mp");
@@ -627,6 +630,9 @@ var Shared;
                 this.damage = RC.Utils.Hashtable.GetNumber(def, "damage");
                 this.fx = RC.Utils.Hashtable.GetString(def, "fx");
                 this.missile = RC.Utils.Hashtable.GetString(def, "missile");
+                this.summon = RC.Utils.Hashtable.GetString(def, "summon");
+                this.summonPos = RC.Utils.Hashtable.GetVec2Array(def, "summon_pos");
+                this.summonFx = RC.Utils.Hashtable.GetString(def, "summon_fx");
             }
         }
         Model.SkillData = SkillData;
@@ -709,37 +715,52 @@ var View;
         }
         CreateTowers(param) {
             for (let i = 0; i < param.team0.length; ++i) {
-                let tower = this.CreateTower(param.team0[i]);
+                let team0 = param.team0[i];
+                let tower = this.CreateTower(team0.id, team0.team, team0.skills);
                 let arr = this._data.towerPos[0][i];
                 tower.position = new RC.Numerics.Vec2(arr[0], arr[1]);
                 if (i == 0)
-                    View.CTower.player = tower;
+                    View.CTower.player = tower.rid;
                 else
                     tower.CreateAI();
             }
             for (let i = 0; i < param.team1.length; ++i) {
-                let tower = this.CreateTower(param.team1[i]);
+                let team1 = param.team1[i];
+                let tower = this.CreateTower(team1.id, team1.team, team1.skills);
                 let arr = this._data.towerPos[1][i];
                 tower.position = new RC.Numerics.Vec2(arr[0], arr[1]);
                 tower.CreateAI();
             }
         }
-        CreateTower(param) {
+        CreateTower(id, team, skills) {
+            let param = new Shared.Model.EntityParam();
+            param.id = id;
             param.rid = Shared.Utils.MakeRIDFromID(param.id);
+            param.team = team;
+            param.skills = skills;
             let entity = this._entityManager.Create(View.CTower, param);
             return entity;
         }
-        CreateChampion(param) {
+        CreateChampion(id, team, skills) {
+            let param = new Shared.Model.EntityParam();
+            param.id = id;
+            param.rid = Shared.Utils.MakeRIDFromID(param.id);
+            param.team = team;
+            param.skills = skills;
             param.rid = Shared.Utils.MakeRIDFromID(param.id);
             let entity = this._entityManager.Create(View.CChampion, param);
             return entity;
         }
-        CreateMissile(param) {
+        CreateMissile(id) {
+            let param = new Shared.Model.EntityParam();
+            param.id = id;
             param.rid = Shared.Utils.MakeRIDFromID(param.id);
             let entity = this._entityManager.Create(View.Missile, param);
             return entity;
         }
-        CreateEffect(param) {
+        CreateEffect(id) {
+            let param = new Shared.Model.EntityParam();
+            param.id = id;
             param.rid = Shared.Utils.MakeRIDFromID(param.id);
             let entity = this._entityManager.Create(View.CEffect, param);
             return entity;
@@ -806,6 +827,7 @@ var View;
         CreateGraphic() {
             this._graphic = this._owner.graphicManager.CreateGraphic(View.EntityGraphic);
             this._graphic.Load(this._data.model);
+            this._graphic.scale = this._data.scale;
             this._graphic.position = this._position;
             this._graphic.direction = this._direction;
         }
@@ -818,7 +840,6 @@ var View;
         get mmp() { return this._data.mmp; }
         get mp() { return this._mp; }
         get hp() { return this._hp; }
-        ;
         set hp(value) {
             if (value == this._hp)
                 return;
@@ -836,11 +857,13 @@ var View;
                 let skill = new View.CSkill(skillId);
                 this._skills.set(skillId, skill);
             }
-            for (let skillId of param.skills) {
-                if (this._skills.has(skillId))
-                    continue;
-                let skill = new View.CSkill(skillId);
-                this._skills.set(skillId, skill);
+            if (param.skills != null) {
+                for (let skillId of param.skills) {
+                    if (this._skills.has(skillId))
+                        continue;
+                    let skill = new View.CSkill(skillId);
+                    this._skills.set(skillId, skill);
+                }
             }
             this.direction = this._team == 0 ? RC.Numerics.Vec2.down : RC.Numerics.Vec2.up;
             this.graphic.ShowHUD();
@@ -894,15 +917,24 @@ var View;
             }
             let skill = this._skills.get(skillId);
             this._mp -= skill.cmp;
+            if (skill.fx != null && skill.fx != "") {
+                let fx = this._owner.CreateEffect(skill.fx);
+                fx.Begin(this.position);
+            }
             if (skill.missile == null || skill.missile == "") {
                 this.MakeFightContext(skillId, target.rid);
             }
             else {
-                let param = new Shared.Model.EntityParam();
-                param.id = skill.missile;
-                param.team = this.team;
-                let missile = this._owner.CreateMissile(param);
+                let missile = this._owner.CreateMissile(skill.missile);
                 missile.Begin(skill, this, target);
+            }
+            if (skill.summon != null && skill.summon != "") {
+                let summon = this._owner.CreateChampion(skill.summon, this.team);
+                summon.position = skill.summonPos[Math.floor(Math.random() * skill.summonPos.length)];
+                if (skill.summonFx != null && skill.summonFx != "") {
+                    let fx = this._owner.CreateEffect(skill.summonFx);
+                    fx.Begin(summon.position);
+                }
             }
         }
         MakeFightContext(skillId, target) {
@@ -1069,6 +1101,9 @@ var View;
         get damage() { return this._data.damage; }
         get fx() { return this._data.fx; }
         get missile() { return this._data.missile; }
+        get summon() { return this._data.summon; }
+        get summonPos() { return this._data.summonPos; }
+        get summonFx() { return this._data.summonFx; }
     }
     View.CSkill = CSkill;
 })(View || (View = {}));
@@ -1133,6 +1168,8 @@ var View;
         set visible(value) { this._root.visible = value; }
         get sortingOrder() { return this._root.sortingOrder; }
         set sortingOrder(value) { this._root.sortingOrder = value; }
+        get scale() { return new RC.Numerics.Vec2(this._modelContainer.scaleX, this._modelContainer.scaleY); }
+        set scale(value) { this._modelContainer.setScale(value.x, value.y); }
         Dispose() {
             this._root.dispose();
         }
@@ -1339,9 +1376,7 @@ var View;
             this._graphic.Stop();
             this.MarkToDestroy();
             if (this._data.dfx != null && this._data.dfx != "") {
-                let param = new Shared.Model.EntityParam();
-                param.id = this._data.dfx;
-                let fx = this._owner.CreateEffect(param);
+                let fx = this._owner.CreateEffect(this._data.dfx);
                 fx.Begin(this.position);
             }
             let caster = this._owner.entityManager.GetEntity(this._caster);
@@ -1649,11 +1684,14 @@ var View;
             }
             Update(deltaTime) {
                 this._battle.Update(deltaTime);
-                this._mpBar.max = View.CTower.player.mmp;
-                this._mpBar.value = View.CTower.player.mp;
+                let player = this.GetPlayer();
+                if (player == null)
+                    return;
+                this._mpBar.max = player.mmp;
+                this._mpBar.value = player.mp;
                 for (let skillGrid of this._skillGrids) {
                     let skillId = skillGrid.name;
-                    skillGrid.grayed = !View.CTower.player.CanUseSkill(skillId);
+                    skillGrid.grayed = !player.CanUseSkill(skillId);
                     skillGrid.touchable = !skillGrid.grayed;
                 }
             }
@@ -1664,10 +1702,19 @@ var View;
                 this._result.getChild("n10").asTextField.text = winTeam == 0 ? "" + Math.floor(Math.random() * 3000 + 1200) : "" + Math.floor(Math.random() * 500 + 800);
                 fairygui.GRoot.inst.addChild(this._result);
             }
+            GetPlayer() {
+                let player = this._battle.entityManager.GetEntity(View.CTower.player);
+                if (player == null)
+                    return null;
+                return player;
+            }
             OnSkillGridClick(e) {
                 let skillGrid = fairygui.GObject.cast(e.currentTarget);
                 let skillId = skillGrid.name;
-                View.CTower.player.UseSkill(skillId);
+                let player = this.GetPlayer();
+                if (player == null)
+                    return;
+                player.UseSkill(skillId);
             }
         }
         UI.UIBattle = UIBattle;
@@ -1817,7 +1864,7 @@ var View;
                 tower = new Shared.Model.EntityParam();
                 tower.id = "e0";
                 tower.team = 1;
-                tower.skills = this._skillPanel.GetSkills();
+                tower.skills = ["s0", "s10", "s2", "s3", "s4"];
                 param.team1.push(tower);
                 tower = new Shared.Model.EntityParam();
                 tower.id = "e1";

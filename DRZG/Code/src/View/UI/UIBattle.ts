@@ -55,12 +55,15 @@ namespace View.UI {
 
 		public Update(deltaTime: number): void {
 			this._battle.Update(deltaTime);
-			this._mpBar.max = CTower.player.mmp;
-			this._mpBar.value = CTower.player.mp;
+			let player = this.GetPlayer();
+			if (player == null)
+				return;
+			this._mpBar.max = player.mmp;
+			this._mpBar.value = player.mp;
 
 			for (let skillGrid of this._skillGrids) {
 				let skillId = skillGrid.name;
-				skillGrid.grayed = !CTower.player.CanUseSkill(skillId);
+				skillGrid.grayed = !player.CanUseSkill(skillId);
 				skillGrid.touchable = !skillGrid.grayed;
 			}
 		}
@@ -74,10 +77,20 @@ namespace View.UI {
 			fairygui.GRoot.inst.addChild(this._result);
 		}
 
+		private GetPlayer(): CTower {
+			let player = <CTower>this._battle.entityManager.GetEntity(CTower.player);
+			if (player == null)
+				return null;
+			return player;
+		}
+
 		private OnSkillGridClick(e: laya.events.Event): void {
 			let skillGrid = <fairygui.GComponent>fairygui.GObject.cast(e.currentTarget);
 			let skillId = skillGrid.name;
-			CTower.player.UseSkill(skillId);
+			let player = this.GetPlayer();
+			if (player == null)
+				return;
+			player.UseSkill(skillId);
 		}
 	}
 }

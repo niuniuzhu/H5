@@ -978,15 +978,24 @@ declare namespace RC.Utils {
         static GetBoolArray(map: {
             [k: string]: any;
         }, key: string): boolean[];
+        static GetVec2Array(map: {
+            [k: string]: any;
+        }, key: string): RC.Numerics.Vec2[] | null;
+        static GetVec3Array(map: {
+            [k: string]: any;
+        }, key: string): RC.Numerics.Vec3[] | null;
+        static GetVec4Array(map: {
+            [k: string]: any;
+        }, key: string): RC.Numerics.Vec4[] | null;
         static GetVec2(map: {
             [k: string]: any;
-        }, key: string): RC.Numerics.Vec2;
+        }, key: string): RC.Numerics.Vec2 | null;
         static GetVec3(map: {
             [k: string]: any;
-        }, key: string): RC.Numerics.Vec3;
+        }, key: string): RC.Numerics.Vec3 | null;
         static GetVec4(map: {
             [k: string]: any;
-        }, key: string): RC.Numerics.Vec4;
+        }, key: string): RC.Numerics.Vec4 | null;
     }
 }
 declare namespace RC.Utils {
