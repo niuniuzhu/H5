@@ -25,7 +25,7 @@ namespace View {
 				target.hp -= skill.damage;
 				target.hp = RC.Numerics.MathUtils.Max(0, target.hp);
 				if (target.hp == 0)
-					target.MarkToDestroy();
+					target.OnDead();
 			}
 		}
 

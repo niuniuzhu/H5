@@ -39,8 +39,8 @@ namespace View {
 			caster.MakeFightContext(this._skill, this._target);
 		}
 
-		public OnUpdateState(context: Shared.UpdateContext): void {
-			super.OnUpdateState(context);
+		public InternalUpdateState(context: Shared.UpdateContext): void {
+			super.InternalUpdateState(context);
 
 			let dist = RC.Numerics.Vec2.Distance(this._lastPos, this.position);
 			if (dist != 0)

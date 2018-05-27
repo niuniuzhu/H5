@@ -50,8 +50,8 @@ namespace View {
 			this.MarkToDestroy();
 		}
 
-		public OnUpdateState(context: Shared.UpdateContext): void {
-			super.OnUpdateState(context);
+		public InternalUpdateState(context: Shared.UpdateContext): void {
+			super.InternalUpdateState(context);
 
 			if (this._follow != null && this._follow != "") {
 				let follow = this.owner.entityManager.GetEntity(this._follow);

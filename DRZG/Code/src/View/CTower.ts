@@ -11,6 +11,7 @@ namespace View {
 		protected _hp: number;
 
 		public get radius(): number { return this._data.radius; }
+		public get mhp(): number { return this._data.mhp; }
 		public get mmp(): number { return this._data.mmp; }
 		public get mp(): number { return this._mp; }
 		public get hp(): number { return this._hp; }
@@ -20,7 +21,7 @@ namespace View {
 			this._hp = value;
 			this.graphic.SetHP(this._data.mhp, this.hp);
 		}
-
+		public get isDead(): boolean { return this._hp <= 0; }
 		public get team(): number { return this._team; }
 		public get numSkills(): number { return this._skills.size; }
 
@@ -46,8 +47,12 @@ namespace View {
 			this.hp = this._data.mhp;
 		}
 
-		public OnUpdateState(context: Shared.UpdateContext): void {
-			super.OnUpdateState(context);
+		public UpdateState(context: Shared.UpdateContext): void {
+			this.InternalUpdateState(context);
+		}
+
+		public InternalUpdateState(context: Shared.UpdateContext): void {
+			super.InternalUpdateState(context);
 			this._mp += this._data.gmp * context.deltaTime * 0.001;
 			this._mp = RC.Numerics.MathUtils.Min(this._mp, this._data.mmp);
 			if (this._ai != null)
@@ -130,6 +135,10 @@ namespace View {
 			let skill = this.GetSkill(skillId);
 			let fightContext = new FightContext(skillId, this.rid, target);
 			this._owner.fightHandler.Add(fightContext);
+		}
+
+		public OnDead(): void {
+			this.MarkToDestroy();
 		}
 	}
 }

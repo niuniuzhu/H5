@@ -70,7 +70,7 @@ namespace View {
 				if (!(entity instanceof CTower))
 					continue;
 				let tower = <CTower>entity;
-				if (tower == null || tower.team != team)
+				if (tower.isDead || tower.team != team)
 					continue;
 				towers.push(tower);
 			}
@@ -91,7 +91,7 @@ namespace View {
 				if (!(e instanceof CTower))
 					continue;
 				let target = <CTower>e;
-				if (target.team == entity.team)
+				if (target.isDead || target.team == entity.team)
 					continue;
 				let dist = RC.Numerics.Vec2.DistanceSquared(entity.position, target.position);
 				if (dist < minDist) {
@@ -112,7 +112,7 @@ namespace View {
 
 		private UpdateState(context: Shared.UpdateContext): void {
 			this._entities.forEach((entity) => {
-				entity.OnUpdateState(context);
+				entity.UpdateState(context);
 			});
 		}
 	}

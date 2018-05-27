@@ -1059,7 +1059,10 @@ var View;
         MarkToDestroy() {
             this._markToDestroy = true;
         }
-        OnUpdateState(context) {
+        UpdateState(context) {
+            this.InternalUpdateState(context);
+        }
+        InternalUpdateState(context) {
         }
         CreateGraphic() {
             this._graphic = this._owner.graphicManager.CreateGraphic(View.EntityGraphic);
@@ -1075,6 +1078,7 @@ var View;
 (function (View) {
     class CTower extends View.CEntity {
         get radius() { return this._data.radius; }
+        get mhp() { return this._data.mhp; }
         get mmp() { return this._data.mmp; }
         get mp() { return this._mp; }
         get hp() { return this._hp; }
@@ -1084,6 +1088,7 @@ var View;
             this._hp = value;
             this.graphic.SetHP(this._data.mhp, this.hp);
         }
+        get isDead() { return this._hp <= 0; }
         get team() { return this._team; }
         get numSkills() { return this._skills.size; }
         OnCreated(owner, param) {
@@ -1107,8 +1112,11 @@ var View;
             this.graphic.ShowHUD();
             this.hp = this._data.mhp;
         }
-        OnUpdateState(context) {
-            super.OnUpdateState(context);
+        UpdateState(context) {
+            this.InternalUpdateState(context);
+        }
+        InternalUpdateState(context) {
+            super.InternalUpdateState(context);
             this._mp += this._data.gmp * context.deltaTime * 0.001;
             this._mp = RC.Numerics.MathUtils.Min(this._mp, this._data.mmp);
             if (this._ai != null)
@@ -1183,6 +1191,9 @@ var View;
             let fightContext = new View.FightContext(skillId, this.rid, target);
             this._owner.fightHandler.Add(fightContext);
         }
+        OnDead() {
+            this.MarkToDestroy();
+        }
     }
     View.CTower = CTower;
 })(View || (View = {}));
@@ -1194,16 +1205,28 @@ var View;
             super.OnCreated(owner, param);
             this._graphic.Stop();
         }
+        InternalUpdateState(context) {
+            super.InternalUpdateState(context);
+            if (this._destroyTime != undefined) {
+                if (context.time >= this._destroyTime) {
+                    this.MarkToDestroy();
+                    this._destroyTime = undefined;
+                }
+            }
+        }
         PlayRun() {
             this._graphic.Play(6, 13, -1, 6);
         }
         PlayFight() {
             this._graphic.Play(0, 5, 1, 0);
         }
-        PlayDie() {
-            this._graphic.Play(14, 14, 1, 14);
+        OnDead() {
+            this._graphic.Play(13, 14, 1, 14, new laya.utils.Handler(this, () => {
+                this._destroyTime = this.owner.time + CChampion.DELAY_DESTROY;
+            }));
         }
     }
+    CChampion.DELAY_DESTROY = 3000;
     View.CChampion = CChampion;
 })(View || (View = {}));
 var View;
@@ -1218,13 +1241,13 @@ var View;
             seekState.CreateAction(View.Actions.Seek);
             let attackState = this._fsm.CreateState(View.Actions.FSMStateType.ATTACK);
             attackState.CreateAction(View.Actions.Attack);
-            let dieState = this._fsm.CreateState(View.Actions.FSMStateType.DIE);
-            dieState.CreateAction(View.Actions.Die);
             this._fsm.Start();
             this._fsm.ChangeState(View.Actions.FSMStateType.SEEK);
         }
         get owner() { return this._owner; }
         Update(context) {
+            if (this.owner.isDead)
+                return;
             this._fsm.Update(context);
         }
     }
@@ -1275,8 +1298,8 @@ var View;
             this._graphic.Stop();
             this.MarkToDestroy();
         }
-        OnUpdateState(context) {
-            super.OnUpdateState(context);
+        InternalUpdateState(context) {
+            super.InternalUpdateState(context);
             if (this._follow != null && this._follow != "") {
                 let follow = this.owner.entityManager.GetEntity(this._follow);
                 if (follow != null) {
@@ -1353,7 +1376,7 @@ var View;
                 if (!(entity instanceof View.CTower))
                     continue;
                 let tower = entity;
-                if (tower == null || tower.team != team)
+                if (tower.isDead || tower.team != team)
                     continue;
                 towers.push(tower);
             }
@@ -1372,7 +1395,7 @@ var View;
                 if (!(e instanceof View.CTower))
                     continue;
                 let target = e;
-                if (target.team == entity.team)
+                if (target.isDead || target.team == entity.team)
                     continue;
                 let dist = RC.Numerics.Vec2.DistanceSquared(entity.position, target.position);
                 if (dist < minDist) {
@@ -1390,7 +1413,7 @@ var View;
         }
         UpdateState(context) {
             this._entities.forEach((entity) => {
-                entity.OnUpdateState(context);
+                entity.UpdateState(context);
             });
         }
     }
@@ -1437,8 +1460,9 @@ var View;
                     let max = RC.Numerics.MathUtils.MIN_VALUE;
                     let target = null;
                     for (let curTarget of targets) {
-                        if (curTarget.hp > max) {
-                            max = curTarget.hp;
+                        let p = curTarget.hp / curTarget.mhp;
+                        if (p > max) {
+                            max = p;
                             target = curTarget;
                         }
                     }
@@ -1448,8 +1472,9 @@ var View;
                     let min = RC.Numerics.MathUtils.MAX_VALUE;
                     let target = null;
                     for (let curTarget of targets) {
-                        if (curTarget.hp < min) {
-                            min = curTarget.hp;
+                        let p = curTarget.hp / curTarget.mhp;
+                        if (p < min) {
+                            min = p;
                             target = curTarget;
                         }
                     }
@@ -1660,7 +1685,7 @@ var View;
                 target.hp -= skill.damage;
                 target.hp = RC.Numerics.MathUtils.Max(0, target.hp);
                 if (target.hp == 0)
-                    target.MarkToDestroy();
+                    target.OnDead();
             }
         }
         Add(fightContext) {
@@ -1777,8 +1802,8 @@ var View;
                 return;
             caster.MakeFightContext(this._skill, this._target);
         }
-        OnUpdateState(context) {
-            super.OnUpdateState(context);
+        InternalUpdateState(context) {
+            super.InternalUpdateState(context);
             let dist = RC.Numerics.Vec2.Distance(this._lastPos, this.position);
             if (dist != 0)
                 this.direction = RC.Numerics.Vec2.DivN(RC.Numerics.Vec2.Sub(this._lastPos, this.position), dist);
@@ -1843,28 +1868,11 @@ var View;
 (function (View) {
     var Actions;
     (function (Actions) {
-        class Die extends Actions.CChampionAIAction {
-            OnEnter(param) {
-                this.owner.owner.PlayDie();
-            }
-            OnExit() {
-            }
-            OnUpdate(context) {
-            }
-        }
-        Actions.Die = Die;
-    })(Actions = View.Actions || (View.Actions = {}));
-})(View || (View = {}));
-var View;
-(function (View) {
-    var Actions;
-    (function (Actions) {
         class FSMStateType {
         }
         FSMStateType.IDLE = 0;
         FSMStateType.SEEK = 1;
         FSMStateType.ATTACK = 2;
-        FSMStateType.DIE = 3;
         Actions.FSMStateType = FSMStateType;
     })(Actions = View.Actions || (View.Actions = {}));
 })(View || (View = {}));
@@ -2441,7 +2449,7 @@ var View;
                 tower = new Shared.Model.EntityParam();
                 tower.id = "e0";
                 tower.team = 1;
-                tower.skills = ["s0", "s10", "s2", "s0", "s0", "s0"];
+                tower.skills = ["s0", "s10", "s2"];
                 param.team1.push(tower);
                 tower = new Shared.Model.EntityParam();
                 tower.id = "e1";

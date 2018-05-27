@@ -144,7 +144,7 @@
 			"target_filter": 0
 		},
 		"s1": {
-			"cmp": 3,
+			"cmp": 4,
 			"damage": 0,
 			"target_mode": 0,
 			"target_filter": 0,
@@ -163,14 +163,14 @@
 			]
 		},
 		"s2": {
-			"cmp": 4,
+			"cmp": 3,
 			"damage": -65,
 			"target_mode": 1,
 			"target_filter": 2,
 			"fx": "e7"
 		},
 		"s10": {
-			"cmp": 2,
+			"cmp": 4,
 			"damage": 0,
 			"fx": "",
 			"target_mode": 0,

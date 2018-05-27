@@ -45,8 +45,9 @@ namespace View {
 					let max = RC.Numerics.MathUtils.MIN_VALUE;
 					let target: CTower = null;
 					for (let curTarget of targets) {
-						if (curTarget.hp > max) {
-							max = curTarget.hp;
+						let p = curTarget.hp / curTarget.mhp;
+						if (p > max) {
+							max = p;
 							target = curTarget;
 						}
 					}
@@ -57,8 +58,9 @@ namespace View {
 					let min = RC.Numerics.MathUtils.MAX_VALUE;
 					let target: CTower = null;
 					for (let curTarget of targets) {
-						if (curTarget.hp < min) {
-							min = curTarget.hp;
+						let p = curTarget.hp / curTarget.mhp;
+						if (p < min) {
+							min = p;
 							target = curTarget;
 						}
 					}

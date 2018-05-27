@@ -72,7 +72,11 @@ namespace View {
 			this._markToDestroy = true;
 		}
 
-		public OnUpdateState(context: Shared.UpdateContext): void {
+		public UpdateState(context: Shared.UpdateContext): void {
+			this.InternalUpdateState(context);
+		}
+
+		protected InternalUpdateState(context: Shared.UpdateContext): void {
 		}
 
 		protected CreateGraphic(): void {

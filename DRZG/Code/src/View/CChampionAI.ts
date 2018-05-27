@@ -15,14 +15,14 @@ namespace View {
 			seekState.CreateAction(View.Actions.Seek);
 			let attackState = this._fsm.CreateState(View.Actions.FSMStateType.ATTACK);
 			attackState.CreateAction(View.Actions.Attack);
-			let dieState = this._fsm.CreateState(View.Actions.FSMStateType.DIE);
-			dieState.CreateAction(View.Actions.Die);
 
 			this._fsm.Start();
 			this._fsm.ChangeState(View.Actions.FSMStateType.SEEK);
 		}
 
 		public Update(context: Shared.UpdateContext): void {
+			if (this.owner.isDead)
+				return;
 			this._fsm.Update(context);
 		}
 	}
