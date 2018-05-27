@@ -525,7 +525,10 @@ var Shared;
 (function (Shared) {
     var FSM;
     (function (FSM) {
-        class AbsActionAbsAction {
+        class AbsAction {
+            constructor() {
+                this.enabled = true;
+            }
             get enabled() { return this._enabled; }
             set enabled(value) {
                 if (this._enabled == value)
@@ -562,7 +565,7 @@ var Shared;
             OnUpdate(context) {
             }
         }
-        FSM.AbsActionAbsAction = AbsActionAbsAction;
+        FSM.AbsAction = AbsAction;
     })(FSM = Shared.FSM || (Shared.FSM = {}));
 })(Shared || (Shared = {}));
 var Shared;
@@ -775,6 +778,7 @@ var Shared;
                 this.scale = RC.Utils.Hashtable.GetVec2(def, "scale");
                 if (this.scale == null)
                     this.scale = RC.Numerics.Vec2.one;
+                this.radius = RC.Utils.Hashtable.GetNumber(def, "radius");
                 this.mhp = RC.Utils.Hashtable.GetNumber(def, "mhp");
                 this.mmp = RC.Utils.Hashtable.GetNumber(def, "mmp");
                 this.mp = RC.Utils.Hashtable.GetNumber(def, "mp");
@@ -854,6 +858,8 @@ var Shared;
                 this.id = id;
                 this.cmp = RC.Utils.Hashtable.GetNumber(def, "cmp");
                 this.damage = RC.Utils.Hashtable.GetNumber(def, "damage");
+                this.duration = RC.Utils.Hashtable.GetNumber(def, "duration");
+                this.hit = RC.Utils.Hashtable.GetNumber(def, "hit");
                 this.fx = RC.Utils.Hashtable.GetString(def, "fx");
                 this.missile = RC.Utils.Hashtable.GetString(def, "missile");
                 this.summon = RC.Utils.Hashtable.GetString(def, "summon");
@@ -890,6 +896,8 @@ var View;
         ;
         get fightHandler() { return this._fihgtHandler; }
         get graphic() { return this._graphic; }
+        ;
+        get tileMap() { return this._tileMap; }
         ;
         Dispose() {
             View.CTower.player = null;
@@ -1064,6 +1072,7 @@ var View;
 var View;
 (function (View) {
     class CTower extends View.CEntity {
+        get radius() { return this._data.radius; }
         get mmp() { return this._data.mmp; }
         get mp() { return this._mp; }
         get hp() { return this._hp; }
@@ -1158,6 +1167,7 @@ var View;
             if (skill.summon != null && skill.summon != "") {
                 let summon = this._owner.CreateChampion(skill.summon, this.team);
                 summon.position = skill.summonPos[Math.floor(Math.random() * skill.summonPos.length)];
+                summon.CreateAI();
                 if (skill.summonFx != null && skill.summonFx != "") {
                     let fx = this._owner.CreateEffect(skill.summonFx);
                     fx.Begin(summon.position);
@@ -1175,6 +1185,7 @@ var View;
 var View;
 (function (View) {
     class CChampion extends View.CTower {
+        get speed() { return this._data.speed; }
         OnCreated(owner, param) {
             super.OnCreated(owner, param);
             this._graphic.Stop();
@@ -1183,9 +1194,7 @@ var View;
             this._graphic.Play(6, 13, -1, 6);
         }
         PlayFight() {
-            this._graphic.Play(0, 5, 1, 6, new laya.utils.Handler(this, () => {
-                this.PlayRun();
-            }));
+            this._graphic.Play(0, 5, 1, 0);
         }
         PlayDie() {
             this._graphic.Play(14, 14, 1, 14);
@@ -1198,8 +1207,21 @@ var View;
     class CChampionAI {
         constructor(owner) {
             this._owner = owner;
+            this._fsm = new Shared.FSM.FSM(this);
+            let idleState = this._fsm.CreateState(View.Actions.FSMStateType.IDLE);
+            idleState.CreateAction(View.Actions.Idle);
+            let seekState = this._fsm.CreateState(View.Actions.FSMStateType.SEEK);
+            seekState.CreateAction(View.Actions.Seek);
+            let attackState = this._fsm.CreateState(View.Actions.FSMStateType.ATTACK);
+            attackState.CreateAction(View.Actions.Attack);
+            let dieState = this._fsm.CreateState(View.Actions.FSMStateType.DIE);
+            dieState.CreateAction(View.Actions.Die);
+            this._fsm.Start();
+            this._fsm.ChangeState(View.Actions.FSMStateType.SEEK);
         }
+        get owner() { return this._owner; }
         Update(context) {
+            this._fsm.Update(context);
         }
     }
     View.CChampionAI = CChampionAI;
@@ -1289,6 +1311,8 @@ var View;
         GetTowersByTeam(team) {
             let towers = [];
             for (let entity of this._entities) {
+                if (!(entity instanceof View.CTower))
+                    continue;
                 let tower = entity;
                 if (tower == null || tower.team != team)
                     continue;
@@ -1306,6 +1330,23 @@ var View;
                 index > this._entities.length - 1)
                 return null;
             return this._entities[index];
+        }
+        GetEnemyNearby(entity) {
+            let nearest = null;
+            let minDist = RC.Numerics.MathUtils.MAX_VALUE;
+            for (let e of this._entities) {
+                if (!(e instanceof View.CTower))
+                    continue;
+                let target = e;
+                if (target.team == entity.team)
+                    continue;
+                let dist = RC.Numerics.Vec2.DistanceSquared(entity.position, target.position);
+                if (dist < minDist) {
+                    minDist = dist;
+                    nearest = target;
+                }
+            }
+            return nearest;
         }
         Update(context) {
             this.UpdateState(context);
@@ -1330,6 +1371,8 @@ var View;
         get id() { return this._data.id; }
         get cmp() { return this._data.cmp; }
         get damage() { return this._data.damage; }
+        get duration() { return this._data.duration; }
+        get hit() { return this._data.hit; }
         get fx() { return this._data.fx; }
         get missile() { return this._data.missile; }
         get summon() { return this._data.summon; }
@@ -1360,10 +1403,11 @@ var View;
             return RC.Algorithm.Graph.GraphSearcher.AStarSearch(this._graph, from, to);
         }
         CoordToIndex(x, y) {
-            return this._graph.CoordToIndex(x, y);
+            return this._graph.CoordToIndex(RC.Numerics.MathUtils.Floor(x), RC.Numerics.MathUtils.Floor(y));
         }
         IndexToCoord(index) {
-            return this._graph.IndexToCoord(index);
+            let arr = this._graph.IndexToCoord(index);
+            return new RC.Numerics.Vec2(arr[0], arr[1]);
         }
     }
     View.CTileMap = CTileMap;
@@ -1653,12 +1697,12 @@ var View;
         }
         OnUpdateState(context) {
             super.OnUpdateState(context);
-            let dir = RC.Numerics.Vec2.Sub(this._lastPos, this.position);
-            dir.Normalize();
-            let pos = RC.Numerics.Vec2.Add(this.position, RC.Numerics.Vec2.MulN(dir, this._data.speed * context.deltaTime * 0.001));
-            this.position = pos;
-            this.direction = dir;
-            if (RC.Numerics.Vec2.DistanceSquared(pos, this._lastPos) < 5) {
+            let dist = RC.Numerics.Vec2.Distance(this._lastPos, this.position);
+            this.direction = RC.Numerics.Vec2.DivN(RC.Numerics.Vec2.Sub(this._lastPos, this.position), dist);
+            let expectTime = dist * 1000 / this._data.speed;
+            let curPos = RC.Numerics.Vec2.Lerp(this.position, this._lastPos, context.deltaTime / expectTime);
+            this.position = curPos;
+            if (RC.Numerics.Vec2.DistanceSquared(curPos, this._lastPos) < 0.1) {
                 this.End();
             }
             let target = this._owner.entityManager.GetEntity(this._target);
@@ -1667,6 +1711,159 @@ var View;
         }
     }
     View.Missile = Missile;
+})(View || (View = {}));
+var View;
+(function (View) {
+    var Actions;
+    (function (Actions) {
+        class CChampionAIAction extends Shared.FSM.AbsAction {
+            get owner() { return this.state.fsm.owner; }
+        }
+        Actions.CChampionAIAction = CChampionAIAction;
+    })(Actions = View.Actions || (View.Actions = {}));
+})(View || (View = {}));
+var View;
+(function (View) {
+    var Actions;
+    (function (Actions) {
+        class Attack extends Actions.CChampionAIAction {
+            OnEnter(param) {
+                let self = this.owner.owner;
+                self.PlayFight();
+                let enemy = self.owner.entityManager.GetEntity(param[0]);
+                if (enemy == null) {
+                    this.state.fsm.ChangeState(Actions.FSMStateType.SEEK);
+                    return;
+                }
+                let skill = self.RandomGetUsableSkill();
+                this._endTime = self.owner.time + skill.duration;
+                this._hitTime = self.owner.time + skill.hit;
+                this._skill = skill.id;
+                this._target = enemy.rid;
+            }
+            OnExit() {
+            }
+            OnUpdate(context) {
+                if (context.time >= this._hitTime) {
+                    this.owner.owner.MakeFightContext(this._skill, this._target);
+                    this._hitTime = RC.Numerics.MathUtils.MAX_VALUE;
+                }
+                if (context.time >= this._endTime) {
+                    this.state.fsm.ChangeState(Actions.FSMStateType.SEEK);
+                }
+            }
+        }
+        Actions.Attack = Attack;
+    })(Actions = View.Actions || (View.Actions = {}));
+})(View || (View = {}));
+var View;
+(function (View) {
+    var Actions;
+    (function (Actions) {
+        class Die extends Actions.CChampionAIAction {
+            OnEnter(param) {
+                this.owner.owner.PlayDie();
+            }
+            OnExit() {
+            }
+            OnUpdate(context) {
+            }
+        }
+        Actions.Die = Die;
+    })(Actions = View.Actions || (View.Actions = {}));
+})(View || (View = {}));
+var View;
+(function (View) {
+    var Actions;
+    (function (Actions) {
+        class FSMStateType {
+        }
+        FSMStateType.IDLE = 0;
+        FSMStateType.SEEK = 1;
+        FSMStateType.ATTACK = 2;
+        FSMStateType.DIE = 3;
+        Actions.FSMStateType = FSMStateType;
+    })(Actions = View.Actions || (View.Actions = {}));
+})(View || (View = {}));
+var View;
+(function (View) {
+    var Actions;
+    (function (Actions) {
+        class Idle extends Actions.CChampionAIAction {
+            OnEnter(param) {
+                this.owner.owner.graphic.Stop();
+            }
+            OnExit() {
+            }
+            OnUpdate(context) {
+            }
+        }
+        Actions.Idle = Idle;
+    })(Actions = View.Actions || (View.Actions = {}));
+})(View || (View = {}));
+var View;
+(function (View) {
+    var Actions;
+    (function (Actions) {
+        class Seek extends Actions.CChampionAIAction {
+            constructor() {
+                super();
+                this._lastEnemyPos = RC.Numerics.Vec2.zero;
+            }
+            OnEnter(param) {
+                this.PlanningPath();
+                if (this._path.length == 1) {
+                    this.WalkComplete();
+                    return;
+                }
+                this.owner.owner.PlayRun();
+            }
+            OnExit() {
+            }
+            OnUpdate(context) {
+                this.PlanningPath();
+                this.WalkPath(context.deltaTime);
+            }
+            PlanningPath() {
+                let self = this.owner.owner;
+                let enemy = self.owner.entityManager.GetEnemyNearby(self);
+                if (enemy == null)
+                    return;
+                let ownerPos = self.position;
+                let enemyPos = enemy.position;
+                let dir = RC.Numerics.Vec2.NormalizeSafe(RC.Numerics.Vec2.Sub(enemyPos, ownerPos));
+                enemyPos.Sub(dir.MulN(enemy.radius));
+                if (enemy.rid != this._lastEnemy || !RC.Numerics.Vec2.Equals(this._lastEnemyPos, enemyPos)) {
+                    let from = self.owner.tileMap.CoordToIndex(ownerPos.x, ownerPos.y);
+                    let to = self.owner.tileMap.CoordToIndex(enemyPos.x, enemyPos.y);
+                    this._path = self.owner.tileMap.AStarSearch(from, to);
+                    this._lastEnemy = enemy.rid;
+                    this._lastEnemyPos.CopyFrom(enemyPos);
+                }
+            }
+            WalkPath(dt) {
+                if (this._path.length == 1) {
+                    this.WalkComplete();
+                    return;
+                }
+                let self = this.owner.owner;
+                let ownerPos = self.position;
+                let nextPos = self.owner.tileMap.IndexToCoord(this._path[1]);
+                let dist = RC.Numerics.Vec2.Distance(ownerPos, nextPos);
+                self.direction = RC.Numerics.Vec2.DivN(RC.Numerics.Vec2.Sub(nextPos, self.position), dist);
+                let expectTime = dist * 1000 / self.speed;
+                let curPos = RC.Numerics.Vec2.Lerp(ownerPos, nextPos, dt / expectTime);
+                if (RC.Numerics.Vec2.DistanceSquared(curPos, nextPos) < 0.1) {
+                    this._path.shift();
+                }
+                self.position = curPos;
+            }
+            WalkComplete() {
+                this.state.fsm.ChangeState(View.Actions.FSMStateType.ATTACK, true, this._lastEnemy);
+            }
+        }
+        Actions.Seek = Seek;
+    })(Actions = View.Actions || (View.Actions = {}));
 })(View || (View = {}));
 var View;
 (function (View) {

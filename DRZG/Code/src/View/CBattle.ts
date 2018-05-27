@@ -21,8 +21,8 @@ namespace View {
 		public get graphicManager(): GraphicManager { return this._graphicManager };
 		public get entityManager(): CEntityManager { return this._entityManager };
 		public get fightHandler(): FightHandler { return this._fihgtHandler; }
-
 		public get graphic(): MapGraphic { return this._graphic };
+		public get tileMap(): CTileMap { return this._tileMap };
 
 		public winHandler: (winTeam: number) => void;
 

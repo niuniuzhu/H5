@@ -38,12 +38,15 @@ namespace View {
 
 		public OnUpdateState(context: Shared.UpdateContext): void {
 			super.OnUpdateState(context);
-			let dir = RC.Numerics.Vec2.Sub(this._lastPos, this.position);
-			dir.Normalize();
-			let pos = RC.Numerics.Vec2.Add(this.position, RC.Numerics.Vec2.MulN(dir, this._data.speed * context.deltaTime * 0.001));
-			this.position = pos;
-			this.direction = dir;
-			if (RC.Numerics.Vec2.DistanceSquared(pos, this._lastPos) < 5) {
+
+			let dist = RC.Numerics.Vec2.Distance(this._lastPos, this.position);
+			this.direction = RC.Numerics.Vec2.DivN(RC.Numerics.Vec2.Sub(this._lastPos, this.position), dist);
+
+			let expectTime = dist * 1000 / this._data.speed;
+			let curPos = RC.Numerics.Vec2.Lerp(this.position, this._lastPos, context.deltaTime / expectTime);
+			this.position = curPos;
+
+			if (RC.Numerics.Vec2.DistanceSquared(curPos, this._lastPos) < 0.1) {
 				this.End();
 			}
 			let target = this._owner.entityManager.GetEntity(this._target);

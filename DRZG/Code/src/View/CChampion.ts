@@ -2,6 +2,8 @@
 
 namespace View {
 	export class CChampion extends CTower {
+		public get speed(): number { return this._data.speed; }
+
 		public OnCreated(owner: CBattle, param: Shared.Model.EntityParam): void {
 			super.OnCreated(owner, param);
 			this._graphic.Stop();
@@ -12,9 +14,7 @@ namespace View {
 		}
 
 		public PlayFight(): void {
-			this._graphic.Play(0, 5, 1, 6, new laya.utils.Handler(this, () => {
-				this.PlayRun();
-			}));
+			this._graphic.Play(0, 5, 1, 0);
 		}
 
 		public PlayDie(): void {

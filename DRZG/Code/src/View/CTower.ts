@@ -10,6 +10,7 @@ namespace View {
 		protected _ai: IEntityAI;
 		protected _hp: number;
 
+		public get radius(): number { return this._data.radius; }
 		public get mmp(): number { return this._data.mmp; }
 		public get mp(): number { return this._mp; }
 		public get hp(): number { return this._hp; }
@@ -60,7 +61,7 @@ namespace View {
 					break;
 
 				case "champion":
-					this._ai = new CChampionAI(this);
+					this._ai = new CChampionAI(<any>this);
 					break;
 			}
 		}
@@ -115,6 +116,7 @@ namespace View {
 			if (skill.summon != null && skill.summon != "") {
 				let summon = this._owner.CreateChampion(skill.summon, this.team);
 				summon.position = skill.summonPos[Math.floor(Math.random() * skill.summonPos.length)];
+				summon.CreateAI();
 				if (skill.summonFx != null && skill.summonFx != "") {
 					let fx = this._owner.CreateEffect(skill.summonFx);
 					fx.Begin(summon.position);

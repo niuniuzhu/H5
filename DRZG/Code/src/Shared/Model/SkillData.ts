@@ -3,6 +3,8 @@ namespace Shared.Model {
 		public readonly id: string;
 		public readonly cmp: number;
 		public readonly damage: number;
+		public readonly duration: number;
+		public readonly hit: number;
 		public readonly fx: string;
 		public readonly missile: string;
 		public readonly summon: string;
@@ -14,6 +16,8 @@ namespace Shared.Model {
 			this.id = id;
 			this.cmp = RC.Utils.Hashtable.GetNumber(def, "cmp");
 			this.damage = RC.Utils.Hashtable.GetNumber(def, "damage");
+			this.duration = RC.Utils.Hashtable.GetNumber(def, "duration");
+			this.hit = RC.Utils.Hashtable.GetNumber(def, "hit");
 			this.fx = RC.Utils.Hashtable.GetString(def, "fx");
 			this.missile = RC.Utils.Hashtable.GetString(def, "missile");
 			this.summon = RC.Utils.Hashtable.GetString(def, "summon");

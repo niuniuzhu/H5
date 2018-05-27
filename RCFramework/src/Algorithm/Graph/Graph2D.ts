@@ -52,7 +52,7 @@ namespace RC.Algorithm.Graph {
 		public IndexToCoord(index: number): number[] {
 			let coord: number[] = [];
 			coord[0] = index % this.col;
-			coord[1] = index / this.col;
+			coord[1] = RC.Numerics.MathUtils.Floor(index / this.col);
 			return coord;
 		}
 	}

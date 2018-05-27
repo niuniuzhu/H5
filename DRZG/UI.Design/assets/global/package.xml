@@ -11,7 +11,7 @@
     <component id="k6nj8" name="panel2.xml" path="/coms/" exported="true"/>
     <movieclip id="k6njb" name="qtm011.jta" path="/assets/" exported="true"/>
     <sound id="k6njc" name="click.wav" path="/assets/" exported="true"/>
-    <image id="f15td" name="tile.jpg" path="/assets/" scale="tile" scale9grid="11,11,22,22"/>
+    <image id="f15td" name="tile.jpg" path="/assets/" scale="tile" scale9grid="11,11,22,22" smoothing="false"/>
     <component id="f15te" name="m0.xml" path="/game/" exported="true"/>
     <component id="f15tf" name="e0.xml" path="/game/" exported="true"/>
     <component id="f15tg" name="e1.xml" path="/game/" exported="true"/>
@@ -38,7 +38,7 @@
     <movieclip id="mb8n11" name="e6.jta" path="/game/" exported="true"/>
     <movieclip id="mb8n12" name="e7.jta" path="/game/" exported="true"/>
     <component id="oeew13" name="m1.xml" path="/game/" exported="true"/>
-    <image id="oeew14" name="战斗界面.png" path="/assets/" scale="" qualityOption="custom" quality="70"/>
+    <image id="oeew14" name="战斗界面.png" path="/assets/" qualityOption="custom" quality="70"/>
     <image id="oeew15" name="战场上的人物1.png" path="/assets/"/>
     <image id="oeew16" name="战场上的人物2.png" path="/assets/"/>
     <component id="m7f717" name="hud.xml" path="/game/" exported="true"/>

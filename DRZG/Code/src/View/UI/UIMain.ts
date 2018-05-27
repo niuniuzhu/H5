@@ -135,6 +135,7 @@ namespace View.UI {
 			tower.id = "e0";
 			tower.team = 1;
 			tower.skills = ["s0","s10","s2","s3","s4"];
+			// tower.skills = ["s10"];
 			param.team1.push(tower);
 
 			tower = new Shared.Model.EntityParam();

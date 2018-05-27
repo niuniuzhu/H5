@@ -56,6 +56,7 @@
 		"e0": {
 			"name": "英雄",
 			"model": "e0",
+			"radius": 2.5,
 			"mhp": 580,
 			"mmp": 10,
 			"mp": 3,
@@ -66,6 +67,7 @@
 		"e1": {
 			"name": "塔",
 			"model": "e1",
+			"radius": 2.5,
 			"mhp": 400,
 			"mmp": 10,
 			"mp": 3,
@@ -78,6 +80,8 @@
 		"e2": {
 			"name": "士兵0",
 			"model": "e2",
+			"radius": 1.8,
+			"speed": 1.5,
 			"scale": [
 				1,
 				-1
@@ -87,19 +91,21 @@
 			"mp": 3,
 			"gmp": 0.6,
 			"skills": [
-				"s2"
+				"s21"
 			],
 			"ai": "champion"
 		},
 		"e3": {
 			"name": "士兵1",
 			"model": "e3",
+			"radius": 1.8,
+			"speed": 8,
 			"mhp": 200,
 			"mmp": 10,
 			"mp": 3,
 			"gmp": 0.6,
 			"skills": [
-				"s2"
+				"s21"
 			],
 			"ai": "champion"
 		},
@@ -214,6 +220,12 @@
 			"damage": 32,
 			"fx": "",
 			"missile": "e4"
+		},
+		"s21": {
+			"cmp": 0,
+			"damage": 12,
+			"duration": 750,
+			"hit": 625
 		}
 	}
 }

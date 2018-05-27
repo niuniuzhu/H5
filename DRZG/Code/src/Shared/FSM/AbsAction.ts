@@ -1,5 +1,5 @@
 namespace Shared.FSM {
-	export class AbsActionAbsAction implements IAction {
+	export class AbsAction implements IAction {
 		private _enabled: boolean;
 
 		public get enabled(): boolean { return this._enabled; }
@@ -14,6 +14,10 @@ namespace Shared.FSM {
 		}
 
 		public state: FSMState;
+
+		constructor(){
+			this.enabled = true;
+		}
 
 		protected OnEnable(): void {
 		}

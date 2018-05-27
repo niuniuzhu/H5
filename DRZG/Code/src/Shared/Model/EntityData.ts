@@ -6,7 +6,8 @@ namespace Shared.Model {
 		public readonly model: string;
 		public readonly scale: RC.Numerics.Vec2;
 
-		// champion
+		// tower
+		public readonly radius: number;
 		public readonly mhp: number;
 		public readonly mmp: number;
 		public readonly mp: number;
@@ -31,6 +32,7 @@ namespace Shared.Model {
 			if (this.scale == null)
 				this.scale = RC.Numerics.Vec2.one;
 
+			this.radius = RC.Utils.Hashtable.GetNumber(def, "radius");
 			this.mhp = RC.Utils.Hashtable.GetNumber(def, "mhp");
 			this.mmp = RC.Utils.Hashtable.GetNumber(def, "mmp");
 			this.mp = RC.Utils.Hashtable.GetNumber(def, "mp");

@@ -5,6 +5,8 @@ namespace View {
 		public get id(): string { return this._data.id; }
 		public get cmp(): number { return this._data.cmp; }
 		public get damage(): number { return this._data.damage; }
+		public get duration(): number { return this._data.duration; }
+		public get hit(): number { return this._data.hit; }
 		public get fx(): string { return this._data.fx; }
 		public get missile(): string { return this._data.missile; }
 		public get summon(): string { return this._data.summon; }

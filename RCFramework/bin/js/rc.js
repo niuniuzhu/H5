@@ -104,7 +104,7 @@ var RC;
                 IndexToCoord(index) {
                     let coord = [];
                     coord[0] = index % this.col;
-                    coord[1] = index / this.col;
+                    coord[1] = RC.Numerics.MathUtils.Floor(index / this.col);
                     return coord;
                 }
             }

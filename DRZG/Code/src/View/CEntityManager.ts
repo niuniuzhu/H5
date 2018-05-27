@@ -67,7 +67,9 @@ namespace View {
 		public GetTowersByTeam(team: number): CTower[] {
 			let towers: CTower[] = [];
 			for (let entity of this._entities) {
-				let tower: CTower = entity as CTower;
+				if (!(entity instanceof CTower))
+					continue;
+				let tower = <CTower>entity;
 				if (tower == null || tower.team != team)
 					continue;
 				towers.push(tower);
@@ -86,6 +88,24 @@ namespace View {
 				index > this._entities.length - 1)
 				return null;
 			return this._entities[index];
+		}
+
+		public GetEnemyNearby(entity: CTower): CTower {
+			let nearest: CTower = null;
+			let minDist = RC.Numerics.MathUtils.MAX_VALUE;
+			for (let e of this._entities) {
+				if (!(e instanceof CTower))
+					continue;
+				let target = <CTower>e;
+				if (target.team == entity.team)
+					continue;
+				let dist = RC.Numerics.Vec2.DistanceSquared(entity.position, target.position);
+				if (dist < minDist) {
+					minDist = dist;
+					nearest = target;
+				}
+			}
+			return nearest;
 		}
 
 		public Update(context: Shared.UpdateContext): void {

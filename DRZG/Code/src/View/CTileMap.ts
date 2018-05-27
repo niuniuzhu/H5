@@ -14,8 +14,16 @@ namespace View {
 			}
 			image.dispose();
 			this._graph = RC.Algorithm.Graph.Graph2D.CreateFullDigraph(texture.height, texture.width, this.GetCost.bind(this));
-			// let path = RC.Algorithm.Graph.GraphSearcher.AStarSearch(this._graph, 180, 433);
+			// let path = RC.Algorithm.Graph.GraphSearcher.AStarSearch(this._graph, this.CoordToIndex(3, 8), this.CoordToIndex(3, 26));
 			// console.log(path);
+			// for(let p of path){
+			// 	console.log(this.IndexToCoord(p));
+			// }
+			// path = RC.Algorithm.Graph.GraphSearcher.AStarSearch(this._graph, this.CoordToIndex(17, 22), this.CoordToIndex(17, 5));
+			// console.log(path);
+			// for(let p of path){
+			// 	console.log(this.IndexToCoord(p));
+			// }
 		}
 
 		private GetCost(index: number): number {
@@ -27,11 +35,12 @@ namespace View {
 		}
 
 		public CoordToIndex(x: number, y: number): number {
-			return this._graph.CoordToIndex(x, y);
+			return this._graph.CoordToIndex(RC.Numerics.MathUtils.Floor(x), RC.Numerics.MathUtils.Floor(y));
 		}
 
-		public IndexToCoord(index: number): number[] {
-			return this._graph.IndexToCoord(index);
+		public IndexToCoord(index: number): RC.Numerics.Vec2 {
+			let arr = this._graph.IndexToCoord(index);
+			return new RC.Numerics.Vec2(arr[0], arr[1]);
 		}
 	}
 }

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="684,1080">
   <displayList>
+    <image id="n15_m7f7" name="n15" src="oeew14" fileName="assets/战斗界面.png" xy="-18,0"/>
     <image id="n8_f15t" name="n8" src="f15td" fileName="assets/tile.jpg" xy="0,0" size="684,1080" alpha="0.3"/>
+    <image id="n20_zg0y" name="n20" src="k2mt18" fileName="game/m1_data.jpg" xy="0,0" size="684,1080" alpha="0.84"/>
     <graph id="n10_f15t" name="n10" xy="0,504" size="684,72" alpha="0.6" type="rect" lineSize="0" fillColor="#ff66cc33"/>
     <graph id="n1_f15t" name="n1" xy="0,0" size="20,20" type="rect"/>
     <graph id="n2_f15t" name="n2" xy="664,0" size="20,20" type="rect"/>
@@ -12,8 +14,7 @@
     <graph id="n12_f15t" name="n12" xy="540,72" size="36,936" alpha="0.6" type="rect" lineSize="0" fillColor="#ff666633"/>
     <graph id="n3_f15t" name="n3" xy="332,530" size="20,20" type="rect"/>
     <graph id="n14_f15t" name="n14" xy="144,972" size="396,36" alpha="0.6" type="rect" lineSize="0" fillColor="#ff666633"/>
-    <image id="n15_m7f7" name="n15" src="oeew14" fileName="assets/战斗界面.png" xy="-18,0" alpha="0.35"/>
     <component id="n18_m7f7" name="n18" src="f15tf" fileName="game/e0.xml" xy="91,163"/>
-    <component id="n19_m7f7" name="n19" src="f15tg" fileName="game/e1.xml" xy="89,918"/>
+    <component id="n19_m7f7" name="n19" src="f15tg" fileName="game/e1.xml" xy="594,919"/>
   </displayList>
 </component>
