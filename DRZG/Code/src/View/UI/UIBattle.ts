@@ -63,6 +63,7 @@ namespace View.UI {
 			let player = this.GetPlayer();
 			if (player == null)
 				return;
+
 			this._mpBar.max = player.mmp;
 			this._mpBar.value = player.mp;
 			this._mp.text = "" + RC.Numerics.MathUtils.Floor(player.mp);
