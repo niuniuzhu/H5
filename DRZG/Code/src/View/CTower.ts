@@ -30,14 +30,14 @@ namespace View {
 			this._mp = this._data.mp;
 			this._skills = new Map<string, CSkill>();
 			for (let skillId of this._data.skills) {
-				let skill = new CSkill(skillId);
+				let skill = new CSkill(this, skillId);
 				this._skills.set(skillId, skill);
 			}
 			if (param.skills != null) {
 				for (let skillId of param.skills) {
 					if (this._skills.has(skillId))
 						continue;
-					let skill = new CSkill(skillId);
+					let skill = new CSkill(this, skillId);
 					this._skills.set(skillId, skill);
 				}
 			}
@@ -97,14 +97,16 @@ namespace View {
 		}
 
 		public UseSkill(skillId: string, target?: CTower): void {
-			if (target == null) {
-				target = this._owner.entityManager.RandomGetTarget(1 - this.team);
-			}
 			let skill = this._skills.get(skillId);
+			if (target == null) {
+				target = skill.RandomGetTarget();
+			}
+			if (target == null)
+				return;
 			this._mp -= skill.cmp;
 			if (skill.fx != null && skill.fx != "") {
 				let fx = this._owner.CreateEffect(skill.fx);
-				fx.Begin(this.position);
+				fx.Begin2(this, target);
 			}
 			if (skill.missile == null || skill.missile == "") {
 				this.MakeFightContext(skillId, target.rid);
@@ -119,7 +121,7 @@ namespace View {
 				summon.CreateAI();
 				if (skill.summonFx != null && skill.summonFx != "") {
 					let fx = this._owner.CreateEffect(skill.summonFx);
-					fx.Begin(summon.position);
+					fx.Begin2(this, summon);
 				}
 			}
 		}

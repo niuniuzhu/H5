@@ -860,6 +860,8 @@ var Shared;
                 this.damage = RC.Utils.Hashtable.GetNumber(def, "damage");
                 this.duration = RC.Utils.Hashtable.GetNumber(def, "duration");
                 this.hit = RC.Utils.Hashtable.GetNumber(def, "hit");
+                this.targetMode = RC.Utils.Hashtable.GetNumber(def, "target_mode");
+                this.targetFilter = RC.Utils.Hashtable.GetNumber(def, "target_filter");
                 this.fx = RC.Utils.Hashtable.GetString(def, "fx");
                 this.missile = RC.Utils.Hashtable.GetString(def, "missile");
                 this.summon = RC.Utils.Hashtable.GetString(def, "summon");
@@ -1090,14 +1092,14 @@ var View;
             this._mp = this._data.mp;
             this._skills = new Map();
             for (let skillId of this._data.skills) {
-                let skill = new View.CSkill(skillId);
+                let skill = new View.CSkill(this, skillId);
                 this._skills.set(skillId, skill);
             }
             if (param.skills != null) {
                 for (let skillId of param.skills) {
                     if (this._skills.has(skillId))
                         continue;
-                    let skill = new View.CSkill(skillId);
+                    let skill = new View.CSkill(this, skillId);
                     this._skills.set(skillId, skill);
                 }
             }
@@ -1148,14 +1150,16 @@ var View;
             return skills[r];
         }
         UseSkill(skillId, target) {
-            if (target == null) {
-                target = this._owner.entityManager.RandomGetTarget(1 - this.team);
-            }
             let skill = this._skills.get(skillId);
+            if (target == null) {
+                target = skill.RandomGetTarget();
+            }
+            if (target == null)
+                return;
             this._mp -= skill.cmp;
             if (skill.fx != null && skill.fx != "") {
                 let fx = this._owner.CreateEffect(skill.fx);
-                fx.Begin(this.position);
+                fx.Begin2(this, target);
             }
             if (skill.missile == null || skill.missile == "") {
                 this.MakeFightContext(skillId, target.rid);
@@ -1170,7 +1174,7 @@ var View;
                 summon.CreateAI();
                 if (skill.summonFx != null && skill.summonFx != "") {
                     let fx = this._owner.CreateEffect(skill.summonFx);
-                    fx.Begin(summon.position);
+                    fx.Begin2(this, summon);
                 }
             }
         }
@@ -1228,7 +1232,16 @@ var View;
 })(View || (View = {}));
 var View;
 (function (View) {
+    let EffectFollowMode;
+    (function (EffectFollowMode) {
+        EffectFollowMode[EffectFollowMode["None"] = 0] = "None";
+        EffectFollowMode[EffectFollowMode["Caster"] = 1] = "Caster";
+        EffectFollowMode[EffectFollowMode["Target"] = 2] = "Target";
+        EffectFollowMode[EffectFollowMode["FollowCster"] = 3] = "FollowCster";
+        EffectFollowMode[EffectFollowMode["FollowTarget"] = 4] = "FollowTarget";
+    })(EffectFollowMode = View.EffectFollowMode || (View.EffectFollowMode = {}));
     class CEffect extends View.CEntity {
+        get followMode() { return this._data.followMode; }
         Begin(position) {
             this.position = position;
             if (this._data.duration <= 0)
@@ -1238,12 +1251,38 @@ var View;
                 this._endTime = this._owner.time + this._data.duration;
             }
         }
+        Begin2(caster, target) {
+            switch (this.followMode) {
+                case EffectFollowMode.Caster:
+                case EffectFollowMode.FollowCster:
+                    this.Begin(caster.position);
+                    break;
+                case EffectFollowMode.Target:
+                case EffectFollowMode.FollowTarget:
+                    this.Begin(target.position);
+                    break;
+            }
+            switch (this.followMode) {
+                case EffectFollowMode.FollowCster:
+                    this._follow = caster.rid;
+                    break;
+                case EffectFollowMode.FollowTarget:
+                    this._follow = target.rid;
+                    break;
+            }
+        }
         OnPlayComplete() {
             this._graphic.Stop();
             this.MarkToDestroy();
         }
         OnUpdateState(context) {
             super.OnUpdateState(context);
+            if (this._follow != null && this._follow != "") {
+                let follow = this.owner.entityManager.GetEntity(this._follow);
+                if (follow != null) {
+                    this.position = follow.position;
+                }
+            }
             if (this._data.duration <= 0)
                 return;
             if (context.time < this._endTime)
@@ -1308,7 +1347,7 @@ var View;
             let entity = this._idToEntity.getValue(rid);
             return entity;
         }
-        GetTowersByTeam(team) {
+        GetTargetsByTeam(team) {
             let towers = [];
             for (let entity of this._entities) {
                 if (!(entity instanceof View.CTower))
@@ -1319,11 +1358,6 @@ var View;
                 towers.push(tower);
             }
             return towers;
-        }
-        RandomGetTarget(team) {
-            let targets = this.GetTowersByTeam(team);
-            let r2 = Math.floor(Math.random() * targets.length);
-            return targets[r2];
         }
         GetEntityAt(index) {
             if (index < 0 ||
@@ -1364,8 +1398,21 @@ var View;
 })(View || (View = {}));
 var View;
 (function (View) {
+    let SkillTargetMode;
+    (function (SkillTargetMode) {
+        SkillTargetMode[SkillTargetMode["Undefine"] = 0] = "Undefine";
+        SkillTargetMode[SkillTargetMode["Teammate"] = 1] = "Teammate";
+        SkillTargetMode[SkillTargetMode["Opponent"] = 2] = "Opponent";
+    })(SkillTargetMode = View.SkillTargetMode || (View.SkillTargetMode = {}));
+    let SkillTargetFilter;
+    (function (SkillTargetFilter) {
+        SkillTargetFilter[SkillTargetFilter["None"] = 0] = "None";
+        SkillTargetFilter[SkillTargetFilter["MaxHp"] = 1] = "MaxHp";
+        SkillTargetFilter[SkillTargetFilter["MinHp"] = 2] = "MinHp";
+    })(SkillTargetFilter = View.SkillTargetFilter || (View.SkillTargetFilter = {}));
     class CSkill {
-        constructor(id) {
+        constructor(owner, id) {
+            this._owner = owner;
             this._data = Shared.Model.ModelFactory.GetSkillData(id);
         }
         get id() { return this._data.id; }
@@ -1373,11 +1420,43 @@ var View;
         get damage() { return this._data.damage; }
         get duration() { return this._data.duration; }
         get hit() { return this._data.hit; }
+        get targetMode() { return this._data.targetMode; }
+        get targetFilter() { return this._data.targetFilter; }
         get fx() { return this._data.fx; }
         get missile() { return this._data.missile; }
         get summon() { return this._data.summon; }
         get summonPos() { return this._data.summonPos; }
         get summonFx() { return this._data.summonFx; }
+        RandomGetTarget() {
+            let team = this.targetMode == SkillTargetMode.Teammate ? this._owner.team : 1 - this._owner.team;
+            let targets = this._owner.owner.entityManager.GetTargetsByTeam(team);
+            switch (this.targetFilter) {
+                case SkillTargetFilter.None:
+                    return targets[Math.floor(Math.random() * targets.length)];
+                case SkillTargetFilter.MaxHp: {
+                    let max = RC.Numerics.MathUtils.MIN_VALUE;
+                    let target = null;
+                    for (let curTarget of targets) {
+                        if (curTarget.hp > max) {
+                            max = curTarget.hp;
+                            target = curTarget;
+                        }
+                    }
+                    return target;
+                }
+                case SkillTargetFilter.MinHp: {
+                    let min = RC.Numerics.MathUtils.MAX_VALUE;
+                    let target = null;
+                    for (let curTarget of targets) {
+                        if (curTarget.hp < min) {
+                            min = curTarget.hp;
+                            target = curTarget;
+                        }
+                    }
+                    return target;
+                }
+            }
+        }
     }
     View.CSkill = CSkill;
 })(View || (View = {}));
@@ -1425,9 +1504,9 @@ var View;
             let skill = this._owner.RandomGetUsableSkill();
             if (skill == null)
                 return;
-            let target = this._owner.owner.entityManager.RandomGetTarget(1 - this._owner.team);
+            let target = skill.RandomGetTarget();
             this._owner.UseSkill(skill.id, target);
-            this._nextUseSkillTime = context.time + Math.floor((Math.random() * 2.5 + 1.2) * 1000);
+            this._nextUseSkillTime = context.time + Math.floor((Math.random() * 2.0 + 1.2) * 1000);
         }
     }
     View.CTowerAI = CTowerAI;
@@ -1681,6 +1760,9 @@ var View;
             this._target = target.rid;
             this._lastPos.CopyFrom(target.position);
             this.position = caster.position;
+            let dist = RC.Numerics.Vec2.Distance(this._lastPos, this.position);
+            if (dist != 0)
+                this.direction = RC.Numerics.Vec2.DivN(RC.Numerics.Vec2.Sub(this._lastPos, this.position), dist);
             this.PlayAni();
         }
         End() {
@@ -1698,7 +1780,8 @@ var View;
         OnUpdateState(context) {
             super.OnUpdateState(context);
             let dist = RC.Numerics.Vec2.Distance(this._lastPos, this.position);
-            this.direction = RC.Numerics.Vec2.DivN(RC.Numerics.Vec2.Sub(this._lastPos, this.position), dist);
+            if (dist != 0)
+                this.direction = RC.Numerics.Vec2.DivN(RC.Numerics.Vec2.Sub(this._lastPos, this.position), dist);
             let expectTime = dist * 1000 / this._data.speed;
             let curPos = RC.Numerics.Vec2.Lerp(this.position, this._lastPos, context.deltaTime / expectTime);
             this.position = curPos;
@@ -1812,13 +1895,14 @@ var View;
             }
             OnEnter(param) {
                 this.PlanningPath();
-                if (this._path.length == 1) {
+                if (this._path == null || this._path.length == 1) {
                     this.WalkComplete();
                     return;
                 }
                 this.owner.owner.PlayRun();
             }
             OnExit() {
+                this._path = null;
             }
             OnUpdate(context) {
                 this.PlanningPath();
@@ -1831,18 +1915,24 @@ var View;
                     return;
                 let ownerPos = self.position;
                 let enemyPos = enemy.position;
-                let dir = RC.Numerics.Vec2.NormalizeSafe(RC.Numerics.Vec2.Sub(enemyPos, ownerPos));
+                let dist = RC.Numerics.Vec2.Distance(enemyPos, ownerPos);
+                let dir = RC.Numerics.Vec2.DivN(RC.Numerics.Vec2.Sub(enemy.position, self.position), dist);
                 enemyPos.Sub(dir.MulN(enemy.radius));
                 if (enemy.rid != this._lastEnemy || !RC.Numerics.Vec2.Equals(this._lastEnemyPos, enemyPos)) {
-                    let from = self.owner.tileMap.CoordToIndex(ownerPos.x, ownerPos.y);
-                    let to = self.owner.tileMap.CoordToIndex(enemyPos.x, enemyPos.y);
-                    this._path = self.owner.tileMap.AStarSearch(from, to);
+                    if (dist <= enemy.radius) {
+                        self.direction = dir;
+                    }
+                    else {
+                        let from = self.owner.tileMap.CoordToIndex(ownerPos.x, ownerPos.y);
+                        let to = self.owner.tileMap.CoordToIndex(enemyPos.x, enemyPos.y);
+                        this._path = self.owner.tileMap.AStarSearch(from, to);
+                    }
                     this._lastEnemy = enemy.rid;
                     this._lastEnemyPos.CopyFrom(enemyPos);
                 }
             }
             WalkPath(dt) {
-                if (this._path.length == 1) {
+                if (this._path.length <= 1) {
                     this.WalkComplete();
                     return;
                 }
@@ -2051,15 +2141,22 @@ var View;
                 this._list2 = this._root.getChild("list2").asList;
                 let count = this._list.numItems;
                 for (let i = 0; i < count; ++i) {
-                    let item = this._list.getChildAt(i);
+                    let item = this._list.getChildAt(i).asCom;
+                    let skillId = "s" + i % 3;
+                    item.data = skillId;
                     item.draggable = true;
                     item.on(fairygui.Events.DRAG_START, this, this.OnItemDragStart);
+                    let skillData = Shared.Model.ModelFactory.GetSkillData(skillId);
+                    item.getChild("mp").asTextField.text = "" + skillData.cmp;
                 }
                 count = this._list2.numItems;
                 for (let i = 0; i < count; ++i) {
-                    let item = this._list2.getChildAt(i);
-                    item.data = item.name;
+                    let item = this._list2.getChildAt(i).asCom;
+                    let skillId = "s" + i % 3;
+                    item.data = skillId;
                     item.on(fairygui.Events.DROP, this, this.OnItemDrop);
+                    let skillData = Shared.Model.ModelFactory.GetSkillData(skillId);
+                    item.getChild("mp").asTextField.text = "" + skillData.cmp;
                 }
             }
             Dispose() {
@@ -2083,12 +2180,15 @@ var View;
             OnItemDragStart(e) {
                 let item = fairygui.GObject.cast(e.currentTarget);
                 item.stopDrag();
-                fairygui.DragDropManager.inst.startDrag(item, item.icon, [item.icon, item.name]);
+                fairygui.DragDropManager.inst.startDrag(item, item.icon, [item.icon, item.data]);
             }
             OnItemDrop(data, e) {
                 let item = fairygui.GObject.cast(e.currentTarget);
+                let skillId = data[1];
                 item.icon = data[0];
-                item.data = data[1];
+                item.data = skillId;
+                let skillData = Shared.Model.ModelFactory.GetSkillData(skillId);
+                item.getChild("mp").asTextField.text = "" + skillData.cmp;
             }
             GetSkills() {
                 let count = this._list2.numItems;
@@ -2097,6 +2197,14 @@ var View;
                     skills.push(this._list2.getChildAt(i).data);
                 }
                 return skills;
+            }
+            GetGridNames() {
+                let count = this._list2.numItems;
+                let names = [];
+                for (let i = 0; i < count; ++i) {
+                    names.push(this._list2.getChildAt(i).name);
+                }
+                return names;
             }
         }
         UI.SkillPanel = SkillPanel;
@@ -2124,12 +2232,16 @@ var View;
                     UI.UIManager.EnterMain();
                 });
                 this._mpBar = this._root.getChild("n2").asProgress;
-                let p = param;
+                this._mp = this._root.getChild("mp").asTextField;
+                let p = param[0];
+                let n = param[1];
                 for (let i = 0; i < p.team0[0].skills.length; ++i) {
                     let skillGrid = this._root.getChild("c" + i).asCom;
                     let skillId = p.team0[0].skills[i];
-                    skillGrid.icon = fairygui.UIPackage.getItemURL("global", skillId);
-                    skillGrid.name = skillId;
+                    let skillData = Shared.Model.ModelFactory.GetSkillData(skillId);
+                    skillGrid.icon = fairygui.UIPackage.getItemURL("global", n[i]);
+                    skillGrid.data = skillId;
+                    skillGrid.getChild("mp").asTextField.text = "" + skillData.cmp;
                     skillGrid.onClick(this, this.OnSkillGridClick);
                     this._skillGrids.push(skillGrid);
                 }
@@ -2153,8 +2265,9 @@ var View;
                     return;
                 this._mpBar.max = player.mmp;
                 this._mpBar.value = player.mp;
+                this._mp.text = "" + RC.Numerics.MathUtils.Floor(player.mp);
                 for (let skillGrid of this._skillGrids) {
-                    let skillId = skillGrid.name;
+                    let skillId = skillGrid.data;
                     skillGrid.grayed = !player.CanUseSkill(skillId);
                     skillGrid.touchable = !skillGrid.grayed;
                 }
@@ -2174,7 +2287,7 @@ var View;
             }
             OnSkillGridClick(e) {
                 let skillGrid = fairygui.GObject.cast(e.currentTarget);
-                let skillId = skillGrid.name;
+                let skillId = skillGrid.data;
                 let player = this.GetPlayer();
                 if (player == null)
                     return;
@@ -2328,7 +2441,7 @@ var View;
                 tower = new Shared.Model.EntityParam();
                 tower.id = "e0";
                 tower.team = 1;
-                tower.skills = ["s0", "s10", "s2", "s3", "s4"];
+                tower.skills = ["s0", "s10", "s2", "s0", "s0", "s0"];
                 param.team1.push(tower);
                 tower = new Shared.Model.EntityParam();
                 tower.id = "e1";
@@ -2340,7 +2453,7 @@ var View;
                 tower.team = 1;
                 tower.skills = [];
                 param.team1.push(tower);
-                UI.UIManager.EnterBattle(param);
+                UI.UIManager.EnterBattle(param, this._skillPanel.GetGridNames());
             }
         }
         UI.UIMain = UIMain;
@@ -2394,7 +2507,7 @@ var View;
             static EnterMain() {
                 this.EnterModule(this._main);
             }
-            static EnterBattle(param) {
+            static EnterBattle(...param) {
                 this.EnterModule(this._battle, param);
             }
         }

@@ -64,7 +64,7 @@ namespace View {
 			return entity;
 		}
 
-		public GetTowersByTeam(team: number): CTower[] {
+		public GetTargetsByTeam(team: number): CTower[] {
 			let towers: CTower[] = [];
 			for (let entity of this._entities) {
 				if (!(entity instanceof CTower))
@@ -75,12 +75,6 @@ namespace View {
 				towers.push(tower);
 			}
 			return towers;
-		}
-
-		public RandomGetTarget(team: number): CTower {
-			let targets = this.GetTowersByTeam(team);
-			let r2 = Math.floor(Math.random() * targets.length);
-			return targets[r2];
 		}
 
 		public GetEntityAt(index: number): CEntity {

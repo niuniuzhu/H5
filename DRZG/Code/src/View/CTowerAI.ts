@@ -14,9 +14,9 @@ namespace View {
 			let skill = this._owner.RandomGetUsableSkill();
 			if (skill == null)
 				return;
-			let target = this._owner.owner.entityManager.RandomGetTarget(1 - this._owner.team);
+			let target = skill.RandomGetTarget();
 			this._owner.UseSkill(skill.id, target);
-			this._nextUseSkillTime = context.time + Math.floor((Math.random() * 2.5 + 1.2) * 1000);
+			this._nextUseSkillTime = context.time + Math.floor((Math.random() * 2.0 + 1.2) * 1000);
 		}
 	}
 }

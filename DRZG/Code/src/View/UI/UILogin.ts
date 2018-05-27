@@ -9,7 +9,7 @@ namespace View.UI {
 		public Dispose(): void {
 		}
 
-		public Enter(param: any): void {
+		public Enter(param?: any[]): void {
 			this._root = fairygui.UIPackage.createObject("login", "Main").asCom;
 			fairygui.GRoot.inst.addChild(this._root);
 			this._root.width = fairygui.GRoot.inst.width;

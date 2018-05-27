@@ -13,7 +13,7 @@ namespace View.Actions {
 
 		protected OnEnter(param: any[]): void {
 			this.PlanningPath();
-			if (this._path.length == 1) {
+			if (this._path == null || this._path.length == 1) {
 				this.WalkComplete();
 				return;
 			}
@@ -21,6 +21,7 @@ namespace View.Actions {
 		}
 
 		protected OnExit(): void {
+			this._path = null;
 		}
 
 		protected OnUpdate(context: Shared.UpdateContext): void {
@@ -35,19 +36,25 @@ namespace View.Actions {
 				return;
 			let ownerPos = self.position;
 			let enemyPos = enemy.position;
-			let dir = RC.Numerics.Vec2.NormalizeSafe(RC.Numerics.Vec2.Sub(enemyPos, ownerPos));
+			let dist = RC.Numerics.Vec2.Distance(enemyPos, ownerPos);
+			let dir = RC.Numerics.Vec2.DivN(RC.Numerics.Vec2.Sub(enemy.position, self.position), dist);
 			enemyPos.Sub(dir.MulN(enemy.radius));
 			if (enemy.rid != this._lastEnemy || !RC.Numerics.Vec2.Equals(this._lastEnemyPos, enemyPos)) {
-				let from = self.owner.tileMap.CoordToIndex(ownerPos.x, ownerPos.y);
-				let to = self.owner.tileMap.CoordToIndex(enemyPos.x, enemyPos.y);
-				this._path = self.owner.tileMap.AStarSearch(from, to);
+				if (dist <= enemy.radius) {
+					self.direction = dir;
+				}
+				else {
+					let from = self.owner.tileMap.CoordToIndex(ownerPos.x, ownerPos.y);
+					let to = self.owner.tileMap.CoordToIndex(enemyPos.x, enemyPos.y);
+					this._path = self.owner.tileMap.AStarSearch(from, to);
+				}
 				this._lastEnemy = enemy.rid;
 				this._lastEnemyPos.CopyFrom(enemyPos);
 			}
 		}
 
 		private WalkPath(dt: number): void {
-			if (this._path.length == 1) {
+			if (this._path.length <= 1) {
 				this.WalkComplete();
 				return;
 			}

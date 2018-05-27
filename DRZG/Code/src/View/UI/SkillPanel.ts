@@ -8,21 +8,27 @@ namespace View.UI {
 		constructor(owner: UIMain) {
 			this._owner = owner;
 			this._root = owner.root.getChild("c2").asCom;
-
 			this._list = this._root.getChild("list").asList;
 			this._list2 = this._root.getChild("list2").asList;
 
 			let count = this._list.numItems;
 			for (let i = 0; i < count; ++i) {
-				let item = this._list.getChildAt(i);
+				let item = this._list.getChildAt(i).asCom
+				let skillId = "s" + i % 3;// 只有3个技能
+				item.data = skillId;
 				item.draggable = true;
 				item.on(fairygui.Events.DRAG_START, this, this.OnItemDragStart);
+				let skillData = Shared.Model.ModelFactory.GetSkillData(skillId);
+				item.getChild("mp").asTextField.text = "" + skillData.cmp;
 			}
 			count = this._list2.numItems;
 			for (let i = 0; i < count; ++i) {
-				let item = this._list2.getChildAt(i);
-				item.data = item.name;
+				let item = this._list2.getChildAt(i).asCom;
+				let skillId = "s" + i % 3;
+				item.data = skillId;
 				item.on(fairygui.Events.DROP, this, this.OnItemDrop);
+				let skillData = Shared.Model.ModelFactory.GetSkillData(skillId);
+				item.getChild("mp").asTextField.text = "" + skillData.cmp;
 			}
 		}
 
@@ -56,13 +62,16 @@ namespace View.UI {
 		private OnItemDragStart(e: laya.events.Event): any {
 			let item = <fairygui.GComponent>fairygui.GObject.cast(e.currentTarget);
 			item.stopDrag();
-			fairygui.DragDropManager.inst.startDrag(item, item.icon, [item.icon, item.name]);
+			fairygui.DragDropManager.inst.startDrag(item, item.icon, [item.icon, item.data]);
 		}
 
 		private OnItemDrop(data: any, e: laya.events.Event): any {
 			let item = <fairygui.GComponent>fairygui.GObject.cast(e.currentTarget);
+			let skillId = <string>data[1];
 			item.icon = data[0];
-			item.data = data[1];
+			item.data = skillId;
+			let skillData = Shared.Model.ModelFactory.GetSkillData(skillId);
+			item.getChild("mp").asTextField.text = "" + skillData.cmp;
 		}
 
 		public GetSkills(): string[] {
@@ -72,6 +81,15 @@ namespace View.UI {
 				skills.push(<string>this._list2.getChildAt(i).data);
 			}
 			return skills;
+		}
+
+		public GetGridNames(): string[] {
+			let count = this._list2.numItems;
+			let names: string[] = [];
+			for (let i = 0; i < count; ++i) {
+				names.push(this._list2.getChildAt(i).name);
+			}
+			return names;
 		}
 	}
 }

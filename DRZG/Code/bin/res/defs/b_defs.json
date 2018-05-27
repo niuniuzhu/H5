@@ -60,7 +60,7 @@
 			"mhp": 580,
 			"mmp": 10,
 			"mp": 3,
-			"gmp": 0.6,
+			"gmp": 0.8,
 			"skills": [],
 			"ai": "tower"
 		},
@@ -71,7 +71,7 @@
 			"mhp": 400,
 			"mmp": 10,
 			"mp": 3,
-			"gmp": 0.6,
+			"gmp": 0.8,
 			"skills": [
 				"s20"
 			],
@@ -80,7 +80,7 @@
 		"e2": {
 			"name": "士兵0",
 			"model": "e2",
-			"radius": 1.8,
+			"radius": 1.7,
 			"speed": 1.5,
 			"scale": [
 				1,
@@ -89,7 +89,7 @@
 			"mhp": 200,
 			"mmp": 10,
 			"mp": 3,
-			"gmp": 0.6,
+			"gmp": 0.8,
 			"skills": [
 				"s21"
 			],
@@ -98,12 +98,12 @@
 		"e3": {
 			"name": "士兵1",
 			"model": "e3",
-			"radius": 1.8,
-			"speed": 8,
+			"radius": 1.7,
+			"speed": 1.5,
 			"mhp": 200,
 			"mmp": 10,
 			"mp": 3,
-			"gmp": 0.6,
+			"gmp": 0.8,
 			"skills": [
 				"s21"
 			],
@@ -125,25 +125,29 @@
 			"name": "召唤",
 			"model": "e6",
 			"duration": 0,
-			"follow_mode": 0
+			"follow_mode": 4
 		},
 		"e7": {
 			"name": "祝福",
 			"model": "e7",
 			"duration": 0,
-			"follow_mode": 0
+			"follow_mode": 4
 		}
 	},
 	"skills": {
 		"s0": {
 			"cmp": 1,
-			"damage": 32,
+			"damage": 25,
 			"fx": "",
-			"missile": "e4"
+			"missile": "e4",
+			"target_mode": 2,
+			"target_filter": 0
 		},
 		"s1": {
-			"cmp": 2,
+			"cmp": 3,
 			"damage": 0,
+			"target_mode": 0,
+			"target_filter": 0,
 			"fx": "",
 			"summon": "e3",
 			"summon_fx": "e6",
@@ -159,49 +163,18 @@
 			]
 		},
 		"s2": {
-			"cmp": 3,
-			"damage": 0,
-			"fx": ""
-		},
-		"s3": {
-			"cmp": 6,
-			"damage": 0,
-			"fx": ""
-		},
-		"s4": {
-			"cmp": 5,
-			"damage": 0,
-			"fx": ""
-		},
-		"s5": {
 			"cmp": 4,
-			"damage": 0,
-			"fx": ""
-		},
-		"s6": {
-			"cmp": 9,
-			"damage": 0,
-			"fx": ""
-		},
-		"s7": {
-			"cmp": 8,
-			"damage": 0,
-			"fx": ""
-		},
-		"s8": {
-			"cmp": 7,
-			"damage": 0,
-			"fx": ""
-		},
-		"s9": {
-			"cmp": 5,
-			"damage": 0,
-			"fx": ""
+			"damage": -65,
+			"target_mode": 1,
+			"target_filter": 2,
+			"fx": "e7"
 		},
 		"s10": {
 			"cmp": 2,
 			"damage": 0,
 			"fx": "",
+			"target_mode": 0,
+			"target_filter": 0,
 			"summon": "e2",
 			"summon_fx": "e6",
 			"summon_pos": [
@@ -217,13 +190,17 @@
 		},
 		"s20": {
 			"cmp": 0,
-			"damage": 32,
+			"damage": 25,
+			"target_mode": 2,
+			"target_filter": 0,
 			"fx": "",
 			"missile": "e4"
 		},
 		"s21": {
 			"cmp": 0,
 			"damage": 12,
+			"target_mode": 2,
+			"target_filter": 0,
 			"duration": 750,
 			"hit": 625
 		}

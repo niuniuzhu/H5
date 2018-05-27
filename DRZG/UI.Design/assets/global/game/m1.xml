@@ -4,7 +4,5 @@
     <image id="n15_oeew" name="n15" src="oeew14" fileName="assets/战斗界面.png" xy="-18,0"/>
     <image id="n16_oeew" name="n16" src="oeew15" fileName="assets/战场上的人物1.png" xy="254,791"/>
     <image id="n17_oeew" name="n17" src="oeew16" fileName="assets/战场上的人物2.png" xy="254,15"/>
-    <image id="n19_zg0y" name="n19" src="f15td" fileName="assets/tile.jpg" xy="0,0" size="684,1080" alpha="0.3"/>
-    <image id="n18_zg0y" name="n18" src="k2mt18" fileName="game/m1_data.jpg" xy="0,0" size="684,1080" alpha="0.69"/>
   </displayList>
 </component>

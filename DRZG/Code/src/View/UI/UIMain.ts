@@ -36,7 +36,7 @@ namespace View.UI {
 		public Dispose(): void {
 		}
 
-		public Enter(param: any): void {
+		public Enter(param?: any[]): void {
 			this._root = fairygui.UIPackage.createObject("main", "Main").asCom;
 			fairygui.GRoot.inst.addChild(this._root);
 			this._root.width = fairygui.GRoot.inst.width;
@@ -109,7 +109,7 @@ namespace View.UI {
 			param.id = "m0";
 			param.rndSeed = RC.Utils.Timer.utcTime;
 			param.team0 = [];
-			param.team1 =[];
+			param.team1 = [];
 
 			// team 0
 			let tower = new Shared.Model.EntityParam();
@@ -134,8 +134,7 @@ namespace View.UI {
 			tower = new Shared.Model.EntityParam();
 			tower.id = "e0";
 			tower.team = 1;
-			tower.skills = ["s0","s10","s2","s3","s4"];
-			// tower.skills = ["s10"];
+			tower.skills = ["s0", "s10", "s2", "s0", "s0", "s0"];
 			param.team1.push(tower);
 
 			tower = new Shared.Model.EntityParam();
@@ -150,7 +149,7 @@ namespace View.UI {
 			tower.skills = [];
 			param.team1.push(tower);
 
-			UIManager.EnterBattle(param);
+			UIManager.EnterBattle(param, this._skillPanel.GetGridNames());
 		}
 	}
 }

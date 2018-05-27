@@ -3,8 +3,9 @@ namespace View.UI {
 		private _root: fairygui.GComponent;
 		private _result: fairygui.GComponent;
 		private _mpBar: fairygui.GProgressBar;
-		private readonly _skillGrids: fairygui.GComponent[];
+		private _mp: fairygui.GTextField;
 		private _battle: CBattle;
+		private readonly _skillGrids: fairygui.GComponent[];
 
 		constructor() {
 			fairygui.UIPackage.addPackage("res/ui/battle");
@@ -14,7 +15,7 @@ namespace View.UI {
 		public Dispose(): void {
 		}
 
-		public Enter(param: any): void {
+		public Enter(param?: any[]): void {
 			this._root = fairygui.UIPackage.createObject("battle", "Main").asCom;
 			fairygui.GRoot.inst.addChild(this._root);
 			this._root.width = fairygui.GRoot.inst.width;
@@ -27,13 +28,17 @@ namespace View.UI {
 			})
 
 			this._mpBar = this._root.getChild("n2").asProgress;
+			this._mp = this._root.getChild("mp").asTextField;
 
-			let p = <Shared.Model.BattleParams>param;
+			let p = <Shared.Model.BattleParams>param[0];
+			let n = <string[]>param[1];
 			for (let i = 0; i < p.team0[0].skills.length; ++i) {
 				let skillGrid = this._root.getChild("c" + i).asCom;
 				let skillId = p.team0[0].skills[i];
-				skillGrid.icon = fairygui.UIPackage.getItemURL("global", skillId);
-				skillGrid.name = skillId;
+				let skillData = Shared.Model.ModelFactory.GetSkillData(skillId);
+				skillGrid.icon = fairygui.UIPackage.getItemURL("global", n[i]);
+				skillGrid.data = skillId;
+				skillGrid.getChild("mp").asTextField.text = "" + skillData.cmp;
 				skillGrid.onClick(this, this.OnSkillGridClick);
 				this._skillGrids.push(skillGrid);
 			}
@@ -60,9 +65,10 @@ namespace View.UI {
 				return;
 			this._mpBar.max = player.mmp;
 			this._mpBar.value = player.mp;
+			this._mp.text = "" + RC.Numerics.MathUtils.Floor(player.mp);
 
 			for (let skillGrid of this._skillGrids) {
-				let skillId = skillGrid.name;
+				let skillId = <string>skillGrid.data;
 				skillGrid.grayed = !player.CanUseSkill(skillId);
 				skillGrid.touchable = !skillGrid.grayed;
 			}
@@ -86,7 +92,7 @@ namespace View.UI {
 
 		private OnSkillGridClick(e: laya.events.Event): void {
 			let skillGrid = <fairygui.GComponent>fairygui.GObject.cast(e.currentTarget);
-			let skillId = skillGrid.name;
+			let skillId = <string>skillGrid.data;
 			let player = this.GetPlayer();
 			if (player == null)
 				return;

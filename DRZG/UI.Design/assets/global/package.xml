@@ -42,7 +42,7 @@
     <image id="oeew15" name="战场上的人物1.png" path="/assets/"/>
     <image id="oeew16" name="战场上的人物2.png" path="/assets/"/>
     <component id="m7f717" name="hud.xml" path="/game/" exported="true"/>
-    <image id="k2mt18" name="m1_data.jpg" path="/game/" exported="true" scale="" qualityOption="custom" quality="100" smoothing="false" atlas="alone_npot"/>
+    <image id="k2mt18" name="m1_data.jpg" path="/game/" exported="true" qualityOption="custom" quality="100" smoothing="false" atlas="alone_npot"/>
   </resources>
   <publish name="global" npot="true">
     <atlas compression="true" index="0"/>

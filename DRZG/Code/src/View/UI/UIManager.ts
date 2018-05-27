@@ -38,7 +38,7 @@ namespace View.UI {
 				this._currModule.OnResize(e);
 		}
 
-		private static EnterModule(module: IUIModule, param?: any): void {
+		private static EnterModule(module: IUIModule, param?: any[]): void {
 			if (this._currModule != null)
 				this._currModule.Leave();
 			module.Enter(param);
@@ -59,7 +59,7 @@ namespace View.UI {
 			this.EnterModule(this._main);
 		}
 
-		public static EnterBattle(param: Shared.Model.BattleParams): void {
+		public static EnterBattle(...param: any[]): void {
 			this.EnterModule(this._battle, param);
 		}
 	}

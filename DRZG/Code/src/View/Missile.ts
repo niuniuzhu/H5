@@ -20,6 +20,9 @@ namespace View {
 			this._target = target.rid;
 			this._lastPos.CopyFrom(target.position);
 			this.position = caster.position;
+			let dist = RC.Numerics.Vec2.Distance(this._lastPos, this.position);
+			if (dist != 0)
+				this.direction = RC.Numerics.Vec2.DivN(RC.Numerics.Vec2.Sub(this._lastPos, this.position), dist);
 			this.PlayAni();
 		}
 
@@ -40,7 +43,8 @@ namespace View {
 			super.OnUpdateState(context);
 
 			let dist = RC.Numerics.Vec2.Distance(this._lastPos, this.position);
-			this.direction = RC.Numerics.Vec2.DivN(RC.Numerics.Vec2.Sub(this._lastPos, this.position), dist);
+			if (dist != 0)
+				this.direction = RC.Numerics.Vec2.DivN(RC.Numerics.Vec2.Sub(this._lastPos, this.position), dist);
 
 			let expectTime = dist * 1000 / this._data.speed;
 			let curPos = RC.Numerics.Vec2.Lerp(this.position, this._lastPos, context.deltaTime / expectTime);
