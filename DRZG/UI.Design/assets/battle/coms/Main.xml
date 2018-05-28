@@ -12,6 +12,8 @@
     <component id="n12_f15t" name="c3" src="f15ts" fileName="coms/card.xml" pkg="evwornmp" xy="429,1094" group="n7_f15t"/>
     <component id="n13_f15t" name="c4" src="f15ts" fileName="coms/card.xml" pkg="evwornmp" xy="556,1094" group="n7_f15t"/>
     <text id="n14_f5la" name="mp" xy="33,1244" size="23,40" group="n7_f15t" fontSize="32" color="#ff66ff" shadowColor="#000000" shadowOffset="1,1" text="0"/>
-    <group id="n7_f15t" name="n7" xy="32,1066" size="656,218"/>
+    <group id="n7_f15t" name="n7" xy="32,1066" size="656,218" advanced="true">
+      <relation target="" sidePair="center-center,bottom-bottom"/>
+    </group>
   </displayList>
 </component>

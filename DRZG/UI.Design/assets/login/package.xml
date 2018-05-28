@@ -18,19 +18,7 @@
     <image id="k6njh" name="01登录02.jpg" path="/assets/"/>
     <component id="k6nji" name="Main.xml" path="/coms/" exported="true"/>
     <component id="10cuij" name="area_btn.xml" path="/coms/"/>
-    <image id="k2mtik" name="bg01.png" path="/assets/" scale="" qualityOption="custom" quality="70"/>
+    <image id="k2mtik" name="bg01.png" path="/assets/" qualityOption="custom" quality="70"/>
   </resources>
-  <publish name="login" npot="true">
-    <atlas compression="true" index="0"/>
-    <atlas compression="true" index="1"/>
-    <atlas compression="true" index="2"/>
-    <atlas compression="true" index="3"/>
-    <atlas compression="true" index="4"/>
-    <atlas compression="true" index="5"/>
-    <atlas compression="true" index="6"/>
-    <atlas compression="true" index="7"/>
-    <atlas compression="true" index="8"/>
-    <atlas compression="true" index="9"/>
-    <atlas compression="true" index="10"/>
-  </publish>
+  <publish name="login" npot="true"/>
 </packageDescription>

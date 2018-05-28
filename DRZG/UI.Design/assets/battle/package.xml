@@ -23,17 +23,5 @@
     <image id="d7xvl" name="xingxing02.png" path="/assets/"/>
     <image id="d7xvm" name="胜利结算页面上的人物.png" path="/assets/"/>
   </resources>
-  <publish name="battle" npot="true">
-    <atlas compression="true" index="0"/>
-    <atlas compression="true" index="1"/>
-    <atlas compression="true" index="2"/>
-    <atlas compression="true" index="3"/>
-    <atlas compression="true" index="4"/>
-    <atlas compression="true" index="5"/>
-    <atlas compression="true" index="6"/>
-    <atlas compression="true" index="7"/>
-    <atlas compression="true" index="8"/>
-    <atlas compression="true" index="9"/>
-    <atlas compression="true" index="10"/>
-  </publish>
+  <publish name="battle" npot="true"/>
 </packageDescription>

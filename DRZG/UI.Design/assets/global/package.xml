@@ -44,17 +44,5 @@
     <component id="m7f717" name="hud.xml" path="/game/" exported="true"/>
     <image id="k2mt18" name="m1_data.jpg" path="/game/" exported="true" qualityOption="custom" quality="100" smoothing="false" atlas="alone_npot"/>
   </resources>
-  <publish name="global" npot="true">
-    <atlas compression="true" index="0"/>
-    <atlas compression="true" index="1"/>
-    <atlas compression="true" index="2"/>
-    <atlas compression="true" index="3"/>
-    <atlas compression="true" index="4"/>
-    <atlas compression="true" index="5"/>
-    <atlas compression="true" index="6"/>
-    <atlas compression="true" index="7"/>
-    <atlas compression="true" index="8"/>
-    <atlas compression="true" index="9"/>
-    <atlas compression="true" index="10"/>
-  </publish>
+  <publish name="global" npot="true"/>
 </packageDescription>

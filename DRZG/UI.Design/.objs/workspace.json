@@ -1,9 +1,19 @@
 {
-	"active_doc": null,
-	"hidden_packages": [],
-	"docs": [],
+	"docs": [
+		"nwaone9f",
+		"bsdg7"
+	],
 	"expanded_nodes": [
+		"nwaone9f",
+		"/",
+		"evwornmp",
+		"/",
 		"dhvv3tkx",
 		"/"
-	]
+	],
+	"active_doc": [
+		"nwaone9f",
+		"bsdg7"
+	],
+	"hidden_packages": []
 }
