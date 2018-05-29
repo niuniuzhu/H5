@@ -1,7 +1,14 @@
 {
+	"active_doc": [
+		"dhvv3tkx",
+		"e280l"
+	],
+	"hidden_packages": [],
 	"docs": [
 		"nwaone9f",
-		"bsdg7"
+		"bsdg7",
+		"dhvv3tkx",
+		"e280l"
 	],
 	"expanded_nodes": [
 		"nwaone9f",
@@ -10,10 +17,5 @@
 		"/",
 		"dhvv3tkx",
 		"/"
-	],
-	"active_doc": [
-		"nwaone9f",
-		"bsdg7"
-	],
-	"hidden_packages": []
+	]
 }

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="720,1280" designImageAlpha="58" designImageLayer="1">
-  <controller name="c1" pages="0,主城,1,副本,2,技能,3,排行榜,4,副本信息,5,玩家信息,6,签到" selected="3"/>
+  <controller name="c1" pages="0,主城,1,副本,2,技能,3,排行榜,4,副本信息,5,玩家信息,6,签到" selected="0"/>
   <displayList>
     <image id="n1_e280" name="n1" src="e280d" fileName="assets/zc/bg02.png" xy="0,0"/>
     <image id="n2_e280" name="n2" src="e280i" fileName="assets/zc/shanglang.png" xy="0,0"/>
     <component id="n3_e280" name="n3" src="d7xv2t" fileName="coms/头像.xml" xy="20,26">
       <Button controller="c1" page="5"/>
     </component>
+    <image id="n28_i7tu" name="n28" src="e280k" fileName="assets/zc/xialang.png" xy="25,1150"/>
     <image id="n16_e280" name="n16" src="e280e" fileName="assets/zc/dengjikuang.png" xy="23,103"/>
     <text id="n5_e280" name="n5" xy="18,102" size="36,25" font="ui://dhvv3tkxe280p" fontSize="20" color="#ffeebb" align="center" autoSize="none" text="1"/>
     <text id="n6_e280" name="n6" xy="178,33" size="20,25" font="ui://dhvv3tkxe280p" fontSize="24" color="#ffeebb" text="0"/>
