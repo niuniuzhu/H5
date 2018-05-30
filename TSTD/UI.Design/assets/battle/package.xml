@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="nwaone9f" jpegQuality="80" compressPNG="true">
+  <resources>
+    <image id="bsdg0" name="jinengdikuang.png" path="/assets/"/>
+    <image id="bsdg1" name="xingdongtiao01.png" path="/assets/"/>
+    <image id="bsdg2" name="xingdongtiao02.png" path="/assets/"/>
+    <image id="bsdg3" name="xuetiao01.png" path="/assets/"/>
+    <image id="bsdg4" name="xuetiao02.png" path="/assets/"/>
+    <image id="bsdg5" name="xuetiao03.png" path="/assets/"/>
+    <image id="bsdg6" name="09战场01.jpg" path="/assets/"/>
+    <component id="bsdg7" name="Main.xml" path="/coms/" exported="true"/>
+    <component id="bsdg8" name="mp_bar.xml" path="/coms/"/>
+    <component id="bsdg9" name="mp_bar_top.xml" path="/coms/"/>
+    <component id="f15ta" name="battle_root.xml" path="/coms/"/>
+    <image id="d7xvd" name="03副本04.jpg" path="/assets/"/>
+    <image id="d7xve" name="03副本03.jpg" path="/assets/"/>
+    <component id="d7xvf" name="result.xml" path="/coms/" exported="true"/>
+    <image id="d7xvg" name="dikuang06.png" path="/assets/"/>
+    <image id="d7xvh" name="shengli.png" path="/assets/"/>
+    <image id="d7xvi" name="shenglidi.png" path="/assets/"/>
+    <image id="d7xvj" name="shibai.png" path="/assets/"/>
+    <image id="d7xvk" name="xingxing01.png" path="/assets/"/>
+    <image id="d7xvl" name="xingxing02.png" path="/assets/"/>
+    <image id="d7xvm" name="胜利结算页面上的人物.png" path="/assets/"/>
+  </resources>
+  <publish name="battle" npot="true"/>
+</packageDescription>

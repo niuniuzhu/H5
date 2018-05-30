@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="281,26" extention="ProgressBar">
+  <displayList>
+    <image id="n30_u0cg" name="n30" src="u0cg35" fileName="assets/zc/tiao_01.png" xy="0,0"/>
+    <component id="n31_u0cg" name="bar" src="u0cg3f" fileName="coms/exp_front.xml" xy="0,0"/>
+  </displayList>
+  <ProgressBar/>
+</component>

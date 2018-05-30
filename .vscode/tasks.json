@@ -55,6 +55,23 @@
 			]
 		},
 		{
+			"label": "Build TSTD",
+			"type": "shell",
+			"command": "tsc-plus",
+			"args": [
+				"-p",
+				"./TSTD/Code"
+			],
+			"group": "build",
+			"presentation": {
+				"panel": "dedicated",
+				"reveal": "silent"
+			},
+			"problemMatcher": [
+				"$tsc"
+			]
+		},
+		{
 			"label": "Build GLTest",
 			"type": "shell",
 			"command": "tsc-plus",

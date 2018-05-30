@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="720,1280" designImageAlpha="43" designImageLayer="1">
+  <controller name="c1" pages="0,,1,,2," selected="0"/>
+  <displayList>
+    <image id="n1_k6nj" name="n1" src="u0cg19" fileName="assets/bg01.png" pkg="evwornmp" xy="0,0"/>
+    <component id="n2_k6nj" name="n2" src="k6nj7" fileName="coms/panel1.xml" pkg="evwornmp" xy="93,359">
+      <gearDisplay controller="c1" pages="0"/>
+      <Label icon="ui://emrbwnx2k6nj7"/>
+    </component>
+    <component id="n13_10cui" name="n13" src="k6nj7" fileName="coms/panel1.xml" pkg="evwornmp" xy="93,359">
+      <gearDisplay controller="c1" pages="1"/>
+      <Label icon="ui://emrbwnx2k6nj8"/>
+    </component>
+    <component id="n18_10cui" name="n18" src="k6nj7" fileName="coms/panel1.xml" pkg="evwornmp" xy="93,359">
+      <gearDisplay controller="c1" pages="2"/>
+      <Label icon="ui://emrbwnx2k6nj9"/>
+    </component>
+    <image id="n6_k6nj" name="n6" src="k6nja" fileName="assets/dikuang01.png" xy="266,559">
+      <gearDisplay controller="c1" pages="0,1"/>
+    </image>
+    <image id="n7_k6nj" name="n7" src="k6nja" fileName="assets/dikuang01.png" xy="266,643">
+      <gearDisplay controller="c1" pages="0,1"/>
+    </image>
+    <text id="n3_k6nj" name="n3" xy="166,565" size="81,47" fontSize="38" color="#8e4a15" text="账号">
+      <gearDisplay controller="c1" pages="0,1"/>
+    </text>
+    <text id="n4_k6nj" name="n4" xy="166,650" size="81,47" fontSize="38" color="#8e4a15" text="密码">
+      <gearDisplay controller="c1" pages="0,1"/>
+    </text>
+    <text id="n8_k6nj" name="name" xy="281,565" size="253,39" input="true" fontSize="30" color="#ffffff" autoSize="none" text="">
+      <gearDisplay controller="c1" pages="0"/>
+    </text>
+    <text id="n9_k6nj" name="password" xy="281,650" size="253,39" input="true" password="true" fontSize="30" color="#ffffff" autoSize="none" text="">
+      <gearDisplay controller="c1" pages="0"/>
+    </text>
+    <component id="n10_k6nj" name="enter_reg_btn" src="k6nj3" fileName="coms/button2.xml" pkg="evwornmp" xy="116,790">
+      <Button icon="ui://emrbwnx2k6nj0" controller="c1" page="1"/>
+    </component>
+    <component id="n11_k6nj" name="login_btn" src="k6nj3" fileName="coms/button2.xml" pkg="evwornmp" xy="372,790">
+      <gearDisplay controller="c1" pages="0"/>
+      <Button icon="ui://emrbwnx2k6nj1" controller="c1" page="2"/>
+    </component>
+    <component id="n12_k6nj" name="exit_btn" src="k6nj2" fileName="coms/button1.xml" pkg="evwornmp" xy="245,1037">
+      <Button icon="ui://emrbwnx2k6nj2"/>
+    </component>
+    <component id="n14_10cui" name="cancel_btn" src="k6nj3" fileName="coms/button2.xml" pkg="evwornmp" xy="116,790">
+      <gearDisplay controller="c1" pages="1,2"/>
+      <Button icon="ui://emrbwnx2k6nj3" controller="c1" page="0"/>
+    </component>
+    <component id="n15_10cui" name="reg_btn" src="k6nj3" fileName="coms/button2.xml" pkg="evwornmp" xy="372,790">
+      <gearDisplay controller="c1" pages="1"/>
+      <Button icon="ui://emrbwnx2k6nj0" controller="c1" page="0"/>
+    </component>
+    <text id="n16_10cui" name="reg_name" xy="281,565" size="253,39" input="true" fontSize="30" color="#ffffff" autoSize="none" text="">
+      <gearDisplay controller="c1" pages="1"/>
+    </text>
+    <text id="n17_10cui" name="reg_password" xy="281,650" size="253,39" input="true" password="true" fontSize="30" color="#ffffff" autoSize="none" text="">
+      <gearDisplay controller="c1" pages="1"/>
+    </text>
+    <component id="n20_10cui" name="n20" src="10cuij" fileName="coms/area_btn.xml" xy="215,557">
+      <gearDisplay controller="c1" pages="2"/>
+      <Button title="一区" titleColor="#ffe6b5" titleFontSize="30"/>
+    </component>
+    <component id="n21_10cui" name="n21" src="10cuij" fileName="coms/area_btn.xml" xy="215,643">
+      <gearDisplay controller="c1" pages="2"/>
+      <Button title="二区" titleColor="#ffe6b5" titleFontSize="30"/>
+    </component>
+    <component id="n22_10cui" name="enter_btn" src="k6nj2" fileName="coms/button1.xml" pkg="evwornmp" xy="372,790">
+      <gearDisplay controller="c1" pages="2"/>
+      <Button icon="ui://emrbwnx2k6nj4"/>
+    </component>
+  </displayList>
+</component>

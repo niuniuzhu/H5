@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="720,1280" designImage="ui://dhvv3tkxu0cg42" designImageAlpha="37" designImageLayer="1">
+  <displayList>
+    <component id="n25_d7xv" name="n25" src="k6nj7" fileName="coms/panel1.xml" pkg="evwornmp" xy="0,0">
+      <Label icon="ui://dhvv3tkxd7xv20"/>
+    </component>
+    <image id="n26_d7xv" name="n26" src="d7xv22" fileName="assets/user/kuang04.png" xy="135,193"/>
+    <image id="n27_d7xv" name="n27" src="e280j" fileName="assets/zc/touxiangkuang.png" xy="290,249"/>
+    <loader id="n28_d7xv" name="icon" xy="293,252" size="94,94" url="ui://evwornmpd7xvv"/>
+    <image id="n29_d7xv" name="n29" src="d7xv21" fileName="assets/user/dikuang07.png" xy="201,373"/>
+    <image id="n30_d7xv" name="n30" src="d7xv21" fileName="assets/user/dikuang07.png" xy="201,436"/>
+    <image id="n31_d7xv" name="n31" src="d7xv21" fileName="assets/user/dikuang07.png" xy="201,499"/>
+    <image id="n32_d7xv" name="n32" src="d7xv21" fileName="assets/user/dikuang07.png" xy="201,562"/>
+    <image id="n33_d7xv" name="n33" src="d7xv21" fileName="assets/user/dikuang07.png" xy="201,625"/>
+    <text id="n34_d7xv" name="n34" xy="207,379" size="155,33" fontSize="24" color="#ffffff" align="center" vAlign="middle" bold="true" text="孤独的流浪者"/>
+    <text id="n35_d7xv" name="n35" xy="207,443" size="88,33" fontSize="24" color="#ffffff" align="center" vAlign="middle" bold="true" text="等级:32"/>
+    <text id="n36_d7xv" name="n36" xy="207,506" size="140,33" fontSize="24" color="#ffffff" align="center" vAlign="middle" bold="true" text="经验:432532"/>
+    <text id="n37_d7xv" name="n37" xy="207,568" size="75,33" fontSize="24" color="#ffffff" align="center" vAlign="middle" bold="true" text="排名:3"/>
+    <text id="n38_d7xv" name="n38" xy="207,631" size="127,33" fontSize="24" color="#ffffff" align="center" vAlign="middle" bold="true" text="战力:48394"/>
+    <component id="n39_u0cg" name="n39" src="k6nj8" fileName="coms/panel2.xml" pkg="evwornmp" xy="0,0">
+      <Label icon="ui://dhvv3tkxu0cg44"/>
+    </component>
+    <component id="n40_u0cg" name="n40" src="k6nj7" fileName="coms/panel1.xml" pkg="evwornmp" xy="93,359"/>
+    <component id="n41_u0cg" name="n41" src="d7xv2t" fileName="coms/头像.xml" xy="302,439"/>
+    <image id="n42_u0cg" name="n42" src="u0cg47" fileName="assets/user/kuang04.png" xy="219,599"/>
+    <image id="n44_u0cg" name="n44" src="u0cg3v" fileName="assets/tansuo/wenzidi.png" xy="217,696"/>
+    <text id="n45_u0cg" name="name" xy="230,610" size="40,36" fontSize="28" color="#ffffff" text=""/>
+    <image id="n46_u0cg" name="n46" src="u0cg3v" fileName="assets/tansuo/wenzidi.png" xy="217,753"/>
+    <image id="n47_u0cg" name="n47" src="u0cg3v" fileName="assets/tansuo/wenzidi.png" xy="217,810"/>
+    <text id="n49_u0cg" name="n49" xy="227,702" size="69,36" fontSize="28" color="#ffffff" text="等级:"/>
+    <text id="n50_u0cg" name="n50" xy="227,758" size="69,36" fontSize="28" color="#ffffff" text="经验:"/>
+    <text id="n51_u0cg" name="n51" xy="227,814" size="69,36" fontSize="28" color="#ffffff" text="战力:"/>
+    <text id="n52_u0cg" name="lvl" xy="299,702" size="21,36" fontSize="28" color="#ffffff" text="0"/>
+    <text id="n53_u0cg" name="exp" xy="299,758" size="21,36" fontSize="28" color="#ffffff" text="0"/>
+    <text id="n54_u0cg" name="atk" xy="299,814" size="21,36" fontSize="28" color="#ffffff" text="0"/>
+    <image id="n55_u0cg" name="n55" src="u0cg45" fileName="assets/user/gaimingzi.png" xy="470,593"/>
+  </displayList>
+</component>

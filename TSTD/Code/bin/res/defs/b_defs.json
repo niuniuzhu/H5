@@ -1,0 +1,208 @@
+{
+	"preloads": [
+		"global.fui,0",
+		"global@atlas0.png,1",
+		"global@atlas0_1.png,1",
+		"global@atlas_k2mt18.jpg,1",
+		"login.fui,0",
+		"login@atlas0.png,1",
+		"main.fui,0",
+		"main@atlas0.png,1",
+		"battle.fui,0",
+		"battle@atlas0.png,1"
+	],
+	"maps": {
+		"m0": {
+			"name": "test",
+			"model": "m1",
+			"size": [
+				684,
+				1080
+			],
+			"tile_size": 36,
+			"tower_pos": [
+				[
+					[
+						10,
+						25
+					],
+					[
+						3,
+						26
+					],
+					[
+						17,
+						26
+					]
+				],
+				[
+					[
+						10,
+						4
+					],
+					[
+						3,
+						5
+					],
+					[
+						17,
+						5
+					]
+				]
+			]
+		}
+	},
+	"entities": {
+		"e0": {
+			"name": "英雄",
+			"model": "e0",
+			"radius": 2.5,
+			"mhp": 580,
+			"mmp": 10,
+			"mp": 3,
+			"gmp": 0.8,
+			"skills": [],
+			"ai": "tower"
+		},
+		"e1": {
+			"name": "塔",
+			"model": "e1",
+			"radius": 2.5,
+			"mhp": 400,
+			"mmp": 10,
+			"mp": 3,
+			"gmp": 0.8,
+			"skills": [
+				"s20"
+			],
+			"ai": "tower"
+		},
+		"e2": {
+			"name": "士兵0",
+			"model": "e2",
+			"radius": 1.7,
+			"speed": 1.5,
+			"scale": [
+				1,
+				-1
+			],
+			"mhp": 200,
+			"mmp": 10,
+			"mp": 3,
+			"gmp": 0.8,
+			"skills": [
+				"s21"
+			],
+			"ai": "champion"
+		},
+		"e3": {
+			"name": "士兵1",
+			"model": "e3",
+			"radius": 1.7,
+			"speed": 1.5,
+			"mhp": 200,
+			"mmp": 10,
+			"mp": 3,
+			"gmp": 0.8,
+			"skills": [
+				"s21"
+			],
+			"ai": "champion"
+		},
+		"e4": {
+			"name": "箭",
+			"model": "e4",
+			"speed": 40,
+			"dfx": "e5"
+		},
+		"e5": {
+			"name": "爆炸",
+			"model": "e5",
+			"duration": 0,
+			"follow_mode": 0
+		},
+		"e6": {
+			"name": "召唤",
+			"model": "e6",
+			"duration": 0,
+			"follow_mode": 4
+		},
+		"e7": {
+			"name": "祝福",
+			"model": "e7",
+			"duration": 0,
+			"follow_mode": 4
+		}
+	},
+	"skills": {
+		"s0": {
+			"cmp": 1,
+			"damage": 25,
+			"fx": "",
+			"missile": "e4",
+			"target_mode": 2,
+			"target_filter": 0
+		},
+		"s1": {
+			"cmp": 4,
+			"damage": 0,
+			"target_mode": 0,
+			"target_filter": 0,
+			"fx": "",
+			"summon": "e3",
+			"summon_fx": "e6",
+			"summon_pos": [
+				[
+					3,
+					22
+				],
+				[
+					17,
+					22
+				]
+			]
+		},
+		"s2": {
+			"cmp": 3,
+			"damage": -65,
+			"target_mode": 1,
+			"target_filter": 2,
+			"fx": "e7"
+		},
+		"s10": {
+			"cmp": 4,
+			"damage": 0,
+			"fx": "",
+			"target_mode": 0,
+			"target_filter": 0,
+			"summon": "e2",
+			"summon_fx": "e6",
+			"summon_pos": [
+				[
+					3,
+					9
+				],
+				[
+					17,
+					9
+				]
+			]
+		},
+		"s20": {
+			"cmp": 0,
+			"damage": 25,
+			"target_mode": 2,
+			"target_filter": 0,
+			"fx": "",
+			"missile": "e4"
+		},
+		"s21": {
+			"cmp": 0,
+			"damage": 12,
+			"target_mode": 2,
+			"target_filter": 0,
+			"duration": 750,
+			"hit": 625
+		}
+	}
+}

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="720,1280" designImage="ui://dhvv3tkxu0cg3m" designImageAlpha="42" designImageLayer="1">
+  <displayList>
+    <component id="n5_u0cg" name="n5" src="k6nj8" fileName="coms/panel2.xml" pkg="evwornmp" xy="0,0">
+      <Label icon="ui://dhvv3tkxu0cg3l"/>
+    </component>
+    <list id="n2_d7xv" name="list" xy="31,131" size="664,998" overflow="scroll" lineGap="33" defaultItem="ui://dhvv3tkxd7xv32" autoClearItems="true">
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+    </list>
+  </displayList>
+</component>

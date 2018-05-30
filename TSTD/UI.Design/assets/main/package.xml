@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="dhvv3tkx" jpegQuality="80" compressPNG="true">
+  <resources>
+    <image id="e2802" name="z_0.png" path="/assets/zc/" scale=""/>
+    <image id="e2803" name="z_1.png" path="/assets/zc/" scale=""/>
+    <image id="e2804" name="z_2.png" path="/assets/zc/" scale=""/>
+    <image id="e2805" name="z_3.png" path="/assets/zc/" scale=""/>
+    <image id="e2806" name="z_4.png" path="/assets/zc/" scale=""/>
+    <image id="e2807" name="z_5.png" path="/assets/zc/" scale=""/>
+    <image id="e2808" name="z_6.png" path="/assets/zc/" scale=""/>
+    <image id="e2809" name="z_7.png" path="/assets/zc/" scale=""/>
+    <image id="e280a" name="z_8.png" path="/assets/zc/" scale=""/>
+    <image id="e280b" name="z_9.png" path="/assets/zc/" scale=""/>
+    <image id="e280j" name="touxiangkuang.png" path="/assets/zc/" scale=""/>
+    <image id="e280k" name="xialang.png" path="/assets/zc/" scale=""/>
+    <component id="e280l" name="Main.xml" path="/coms/" exported="true"/>
+    <font id="e280p" name="Font1.fnt" path="/coms/" exported="true"/>
+    <component id="yer1r" name="shouye.xml" path="/coms/"/>
+    <component id="yer1u" name="place.xml" path="/coms/"/>
+    <component id="yer1x" name="lingshou.xml" path="/coms/"/>
+    <image id="yer11e" name="biaoti06.png" path="/assets/task/" scale=""/>
+    <image id="yer11g" name="kuang06.png" path="/assets/task/" scale=""/>
+    <component id="yer11v" name="task.xml" path="/coms/"/>
+    <component id="yer11w" name="task_item.xml" path="/coms/"/>
+    <component id="d7xv2s" name="user.xml" path="/coms/"/>
+    <component id="d7xv2t" name="头像.xml" path="/coms/"/>
+    <component id="d7xv31" name="message.xml" path="/coms/"/>
+    <component id="d7xv32" name="message_item.xml" path="/coms/"/>
+    <image id="u0cg33" name="02主界面01(1).jpg" path="/assets/zc/"/>
+    <image id="u0cg35" name="tiao_01.png" path="/assets/zc/"/>
+    <image id="u0cg36" name="tiao_02.png" path="/assets/zc/"/>
+    <image id="u0cg37" name="tiao_03.png" path="/assets/zc/"/>
+    <image id="u0cg38" name="xiwangmu.png" path="/assets/zc/"/>
+    <image id="u0cg39" name="xuanwu.png" path="/assets/zc/"/>
+    <image id="u0cg3a" name="yutu.png" path="/assets/zc/"/>
+    <image id="u0cg3b" name="degnji.png" path="/assets/zc/"/>
+    <image id="u0cg3c" name="ti.png" path="/assets/zc/"/>
+    <component id="u0cg3d" name="hpbar.xml" path="/coms/"/>
+    <component id="u0cg3e" name="hp_front.xml" path="/coms/"/>
+    <component id="u0cg3f" name="exp_front.xml" path="/coms/"/>
+    <component id="u0cg3g" name="expbar.xml" path="/coms/"/>
+    <component id="u0cg3h" name="yutu_btn.xml" path="/coms/"/>
+    <component id="u0cg3i" name="xuanwu_btn.xml" path="/coms/"/>
+    <component id="u0cg3j" name="xiwangmu_btn.xml" path="/coms/"/>
+    <component id="u0cg3k" name="empty_btn.xml" path="/coms/"/>
+    <image id="u0cg3l" name="biaoti07.png" path="/assets/message/"/>
+    <image id="u0cg3m" name="08消息01.jpg" path="/assets/message/"/>
+    <image id="u0cg3n" name="heidi01.png" path="/assets/zc/"/>
+    <image id="u0cg3o" name="03探索01.jpg" path="/assets/tansuo/"/>
+    <image id="u0cg3p" name="03探索02.jpg" path="/assets/tansuo/"/>
+    <image id="u0cg3q" name="anniuwenzi_07.png" path="/assets/tansuo/"/>
+    <image id="u0cg3r" name="anniuwenzi_08.png" path="/assets/tansuo/"/>
+    <image id="u0cg3s" name="anniuwenzi_09.png" path="/assets/tansuo/"/>
+    <image id="u0cg3t" name="biaoti04.png" path="/assets/tansuo/"/>
+    <image id="u0cg3u" name="shanglang.png" path="/assets/tansuo/"/>
+    <image id="u0cg3v" name="wenzidi.png" path="/assets/tansuo/"/>
+    <component id="u0cg3w" name="tansuo.xml" path="/coms/"/>
+    <image id="u0cg3y" name="07任务01.jpg" path="/assets/task/"/>
+    <image id="u0cg3z" name="biaoti08.png" path="/assets/lingshou/"/>
+    <image id="u0cg40" name="09灵兽01.jpg" path="/assets/lingshou/"/>
+    <component id="u0cg41" name="lingshou_item.xml" path="/coms/"/>
+    <image id="u0cg42" name="06角色01.jpg" path="/assets/user/"/>
+    <image id="u0cg43" name="06角色02.jpg" path="/assets/user/"/>
+    <image id="u0cg44" name="biaoti05.png" path="/assets/user/"/>
+    <image id="u0cg45" name="gaimingzi.png" path="/assets/user/"/>
+    <image id="u0cg46" name="heidi02.png" path="/assets/user/"/>
+    <image id="u0cg47" name="kuang04.png" path="/assets/user/"/>
+    <component id="u0cg48" name="fight.xml" path="/coms/"/>
+  </resources>
+  <publish name="main" npot="true"/>
+</packageDescription>

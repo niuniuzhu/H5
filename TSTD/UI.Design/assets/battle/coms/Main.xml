@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="720,1280" designImageAlpha="38" designImageLayer="1">
+  <displayList>
+    <component id="n3_f15t" name="n3" src="f15ta" fileName="coms/battle_root.xml" xy="18,0"/>
+    <image id="n1_bsdg" name="n1" src="bsdg0" fileName="assets/jinengdikuang.png" xy="32,1066" group="n7_f15t"/>
+    <component id="n2_bsdg" name="n2" src="bsdg8" fileName="coms/mp_bar.xml" xy="55,1259" group="n7_f15t">
+      <ProgressBar value="50" max="100"/>
+    </component>
+    <component id="n9_f15t" name="c0" src="f15ts" fileName="coms/card.xml" pkg="evwornmp" xy="48,1094" group="n7_f15t"/>
+    <component id="n10_f15t" name="c1" src="f15ts" fileName="coms/card.xml" pkg="evwornmp" xy="175,1094" group="n7_f15t"/>
+    <component id="n11_f15t" name="c2" src="f15ts" fileName="coms/card.xml" pkg="evwornmp" xy="302,1094" group="n7_f15t"/>
+    <component id="n12_f15t" name="c3" src="f15ts" fileName="coms/card.xml" pkg="evwornmp" xy="429,1094" group="n7_f15t"/>
+    <component id="n13_f15t" name="c4" src="f15ts" fileName="coms/card.xml" pkg="evwornmp" xy="556,1094" group="n7_f15t"/>
+    <text id="n14_f5la" name="mp" xy="33,1244" size="23,40" group="n7_f15t" fontSize="32" color="#ff66ff" shadowColor="#000000" shadowOffset="1,1" text="0"/>
+    <group id="n7_f15t" name="n7" xy="32,1066" size="656,218" advanced="true">
+      <relation target="" sidePair="center-center,bottom-bottom"/>
+    </group>
+  </displayList>
+</component>

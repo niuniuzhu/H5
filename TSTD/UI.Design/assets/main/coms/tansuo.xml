@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="720,1280" designImageAlpha="60" designImageLayer="1">
+  <controller name="c1" pages="0,,1," selected="0"/>
+  <displayList>
+    <component id="n1_u0cg" name="n1" src="k6nj8" fileName="coms/panel2.xml" pkg="evwornmp" xy="0,0">
+      <Label icon="ui://dhvv3tkxu0cg3t"/>
+    </component>
+    <component id="n2_u0cg" name="search_btn" src="k6nj2" fileName="coms/button1.xml" pkg="evwornmp" xy="245,494">
+      <gearDisplay controller="c1" pages="0"/>
+      <Button icon="ui://dhvv3tkxu0cg3r" controller="c1" page="1"/>
+    </component>
+    <component id="n3_u0cg" name="back_btn" src="k6nj3" fileName="coms/button2.xml" pkg="evwornmp" xy="244,698">
+      <gearDisplay controller="c1" pages="0"/>
+      <Button icon="ui://dhvv3tkxu0cg3q"/>
+    </component>
+    <component id="n4_u0cg" name="n4" src="k6nj7" fileName="coms/panel1.xml" pkg="evwornmp" xy="93,359" group="n13_u0cg"/>
+    <component id="n5_u0cg" name="n5" src="d7xv2t" fileName="coms/头像.xml" xy="302,423" group="n13_u0cg"/>
+    <image id="n6_u0cg" name="n6" src="u0cg3v" fileName="assets/tansuo/wenzidi.png" xy="218,584" group="n13_u0cg"/>
+    <image id="n7_u0cg" name="n7" src="u0cg3v" fileName="assets/tansuo/wenzidi.png" xy="218,640" group="n13_u0cg"/>
+    <image id="n8_u0cg" name="n8" src="u0cg3v" fileName="assets/tansuo/wenzidi.png" xy="218,696" group="n13_u0cg"/>
+    <text id="n9_u0cg" name="name" xy="222,588" size="40,36" group="n13_u0cg" fontSize="28" color="#ffffff" text=""/>
+    <text id="n10_u0cg" name="type" xy="222,645" size="40,36" group="n13_u0cg" fontSize="28" color="#ffffff" text=""/>
+    <text id="n12_u0cg" name="lv" xy="222,702" size="69,36" group="n13_u0cg" fontSize="28" color="#ffffff" text="等级:"/>
+    <text id="n11_u0cg" name="lvl" xy="302,702" size="40,36" group="n13_u0cg" fontSize="28" color="#ffffff" text=""/>
+    <component id="n14_u0cg" name="n14" src="k6nj3" fileName="coms/button2.xml" pkg="evwornmp" xy="116,791" group="n13_u0cg">
+      <Button icon="ui://dhvv3tkxu0cg3q" controller="c1" page="0"/>
+    </component>
+    <component id="n15_u0cg" name="atk_btn" src="k6nj2" fileName="coms/button1.xml" pkg="evwornmp" xy="372,791" group="n13_u0cg">
+      <Button icon="ui://dhvv3tkxu0cg3s"/>
+    </component>
+    <group id="n13_u0cg" name="n13" xy="93,359" size="533,562" advanced="true">
+      <gearDisplay controller="c1" pages="1"/>
+    </group>
+  </displayList>
+</component>
