@@ -1970,13 +1970,17 @@ var View;
         class FightPanel {
             constructor(owner) {
                 this._owner = owner;
-                this._root = owner.root.getChild("c4").asCom;
+                this._root = owner.root.getChild("c6").asCom;
+                this._gesture = new UI.GestureComponent(this._root);
             }
             Dispose() {
+                this._gesture.Dispose();
             }
             Enter() {
+                this._gesture.Enter();
             }
             Exit() {
+                this._gesture.Exit();
             }
             Update(deltaTime) {
             }
@@ -1984,6 +1988,230 @@ var View;
             }
         }
         UI.FightPanel = FightPanel;
+    })(UI = View.UI || (View.UI = {}));
+})(View || (View = {}));
+var View;
+(function (View) {
+    var UI;
+    (function (UI) {
+        class GestureComponent {
+            constructor(root) {
+                this._root = root;
+                this._line = this._root.getChild("line").asCom;
+                this._keypad = this._root.getChild("keypad").asCom;
+                this._keypad.displayObject.on(Laya.Event.MOUSE_DOWN, this, this.OnTouchBegin);
+                this._keys = [];
+                for (let i = 0; i < 9; ++i) {
+                    this._keys.push(new UI.KeyComponent(this._keypad.getChild("n" + i).asCom, i));
+                }
+                this._keyRadius = this._keys[0].width * 0.5;
+                this._keyLine = new UI.KeyLineComponent();
+                this._touched = [];
+                this._lines = [];
+            }
+            Dispose() {
+                this._keyLine.Dispose();
+            }
+            Enter() {
+                let graph = RC.Algorithm.Graph.Graph2D.CreateFullDigraph(3, 3);
+                let path = RC.Algorithm.Graph.GraphSearcher.MazeSearch(graph, 0, 7, RC.Numerics.MathUtils.Random);
+                for (let p of path)
+                    this._keys[p].selectedIndex = 1;
+                for (let i = 0; i < path.length - 1; ++i) {
+                    let curPoint = graph.IndexToCoord(path[i]);
+                    let nextPoint = graph.IndexToCoord(path[i + 1]);
+                    let curPos = new RC.Numerics.Vec2(curPoint[0], curPoint[1]);
+                    let nextPos = new RC.Numerics.Vec2(nextPoint[0], nextPoint[1]);
+                    let dir = RC.Numerics.Vec2.Sub(nextPos, curPos);
+                    dir.Normalize();
+                    let angle = RC.Numerics.Vec2.Dot(RC.Numerics.Vec2.up, dir);
+                    angle = RC.Numerics.MathUtils.Clamp(angle, -1, 1);
+                    angle = RC.Numerics.MathUtils.RadToDeg(RC.Numerics.MathUtils.Acos(angle));
+                    let sign = dir.x > 0 ? -1 : 1;
+                    this._keys[path[i]].rotation = angle * sign;
+                }
+                this._path = path;
+            }
+            Exit() {
+                for (let key of this._keys) {
+                    key.touched = false;
+                    key.selectedIndex = 0;
+                }
+                this._touched.splice(0);
+                for (let line of this._lines)
+                    line.dispose();
+                this._lines.splice(0);
+            }
+            Update(deltaTime) {
+            }
+            OnResize(e) {
+            }
+            OnTouchBegin(e) {
+                fairygui.GRoot.inst.displayObject.on(Laya.Event.MOUSE_MOVE, this, this.OnTouchMove);
+                fairygui.GRoot.inst.displayObject.on(Laya.Event.MOUSE_UP, this, this.OnTouchEnd);
+            }
+            OnTouchMove(e) {
+                let p = this._keypad.globalToLocal(e.stageX, e.stageY);
+                let v = new RC.Numerics.Vec2(p.x, p.y);
+                let key = this.PointOverKey(v, this._keyRadius);
+                if (key != null && this._touched.indexOf(key) < 0) {
+                    key.touched = true;
+                    if (this._touched.length > 0)
+                        this.UpdateVisual(key, this._touched[this._touched.length - 1]);
+                    this._touched.push(key);
+                    this._keyLine.AttachTo(key);
+                    if (this._touched.length == this._path.length) {
+                        this.HandleTouchEnd();
+                        return;
+                    }
+                }
+                this._keyLine.UpdateVisual(v);
+            }
+            OnTouchEnd(e) {
+                this.HandleTouchEnd();
+            }
+            HandleTouchEnd() {
+                fairygui.GRoot.inst.displayObject.off(Laya.Event.MOUSE_MOVE, this, this.OnTouchMove);
+                fairygui.GRoot.inst.displayObject.off(Laya.Event.MOUSE_UP, this, this.OnTouchEnd);
+                this._keyLine.Detach();
+                if (this._touched.length != this._path.length)
+                    this.HandleIncorrectGesture();
+                else {
+                    let pass = true;
+                    for (let i = 0; i < this._path.length; ++i) {
+                        if (this._path[i] != this._touched[i].id) {
+                            pass = false;
+                            break;
+                        }
+                    }
+                    if (pass)
+                        this.HandleCorrectGesture();
+                    else
+                        this.HandleIncorrectGesture();
+                }
+            }
+            HandleCorrectGesture() {
+                console.log("t");
+            }
+            HandleIncorrectGesture() {
+                console.log("f");
+            }
+            UpdateVisual(key, lastKey) {
+                let line = fairygui.UIPackage.createObject("main", "key_line").asCom;
+                this._lines.push(line);
+                line.setXY(lastKey.x, lastKey.y);
+                this._line.addChild(line);
+                let orgiPos = new RC.Numerics.Vec2(lastKey.x, lastKey.y);
+                let curPos = new RC.Numerics.Vec2(key.x, key.y);
+                let vec = RC.Numerics.Vec2.Sub(curPos, orgiPos);
+                let dist = vec.Magnitude();
+                line.height = dist;
+                if (dist == 0)
+                    return;
+                let dir = RC.Numerics.Vec2.DivN(vec, dist);
+                let angle = RC.Numerics.Vec2.Dot(RC.Numerics.Vec2.up, dir);
+                angle = RC.Numerics.MathUtils.Clamp(angle, -1, 1);
+                angle = RC.Numerics.MathUtils.RadToDeg(RC.Numerics.MathUtils.Acos(angle));
+                let sign = dir.x > 0 ? -1 : 1;
+                line.rotation = angle * sign;
+            }
+            ClearKeypadsStates() {
+                for (let key of this._keys)
+                    key.touched = false;
+            }
+            PointOverKey(v, radius) {
+                let r2 = radius * radius;
+                for (let key of this._keys) {
+                    let dx = v.x - key.x;
+                    let dy = v.y - key.y;
+                    if (dx * dx + dy * dy < r2) {
+                        return key;
+                    }
+                }
+                return null;
+            }
+        }
+        UI.GestureComponent = GestureComponent;
+    })(UI = View.UI || (View.UI = {}));
+})(View || (View = {}));
+var View;
+(function (View) {
+    var UI;
+    (function (UI) {
+        class KeyComponent {
+            constructor(com, id) {
+                this._com = com;
+                this._id = id;
+                this._controller = this._com.getController("c1");
+            }
+            get id() { return this._id; }
+            get parent() { return this._com.parent; }
+            get x() { return this._com.x; }
+            get y() { return this._com.y; }
+            get width() { return this._com.width; }
+            set width(value) { this._com.width = value; }
+            get height() { return this._com.height; }
+            set height(value) { this._com.height = value; }
+            get selectedIndex() { return this._controller.selectedIndex; }
+            set selectedIndex(value) { this._controller.selectedIndex = value; }
+            get rotation() { return this._com.rotation; }
+            set rotation(value) { this._com.rotation = value; }
+            get touched() { return this._touched; }
+            set touched(value) {
+                if (this._touched == value)
+                    return;
+                this._touched = true;
+                this._com.getChild("n0").asCom.getController("c1").selectedIndex = this._touched ? 1 : 0;
+                this._com.getChild("n1").asCom.getController("c1").selectedIndex = this._touched ? 1 : 0;
+            }
+            AddChild(child) {
+                this._com.addChild(child);
+            }
+            RemoveChild(child) {
+                this._com.removeChild(child);
+            }
+        }
+        UI.KeyComponent = KeyComponent;
+    })(UI = View.UI || (View.UI = {}));
+})(View || (View = {}));
+var View;
+(function (View) {
+    var UI;
+    (function (UI) {
+        class KeyLineComponent {
+            constructor() {
+                this._com = fairygui.UIPackage.createObject("main", "key_line").asCom;
+            }
+            Dispose() {
+                this._com.dispose();
+            }
+            AttachTo(key) {
+                this.Detach();
+                key.parent.addChild(this._com);
+                this._com.setXY(key.x, key.y);
+                this._attached = key;
+            }
+            Detach() {
+                if (this._com.parent != null)
+                    this._com.parent.removeChild(this._com);
+            }
+            UpdateVisual(v) {
+                let orgiPos = new RC.Numerics.Vec2(this._attached.x, this._attached.y);
+                let curPos = new RC.Numerics.Vec2(v.x, v.y);
+                let vec = RC.Numerics.Vec2.Sub(curPos, orgiPos);
+                let dist = vec.Magnitude();
+                this._com.height = dist;
+                if (dist == 0)
+                    return;
+                let dir = RC.Numerics.Vec2.DivN(vec, dist);
+                let angle = RC.Numerics.Vec2.Dot(RC.Numerics.Vec2.up, dir);
+                angle = RC.Numerics.MathUtils.Clamp(angle, -1, 1);
+                angle = RC.Numerics.MathUtils.RadToDeg(RC.Numerics.MathUtils.Acos(angle));
+                let sign = dir.x > 0 ? -1 : 1;
+                this._com.rotation = angle * sign;
+            }
+        }
+        UI.KeyLineComponent = KeyLineComponent;
     })(UI = View.UI || (View.UI = {}));
 })(View || (View = {}));
 var View;
@@ -2247,20 +2475,20 @@ var View;
                 this._root.height = fairygui.GRoot.inst.height;
                 this._root.addRelation(fairygui.GRoot.inst, fairygui.RelationType.Size);
                 this._zcPanel = new UI.ZCPanel(this);
-                this._searchPanel = new UI.SearchPanel(this);
-                this._lingshouPanel = new UI.LingshouPanel(this);
-                this._taskPanel = new UI.TaskPabel(this);
-                this._fightPanel = new UI.FightPanel(this);
-                this._userInfoPanel = new UI.UserInfoPanel(this);
                 this._msgPanel = new UI.MsgPanel(this);
+                this._searchPanel = new UI.SearchPanel(this);
+                this._taskPanel = new UI.TaskPabel(this);
+                this._lingshouPanel = new UI.LingshouPanel(this);
+                this._userInfoPanel = new UI.UserInfoPanel(this);
+                this._fightPanel = new UI.FightPanel(this);
                 this._controller = this._root.getController("c1");
                 this._panels.push(this._zcPanel);
-                this._panels.push(this._searchPanel);
-                this._panels.push(this._lingshouPanel);
-                this._panels.push(this._taskPanel);
-                this._panels.push(this._fightPanel);
-                this._panels.push(this._userInfoPanel);
                 this._panels.push(this._msgPanel);
+                this._panels.push(this._searchPanel);
+                this._panels.push(this._taskPanel);
+                this._panels.push(this._lingshouPanel);
+                this._panels.push(this._userInfoPanel);
+                this._panels.push(this._fightPanel);
             }
             Leave() {
                 for (let p of this._panels)

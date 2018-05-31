@@ -44,21 +44,21 @@ namespace View.UI {
 			this._root.addRelation(fairygui.GRoot.inst, fairygui.RelationType.Size);
 
 			this._zcPanel = new ZCPanel(this);
-			this._searchPanel = new SearchPanel(this);
-			this._lingshouPanel = new LingshouPanel(this);
-			this._taskPanel = new TaskPabel(this);
-			this._fightPanel = new FightPanel(this);
-			this._userInfoPanel = new UserInfoPanel(this);
 			this._msgPanel = new MsgPanel(this);
+			this._searchPanel = new SearchPanel(this);
+			this._taskPanel = new TaskPabel(this);
+			this._lingshouPanel = new LingshouPanel(this);
+			this._userInfoPanel = new UserInfoPanel(this);
+			this._fightPanel = new FightPanel(this);
 
 			this._controller = this._root.getController("c1");
 			this._panels.push(this._zcPanel);
-			this._panels.push(this._searchPanel);
-			this._panels.push(this._lingshouPanel);
-			this._panels.push(this._taskPanel);
-			this._panels.push(this._fightPanel);
-			this._panels.push(this._userInfoPanel);
 			this._panels.push(this._msgPanel);
+			this._panels.push(this._searchPanel);
+			this._panels.push(this._taskPanel);
+			this._panels.push(this._lingshouPanel);
+			this._panels.push(this._userInfoPanel);
+			this._panels.push(this._fightPanel);
 		}
 
 		public Leave(): void {

@@ -1,5 +1,34 @@
 namespace RC.Algorithm.Graph {
 	export class GraphSearcher {
+		public static MazeSearch(graph: GraphBase, start: number, maxStep: number, rndFunc: (min: number, max: number) => number): number[] {
+			let visitedNodes: number[] = [];
+			let edges: GraphEdge[] = [];
+			let curStep = 0;
+			let node = graph.GetNodeAt(start);
+			while (node != null) {
+				if (maxStep >= 0 && curStep == maxStep)
+					break;
+				visitedNodes.push(node.index);
+				edges.splice(0);
+				let allVisited = true;
+				// 检查各边的目标节点是否已被访问
+				for (let edge of node.edges) {
+					if (visitedNodes.indexOf(edge.to) < 0) {
+						allVisited = false;
+						edges.push(edge);
+					}
+				}
+				if (allVisited)
+					break;
+
+				// 随机选取一条边
+				let edge = edges[RC.Numerics.MathUtils.Floor(rndFunc(0, edges.length))];
+				node = graph.GetNodeAt(edge.to);
+				++curStep;
+			}
+			return visitedNodes;
+		}
+
 		public static PrimSearch(graph: GraphBase, start: number): GraphEdge[] {
 			let shortestPathPredecessors: GraphEdge[] = [];
 			let visitedNodes = new Set<number>();

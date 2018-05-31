@@ -30,15 +30,38 @@ namespace RC.Algorithm.Graph {
 						node.AddEdge(cur, cur + 1, rndFunc == null ? 0 : rndFunc(cur + 1));
 					if (j > 0)
 						node.AddEdge(cur, cur - 1, rndFunc == null ? 0 : rndFunc(cur - 1));
+					if (i < r - 1)
+						node.AddEdge(cur, cur + c, rndFunc == null ? 0 : rndFunc(cur + c));
+					if (i > 0)
+						node.AddEdge(cur, cur - c, rndFunc == null ? 0 : rndFunc(cur - c));
+					if (j < c - 1 && i < r - 1)
+						node.AddEdge(cur, cur + c + 1, rndFunc == null ? 0 : rndFunc(cur + 1));
+					if (j > 0 && i < r - 1)
+						node.AddEdge(cur, cur + c - 1, rndFunc == null ? 0 : rndFunc(cur + 1));
+					if (j < c - 1 && i > 0)
+						node.AddEdge(cur, cur - c + 1, rndFunc == null ? 0 : rndFunc(cur + 1));
+					if (j > 0 && i > 0)
+						node.AddEdge(cur, cur - c - 1, rndFunc == null ? 0 : rndFunc(cur + 1));
 				}
 			}
-			for (let i = 0; i < c; i++) {
-				for (let j = 0; j < r; j++) {
-					let cur = j * c + i;
+			return graph;
+		}
+
+		public static CreateHVDigraph(row: number, col: number, rndFunc?: (index: number) => number): Graph2D {
+			let graph = new Graph2D(row, col);
+			let r = graph.row;
+			let c = graph.col;
+			for (let i = 0; i < r; i++) {
+				for (let j = 0; j < c; j++) {
+					let cur = i * c + j;
 					let node = graph.GetNodeAt(cur);
-					if (j < r - 1)
-						node.AddEdge(cur, cur + c, rndFunc == null ? 0 : rndFunc(cur + c));
+					if (j < c - 1)
+						node.AddEdge(cur, cur + 1, rndFunc == null ? 0 : rndFunc(cur + 1));
 					if (j > 0)
+						node.AddEdge(cur, cur - 1, rndFunc == null ? 0 : rndFunc(cur - 1));
+					if (i < r - 1)
+						node.AddEdge(cur, cur + c, rndFunc == null ? 0 : rndFunc(cur + c));
+					if (i > 0)
 						node.AddEdge(cur, cur - c, rndFunc == null ? 0 : rndFunc(cur - c));
 				}
 			}

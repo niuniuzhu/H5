@@ -1,2 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="138,51"/>
+<component size="720,1280">
+  <displayList>
+    <component id="n2_ja73" name="line" src="yer1u" fileName="coms/place.xml" xy="85,365"/>
+    <component id="n0_u0cg" name="keypad" src="u0cg49" fileName="coms/keypad.xml" xy="85,365"/>
+  </displayList>
+</component>

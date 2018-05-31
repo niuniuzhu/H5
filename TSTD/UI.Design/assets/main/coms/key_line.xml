@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="20,20" pivot="0.5,0" anchor="true">
+  <displayList>
+    <graph id="n1_ja73" name="n1" xy="0,-10" size="20,20" type="eclipse" lineSize="0" fillColor="#db006699">
+      <relation target="" sidePair="top-top,width-width"/>
+    </graph>
+    <graph id="n2_ja73" name="n2" xy="0,10" size="20,20" type="eclipse" lineSize="0" fillColor="#db006699">
+      <relation target="" sidePair="bottom-bottom,width-width"/>
+    </graph>
+    <graph id="n0_ja73" name="n0" xy="0,0" size="20,20" type="rect" lineSize="0" fillColor="#db006699">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+  </displayList>
+</component>

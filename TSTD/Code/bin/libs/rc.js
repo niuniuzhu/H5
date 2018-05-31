@@ -4,16 +4,11 @@ var RC;
     class Test {
         constructor() {
             this._i = 0;
-            let graph = RC.Algorithm.Graph.Graph2D.CreateFullDigraph(10, 10, this.F.bind(this));
-            let path = RC.Algorithm.Graph.GraphSearcher.AStarSearch(graph, 0, 99);
+            let v = RC.Numerics.Vec2.right;
+            console.log(v.Rotate(RC.Numerics.MathUtils.DegToRad(90)));
+            let graph = RC.Algorithm.Graph.Graph2D.CreateFullDigraph(3, 3, this.F.bind(this));
+            let path = RC.Algorithm.Graph.GraphSearcher.MazeSearch(graph, 0, -1, RC.Numerics.MathUtils.Random);
             console.log(path);
-            let queue = new RC.Collections.PriorityQueue(RC.Algorithm.Graph.NumberPair.NumberCompare);
-            queue.add(new RC.Algorithm.Graph.NumberPair(1, 4));
-            queue.add(new RC.Algorithm.Graph.NumberPair(2, 3));
-            queue.add(new RC.Algorithm.Graph.NumberPair(3, 2));
-            queue.add(new RC.Algorithm.Graph.NumberPair(4, 1));
-            while (!queue.isEmpty())
-                console.log(queue.dequeue());
         }
         F(index) {
             return this._i++;
@@ -84,15 +79,37 @@ var RC;
                                 node.AddEdge(cur, cur + 1, rndFunc == null ? 0 : rndFunc(cur + 1));
                             if (j > 0)
                                 node.AddEdge(cur, cur - 1, rndFunc == null ? 0 : rndFunc(cur - 1));
+                            if (i < r - 1)
+                                node.AddEdge(cur, cur + c, rndFunc == null ? 0 : rndFunc(cur + c));
+                            if (i > 0)
+                                node.AddEdge(cur, cur - c, rndFunc == null ? 0 : rndFunc(cur - c));
+                            if (j < c - 1 && i < r - 1)
+                                node.AddEdge(cur, cur + c + 1, rndFunc == null ? 0 : rndFunc(cur + 1));
+                            if (j > 0 && i < r - 1)
+                                node.AddEdge(cur, cur + c - 1, rndFunc == null ? 0 : rndFunc(cur + 1));
+                            if (j < c - 1 && i > 0)
+                                node.AddEdge(cur, cur - c + 1, rndFunc == null ? 0 : rndFunc(cur + 1));
+                            if (j > 0 && i > 0)
+                                node.AddEdge(cur, cur - c - 1, rndFunc == null ? 0 : rndFunc(cur + 1));
                         }
                     }
-                    for (let i = 0; i < c; i++) {
-                        for (let j = 0; j < r; j++) {
-                            let cur = j * c + i;
+                    return graph;
+                }
+                static CreateHVDigraph(row, col, rndFunc) {
+                    let graph = new Graph2D(row, col);
+                    let r = graph.row;
+                    let c = graph.col;
+                    for (let i = 0; i < r; i++) {
+                        for (let j = 0; j < c; j++) {
+                            let cur = i * c + j;
                             let node = graph.GetNodeAt(cur);
-                            if (j < r - 1)
-                                node.AddEdge(cur, cur + c, rndFunc == null ? 0 : rndFunc(cur + c));
+                            if (j < c - 1)
+                                node.AddEdge(cur, cur + 1, rndFunc == null ? 0 : rndFunc(cur + 1));
                             if (j > 0)
+                                node.AddEdge(cur, cur - 1, rndFunc == null ? 0 : rndFunc(cur - 1));
+                            if (i < r - 1)
+                                node.AddEdge(cur, cur + c, rndFunc == null ? 0 : rndFunc(cur + c));
+                            if (i > 0)
                                 node.AddEdge(cur, cur - c, rndFunc == null ? 0 : rndFunc(cur - c));
                         }
                     }
@@ -171,6 +188,31 @@ var RC;
         var Graph;
         (function (Graph) {
             class GraphSearcher {
+                static MazeSearch(graph, start, maxStep, rndFunc) {
+                    let visitedNodes = [];
+                    let edges = [];
+                    let curStep = 0;
+                    let node = graph.GetNodeAt(start);
+                    while (node != null) {
+                        if (maxStep >= 0 && curStep == maxStep)
+                            break;
+                        visitedNodes.push(node.index);
+                        edges.splice(0);
+                        let allVisited = true;
+                        for (let edge of node.edges) {
+                            if (visitedNodes.indexOf(edge.to) < 0) {
+                                allVisited = false;
+                                edges.push(edge);
+                            }
+                        }
+                        if (allVisited)
+                            break;
+                        let edge = edges[RC.Numerics.MathUtils.Floor(rndFunc(0, edges.length))];
+                        node = graph.GetNodeAt(edge.to);
+                        ++curStep;
+                    }
+                    return visitedNodes;
+                }
                 static PrimSearch(graph, start) {
                     let shortestPathPredecessors = [];
                     let visitedNodes = new Set();
@@ -3695,6 +3737,9 @@ var RC;
     var Numerics;
     (function (Numerics) {
         class MathUtils {
+            static Random(min, max) {
+                return Math.random() * (max - min) + min;
+            }
             static Sin(f) {
                 return Math.sin(f);
             }
@@ -4518,6 +4563,11 @@ var RC;
                 val = val > 1 ? 1 : val;
                 val = val < -1 ? -1 : val;
                 return Numerics.MathUtils.Acos(val);
+            }
+            Rotate(angle) {
+                let x = this.x * Numerics.MathUtils.Cos(angle) - this.y * Numerics.MathUtils.Sin(angle);
+                let y = this.x * Numerics.MathUtils.Sin(angle) + this.y * Numerics.MathUtils.Cos(angle);
+                return new RC.Numerics.Vec2(x, y);
             }
             EqualsTo(v) {
                 return Vec2.Equals(this, v);

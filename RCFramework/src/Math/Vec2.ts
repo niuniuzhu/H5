@@ -190,6 +190,12 @@ namespace RC.Numerics {
 			return MathUtils.Acos(val);
 		}
 
+		public Rotate(angle: number): Vec2 {
+			let x = this.x * MathUtils.Cos(angle) - this.y * MathUtils.Sin(angle);
+			let y = this.x * MathUtils.Sin(angle) + this.y * MathUtils.Cos(angle);
+			return new RC.Numerics.Vec2(x, y);
+		}
+
 		public EqualsTo(v: Vec2): boolean {
 			return Vec2.Equals(this, v);
 		}

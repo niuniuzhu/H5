@@ -67,6 +67,10 @@ namespace RC.Numerics {
 		/// </summary>
 		public static readonly NEGATIVE_INFINITY: number = Number.NEGATIVE_INFINITY;
 
+		public static Random(min: number, max: number): number {
+			return Math.random() * (max - min) + min;
+		}
+
 		/// <summary>
 		///   <para>Returns the sine of angle f in radians.</para>
 		/// </summary>

@@ -3,13 +3,11 @@
 		"global.fui,0",
 		"global@atlas0.png,1",
 		"global@atlas0_1.png,1",
-		"global@atlas_k2mt18.jpg,1",
 		"login.fui,0",
 		"login@atlas0.png,1",
 		"main.fui,0",
 		"main@atlas0.png,1",
-		"battle.fui,0",
-		"battle@atlas0.png,1"
+		"battle.fui,0"
 	],
 	"maps": {
 		"m0": {

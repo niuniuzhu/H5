@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <packageDescription id="dhvv3tkx" jpegQuality="80" compressPNG="true">
   <resources>
-    <image id="e2802" name="z_0.png" path="/assets/zc/" scale=""/>
-    <image id="e2803" name="z_1.png" path="/assets/zc/" scale=""/>
-    <image id="e2804" name="z_2.png" path="/assets/zc/" scale=""/>
-    <image id="e2805" name="z_3.png" path="/assets/zc/" scale=""/>
-    <image id="e2806" name="z_4.png" path="/assets/zc/" scale=""/>
-    <image id="e2807" name="z_5.png" path="/assets/zc/" scale=""/>
-    <image id="e2808" name="z_6.png" path="/assets/zc/" scale=""/>
-    <image id="e2809" name="z_7.png" path="/assets/zc/" scale=""/>
-    <image id="e280a" name="z_8.png" path="/assets/zc/" scale=""/>
-    <image id="e280b" name="z_9.png" path="/assets/zc/" scale=""/>
-    <image id="e280j" name="touxiangkuang.png" path="/assets/zc/" scale=""/>
-    <image id="e280k" name="xialang.png" path="/assets/zc/" scale=""/>
+    <image id="e2802" name="z_0.png" path="/assets/zc/"/>
+    <image id="e2803" name="z_1.png" path="/assets/zc/"/>
+    <image id="e2804" name="z_2.png" path="/assets/zc/"/>
+    <image id="e2805" name="z_3.png" path="/assets/zc/"/>
+    <image id="e2806" name="z_4.png" path="/assets/zc/"/>
+    <image id="e2807" name="z_5.png" path="/assets/zc/"/>
+    <image id="e2808" name="z_6.png" path="/assets/zc/"/>
+    <image id="e2809" name="z_7.png" path="/assets/zc/"/>
+    <image id="e280a" name="z_8.png" path="/assets/zc/"/>
+    <image id="e280b" name="z_9.png" path="/assets/zc/"/>
+    <image id="e280j" name="touxiangkuang.png" path="/assets/zc/"/>
+    <image id="e280k" name="xialang.png" path="/assets/zc/"/>
     <component id="e280l" name="Main.xml" path="/coms/" exported="true"/>
     <font id="e280p" name="Font1.fnt" path="/coms/" exported="true"/>
     <component id="yer1r" name="shouye.xml" path="/coms/"/>
     <component id="yer1u" name="place.xml" path="/coms/"/>
     <component id="yer1x" name="lingshou.xml" path="/coms/"/>
-    <image id="yer11e" name="biaoti06.png" path="/assets/task/" scale=""/>
-    <image id="yer11g" name="kuang06.png" path="/assets/task/" scale=""/>
+    <image id="yer11e" name="biaoti06.png" path="/assets/task/"/>
+    <image id="yer11g" name="kuang06.png" path="/assets/task/"/>
     <component id="yer11v" name="task.xml" path="/coms/"/>
     <component id="yer11w" name="task_item.xml" path="/coms/"/>
     <component id="d7xv2s" name="user.xml" path="/coms/"/>
@@ -66,6 +66,42 @@
     <image id="u0cg46" name="heidi02.png" path="/assets/user/"/>
     <image id="u0cg47" name="kuang04.png" path="/assets/user/"/>
     <component id="u0cg48" name="fight.xml" path="/coms/"/>
+    <component id="u0cg49" name="keypad.xml" path="/coms/"/>
+    <component id="u0cg4a" name="key.xml" path="/coms/"/>
+    <image id="u0cg4b" name="p1.png" path="/assets/fight/"/>
+    <image id="u0cg4c" name="p0.png" path="/assets/fight/"/>
+    <component id="ja734d" name="key_state_1.xml" path="/coms/"/>
+    <component id="ja734e" name="key_state_2.xml" path="/coms/"/>
+    <image id="ja734f" name="p1_0.png" path="/assets/fight/"/>
+    <image id="ja734g" name="p0_0.png" path="/assets/fight/"/>
+    <component id="ja734h" name="key_line.xml" path="/coms/" exported="true"/>
+    <image id="ja734i" name="04战斗02.jpg" path="/assets/fight/"/>
+    <image id="ja734j" name="04战斗03.jpg" path="/assets/fight/"/>
+    <image id="ja734k" name="04战斗01.jpg" path="/assets/fight/"/>
+    <image id="ja734l" name="naili.png" path="/assets/fight/"/>
+    <image id="ja734m" name="naili_01.png" path="/assets/fight/"/>
+    <image id="ja734n" name="naili_02.png" path="/assets/fight/"/>
+    <image id="ja734o" name="naili_03.png" path="/assets/fight/"/>
+    <image id="ja734p" name="shengli.png" path="/assets/fight/"/>
+    <image id="ja734q" name="shenglidi.png" path="/assets/fight/"/>
+    <image id="ja734r" name="shenglitouxiang.png" path="/assets/fight/"/>
+    <image id="ja734s" name="shibai.png" path="/assets/fight/"/>
+    <image id="ja734t" name="xingxing01.png" path="/assets/fight/"/>
+    <image id="ja734u" name="xingxing01.png2.png" path="/assets/fight/"/>
+    <image id="ja734v" name="anniuwenzi_10.png" path="/assets/fight/"/>
+    <image id="ja734w" name="anniuwenzi_11.png" path="/assets/fight/"/>
+    <image id="ja734x" name="anniuwenzi_12.png" path="/assets/fight/"/>
+    <image id="ja734y" name="di02.png" path="/assets/fight/"/>
+    <image id="ja734z" name="dumiao_0.png" path="/assets/fight/"/>
+    <image id="ja7350" name="dumiao_1.png" path="/assets/fight/"/>
+    <image id="ja7351" name="dumiao_2.png" path="/assets/fight/"/>
+    <image id="ja7352" name="dumiao_3.png" path="/assets/fight/"/>
+    <image id="ja7353" name="dumiao_4.png" path="/assets/fight/"/>
+    <image id="ja7354" name="dumiao_5.png" path="/assets/fight/"/>
+    <image id="ja7355" name="dumiao_6.png" path="/assets/fight/"/>
+    <image id="ja7356" name="dumiao_7.png" path="/assets/fight/"/>
+    <image id="ja7357" name="dumiao_8.png" path="/assets/fight/"/>
+    <image id="ja7358" name="dumiao_9.png" path="/assets/fight/"/>
   </resources>
   <publish name="main" npot="true"/>
 </packageDescription>

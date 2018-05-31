@@ -4,16 +4,9 @@ var RC;
     class Test {
         constructor() {
             this._i = 0;
-            let graph = RC.Algorithm.Graph.Graph2D.CreateFullDigraph(10, 10, this.F.bind(this));
-            let path = RC.Algorithm.Graph.GraphSearcher.AStarSearch(graph, 0, 99);
+            let graph = RC.Algorithm.Graph.Graph2D.CreateHVDigraph(3, 3, this.F.bind(this));
+            let path = RC.Algorithm.Graph.GraphSearcher.MazeSearch(graph, 0, -1, RC.Numerics.MathUtils.Random);
             console.log(path);
-            let queue = new RC.Collections.PriorityQueue(RC.Algorithm.Graph.NumberPair.NumberCompare);
-            queue.add(new RC.Algorithm.Graph.NumberPair(1, 4));
-            queue.add(new RC.Algorithm.Graph.NumberPair(2, 3));
-            queue.add(new RC.Algorithm.Graph.NumberPair(3, 2));
-            queue.add(new RC.Algorithm.Graph.NumberPair(4, 1));
-            while (!queue.isEmpty())
-                console.log(queue.dequeue());
         }
         F(index) {
             return this._i++;
@@ -72,7 +65,7 @@ var RC;
                 GetNode(row, col) {
                     return this.GetNodeAt(row * this.col + col);
                 }
-                static CreateFullDigraph(row, col, rndFunc) {
+                static CreateHVDigraph(row, col, rndFunc) {
                     let graph = new Graph2D(row, col);
                     let r = graph.row;
                     let c = graph.col;
@@ -171,6 +164,31 @@ var RC;
         var Graph;
         (function (Graph) {
             class GraphSearcher {
+                static MazeSearch(graph, start, maxStep, rndFunc) {
+                    let visitedNodes = [];
+                    let edges = [];
+                    let curStep = 0;
+                    let node = graph.GetNodeAt(start);
+                    while (node != null) {
+                        if (maxStep >= 0 && curStep == maxStep)
+                            break;
+                        visitedNodes.push(node.index);
+                        edges.splice(0);
+                        let allVisited = true;
+                        for (let edge of node.edges) {
+                            if (visitedNodes.indexOf(edge.to) < 0) {
+                                allVisited = false;
+                                edges.push(edge);
+                            }
+                        }
+                        if (allVisited)
+                            break;
+                        let edge = edges[RC.Numerics.MathUtils.Floor(rndFunc(0, edges.length))];
+                        node = graph.GetNodeAt(edge.to);
+                        ++curStep;
+                    }
+                    return visitedNodes;
+                }
                 static PrimSearch(graph, start) {
                     let shortestPathPredecessors = [];
                     let visitedNodes = new Set();
@@ -3695,6 +3713,9 @@ var RC;
     var Numerics;
     (function (Numerics) {
         class MathUtils {
+            static Random(min, max) {
+                return Math.random() * (max - min) + min;
+            }
             static Sin(f) {
                 return Math.sin(f);
             }

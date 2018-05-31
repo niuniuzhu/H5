@@ -25,6 +25,7 @@ declare namespace RC.Algorithm.Graph {
         constructor(row: number, col: number);
         GetNode(row: number, col: number): GraphNode | undefined;
         static CreateFullDigraph(row: number, col: number, rndFunc?: (index: number) => number): Graph2D;
+        static CreateHVDigraph(row: number, col: number, rndFunc?: (index: number) => number): Graph2D;
         CoordToIndex(x: number, y: number): number;
         IndexToCoord(index: number): number[];
     }
@@ -53,6 +54,7 @@ declare namespace RC.Algorithm.Graph {
 }
 declare namespace RC.Algorithm.Graph {
     class GraphSearcher {
+        static MazeSearch(graph: GraphBase, start: number, maxStep: number, rndFunc: (min: number, max: number) => number): number[];
         static PrimSearch(graph: GraphBase, start: number): GraphEdge[];
         static AStarSearch(graph: GraphBase, start: number, end: number): number[];
     }
@@ -635,6 +637,7 @@ declare namespace RC.Numerics {
         static readonly RAD_TO_DEG: number;
         static readonly INFINITY: number;
         static readonly NEGATIVE_INFINITY: number;
+        static Random(min: number, max: number): number;
         static Sin(f: number): number;
         static Cos(f: number): number;
         static Tan(f: number): number;
@@ -767,6 +770,7 @@ declare namespace RC.Numerics {
         AproxEqualsBox(vector: Vec2, tolerance: number): boolean;
         ApproxEquals(vector: Vec2, tolerance: number): boolean;
         Angle(vector: Vec2): number;
+        Rotate(angle: number): Vec2;
         EqualsTo(v: Vec2): boolean;
         ToString(): string;
         static Add(v1: Vec2, v2: Vec2): Vec2;

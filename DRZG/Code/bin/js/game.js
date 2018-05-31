@@ -1498,7 +1498,7 @@ var View;
                 this._mapData.push(pixels[i]);
             }
             image.dispose();
-            this._graph = RC.Algorithm.Graph.Graph2D.CreateFullDigraph(texture.height, texture.width, this.GetCost.bind(this));
+            this._graph = RC.Algorithm.Graph.Graph2D.CreateHVDigraph(texture.height, texture.width, this.GetCost.bind(this));
         }
         GetCost(index) {
             return this._mapData[index];

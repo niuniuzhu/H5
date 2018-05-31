@@ -12,6 +12,36 @@
     <sound id="k6njc" name="click.wav" path="/assets/" exported="true"/>
     <image id="u0cg19" name="bg01.png" path="/assets/" exported="true" qualityOption="custom" quality="70"/>
     <image id="u0cg1a" name="shanglang.png" path="/assets/"/>
+    <movieclip id="ja731b" name="1.jta" path="/assets/models/草食系/" exported="true"/>
+    <movieclip id="ja731c" name="2.jta" path="/assets/models/草食系/" exported="true"/>
+    <movieclip id="ja731d" name="3.jta" path="/assets/models/草食系/" exported="true"/>
+    <movieclip id="ja731e" name="4.jta" path="/assets/models/草食系/" exported="true"/>
+    <movieclip id="ja731f" name="5.jta" path="/assets/models/草食系/" exported="true"/>
+    <movieclip id="ja731g" name="1.jta" path="/assets/models/猛兽系/" exported="true"/>
+    <movieclip id="ja731h" name="2.jta" path="/assets/models/猛兽系/" exported="true"/>
+    <movieclip id="ja731i" name="3.jta" path="/assets/models/猛兽系/" exported="true"/>
+    <movieclip id="ja731j" name="4.jta" path="/assets/models/猛兽系/" exported="true"/>
+    <movieclip id="ja731k" name="5.jta" path="/assets/models/猛兽系/" exported="true"/>
+    <movieclip id="ja731l" name="1.jta" path="/assets/models/鸟系/" exported="true"/>
+    <movieclip id="ja731m" name="2.jta" path="/assets/models/鸟系/" exported="true"/>
+    <movieclip id="ja731n" name="3.jta" path="/assets/models/鸟系/" exported="true"/>
+    <movieclip id="ja731o" name="4.jta" path="/assets/models/鸟系/" exported="true"/>
+    <movieclip id="ja731p" name="5.jta" path="/assets/models/鸟系/" exported="true"/>
+    <movieclip id="ja731w" name="1.jta" path="/assets/models/神兽系/" exported="true"/>
+    <movieclip id="ja731x" name="2.jta" path="/assets/models/神兽系/" exported="true"/>
+    <movieclip id="ja731y" name="3.jta" path="/assets/models/神兽系/" exported="true"/>
+    <movieclip id="ja731z" name="4.jta" path="/assets/models/神兽系/" exported="true"/>
+    <movieclip id="ja7320" name="5.jta" path="/assets/models/神兽系/" exported="true"/>
+    <movieclip id="ja7321" name="1.jta" path="/assets/models/水系/" exported="true"/>
+    <movieclip id="ja7322" name="2.jta" path="/assets/models/水系/" exported="true"/>
+    <movieclip id="ja7323" name="3.jta" path="/assets/models/水系/" exported="true"/>
+    <movieclip id="ja7324" name="4.jta" path="/assets/models/水系/" exported="true"/>
+    <movieclip id="ja7325" name="5.jta" path="/assets/models/水系/" exported="true"/>
+    <movieclip id="ja7326" name="2.jta" path="/assets/models/神灵系/" exported="true"/>
+    <movieclip id="ja7327" name="1.jta" path="/assets/models/神灵系/" exported="true"/>
+    <movieclip id="ja7329" name="5.jta" path="/assets/models/神灵系/" exported="true"/>
+    <movieclip id="ja732d" name="3.jta" path="/assets/models/神灵系/" exported="true"/>
+    <movieclip id="ja732e" name="4.jta" path="/assets/models/神灵系/" exported="true"/>
   </resources>
   <publish name="global" npot="true"/>
 </packageDescription>

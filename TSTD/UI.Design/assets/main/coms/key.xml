@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="100,100" pivot="0.5,0.5" anchor="true">
+  <controller name="c1" pages="0,,1," selected="0"/>
+  <displayList>
+    <component id="n0_u0cg" name="n0" src="ja734d" fileName="coms/key_state_1.xml" xy="0,0"/>
+    <component id="n1_u0cg" name="n1" src="ja734e" fileName="coms/key_state_2.xml" xy="0,0">
+      <gearDisplay controller="c1" pages="1"/>
+    </component>
+  </displayList>
+</component>
