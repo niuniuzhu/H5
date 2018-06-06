@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="496,22" extention="ProgressBar">
+  <displayList>
+    <image id="n0_tbt3" name="n0" src="tbt35q" fileName="assets/fight/tunshi_01.png" xy="0,0"/>
+    <image id="n1_tbt3" name="bar" src="tbt35r" fileName="assets/fight/tunshi_02.png" xy="0,0"/>
+  </displayList>
+  <ProgressBar/>
+</component>

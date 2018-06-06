@@ -2,7 +2,6 @@ namespace View.UI {
 	export class UIManager {
 		private static _login: UILogin;
 		private static _main: UIMain;
-		private static _battle: UIBattle;
 		private static _currModule: IUIModule;
 
 		public static get login(): UILogin { return this._login; }
@@ -18,7 +17,6 @@ namespace View.UI {
 
 			this._login = new UILogin();
 			this._main = new UIMain();
-			this._battle = new UIBattle();
 		}
 
 		public static Dispose(): void {
@@ -57,10 +55,6 @@ namespace View.UI {
 
 		public static EnterMain(): void {
 			this.EnterModule(this._main);
-		}
-
-		public static EnterBattle(...param: any[]): void {
-			this.EnterModule(this._battle, param);
 		}
 	}
 }

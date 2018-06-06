@@ -1,15 +1,16 @@
 namespace View.UI {
 	export class UIMain implements IUIModule {
-		private _root: fairygui.GComponent;
-		private _controller: fairygui.Controller;
+		private readonly _root: fairygui.GComponent;
+		private readonly _controller: fairygui.Controller;
 		private readonly _panels: IMainPanel[];
-		private _zcPanel: ZCPanel;
-		private _searchPanel: SearchPanel;
-		private _lingshouPanel: LingshouPanel;
-		private _taskPanel: TaskPabel;
-		private _fightPanel: FightPanel;
-		private _userInfoPanel: UserInfoPanel;
-		private _msgPanel: MsgPanel;
+		private readonly _zcPanel: ZCPanel;
+		private readonly _searchPanel: SearchPanel;
+		private readonly _lingshouPanel: LingshouPanel;
+		private readonly _taskPanel: TaskPabel;
+		private readonly _userInfoPanel: UserInfoPanel;
+		private readonly _msgPanel: MsgPanel;
+		private readonly _fightPanel: FightPanel;
+		private readonly _resultPanel: ResultPanel;
 
 		public get root(): fairygui.GComponent { return this._root; }
 		public get zcPanel(): ZCPanel { return this._zcPanel; }
@@ -19,29 +20,35 @@ namespace View.UI {
 		public get userInfoPanel(): UserInfoPanel { return this._userInfoPanel; }
 		public get linghouPanel(): LingshouPanel { return this._lingshouPanel; }
 		public get fightPanel(): FightPanel { return this._fightPanel; }
+		public get resultPanel(): ResultPanel { return this._resultPanel; }
 
 		public set panelIndex(value: number) {
 			if (this._controller.selectedIndex == value)
 				return;
-			this._panels[this._controller.selectedIndex].Exit();
-			this._panels[value].Enter();
 			this._controller.selectedIndex = value;
 		}
 
+		private _lastIndex: number;
+
 		constructor() {
 			fairygui.UIPackage.addPackage("res/ui/main");
-			this._panels = [];
-		}
 
-		public Dispose(): void {
-		}
+			View.CUser.img = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(0, 6));
+			View.CUser.lvl = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(20, 40));
+			View.CUser.hp = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(1, 2));
+			View.CUser.exp = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(120, 300));
+			View.CUser.atk = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(100, 200));
+			View.CUser.pets = ["e0", "e1", "e2", "e3", "e4"];
+			View.CUser.petForFight = 0;
+			View.CUser.uname = "深蓝的天空";
 
-		public Enter(param?: any[]): void {
 			this._root = fairygui.UIPackage.createObject("main", "Main").asCom;
 			fairygui.GRoot.inst.addChild(this._root);
 			this._root.width = fairygui.GRoot.inst.width;
 			this._root.height = fairygui.GRoot.inst.height;
 			this._root.addRelation(fairygui.GRoot.inst, fairygui.RelationType.Size);
+			this._controller = this._root.getController("c1");
+			this._controller.on(fairygui.Events.STATE_CHANGED, this, this.OnSelectedIndexChanged);
 
 			this._zcPanel = new ZCPanel(this);
 			this._msgPanel = new MsgPanel(this);
@@ -50,8 +57,9 @@ namespace View.UI {
 			this._lingshouPanel = new LingshouPanel(this);
 			this._userInfoPanel = new UserInfoPanel(this);
 			this._fightPanel = new FightPanel(this);
+			this._resultPanel = new ResultPanel(this);
 
-			this._controller = this._root.getController("c1");
+			this._panels = [];
 			this._panels.push(this._zcPanel);
 			this._panels.push(this._msgPanel);
 			this._panels.push(this._searchPanel);
@@ -59,16 +67,22 @@ namespace View.UI {
 			this._panels.push(this._lingshouPanel);
 			this._panels.push(this._userInfoPanel);
 			this._panels.push(this._fightPanel);
+			this._panels.push(this._resultPanel);
 		}
 
-		public Leave(): void {
+		public Dispose(): void {
 			for (let p of this._panels)
 				p.Dispose();
 			this._panels.splice(0);
-
 			this._root.dispose();
-			this._root = null;
-			this._controller = null;
+		}
+
+		public Enter(param?: any[]): void {
+			this._lastIndex = 0;
+			this._panels[0].Enter();
+		}
+
+		public Leave(): void {
 		}
 
 		public Update(deltaTime: number): void {
@@ -79,6 +93,12 @@ namespace View.UI {
 		public OnResize(e: laya.events.Event): void {
 			for (let p of this._panels)
 				p.OnResize(e);
+		}
+
+		private OnSelectedIndexChanged(): void {
+			this._panels[this._lastIndex].Exit();
+			this._panels[this._controller.selectedIndex].Enter();
+			this._lastIndex = this._controller.selectedIndex;
 		}
 	}
 }

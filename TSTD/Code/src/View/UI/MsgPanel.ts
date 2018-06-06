@@ -14,9 +14,15 @@ namespace View.UI {
 		}
 
 		public Enter(): void {
+			let tasksDef = Shared.Defs.GetMessage();
+			for ( let taskDef of tasksDef){
+				let com = this._list.addItemFromPool().asCom;
+				com.getChild("content").asTextField.text = taskDef;
+			}
 		}
 
 		public Exit(): void {
+			this._list.removeChildrenToPool();
 		}
 
 		public Update(deltaTime: number): void {

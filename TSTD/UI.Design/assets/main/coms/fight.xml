@@ -2,6 +2,8 @@
 <component size="720,1280" designImageAlpha="35" designImageLayer="1">
   <displayList>
     <image id="n3_tbt3" name="n3" src="tbt35a" fileName="assets/zc/战斗界面.jpg" xy="0,0"/>
+    <component id="n13_tbt3" name="p2" src="yer1u" fileName="coms/place.xml" xy="359,425" size="1,1"/>
+    <component id="n14_tbt3" name="p1" src="yer1u" fileName="coms/place.xml" xy="359,1040" size="1,1"/>
     <image id="n7_tbt3" name="n7" src="ja734l" fileName="assets/fight/naili.png" xy="48,165"/>
     <image id="n8_tbt3" name="n8" src="ja734l" fileName="assets/fight/naili.png" xy="48,1237"/>
     <component id="n5_tbt3" name="hp_bar2" src="tbt35c" fileName="coms/fight_hpbar.xml" xy="116,166" touchable="false">
@@ -16,9 +18,9 @@
     <component id="n0_u0cg" name="keypad" src="u0cg49" fileName="coms/keypad.xml" xy="85,365" visible="false"/>
   </displayList>
   <transition name="t0">
-    <item time="0" type="Alpha" target="n0_u0cg" tween="true" startValue="0" endValue="1" duration="24"/>
-    <item time="0" type="Alpha" target="n11_tbt3" tween="true" startValue="0" endValue="0.6" duration="9"/>
     <item time="0" type="Alpha" target="n9_tbt3" tween="true" startValue="0" endValue="1" duration="24"/>
+    <item time="0" type="Alpha" target="n11_tbt3" tween="true" startValue="0" endValue="0.6" duration="9"/>
+    <item time="0" type="Alpha" target="n0_u0cg" tween="true" startValue="0" endValue="1" duration="24"/>
     <item time="0" type="Visible" target="n0_u0cg" value="true"/>
     <item time="0" type="Visible" target="n11_tbt3" value="true"/>
   </transition>
@@ -27,11 +29,11 @@
     <item time="0" type="Scale" target="n12_tbt3" tween="true" startValue="3,3" endValue="1,1" duration="9" ease="Bounce.Out"/>
     <item time="0" type="Visible" target="n12_tbt3" value="true"/>
     <item time="24" type="Alpha" target="n9_tbt3" tween="true" startValue="1" endValue="0" duration="12"/>
+    <item time="24" type="Alpha" target="n12_tbt3" tween="true" startValue="1" endValue="0.01" duration="12"/>
     <item time="24" type="Alpha" target="n11_tbt3" tween="true" startValue="0.6" endValue="0" duration="12"/>
     <item time="24" type="Alpha" target="n0_u0cg" tween="true" startValue="1" endValue="0" duration="12"/>
-    <item time="24" type="Alpha" target="n12_tbt3" tween="true" startValue="1" endValue="0.01" duration="12"/>
+    <item time="36" type="Visible" target="n11_tbt3" value="false"/>
     <item time="36" type="Visible" target="n12_tbt3" value="false"/>
     <item time="36" type="Visible" target="n0_u0cg" value="false"/>
-    <item time="36" type="Visible" target="n11_tbt3" value="false"/>
   </transition>
 </component>

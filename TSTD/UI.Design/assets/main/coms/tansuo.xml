@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="720,1280" designImageAlpha="60" designImageLayer="1">
-  <controller name="c1" pages="0,,1," selected="0"/>
+  <controller name="c1" pages="0,,1," selected="1"/>
   <displayList>
     <component id="n1_u0cg" name="n1" src="k6nj8" fileName="coms/panel2.xml" pkg="evwornmp" xy="0,0">
       <Label icon="ui://dhvv3tkxu0cg3t"/>
@@ -14,7 +14,7 @@
       <Button icon="ui://dhvv3tkxu0cg3q"/>
     </component>
     <component id="n4_u0cg" name="n4" src="k6nj7" fileName="coms/panel1.xml" pkg="evwornmp" xy="93,359" group="n13_u0cg"/>
-    <component id="n5_u0cg" name="n5" src="d7xv2t" fileName="coms/头像.xml" xy="302,423" group="n13_u0cg"/>
+    <component id="n5_u0cg" name="img" src="d7xv2t" fileName="coms/头像.xml" xy="302,423" group="n13_u0cg"/>
     <image id="n6_u0cg" name="n6" src="u0cg3v" fileName="assets/tansuo/wenzidi.png" xy="218,584" group="n13_u0cg"/>
     <image id="n7_u0cg" name="n7" src="u0cg3v" fileName="assets/tansuo/wenzidi.png" xy="218,640" group="n13_u0cg"/>
     <image id="n8_u0cg" name="n8" src="u0cg3v" fileName="assets/tansuo/wenzidi.png" xy="218,696" group="n13_u0cg"/>

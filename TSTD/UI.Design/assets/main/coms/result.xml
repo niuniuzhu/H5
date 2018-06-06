@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="720,1280" designImageLayer="1">
+  <controller name="c1" pages="0,,1,,2," selected="0"/>
+  <displayList>
+    <image id="n23_tbt3" name="n23" src="tbt35a" fileName="assets/zc/战斗界面.jpg" xy="0,0"/>
+    <graph id="n8_tbt3" name="n8" xy="0,0" size="720,1280" alpha="0.8" type="rect" lineSize="0" fillColor="#ff000000"/>
+    <image id="n2_tbt3" name="n2" src="ja734q" fileName="assets/fight/shenglidi.png" xy="0,81">
+      <gearDisplay controller="c1" pages="0,2"/>
+    </image>
+    <image id="n3_tbt3" name="n3" src="ja734r" fileName="assets/fight/shenglitouxiang.png" xy="217,191">
+      <gearDisplay controller="c1" pages="0,2"/>
+    </image>
+    <image id="n5_tbt3" name="n5" src="ja734t" fileName="assets/fight/xingxing01.png" xy="213,509" group="n12_tbt3"/>
+    <image id="n6_tbt3" name="n6" src="ja734t" fileName="assets/fight/xingxing01.png" xy="300,509" group="n12_tbt3"/>
+    <image id="n7_tbt3" name="n7" src="ja734t" fileName="assets/fight/xingxing01.png" xy="386,509" group="n12_tbt3"/>
+    <image id="n4_tbt3" name="n4" src="ja734p" fileName="assets/fight/shengli.png" xy="219,366" group="n12_tbt3"/>
+    <component id="n9_tbt3" name="n9" src="k6nj2" fileName="coms/button1.xml" pkg="evwornmp" xy="245,722" group="n12_tbt3">
+      <Button icon="ui://dhvv3tkxja734v"/>
+    </component>
+    <component id="n10_tbt3" name="n10" src="k6nj2" fileName="coms/button1.xml" pkg="evwornmp" xy="245,873" group="n12_tbt3">
+      <Button icon="ui://dhvv3tkxja734w"/>
+    </component>
+    <component id="n11_tbt3" name="n11" src="k6nj3" fileName="coms/button2.xml" pkg="evwornmp" xy="244,1024" group="n12_tbt3">
+      <Button icon="ui://dhvv3tkxja734x"/>
+    </component>
+    <group id="n12_tbt3" name="n12" xy="213,366" size="296,745" advanced="true">
+      <gearDisplay controller="c1" pages="0"/>
+    </group>
+    <image id="n13_tbt3" name="n13" src="ja734s" fileName="assets/fight/shibai.png" xy="163,364" group="n22_tbt3"/>
+    <image id="n14_tbt3" name="n14" src="ja734t" fileName="assets/fight/xingxing01.png" xy="213,509" group="n22_tbt3"/>
+    <image id="n15_tbt3" name="n15" src="ja734u" fileName="assets/fight/xingxing01.png2.png" xy="299,509" group="n22_tbt3"/>
+    <image id="n16_tbt3" name="n16" src="ja734u" fileName="assets/fight/xingxing01.png2.png" xy="387,509" group="n22_tbt3"/>
+    <image id="n17_tbt3" name="n17" src="ja734y" fileName="assets/fight/di02.png" xy="0,747" group="n22_tbt3"/>
+    <text id="n18_tbt3" name="n18" xy="211,815" size="174,40" group="n22_tbt3" fontSize="32" color="#ffffff" text="损失经验值:"/>
+    <text id="n19_tbt3" name="n19" xy="397,815" size="23,40" group="n22_tbt3" fontSize="32" color="#ffdd1e" text="0"/>
+    <component id="n21_tbt3" name="n21" src="k6nj3" fileName="coms/button2.xml" pkg="evwornmp" xy="244,1052" group="n22_tbt3">
+      <Button icon="ui://dhvv3tkxu0cg3q"/>
+    </component>
+    <group id="n22_tbt3" name="n22" xy="0,364" size="720,775" advanced="true">
+      <gearDisplay controller="c1" pages="1"/>
+    </group>
+    <component id="n24_tbt3" name="n24" src="tbt35s" fileName="coms/ts_bar.xml" xy="112,653" visible="false">
+      <gearDisplay controller="c1" pages="0"/>
+      <ProgressBar max="100"/>
+    </component>
+    <image id="n25_tbt3" name="n25" src="tbt35t" fileName="assets/fight/shoufuchenggong.png" xy="121,376" group="n29_tbt3">
+      <gearDisplay controller="c1" pages="2"/>
+    </image>
+    <image id="n26_tbt3" name="n26" src="ja734y" fileName="assets/fight/di02.png" xy="0,747" group="n29_tbt3"/>
+    <text id="n27_tbt3" name="n27" xy="0,747" size="720,168" group="n29_tbt3" fontSize="32" color="#ffdd1e" align="center" vAlign="middle" autoSize="none" text=""/>
+    <component id="n28_tbt3" name="n28" src="k6nj3" fileName="coms/button2.xml" pkg="evwornmp" xy="244,1053" group="n29_tbt3">
+      <Button icon="ui://dhvv3tkxtbt35v"/>
+    </component>
+    <group id="n29_tbt3" name="n29" xy="0,376" size="720,764" advanced="true">
+      <gearDisplay controller="c1" pages="2"/>
+    </group>
+  </displayList>
+</component>

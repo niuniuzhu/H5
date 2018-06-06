@@ -3,46 +3,43 @@ namespace Shared.Model {
 		// generice
 		public readonly id: string;
 		public readonly name: string;
+		public readonly type: string;
 		public readonly model: string;
-		public readonly scale: RC.Numerics.Vec2;
-
-		// tower
-		public readonly radius: number;
-		public readonly mhp: number;
-		public readonly mmp: number;
-		public readonly mp: number;
-		public readonly gmp: number;
-		public readonly skills: string[];
-		public readonly ai: string;
-
-		// missile
-		public readonly speed: number;
-		public readonly dfx: string;
-
-		// effect
-		public readonly duration: number;
-		public readonly followMode: number;
+		public readonly icon: string;
+		public readonly dup: RC.Collections.Dictionary<string, EAction>;
+		public readonly ddown: RC.Collections.Dictionary<string, EAction>;
 
 		constructor(id: string) {
 			this.id = id;
 			let def = Defs.GetEntity(this.id);
 			this.name = RC.Utils.Hashtable.GetString(def, "name");
+			this.type = RC.Utils.Hashtable.GetString(def, "type");
 			this.model = RC.Utils.Hashtable.GetString(def, "model");
-			this.scale = RC.Utils.Hashtable.GetVec2(def, "scale");
-			if (this.scale == null)
-				this.scale = RC.Numerics.Vec2.one;
+			this.icon = RC.Utils.Hashtable.GetString(def, "icon");
+			let map = RC.Utils.Hashtable.GetMap(def, "actions");
+			this.dup = new RC.Collections.Dictionary<string, EAction>();
+			this.ddown = new RC.Collections.Dictionary<string, EAction>();
+			for (let key in map) {
+				let arr: number[] = map[key];
 
-			this.radius = RC.Utils.Hashtable.GetNumber(def, "radius");
-			this.mhp = RC.Utils.Hashtable.GetNumber(def, "mhp");
-			this.mmp = RC.Utils.Hashtable.GetNumber(def, "mmp");
-			this.mp = RC.Utils.Hashtable.GetNumber(def, "mp");
-			this.gmp = RC.Utils.Hashtable.GetNumber(def, "gmp");
-			this.skills = RC.Utils.Hashtable.GetStringArray(def, "skills");
-			this.ai = RC.Utils.Hashtable.GetString(def, "ai");
-			this.speed = RC.Utils.Hashtable.GetNumber(def, "speed");
-			this.dfx = RC.Utils.Hashtable.GetString(def, "dfx");
-			this.duration = RC.Utils.Hashtable.GetNumber(def, "duration");
-			this.followMode = RC.Utils.Hashtable.GetNumber(def, "follow_mode");
+				let eaction = new EAction();
+				eaction.name = key;
+				eaction.start = arr[0] - 1;
+				eaction.end = arr[1] - 1;
+				this.dup.setValue(key, eaction);
+
+				eaction = new EAction();
+				eaction.name = key;
+				eaction.start = arr[2] - 1;
+				eaction.end = arr[3] - 1;
+				this.ddown.setValue(key, eaction);
+			}
 		}
+	}
+
+	export class EAction {
+		public name: string;
+		public start: number;
+		public end: number;
 	}
 }

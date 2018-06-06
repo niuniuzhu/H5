@@ -116,6 +116,15 @@
     <image id="tbt35k" name="cuo.png" path="/assets/fight/"/>
     <image id="tbt35l" name="dui1.png" path="/assets/fight/"/>
     <component id="tbt35m" name="gok.xml" path="/coms/"/>
+    <image id="tbt35n" name="lingshouanniu.png" path="/assets/zc/"/>
+    <component id="tbt35o" name="result.xml" path="/coms/"/>
+    <image id="tbt35p" name="chuzhan.png" path="/assets/lingshou/"/>
+    <image id="tbt35q" name="tunshi_01.png" path="/assets/fight/"/>
+    <image id="tbt35r" name="tunshi_02.png" path="/assets/fight/"/>
+    <component id="tbt35s" name="ts_bar.xml" path="/coms/"/>
+    <image id="tbt35t" name="shoufuchenggong.png" path="/assets/fight/"/>
+    <image id="tbt35u" name="05吞噬、收伏、放生02.jpg" path="/assets/fight/"/>
+    <image id="tbt35v" name="anniuwenzi_14.png" path="/assets/fight/"/>
   </resources>
   <publish name="main" npot="true"/>
 </packageDescription>

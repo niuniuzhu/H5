@@ -286,7 +286,7 @@ var Game;
             let object = new THREE.AxesHelper(50);
             object.position.set(0, 0, 0);
             this.scene.add(object);
-            let loader = new THREE.JSONLoader();
+            let loader = new THREE.GLTF();
             loader.load("res/models/skinned/Samba Dancing.json", (geometry, materials) => {
                 let mesh = new THREE.Mesh(geometry, materials);
                 this.scene.add(mesh);

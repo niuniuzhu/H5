@@ -2,12 +2,14 @@
 <component size="648,135" designImage="ui://dhvv3tkxu0cg40" designImageOffsetX="-31" designImageOffsetY="-299" designImageLayer="1">
   <displayList>
     <image id="n23_yer1" name="n23" src="yer11g" fileName="assets/task/kuang06.png" xy="0,0"/>
-    <text id="n27_yer1" name="atk" xy="9,12" size="635,123" fontSize="28" color="#996732" vAlign="middle" autoSize="none" bold="true" text=""/>
-    <component id="n28_u0cg" name="n28" src="d7xv2t" fileName="coms/头像.xml" xy="16,16"/>
+    <component id="n28_u0cg" name="img" src="d7xv2t" fileName="coms/头像.xml" xy="16,16"/>
     <image id="n29_u0cg" name="n29" src="u0cg3v" fileName="assets/tansuo/wenzidi.png" xy="152,30"/>
     <text id="n30_u0cg" name="name" xy="158,33" size="40,36" fontSize="28" color="#ffffff" text=""/>
     <text id="n31_u0cg" name="lv" xy="159,87" size="69,36" fontSize="28" color="#996732" text="等级:"/>
-    <text id="n32_u0cg" name="lvl" xy="234,87" size="40,36" fontSize="28" color="#00d554" text=""/>
-    <text id="n33_u0cg" name="type" xy="536,33" size="40,36" fontSize="28" color="#ffffff" text=""/>
+    <text id="n32_u0cg" name="lvl" xy="234,87" size="40,36" fontSize="28" color="#d55400" text=""/>
+    <text id="n33_u0cg" name="type" xy="536,33" size="40,36" fontSize="28" color="#996732" text=""/>
+    <component id="n34_tbt3" name="n34" src="k6nj2" fileName="coms/button1.xml" pkg="evwornmp" xy="517,81" size="124,49" aspect="true">
+      <Button icon="ui://dhvv3tkxtbt35p"/>
+    </component>
   </displayList>
 </component>

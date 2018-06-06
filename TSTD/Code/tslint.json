@@ -31,7 +31,7 @@
         // 功能特性
         "await-promise":true,// 不允许没有Promise的情况下使用await
         //"curly":true,// if/for/do/while强制使用大括号
-        "forin":true,// 使用for in语句时，强制进行hasOwnProperty检查
+        // "forin":true,// 使用for in语句时，强制进行hasOwnProperty检查
         "no-arg":true,// 不允许使用arguments.callee
         // "no-bitwise":true, // 不允许使用特殊运算符 &, &=, |, |=, ^, ^=, <<, <<=, >>, >>=, >>>, >>>=, ~
         "no-conditional-assignment":true,// do while/for/if/while 语句中将会对例如if(a=b)进行检查

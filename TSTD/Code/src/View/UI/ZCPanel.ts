@@ -6,25 +6,23 @@ namespace View.UI {
 		constructor(owner: UIMain) {
 			this._owner = owner;
 			this._root = owner.root.getChild("c0").asCom;
-
-			let hp = Math.floor(Math.random() * 10000 + 3000);
-			let exp = Math.floor(Math.random() * 10000 + 3000);
-			this._root.getChild("lvl").asTextField.text = "" + Math.floor(Math.random() * 30 + 5);
-			this._root.getChild("hp").asTextField.text = `${hp}/${hp}`;
-			this._root.getChild("exp").asTextField.text = `${exp}/${exp}`;
-			this._root.getChild("atk").asTextField.text = "" + Math.floor(Math.random() * 10000 + 3000);
-			this._root.getChild("hp").asProgress.max = hp;
-			this._root.getChild("hp").asProgress.value = hp;
-			this._root.getChild("exp").asProgress.max = exp;
-			this._root.getChild("exp").asProgress.value = exp;
-			this._root.getChild("img").asCom.getChild("icon").asLoader.url = fairygui.UIPackage.getItemURL("main", "u" + RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(0, 6)));
-			this._root.getChild("img").onClick(this, this.OnImageBtnClick);
 		}
 
 		public Dispose(): void {
 		}
 
 		public Enter(): void {
+			this._root.getChild("name").asTextField.text = View.CUser.uname;
+			this._root.getChild("lvl").asTextField.text = "" + View.CUser.lvl;
+			this._root.getChild("hp").asTextField.text = `${View.CUser.hp}/${View.CUser.hp}`;
+			this._root.getChild("exp").asTextField.text = `${View.CUser.exp}/${View.CUser.exp}`;
+			this._root.getChild("hp_bar").asProgress.max = View.CUser.hp;
+			this._root.getChild("hp_bar").asProgress.value = View.CUser.hp;
+			this._root.getChild("exp_bar").asProgress.max = View.CUser.exp;
+			this._root.getChild("exp_bar").asProgress.value = View.CUser.exp;
+			this._root.getChild("atk").asTextField.text = "" + View.CUser.atk;
+			this._root.getChild("img").asCom.getChild("icon").asLoader.url = fairygui.UIPackage.getItemURL("main", "u" + View.CUser.img);
+			this._root.getChild("img").onClick(this, this.OnImageBtnClick);
 		}
 
 		public Exit(): void {

@@ -3,204 +3,245 @@
 		"global.fui,0",
 		"global@atlas0.png,1",
 		"global@atlas0_1.png,1",
+		"global@atlas0_2.png,1",
+		"global@atlas0_3.png,1",
+		"global@atlas0_4.png,1",
+		"global@atlas0_5.png,1",
+		"global@atlas0_6.png,1",
 		"login.fui,0",
 		"login@atlas0.png,1",
 		"main.fui,0",
 		"main@atlas0.png,1",
 		"battle.fui,0"
 	],
-	"maps": {
-		"m0": {
-			"name": "test",
-			"model": "m1",
-			"size": [
-				684,
-				1080
-			],
-			"tile_size": 36,
-			"tower_pos": [
-				[
-					[
-						10,
-						25
-					],
-					[
-						3,
-						26
-					],
-					[
-						17,
-						26
-					]
-				],
-				[
-					[
-						10,
-						4
-					],
-					[
-						3,
-						5
-					],
-					[
-						17,
-						5
-					]
-				]
-			]
-		}
-	},
 	"entities": {
 		"e0": {
-			"name": "英雄",
-			"model": "e0",
-			"radius": 2.5,
-			"mhp": 580,
-			"mmp": 10,
-			"mp": 3,
-			"gmp": 0.8,
-			"skills": [],
-			"ai": "tower"
+			"name":"草叶兽",
+			"type":"草食系",
+			"model": "c1",
+			"icon": "c1",
+			"actions": {
+				"idle": [
+					1,
+					4,
+					12,
+					15
+				],
+				"atk": [
+					5,
+					7,
+					16,
+					18
+				],
+				"dir": [
+					8,
+					11,
+					19,
+					22
+				]
+			}
 		},
 		"e1": {
-			"name": "塔",
-			"model": "e1",
-			"radius": 2.5,
-			"mhp": 400,
-			"mmp": 10,
-			"mp": 3,
-			"gmp": 0.8,
-			"skills": [
-				"s20"
-			],
-			"ai": "tower"
+			"name":"巨岩兽",
+			"type":"草食系",
+			"model": "c2",
+			"icon": "c2",
+			"actions": {
+				"idle": [
+					1,
+					3,
+					8,
+					10
+				],
+				"atk": [
+					4,
+					6,
+					11,
+					13
+				],
+				"dir": [
+					7,
+					7,
+					14,
+					14
+				]
+			}
 		},
 		"e2": {
-			"name": "士兵0",
-			"model": "e2",
-			"radius": 1.7,
-			"speed": 1.5,
-			"scale": [
-				1,
-				-1
-			],
-			"mhp": 200,
-			"mmp": 10,
-			"mp": 3,
-			"gmp": 0.8,
-			"skills": [
-				"s21"
-			],
-			"ai": "champion"
+			"name":"仙马",
+			"type":"草食系",
+			"model": "c3",
+			"icon": "c3",
+			"actions": {
+				"idle": [
+					1,
+					3,
+					8,
+					10
+				],
+				"atk": [
+					4,
+					6,
+					11,
+					13
+				],
+				"dir": [
+					7,
+					7,
+					14,
+					14
+				]
+			}
 		},
 		"e3": {
-			"name": "士兵1",
-			"model": "e3",
-			"radius": 1.7,
-			"speed": 1.5,
-			"mhp": 200,
-			"mmp": 10,
-			"mp": 3,
-			"gmp": 0.8,
-			"skills": [
-				"s21"
-			],
-			"ai": "champion"
+			"name":"仙木精",
+			"type":"草食系",
+			"model": "c4",
+			"icon": "c4",
+			"actions": {
+				"idle": [
+					1,
+					4,
+					9,
+					12
+				],
+				"atk": [
+					5,
+					7,
+					13,
+					15
+				],
+				"dir": [
+					8,
+					8,
+					16,
+					16
+				]
+			}
 		},
 		"e4": {
-			"name": "箭",
-			"model": "e4",
-			"speed": 40,
-			"dfx": "e5"
+			"name":"树灵",
+			"type":"草食系",
+			"model": "c5",
+			"icon": "c5",
+			"actions": {
+				"idle": [
+					1,
+					3,
+					8,
+					10
+				],
+				"atk": [
+					4,
+					6,
+					11,
+					13
+				],
+				"dir": [
+					7,
+					7,
+					14,
+					14
+				]
+			}
 		},
 		"e5": {
-			"name": "爆炸",
-			"model": "e5",
-			"duration": 0,
-			"follow_mode": 0
+			"model": "m1",
+			"icon": "m1",
+			"actions": [
+				[],
+				[]
+			]
 		},
 		"e6": {
-			"name": "召唤",
-			"model": "e6",
-			"duration": 0,
-			"follow_mode": 4
+			"model": "m2",
+			"icon": "m2",
+			"actions": [
+				[],
+				[]
+			]
 		},
 		"e7": {
-			"name": "祝福",
-			"model": "e7",
-			"duration": 0,
-			"follow_mode": 4
+			"model": "m3",
+			"icon": "m3",
+			"actions": [
+				[],
+				[]
+			]
+		},
+		"e8": {
+			"model": "m4",
+			"icon": "m4",
+			"actions": [
+				[],
+				[]
+			]
+		},
+		"e9": {
+			"model": "m5",
+			"icon": "m5",
+			"actions": [
+				[],
+				[]
+			]
+		},
+		"e10": {
+			"model": "n1",
+			"icon": "n1",
+			"actions": [
+				[],
+				[]
+			]
+		},
+		"e11": {
+			"model": "n2",
+			"icon": "n2",
+			"actions": [
+				[],
+				[]
+			]
+		},
+		"e12": {
+			"model": "n3",
+			"icon": "n3",
+			"actions": [
+				[],
+				[]
+			]
+		},
+		"e13": {
+			"model": "n4",
+			"icon": "n4",
+			"actions": [
+				[],
+				[]
+			]
+		},
+		"e14": {
+			"model": "n5",
+			"icon": "n5",
+			"actions": [
+				[],
+				[]
+			]
 		}
 	},
-	"skills": {
-		"s0": {
-			"cmp": 1,
-			"damage": 25,
-			"fx": "",
-			"missile": "e4",
-			"target_mode": 2,
-			"target_filter": 0
-		},
-		"s1": {
-			"cmp": 4,
-			"damage": 0,
-			"target_mode": 0,
-			"target_filter": 0,
-			"fx": "",
-			"summon": "e3",
-			"summon_fx": "e6",
-			"summon_pos": [
-				[
-					3,
-					22
-				],
-				[
-					17,
-					22
-				]
-			]
-		},
-		"s2": {
-			"cmp": 3,
-			"damage": -65,
-			"target_mode": 1,
-			"target_filter": 2,
-			"fx": "e7"
-		},
-		"s10": {
-			"cmp": 4,
-			"damage": 0,
-			"fx": "",
-			"target_mode": 0,
-			"target_filter": 0,
-			"summon": "e2",
-			"summon_fx": "e6",
-			"summon_pos": [
-				[
-					3,
-					9
-				],
-				[
-					17,
-					9
-				]
-			]
-		},
-		"s20": {
-			"cmp": 0,
-			"damage": 25,
-			"target_mode": 2,
-			"target_filter": 0,
-			"fx": "",
-			"missile": "e4"
-		},
-		"s21": {
-			"cmp": 0,
-			"damage": 12,
-			"target_mode": 2,
-			"target_filter": 0,
-			"duration": 750,
-			"hit": 625
-		}
-	}
+	"task": [
+		"吞噬一次灵兽&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color=\"#ffffff\">0/1</font><br><br>任务奖励：<font color=\"#d55400\">获得20体力，100经验。</font>",
+		"放生一次灵兽&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color=\"#ffffff\">0/1</font><br><br>任务奖励：<font color=\"#d55400\">获得20体力，100经验。</font>",
+		"收伏一次灵兽&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color=\"#ffffff\">0/1</font><br><br>任务奖励：<font color=\"#d55400\">获得20体力，100经验。</font>",
+		"收伏三次灵兽&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color=\"#ffffff\">0/1</font><br><br>任务奖励：<font color=\"#d55400\">获得60体力，300经验。</font>",
+		"获得10000战力&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color=\"#ffffff\">0/1</font><br><br>任务奖励：<font color=\"#d55400\">获得100体力，1000经验。</font>",
+		"提升到10级&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color=\"#ffffff\">0/1</font><br><br>任务奖励：<font color=\"#d55400\">获得100体力，1000经验。</font>",
+		"探索100次&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color=\"#ffffff\">0/1</font><br><br>任务奖励：<font color=\"#d55400\">获得200体力，2000经验。</font>"
+	],
+	"message": [
+		"你获得进阶礼包<br><br>恭喜你获得进阶礼包，<font color=\"#d55400\">恭喜你获得进阶礼包，增加100体力。</font>",
+		"你获得新手礼包<br><br>恭喜你获得新手礼包，<font color=\"#d55400\">恭喜你获得新手礼包，增加100体力。</font>",
+		"系统公告<br><br>庆贺吞噬天地内测，将有一系列狂欢活动，切勿错过。",
+		"你成功吞噬灵兽<br><br>成功获得<font color=\"#d55400\">100经验，10体力</font>。",
+		"你成功吞噬了灵兽，成功获得100经验，10体力。<br><br>你成功抵御敌方星球的防御，没有任何损失。",
+		"你被灵兽击败<br><br>灵兽实力非同小可，还是先吞噬其他灵兽提升实力。",
+		"欢迎进入吞噬天地<br><br>欢迎进入吞噬天地的架空世界，祝您游戏愉快。"
+	]
 }

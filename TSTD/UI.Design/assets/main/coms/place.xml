@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="200,200" extention="Button">
+<component size="200,200">
   <displayList/>
-  <Button/>
 </component>

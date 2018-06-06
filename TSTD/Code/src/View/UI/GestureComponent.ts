@@ -55,20 +55,20 @@ namespace View.UI {
 				this._keyLine.AttachTo(key);
 				if (this._touched.length == this._path.length) {
 					this.HandleTouchEnd();
-					return;
 				}
 			}
 			this._keyLine.UpdateVisual(v);
 		}
 
 		private OnTouchEnd(e: laya.events.Event): void {
+			if (this._touched.length == 0)
+				return;
 			this.HandleTouchEnd();
 		}
 
 		private HandleTouchEnd(): void {
 			fairygui.GRoot.inst.displayObject.off(Laya.Event.MOUSE_MOVE, this, this.OnTouchMove);
 			fairygui.GRoot.inst.displayObject.off(Laya.Event.MOUSE_UP, this, this.OnTouchEnd);
-			this._keyLine.Detach();
 			if (this._touched.length != this._path.length)
 				this.HandleIncorrectGesture();
 			else {
@@ -131,7 +131,11 @@ namespace View.UI {
 			return null;
 		}
 
-		public Show():void{
+		public TouchEnd():void{
+			this.HandleTouchEnd();
+		}
+
+		public Show(): void {
 			let graph = RC.Algorithm.Graph.Graph2D.CreateFullDigraph(3, 3);
 			let path = RC.Algorithm.Graph.GraphSearcher.MazeSearch(graph, 0, 7, RC.Numerics.MathUtils.Random);
 			for (let p of path)
@@ -154,17 +158,20 @@ namespace View.UI {
 			this._root.getTransition("t0").play();
 		}
 
-		public Hide():void{
+		public Hide(completeHandler: () => void): void {
 			this._keypad.displayObject.off(Laya.Event.MOUSE_DOWN, this, this.OnTouchBegin);
-			for (let key of this._keys) {
-				key.touched = false;
-				key.selectedIndex = 0;
-			}
-			this._touched.splice(0);
-			for (let line of this._lines)
-				line.dispose();
-			this._lines.splice(0);
-			this._root.getTransition("t1").play();
+			this._root.getTransition("t1").play(new laya.utils.Handler(this, () => {
+				this._keyLine.Detach();
+				for (let key of this._keys) {
+					key.touched = false;
+					key.selectedIndex = 0;
+				}
+				this._touched.splice(0);
+				for (let line of this._lines)
+					line.dispose();
+				this._lines.splice(0);
+				completeHandler();
+			}));
 		}
 	}
 }

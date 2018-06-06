@@ -5,12 +5,12 @@
     <component id="n33_u0cg" name="img" src="d7xv2t" fileName="coms/头像.xml" xy="6,7">
       <Button page="5"/>
     </component>
-    <component id="n34_u0cg" name="hp" src="u0cg3d" fileName="coms/hpbar.xml" xy="146,14">
+    <component id="n34_u0cg" name="hp_bar" src="u0cg3d" fileName="coms/hpbar.xml" xy="146,14">
       <ProgressBar value="100" max="100"/>
     </component>
     <text id="n35_u0cg" name="hp" xy="178,13" size="216,31" fontSize="20" color="#ffffff" align="center" vAlign="middle" autoSize="none" text="0/0"/>
     <image id="n36_u0cg" name="n36" src="u0cg3b" fileName="assets/zc/degnji.png" xy="96,52"/>
-    <component id="n37_u0cg" name="exp" src="u0cg3g" fileName="coms/expbar.xml" xy="145,104">
+    <component id="n37_u0cg" name="exp_bar" src="u0cg3g" fileName="coms/expbar.xml" xy="145,104">
       <ProgressBar max="100"/>
     </component>
     <text id="n38_u0cg" name="lvl" xy="101,105" size="36,25" fontSize="26" color="#8d4219" align="center" autoSize="none" text="1"/>
@@ -18,5 +18,10 @@
     <text id="n40_u0cg" name="name" xy="149,59" size="145,36" fontSize="28" color="#f4ff00" align="center" vAlign="middle" text="深蓝的天空"/>
     <text id="n41_u0cg" name="atk" xy="539,58" size="25,32" font="ui://dhvv3tkxe280p" fontSize="20" color="#ffffff" align="center" vAlign="middle" text="0"/>
     <image id="n42_u0cg" name="n42" src="u0cg3c" fileName="assets/zc/ti.png" xy="135,8"/>
+    <image id="n44_tbt3" name="n44" src="u0cg3n" fileName="assets/zc/heidi01.png" xy="564,971" group="n48_tbt3"/>
+    <image id="n45_tbt3" name="n45" src="tbt35n" fileName="assets/zc/lingshouanniu.png" xy="572,1109" group="n48_tbt3"/>
+    <image id="n46_tbt3" name="n46" src="tbt35n" fileName="assets/zc/lingshouanniu.png" xy="572,1045" group="n48_tbt3"/>
+    <image id="n47_tbt3" name="n47" src="tbt35n" fileName="assets/zc/lingshouanniu.png" xy="572,981" group="n48_tbt3"/>
+    <group id="n48_tbt3" name="n48" xy="564,971" size="150,201" advanced="true"/>
   </displayList>
 </component>
