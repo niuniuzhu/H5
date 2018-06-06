@@ -730,6 +730,38 @@ declare namespace RC.Numerics {
     }
 }
 declare namespace RC.Numerics {
+    class Rect {
+        private _xMin;
+        private _yMin;
+        private _width;
+        private _height;
+        static readonly zero: Rect;
+        x: number;
+        y: number;
+        position: Vec2;
+        center: Vec2;
+        min: Vec2;
+        max: Vec2;
+        width: number;
+        height: number;
+        size: Vec2;
+        xMin: number;
+        yMin: number;
+        xMax: number;
+        yMax: number;
+        constructor(x?: number, y?: number, width?: number, height?: number);
+        CopyFrom(source: Rect): void;
+        Clone(): Rect;
+        static MinMaxRect(xmin: number, ymin: number, xmax: number, ymax: number): Rect;
+        Set(x: number, y: number, width: number, height: number): void;
+        Contains(point: Vec2, allowInverse?: boolean): boolean;
+        private static OrderMinMax(rect);
+        Overlaps(other: Rect, allowInverse?: boolean): boolean;
+        static NormalizedToPoint(rectangle: Rect, normalizedRectCoordinates: Vec2): Vec2;
+        static PointToNormalized(rectangle: Rect, point: Vec2): Vec2;
+    }
+}
+declare namespace RC.Numerics {
     class Vec2 {
         x: number;
         y: number;

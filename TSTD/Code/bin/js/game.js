@@ -1971,22 +1971,47 @@ var View;
             constructor(owner) {
                 this._owner = owner;
                 this._root = owner.root.getChild("c6").asCom;
-                this._gesture = new UI.GestureComponent(this._root);
+                this._time = this._root.getChild("time").asTextField;
+                this._result = this._root.getChild("g_result").asCom;
+                this._gesture = new UI.GestureComponent(this._root, this.OnGestureSuccess.bind(this), this.OnGestureError.bind(this));
             }
             Dispose() {
                 this._gesture.Dispose();
             }
             Enter() {
-                this._gesture.Enter();
+                this.ShowGesture();
             }
             Exit() {
-                this._gesture.Exit();
             }
             Update(deltaTime) {
+                if (!this._gestureShowing)
+                    return;
+                this._countdown -= deltaTime;
+                if (this._countdown <= 0) {
+                    this._countdown = 0;
+                    this.OnGestureError();
+                }
+                this._time.text = "" + RC.Numerics.MathUtils.Floor((this._countdown + 1000) * 0.001);
             }
             OnResize(e) {
             }
+            ShowGesture() {
+                this._countdown = FightPanel.COUNT_DOWN;
+                this._gesture.Show();
+                this._gestureShowing = true;
+            }
+            OnGestureSuccess() {
+                this._result.getController("c1").selectedIndex = 0;
+                this._gesture.Hide();
+                this._gestureShowing = false;
+            }
+            OnGestureError() {
+                this._result.getController("c1").selectedIndex = 1;
+                this._gesture.Hide();
+                this._gestureShowing = false;
+            }
         }
+        FightPanel.COUNT_DOWN = 10000;
         UI.FightPanel = FightPanel;
     })(UI = View.UI || (View.UI = {}));
 })(View || (View = {}));
@@ -1995,11 +2020,10 @@ var View;
     var UI;
     (function (UI) {
         class GestureComponent {
-            constructor(root) {
+            constructor(root, successtHandler, errorHandler) {
                 this._root = root;
-                this._line = this._root.getChild("line").asCom;
                 this._keypad = this._root.getChild("keypad").asCom;
-                this._keypad.displayObject.on(Laya.Event.MOUSE_DOWN, this, this.OnTouchBegin);
+                this._line = this._keypad.getChild("line").asCom;
                 this._keys = [];
                 for (let i = 0; i < 9; ++i) {
                     this._keys.push(new UI.KeyComponent(this._keypad.getChild("n" + i).asCom, i));
@@ -2008,39 +2032,11 @@ var View;
                 this._keyLine = new UI.KeyLineComponent();
                 this._touched = [];
                 this._lines = [];
+                this._successtHandler = successtHandler;
+                this._errorHandler = errorHandler;
             }
             Dispose() {
                 this._keyLine.Dispose();
-            }
-            Enter() {
-                let graph = RC.Algorithm.Graph.Graph2D.CreateFullDigraph(3, 3);
-                let path = RC.Algorithm.Graph.GraphSearcher.MazeSearch(graph, 0, 7, RC.Numerics.MathUtils.Random);
-                for (let p of path)
-                    this._keys[p].selectedIndex = 1;
-                for (let i = 0; i < path.length - 1; ++i) {
-                    let curPoint = graph.IndexToCoord(path[i]);
-                    let nextPoint = graph.IndexToCoord(path[i + 1]);
-                    let curPos = new RC.Numerics.Vec2(curPoint[0], curPoint[1]);
-                    let nextPos = new RC.Numerics.Vec2(nextPoint[0], nextPoint[1]);
-                    let dir = RC.Numerics.Vec2.Sub(nextPos, curPos);
-                    dir.Normalize();
-                    let angle = RC.Numerics.Vec2.Dot(RC.Numerics.Vec2.up, dir);
-                    angle = RC.Numerics.MathUtils.Clamp(angle, -1, 1);
-                    angle = RC.Numerics.MathUtils.RadToDeg(RC.Numerics.MathUtils.Acos(angle));
-                    let sign = dir.x > 0 ? -1 : 1;
-                    this._keys[path[i]].rotation = angle * sign;
-                }
-                this._path = path;
-            }
-            Exit() {
-                for (let key of this._keys) {
-                    key.touched = false;
-                    key.selectedIndex = 0;
-                }
-                this._touched.splice(0);
-                for (let line of this._lines)
-                    line.dispose();
-                this._lines.splice(0);
             }
             Update(deltaTime) {
             }
@@ -2091,10 +2087,10 @@ var View;
                 }
             }
             HandleCorrectGesture() {
-                console.log("t");
+                this._successtHandler();
             }
             HandleIncorrectGesture() {
-                console.log("f");
+                this._errorHandler();
             }
             UpdateVisual(key, lastKey) {
                 let line = fairygui.UIPackage.createObject("main", "key_line").asCom;
@@ -2129,6 +2125,40 @@ var View;
                     }
                 }
                 return null;
+            }
+            Show() {
+                let graph = RC.Algorithm.Graph.Graph2D.CreateFullDigraph(3, 3);
+                let path = RC.Algorithm.Graph.GraphSearcher.MazeSearch(graph, 0, 7, RC.Numerics.MathUtils.Random);
+                for (let p of path)
+                    this._keys[p].selectedIndex = 1;
+                for (let i = 0; i < path.length - 1; ++i) {
+                    let curPoint = graph.IndexToCoord(path[i]);
+                    let nextPoint = graph.IndexToCoord(path[i + 1]);
+                    let curPos = new RC.Numerics.Vec2(curPoint[0], curPoint[1]);
+                    let nextPos = new RC.Numerics.Vec2(nextPoint[0], nextPoint[1]);
+                    let dir = RC.Numerics.Vec2.Sub(nextPos, curPos);
+                    dir.Normalize();
+                    let angle = RC.Numerics.Vec2.Dot(RC.Numerics.Vec2.up, dir);
+                    angle = RC.Numerics.MathUtils.Clamp(angle, -1, 1);
+                    angle = RC.Numerics.MathUtils.RadToDeg(RC.Numerics.MathUtils.Acos(angle));
+                    let sign = dir.x > 0 ? -1 : 1;
+                    this._keys[path[i]].rotation = angle * sign;
+                }
+                this._path = path;
+                this._keypad.displayObject.on(Laya.Event.MOUSE_DOWN, this, this.OnTouchBegin);
+                this._root.getTransition("t0").play();
+            }
+            Hide() {
+                this._keypad.displayObject.off(Laya.Event.MOUSE_DOWN, this, this.OnTouchBegin);
+                for (let key of this._keys) {
+                    key.touched = false;
+                    key.selectedIndex = 0;
+                }
+                this._touched.splice(0);
+                for (let line of this._lines)
+                    line.dispose();
+                this._lines.splice(0);
+                this._root.getTransition("t1").play();
             }
         }
         UI.GestureComponent = GestureComponent;
@@ -2602,11 +2632,12 @@ var View;
                 this._root.getChild("hp").asTextField.text = `${hp}/${hp}`;
                 this._root.getChild("exp").asTextField.text = `${exp}/${exp}`;
                 this._root.getChild("atk").asTextField.text = "" + Math.floor(Math.random() * 10000 + 3000);
-                this._root.getChild("n34").asProgress.max = hp;
-                this._root.getChild("n34").asProgress.value = hp;
-                this._root.getChild("n37").asProgress.max = exp;
-                this._root.getChild("n37").asProgress.value = exp;
-                this._root.getChild("n33").onClick(this, this.OnImageBtnClick);
+                this._root.getChild("hp").asProgress.max = hp;
+                this._root.getChild("hp").asProgress.value = hp;
+                this._root.getChild("exp").asProgress.max = exp;
+                this._root.getChild("exp").asProgress.value = exp;
+                this._root.getChild("img").asCom.getChild("icon").asLoader.url = fairygui.UIPackage.getItemURL("main", "u" + RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(0, 6)));
+                this._root.getChild("img").onClick(this, this.OnImageBtnClick);
             }
             Dispose() {
             }

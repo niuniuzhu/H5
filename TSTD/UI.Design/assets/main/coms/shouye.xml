@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="720,1280" designImage="ui://dhvv3tkxu0cg33">
+<component size="720,1280">
   <displayList>
-    <component id="n33_u0cg" name="n33" src="d7xv2t" fileName="coms/头像.xml" xy="6,7">
+    <image id="n43_tbt3" name="n43" src="tbt359" fileName="assets/zc/主界面.jpg" xy="0,0"/>
+    <component id="n33_u0cg" name="img" src="d7xv2t" fileName="coms/头像.xml" xy="6,7">
       <Button page="5"/>
     </component>
-    <component id="n34_u0cg" name="n34" src="u0cg3d" fileName="coms/hpbar.xml" xy="146,14">
+    <component id="n34_u0cg" name="hp" src="u0cg3d" fileName="coms/hpbar.xml" xy="146,14">
       <ProgressBar value="100" max="100"/>
     </component>
     <text id="n35_u0cg" name="hp" xy="178,13" size="216,31" fontSize="20" color="#ffffff" align="center" vAlign="middle" autoSize="none" text="0/0"/>
     <image id="n36_u0cg" name="n36" src="u0cg3b" fileName="assets/zc/degnji.png" xy="96,52"/>
-    <component id="n37_u0cg" name="n37" src="u0cg3g" fileName="coms/expbar.xml" xy="145,104">
+    <component id="n37_u0cg" name="exp" src="u0cg3g" fileName="coms/expbar.xml" xy="145,104">
       <ProgressBar max="100"/>
     </component>
     <text id="n38_u0cg" name="lvl" xy="101,105" size="36,25" fontSize="26" color="#8d4219" align="center" autoSize="none" text="1"/>

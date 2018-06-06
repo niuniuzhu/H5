@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="316,22" extention="ProgressBar">
+  <displayList>
+    <image id="n0_tbt3" name="n0" src="ja734m" fileName="assets/fight/naili_01.png" xy="0,0"/>
+    <image id="n1_tbt3" name="bar" src="ja734n" fileName="assets/fight/naili_02.png" xy="0,0"/>
+  </displayList>
+  <ProgressBar/>
+</component>

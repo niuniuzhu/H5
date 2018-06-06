@@ -80,8 +80,8 @@
     <image id="ja734k" name="04战斗01.jpg" path="/assets/fight/"/>
     <image id="ja734l" name="naili.png" path="/assets/fight/"/>
     <image id="ja734m" name="naili_01.png" path="/assets/fight/"/>
-    <image id="ja734n" name="naili_02.png" path="/assets/fight/"/>
-    <image id="ja734o" name="naili_03.png" path="/assets/fight/"/>
+    <image id="ja734n" name="naili_02.png" path="/assets/fight/" scale="9grid" scale9grid="6,9,302,6"/>
+    <image id="ja734o" name="naili_03.png" path="/assets/fight/" scale="9grid" scale9grid="8,10,299,6"/>
     <image id="ja734p" name="shengli.png" path="/assets/fight/"/>
     <image id="ja734q" name="shenglidi.png" path="/assets/fight/"/>
     <image id="ja734r" name="shenglitouxiang.png" path="/assets/fight/"/>
@@ -102,6 +102,20 @@
     <image id="ja7356" name="dumiao_7.png" path="/assets/fight/"/>
     <image id="ja7357" name="dumiao_8.png" path="/assets/fight/"/>
     <image id="ja7358" name="dumiao_9.png" path="/assets/fight/"/>
+    <image id="tbt359" name="主界面.jpg" path="/assets/zc/"/>
+    <image id="tbt35a" name="战斗界面.jpg" path="/assets/zc/"/>
+    <font id="tbt35b" name="fight_font.fnt" path="/coms/" exported="true"/>
+    <component id="tbt35c" name="fight_hpbar.xml" path="/coms/"/>
+    <component id="tbt35d" name="fight_hpbar2.xml" path="/coms/"/>
+    <image id="tbt35e" name="u0.png" path="/assets/user/" exported="true"/>
+    <image id="tbt35f" name="u1.png" path="/assets/user/" exported="true"/>
+    <image id="tbt35g" name="u2.png" path="/assets/user/" exported="true"/>
+    <image id="tbt35h" name="u3.png" path="/assets/user/" exported="true"/>
+    <image id="tbt35i" name="u4.png" path="/assets/user/" exported="true"/>
+    <image id="tbt35j" name="u5.png" path="/assets/user/" exported="true"/>
+    <image id="tbt35k" name="cuo.png" path="/assets/fight/"/>
+    <image id="tbt35l" name="dui1.png" path="/assets/fight/"/>
+    <component id="tbt35m" name="gok.xml" path="/coms/"/>
   </resources>
   <publish name="main" npot="true"/>
 </packageDescription>

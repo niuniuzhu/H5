@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="720,1280" designImageAlpha="28" designImageLayer="1">
-  <controller name="c1" pages="0,首页,1,消息,2,探索,3,任务,4,灵兽,5,玩家信息,6,战斗" selected="0"/>
+  <controller name="c1" pages="0,首页,1,消息,2,探索,3,任务,4,灵兽,5,玩家信息,6,战斗" selected="6"/>
   <displayList>
     <component id="n54_u0cg" name="c6" src="u0cg48" fileName="coms/fight.xml" xy="0,0">
       <gearDisplay controller="c1" pages="6"/>
@@ -23,26 +23,29 @@
     <component id="n46_u0cg" name="c0" src="yer1r" fileName="coms/shouye.xml" xy="0,0">
       <gearDisplay controller="c1" pages="0"/>
     </component>
-    <image id="n28_i7tu" name="n28" src="e280k" fileName="assets/zc/xialang.png" xy="0,1148"/>
-    <component id="n41_u0cg" name="n41" src="u0cg3k" fileName="coms/empty_btn.xml" xy="5,1180">
-      <Button controller="c1" page="0"/>
-    </component>
-    <component id="n42_u0cg" name="n42" src="u0cg3k" fileName="coms/empty_btn.xml" xy="149,1180">
-      <Button controller="c1" page="1"/>
-    </component>
-    <component id="n43_u0cg" name="n43" src="u0cg3k" fileName="coms/empty_btn.xml" xy="293,1180">
-      <Button controller="c1" page="2"/>
-    </component>
-    <component id="n44_u0cg" name="n44" src="u0cg3k" fileName="coms/empty_btn.xml" xy="437,1180">
-      <Button controller="c1" page="3"/>
-    </component>
-    <component id="n45_u0cg" name="n45" src="u0cg3k" fileName="coms/empty_btn.xml" xy="581,1180">
-      <Button controller="c1" page="4"/>
-    </component>
     <image id="n48_u0cg" name="n48" src="u0cg3n" fileName="assets/zc/heidi01.png" xy="569,940" group="n49_u0cg"/>
     <component id="n38_u0cg" name="n38" src="u0cg3j" fileName="coms/xiwangmu_btn.xml" xy="577,1078" group="n49_u0cg"/>
     <component id="n39_u0cg" name="n39" src="u0cg3i" fileName="coms/xuanwu_btn.xml" xy="577,1014" group="n49_u0cg"/>
     <component id="n40_u0cg" name="n40" src="u0cg3h" fileName="coms/yutu_btn.xml" xy="577,950" group="n49_u0cg"/>
     <group id="n49_u0cg" name="n49" xy="569,940" size="150,201" visible="false" advanced="true"/>
+    <image id="n28_i7tu" name="n28" src="e280k" fileName="assets/zc/xialang.png" xy="0,1148" group="n55_tbt3"/>
+    <component id="n41_u0cg" name="n41" src="u0cg3k" fileName="coms/empty_btn.xml" xy="5,1180" group="n55_tbt3">
+      <Button controller="c1" page="0"/>
+    </component>
+    <component id="n42_u0cg" name="n42" src="u0cg3k" fileName="coms/empty_btn.xml" xy="149,1180" group="n55_tbt3">
+      <Button controller="c1" page="1"/>
+    </component>
+    <component id="n43_u0cg" name="n43" src="u0cg3k" fileName="coms/empty_btn.xml" xy="293,1180" group="n55_tbt3">
+      <Button controller="c1" page="2"/>
+    </component>
+    <component id="n44_u0cg" name="n44" src="u0cg3k" fileName="coms/empty_btn.xml" xy="437,1180" group="n55_tbt3">
+      <Button controller="c1" page="3"/>
+    </component>
+    <component id="n45_u0cg" name="n45" src="u0cg3k" fileName="coms/empty_btn.xml" xy="581,1180" group="n55_tbt3">
+      <Button controller="c1" page="4"/>
+    </component>
+    <group id="n55_tbt3" name="n55" xy="0,1148" size="720,132" advanced="true">
+      <gearDisplay controller="c1" pages="0,1,2,3,4,5"/>
+    </group>
   </displayList>
 </component>

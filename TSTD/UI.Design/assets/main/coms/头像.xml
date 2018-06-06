@@ -2,7 +2,7 @@
 <component size="116,116" extention="Button">
   <displayList>
     <image id="n3_e280" name="n3" src="e280j" fileName="assets/zc/touxiangkuang.png" xy="0,0"/>
-    <loader id="n4_e280" name="n4" xy="3,3" size="116,116"/>
+    <loader id="n4_e280" name="icon" xy="3,3" size="116,116"/>
   </displayList>
   <Button/>
 </component>

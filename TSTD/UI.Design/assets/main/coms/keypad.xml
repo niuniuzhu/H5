@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="550,550">
   <displayList>
+    <component id="n10_tbt3" name="line" src="yer1u" fileName="coms/place.xml" xy="0,0"/>
     <component id="n0_u0cg" name="n0" src="u0cg4a" fileName="coms/key.xml" xy="50,50"/>
     <component id="n1_u0cg" name="n1" src="u0cg4a" fileName="coms/key.xml" xy="275,50"/>
     <component id="n2_u0cg" name="n2" src="u0cg4a" fileName="coms/key.xml" xy="500,50"/>

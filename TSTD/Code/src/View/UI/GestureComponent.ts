@@ -8,13 +8,14 @@ namespace View.UI {
 		private readonly _keyLine: KeyLineComponent;
 		private readonly _touched: KeyComponent[];
 		private readonly _lines: fairygui.GComponent[];
+		private readonly _successtHandler: () => void;
+		private readonly _errorHandler: () => void;
 		private _path: number[];
 
-		constructor(root: fairygui.GComponent) {
+		constructor(root: fairygui.GComponent, successtHandler: () => void, errorHandler: () => void) {
 			this._root = root;
-			this._line = this._root.getChild("line").asCom;
 			this._keypad = this._root.getChild("keypad").asCom;
-			this._keypad.displayObject.on(Laya.Event.MOUSE_DOWN, this, this.OnTouchBegin);
+			this._line = this._keypad.getChild("line").asCom;
 			this._keys = [];
 			for (let i = 0; i < 9; ++i) {
 				this._keys.push(new KeyComponent(this._keypad.getChild("n" + i).asCom, i));
@@ -23,42 +24,12 @@ namespace View.UI {
 			this._keyLine = new KeyLineComponent();
 			this._touched = [];
 			this._lines = [];
+			this._successtHandler = successtHandler;
+			this._errorHandler = errorHandler;
 		}
 
 		public Dispose(): void {
 			this._keyLine.Dispose();
-		}
-
-		public Enter(): void {
-			let graph = RC.Algorithm.Graph.Graph2D.CreateFullDigraph(3, 3);
-			let path = RC.Algorithm.Graph.GraphSearcher.MazeSearch(graph, 0, 7, RC.Numerics.MathUtils.Random);
-			for (let p of path)
-				this._keys[p].selectedIndex = 1;
-			for (let i = 0; i < path.length - 1; ++i) {
-				let curPoint = graph.IndexToCoord(path[i]);
-				let nextPoint = graph.IndexToCoord(path[i + 1]);
-				let curPos = new RC.Numerics.Vec2(curPoint[0], curPoint[1]);
-				let nextPos = new RC.Numerics.Vec2(nextPoint[0], nextPoint[1]);
-				let dir = RC.Numerics.Vec2.Sub(nextPos, curPos);
-				dir.Normalize();
-				let angle = RC.Numerics.Vec2.Dot(RC.Numerics.Vec2.up, dir);
-				angle = RC.Numerics.MathUtils.Clamp(angle, -1, 1);
-				angle = RC.Numerics.MathUtils.RadToDeg(RC.Numerics.MathUtils.Acos(angle));
-				let sign = dir.x > 0 ? -1 : 1;
-				this._keys[path[i]].rotation = angle * sign;
-			}
-			this._path = path;
-		}
-
-		public Exit(): void {
-			for (let key of this._keys) {
-				key.touched = false;
-				key.selectedIndex = 0;
-			}
-			this._touched.splice(0);
-			for (let line of this._lines)
-				line.dispose();
-			this._lines.splice(0);
 		}
 
 		public Update(deltaTime: number): void {
@@ -116,11 +87,11 @@ namespace View.UI {
 		}
 
 		private HandleCorrectGesture(): void {
-			console.log("t");
+			this._successtHandler();
 		}
 
 		private HandleIncorrectGesture(): void {
-			console.log("f");
+			this._errorHandler();
 		}
 
 		private UpdateVisual(key: KeyComponent, lastKey: KeyComponent): void {
@@ -158,6 +129,42 @@ namespace View.UI {
 				}
 			}
 			return null;
+		}
+
+		public Show():void{
+			let graph = RC.Algorithm.Graph.Graph2D.CreateFullDigraph(3, 3);
+			let path = RC.Algorithm.Graph.GraphSearcher.MazeSearch(graph, 0, 7, RC.Numerics.MathUtils.Random);
+			for (let p of path)
+				this._keys[p].selectedIndex = 1;
+			for (let i = 0; i < path.length - 1; ++i) {
+				let curPoint = graph.IndexToCoord(path[i]);
+				let nextPoint = graph.IndexToCoord(path[i + 1]);
+				let curPos = new RC.Numerics.Vec2(curPoint[0], curPoint[1]);
+				let nextPos = new RC.Numerics.Vec2(nextPoint[0], nextPoint[1]);
+				let dir = RC.Numerics.Vec2.Sub(nextPos, curPos);
+				dir.Normalize();
+				let angle = RC.Numerics.Vec2.Dot(RC.Numerics.Vec2.up, dir);
+				angle = RC.Numerics.MathUtils.Clamp(angle, -1, 1);
+				angle = RC.Numerics.MathUtils.RadToDeg(RC.Numerics.MathUtils.Acos(angle));
+				let sign = dir.x > 0 ? -1 : 1;
+				this._keys[path[i]].rotation = angle * sign;
+			}
+			this._path = path;
+			this._keypad.displayObject.on(Laya.Event.MOUSE_DOWN, this, this.OnTouchBegin);
+			this._root.getTransition("t0").play();
+		}
+
+		public Hide():void{
+			this._keypad.displayObject.off(Laya.Event.MOUSE_DOWN, this, this.OnTouchBegin);
+			for (let key of this._keys) {
+				key.touched = false;
+				key.selectedIndex = 0;
+			}
+			this._touched.splice(0);
+			for (let line of this._lines)
+				line.dispose();
+			this._lines.splice(0);
+			this._root.getTransition("t1").play();
 		}
 	}
 }
