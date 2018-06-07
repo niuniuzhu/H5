@@ -22,6 +22,11 @@ namespace View.UI {
 				item.getChild("name").asTextField.text = def.name;
 				item.getChild("lvl").asTextField.text = "" + RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(3, 10));
 				item.getChild("type").asTextField.text = def.type;
+				let img = item.getChild("img").asButton;
+				img.icon = fairygui.UIPackage.getItemURL("global", def.model);
+				let loader = img.getChild("icon").asLoader;
+				loader.playing = false;
+				loader.frame = 0;
 				let btn = item.getChild("n34").asButton;
 				btn.onClick(this, this.OnFightBtnClick);
 				btn.data = i;

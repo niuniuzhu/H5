@@ -23,7 +23,7 @@
     <component id="yer11v" name="task.xml" path="/coms/"/>
     <component id="yer11w" name="task_item.xml" path="/coms/"/>
     <component id="d7xv2s" name="user.xml" path="/coms/"/>
-    <component id="d7xv2t" name="头像.xml" path="/coms/"/>
+    <component id="d7xv2t" name="img.xml" path="/coms/"/>
     <component id="d7xv31" name="message.xml" path="/coms/"/>
     <component id="d7xv32" name="message_item.xml" path="/coms/"/>
     <image id="u0cg33" name="02主界面01(1).jpg" path="/assets/zc/"/>
@@ -72,8 +72,8 @@
     <image id="u0cg4c" name="p0.png" path="/assets/fight/"/>
     <component id="ja734d" name="key_state_1.xml" path="/coms/"/>
     <component id="ja734e" name="key_state_2.xml" path="/coms/"/>
-    <image id="ja734f" name="p1_0.png" path="/assets/fight/"/>
-    <image id="ja734g" name="p0_0.png" path="/assets/fight/"/>
+    <image id="ja734f" name="p1_0.png" path="/assets/fight/" scale=""/>
+    <image id="ja734g" name="p0_0.png" path="/assets/fight/" scale=""/>
     <component id="ja734h" name="key_line.xml" path="/coms/" exported="true"/>
     <image id="ja734i" name="04战斗02.jpg" path="/assets/fight/"/>
     <image id="ja734j" name="04战斗03.jpg" path="/assets/fight/"/>
@@ -126,6 +126,9 @@
     <image id="tbt35u" name="05吞噬、收伏、放生02.jpg" path="/assets/fight/"/>
     <image id="tbt35v" name="anniuwenzi_14.png" path="/assets/fight/"/>
     <component id="lrpy5w" name="shouye_item.xml" path="/coms/"/>
+    <image id="jiqm5x" name="p0_1.png" path="/assets/fight/"/>
+    <image id="jiqm5y" name="p1_1.png" path="/assets/fight/"/>
+    <component id="jiqm5z" name="img_selector.xml" path="/coms/" exported="true"/>
   </resources>
   <publish name="main" npot="true"/>
 </packageDescription>

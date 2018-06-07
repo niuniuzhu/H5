@@ -48,7 +48,7 @@ namespace View.UI {
 			let v = new RC.Numerics.Vec2(p.x, p.y)
 			let key = this.PointOverKey(v, this._keyRadius);
 			if (key != null && this._touched.indexOf(key) < 0) {
-				key.touched = true;
+				key.state = 2;
 				if (this._touched.length > 0)
 					this.UpdateVisual(key, this._touched[this._touched.length - 1]);
 				this._touched.push(key);
@@ -61,8 +61,11 @@ namespace View.UI {
 		}
 
 		private OnTouchEnd(e: laya.events.Event): void {
-			if (this._touched.length == 0)
+			if (this._touched.length == 0) {
+				fairygui.GRoot.inst.displayObject.off(Laya.Event.MOUSE_MOVE, this, this.OnTouchMove);
+				fairygui.GRoot.inst.displayObject.off(Laya.Event.MOUSE_UP, this, this.OnTouchEnd);
 				return;
+			}
 			this.HandleTouchEnd();
 		}
 
@@ -114,11 +117,6 @@ namespace View.UI {
 			line.rotation = angle * sign;
 		}
 
-		private ClearKeypadsStates(): void {
-			for (let key of this._keys)
-				key.touched = false;
-		}
-
 		private PointOverKey(v: RC.Numerics.Vec2, radius: number): KeyComponent {
 			let r2 = radius * radius;
 			for (let key of this._keys) {
@@ -131,15 +129,17 @@ namespace View.UI {
 			return null;
 		}
 
-		public TouchEnd():void{
+		public TouchEnd(): void {
 			this.HandleTouchEnd();
 		}
 
 		public Show(): void {
 			let graph = RC.Algorithm.Graph.Graph2D.CreateFullDigraph(3, 3);
-			let path = RC.Algorithm.Graph.GraphSearcher.MazeSearch(graph, 0, 7, RC.Numerics.MathUtils.Random);
+			let start = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(0, 9));
+			let path = RC.Algorithm.Graph.GraphSearcher.MazeSearch(graph, start, 7, RC.Numerics.MathUtils.Random);
 			for (let p of path)
 				this._keys[p].selectedIndex = 1;
+			this._keys[path[0]].state = 2;
 			for (let i = 0; i < path.length - 1; ++i) {
 				let curPoint = graph.IndexToCoord(path[i]);
 				let nextPoint = graph.IndexToCoord(path[i + 1]);
@@ -163,7 +163,7 @@ namespace View.UI {
 			this._root.getTransition("t1").play(new laya.utils.Handler(this, () => {
 				this._keyLine.Detach();
 				for (let key of this._keys) {
-					key.touched = false;
+					key.state = 0;
 					key.selectedIndex = 0;
 				}
 				this._touched.splice(0);

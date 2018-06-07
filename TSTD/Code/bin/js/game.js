@@ -797,7 +797,7 @@ var View;
                 let v = new RC.Numerics.Vec2(p.x, p.y);
                 let key = this.PointOverKey(v, this._keyRadius);
                 if (key != null && this._touched.indexOf(key) < 0) {
-                    key.touched = true;
+                    key.state = 2;
                     if (this._touched.length > 0)
                         this.UpdateVisual(key, this._touched[this._touched.length - 1]);
                     this._touched.push(key);
@@ -809,8 +809,11 @@ var View;
                 this._keyLine.UpdateVisual(v);
             }
             OnTouchEnd(e) {
-                if (this._touched.length == 0)
+                if (this._touched.length == 0) {
+                    fairygui.GRoot.inst.displayObject.off(Laya.Event.MOUSE_MOVE, this, this.OnTouchMove);
+                    fairygui.GRoot.inst.displayObject.off(Laya.Event.MOUSE_UP, this, this.OnTouchEnd);
                     return;
+                }
                 this.HandleTouchEnd();
             }
             HandleTouchEnd() {
@@ -857,10 +860,6 @@ var View;
                 let sign = dir.x > 0 ? -1 : 1;
                 line.rotation = angle * sign;
             }
-            ClearKeypadsStates() {
-                for (let key of this._keys)
-                    key.touched = false;
-            }
             PointOverKey(v, radius) {
                 let r2 = radius * radius;
                 for (let key of this._keys) {
@@ -877,9 +876,11 @@ var View;
             }
             Show() {
                 let graph = RC.Algorithm.Graph.Graph2D.CreateFullDigraph(3, 3);
-                let path = RC.Algorithm.Graph.GraphSearcher.MazeSearch(graph, 0, 7, RC.Numerics.MathUtils.Random);
+                let start = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(0, 9));
+                let path = RC.Algorithm.Graph.GraphSearcher.MazeSearch(graph, start, 7, RC.Numerics.MathUtils.Random);
                 for (let p of path)
                     this._keys[p].selectedIndex = 1;
+                this._keys[path[0]].state = 2;
                 for (let i = 0; i < path.length - 1; ++i) {
                     let curPoint = graph.IndexToCoord(path[i]);
                     let nextPoint = graph.IndexToCoord(path[i + 1]);
@@ -902,7 +903,7 @@ var View;
                 this._root.getTransition("t1").play(new laya.utils.Handler(this, () => {
                     this._keyLine.Detach();
                     for (let key of this._keys) {
-                        key.touched = false;
+                        key.state = 0;
                         key.selectedIndex = 0;
                     }
                     this._touched.splice(0);
@@ -938,13 +939,10 @@ var View;
             set selectedIndex(value) { this._controller.selectedIndex = value; }
             get rotation() { return this._com.rotation; }
             set rotation(value) { this._com.rotation = value; }
-            get touched() { return this._touched; }
-            set touched(value) {
-                if (this._touched == value)
-                    return;
-                this._touched = true;
-                this._com.getChild("n0").asCom.getController("c1").selectedIndex = this._touched ? 1 : 0;
-                this._com.getChild("n1").asCom.getController("c1").selectedIndex = this._touched ? 1 : 0;
+            get state() { return this._state; }
+            set state(value) {
+                this._com.getChild("n0").asCom.getController("c1").selectedIndex = value;
+                this._com.getChild("n1").asCom.getController("c1").selectedIndex = value;
             }
             AddChild(child) {
                 this._com.addChild(child);
@@ -978,6 +976,8 @@ var View;
                     this._com.parent.removeChild(this._com);
             }
             UpdateVisual(v) {
+                if (this._attached == null)
+                    return;
                 let orgiPos = new RC.Numerics.Vec2(this._attached.x, this._attached.y);
                 let curPos = new RC.Numerics.Vec2(v.x, v.y);
                 let vec = RC.Numerics.Vec2.Sub(curPos, orgiPos);
@@ -1016,6 +1016,11 @@ var View;
                     item.getChild("name").asTextField.text = def.name;
                     item.getChild("lvl").asTextField.text = "" + RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(3, 10));
                     item.getChild("type").asTextField.text = def.type;
+                    let img = item.getChild("img").asButton;
+                    img.icon = fairygui.UIPackage.getItemURL("global", def.model);
+                    let loader = img.getChild("icon").asLoader;
+                    loader.playing = false;
+                    loader.frame = 0;
                     let btn = item.getChild("n34").asButton;
                     btn.onClick(this, this.OnFightBtnClick);
                     btn.data = i;
@@ -1203,6 +1208,11 @@ var View;
                 this._root.getChild("name").asTextField.text = def.name;
                 this._root.getChild("type").asTextField.text = def.type;
                 this._root.getChild("lvl").asTextField.text = "" + RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(View.CUser.lvl - 3, View.CUser.lvl + 3));
+                let img = this._root.getChild("img").asButton;
+                img.icon = fairygui.UIPackage.getItemURL("global", def.model);
+                let loader = img.getChild("icon").asLoader;
+                loader.playing = false;
+                loader.frame = 0;
             }
         }
         UI.SearchPanel = SearchPanel;
@@ -1285,9 +1295,9 @@ var View;
                 fairygui.UIPackage.addPackage("res/ui/main");
                 View.CUser.img = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(0, 6));
                 View.CUser.lvl = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(20, 40));
-                View.CUser.hp = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(1000, 1200));
+                View.CUser.hp = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(760, 950));
                 View.CUser.exp = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(120, 300));
-                View.CUser.atk = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(100, 200));
+                View.CUser.atk = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(130, 220));
                 View.CUser.pets = [];
                 let candidate = [];
                 for (let i = 0; i < 30; ++i) {
@@ -1427,16 +1437,23 @@ var View;
             constructor(owner) {
                 this._owner = owner;
                 this._root = owner.root.getChild("c5").asCom;
+                this._popup = fairygui.UIPackage.createObject("main", "img_selector").asCom;
+                this._img = this._root.getChild("img").asButton;
+                this._img.onClick(this, this.OnImageBtnClick);
+                let imgList = this._popup.getChild("n1").asList;
+                imgList.on(fairygui.Events.CLICK_ITEM, this, this.OnListItemClick);
+                this._input = this._root.getChild("name").asTextInput;
+                this._input.on(laya.events.Event.INPUT, this, this.OnNameChanged);
             }
             Dispose() {
+                this._popup.dispose();
             }
             Enter() {
                 this._root.getChild("name").asTextField.text = View.CUser.uname;
                 this._root.getChild("lvl").asTextField.text = "" + View.CUser.lvl;
                 this._root.getChild("exp").asTextField.text = "" + View.CUser.exp;
                 this._root.getChild("atk").asTextField.text = "" + View.CUser.atk;
-                this._root.getChild("img").asCom.getChild("icon").asLoader.url = fairygui.UIPackage.getItemURL("main", "u" + View.CUser.img);
-                this._root.getChild("img").onClick(this, this.OnImageBtnClick);
+                this._img.icon = fairygui.UIPackage.getItemURL("main", "u" + View.CUser.img);
             }
             Exit() {
             }
@@ -1445,6 +1462,20 @@ var View;
             OnResize(e) {
             }
             OnImageBtnClick(e) {
+                fairygui.GRoot.inst.showPopup(this._popup, this._img);
+            }
+            OnListItemClick(sender, e) {
+                let id = sender.asCom.name;
+                View.CUser.img = Number.parseInt(id);
+                this._img.icon = fairygui.UIPackage.getItemURL("main", "u" + View.CUser.img);
+                fairygui.GRoot.inst.hidePopup();
+            }
+            OnNameChanged(e) {
+                if (this._input.text == "") {
+                    this._input.text = View.CUser.uname;
+                    return;
+                }
+                View.CUser.uname = this._input.text;
             }
         }
         UI.UserInfoPanel = UserInfoPanel;

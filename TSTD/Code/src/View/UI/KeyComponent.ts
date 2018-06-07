@@ -21,14 +21,11 @@ namespace View.UI {
 		public get rotation(): number { return this._com.rotation; }
 		public set rotation(value: number) { this._com.rotation = value; }
 
-		private _touched: boolean;
-		public get touched(): boolean { return this._touched; }
-		public set touched(value: boolean) {
-			if (this._touched == value)
-				return;
-			this._touched = true;
-			this._com.getChild("n0").asCom.getController("c1").selectedIndex = this._touched ? 1 : 0;
-			this._com.getChild("n1").asCom.getController("c1").selectedIndex = this._touched ? 1 : 0;
+		private _state: number;
+		public get state(): number { return this._state; }
+		public set state(value: number) {
+			this._com.getChild("n0").asCom.getController("c1").selectedIndex = value;
+			this._com.getChild("n1").asCom.getController("c1").selectedIndex = value;
 		}
 
 		constructor(com: fairygui.GComponent, id: number) {

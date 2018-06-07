@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="274,402">
+  <displayList>
+    <image id="n0_jiqm" name="n0" src="u0cg46" fileName="assets/user/heidi02.png" xy="0,0"/>
+    <list id="n1_jiqm" name="n1" xy="13,8" size="248,386" layout="flow_hz" overflow="scroll" lineGap="18" colGap="14" defaultItem="ui://dhvv3tkxd7xv2t">
+      <item icon="ui://dhvv3tkxtbt35e" name="0"/>
+      <item icon="ui://dhvv3tkxtbt35f" name="1"/>
+      <item icon="ui://dhvv3tkxtbt35g" name="2"/>
+      <item icon="ui://dhvv3tkxtbt35h" name="3"/>
+      <item icon="ui://dhvv3tkxtbt35i" name="4"/>
+      <item icon="ui://dhvv3tkxtbt35j" name="5"/>
+    </list>
+  </displayList>
+</component>

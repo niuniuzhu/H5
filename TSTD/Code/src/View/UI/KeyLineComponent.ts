@@ -24,6 +24,8 @@ namespace View.UI {
 		}
 
 		public UpdateVisual(v: RC.Numerics.Vec2): void {
+			if (this._attached == null)
+				return;
 			let orgiPos = new RC.Numerics.Vec2(this._attached.x, this._attached.y);
 			let curPos = new RC.Numerics.Vec2(v.x, v.y);
 			let vec = RC.Numerics.Vec2.Sub(curPos, orgiPos);

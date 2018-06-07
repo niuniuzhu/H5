@@ -21,10 +21,10 @@
       <Label icon="ui://dhvv3tkxu0cg44"/>
     </component>
     <component id="n40_u0cg" name="n40" src="k6nj7" fileName="coms/panel1.xml" pkg="evwornmp" xy="93,359"/>
-    <component id="n41_u0cg" name="img" src="d7xv2t" fileName="coms/头像.xml" xy="302,439"/>
+    <component id="n41_u0cg" name="img" src="d7xv2t" fileName="coms/img.xml" xy="302,439"/>
     <image id="n42_u0cg" name="n42" src="u0cg47" fileName="assets/user/kuang04.png" xy="219,599"/>
     <image id="n44_u0cg" name="n44" src="u0cg3v" fileName="assets/tansuo/wenzidi.png" xy="217,696"/>
-    <text id="n45_u0cg" name="name" xy="230,610" size="40,36" fontSize="28" color="#ffffff" text=""/>
+    <text id="n45_u0cg" name="name" xy="230,610" size="238,36" input="true" fontSize="28" color="#ffffff" autoSize="none" singleLine="true" text=""/>
     <image id="n46_u0cg" name="n46" src="u0cg3v" fileName="assets/tansuo/wenzidi.png" xy="217,753"/>
     <image id="n47_u0cg" name="n47" src="u0cg3v" fileName="assets/tansuo/wenzidi.png" xy="217,810"/>
     <text id="n49_u0cg" name="n49" xy="227,702" size="69,36" fontSize="28" color="#ffffff" text="等级:"/>

@@ -48,7 +48,11 @@ namespace View.UI {
 			this._root.getChild("name").asTextField.text = def.name;
 			this._root.getChild("type").asTextField.text = def.type;
 			this._root.getChild("lvl").asTextField.text = "" + RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(CUser.lvl - 3, CUser.lvl + 3));
-			// todo img
+			let img = this._root.getChild("img").asButton;
+			img.icon = fairygui.UIPackage.getItemURL("global", def.model);
+			let loader = img.getChild("icon").asLoader;
+			loader.playing = false;
+			loader.frame = 0;
 		}
 	}
 }
