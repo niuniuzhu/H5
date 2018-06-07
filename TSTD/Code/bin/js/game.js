@@ -578,6 +578,12 @@ var View;
             this._root.setPivot(0.5, 0.5);
             this._root.center();
             this._root.playing = false;
+            this._hitFx = fairygui.UIPackage.createObject("global", "hit").asMovieClip;
+            container.addChild(this._hitFx);
+            this._hitFx.setPivot(0.5, 0.5);
+            this._hitFx.center();
+            this._hitFx.playing = false;
+            this._hitFx.visible = false;
             this.Idle();
         }
         Dispose() {
@@ -604,6 +610,12 @@ var View;
             let action = this.GetAction("die");
             this._root.setPlaySettings(action.start, action.end, 0);
             this._root.playing = true;
+        }
+        Hit() {
+            this._hitFx.visible = true;
+            this._hitFx.frame = 0;
+            this._hitFx.setPlaySettings(0, -1, 1, 0, new laya.utils.Handler(this, (() => this._hitFx.visible = false).bind(this)));
+            this._hitFx.playing = true;
         }
     }
     View.CPets = CPets;
@@ -634,16 +646,30 @@ var View;
             this._opponent.hp = View.CUser.hp;
         }
         BeginFight(playerAction, completeHandler) {
-            let opponentAction = RC.Numerics.MathUtils.Random(0, 1) > 0.2 ? true : false;
+            this.playerAction(playerAction, completeHandler);
+        }
+        playerAction(playerAction, completeHandler) {
             if (playerAction) {
                 let offset = RC.Numerics.MathUtils.Floor(this._player.atk * 0.1);
                 this._opponent.hp -= this._player.atk + RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(-offset, offset));
+                this._opponent.Hit();
+                this._player.Attack((() => {
+                    this.opponentAction(completeHandler);
+                }).bind(this));
             }
+            else
+                this.opponentAction(completeHandler);
+        }
+        opponentAction(completeHandler) {
+            let opponentAction = RC.Numerics.MathUtils.Random(0, 1) > 0.15 ? true : false;
             if (opponentAction) {
                 let offset = RC.Numerics.MathUtils.Floor(this._player.atk * 0.1);
                 this._player.hp -= this._opponent.atk + RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(-offset, offset));
+                this._player.Hit();
+                this._opponent.Attack((() => completeHandler()).bind(this));
             }
-            this._player.Attack((() => completeHandler()).bind(this));
+            else
+                completeHandler();
         }
     }
     View.Fight = Fight;
@@ -727,7 +753,7 @@ var View;
                 }
             }
         }
-        FightPanel.COUNT_DOWN = 10000;
+        FightPanel.COUNT_DOWN = 15000;
         UI.FightPanel = FightPanel;
     })(UI = View.UI || (View.UI = {}));
 })(View || (View = {}));
@@ -1110,8 +1136,11 @@ var View;
             }
             TunshiSuccess() {
                 this._root.getController("c1").selectedIndex = 2;
-                let def = Shared.Model.ModelFactory.GetEntityData(this._owner.fightPanel.fight.opponent.id);
+                let id = this.opponent.id;
+                let def = Shared.Model.ModelFactory.GetEntityData(id);
                 this._root.getChild("n27").asTextField.text = `你成功收复了${def.name}作为麾下灵兽,恭喜!`;
+                if (View.CUser.pets.indexOf(id) < 0)
+                    View.CUser.pets.push(id);
             }
         }
         ResultPanel.EATING_RATE = 0.2 / 1000;
@@ -1128,16 +1157,13 @@ var View;
                 this._root = owner.root.getChild("c2").asCom;
                 this._root.getChild("back_btn").onClick(this, this.OnBackBtnClick);
                 this._root.getChild("atk_btn").onClick(this, this.OnAtkBtnClick);
+                this._root.getController("c1").on(fairygui.Events.STATE_CHANGED, this, this.OnControllerIndexChanged);
             }
             Dispose() {
             }
             Enter() {
                 this._root.getController("c1").selectedIndex = 0;
-                this._opponentId = "e" + RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(0, 5));
-                let def = Shared.Model.ModelFactory.GetEntityData(this._opponentId);
-                this._root.getChild("name").asTextField.text = def.name;
-                this._root.getChild("type").asTextField.text = def.type;
-                this._root.getChild("lvl").asTextField.text = "" + View.CUser.lvl;
+                this.SearchOpponent();
             }
             Exit() {
             }
@@ -1151,6 +1177,16 @@ var View;
             OnAtkBtnClick(e) {
                 this._owner.fightPanel.opponentId = this._opponentId;
                 this._owner.panelIndex = 6;
+            }
+            OnControllerIndexChanged() {
+                this.SearchOpponent();
+            }
+            SearchOpponent() {
+                this._opponentId = "e" + RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(0, 30));
+                let def = Shared.Model.ModelFactory.GetEntityData(this._opponentId);
+                this._root.getChild("name").asTextField.text = def.name;
+                this._root.getChild("type").asTextField.text = def.type;
+                this._root.getChild("lvl").asTextField.text = "" + RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(View.CUser.lvl - 3, View.CUser.lvl + 3));
             }
         }
         UI.SearchPanel = SearchPanel;
@@ -1233,10 +1269,19 @@ var View;
                 fairygui.UIPackage.addPackage("res/ui/main");
                 View.CUser.img = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(0, 6));
                 View.CUser.lvl = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(20, 40));
-                View.CUser.hp = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(1, 2));
+                View.CUser.hp = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(1000, 1200));
                 View.CUser.exp = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(120, 300));
                 View.CUser.atk = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(100, 200));
-                View.CUser.pets = ["e0", "e1", "e2", "e3", "e4"];
+                View.CUser.pets = [];
+                let candidate = [];
+                for (let i = 0; i < 30; ++i) {
+                    candidate.push(i);
+                }
+                for (let i = 0; i < 10; ++i) {
+                    let pos = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(0, candidate.length));
+                    let m = candidate.splice(pos, 1)[0];
+                    View.CUser.pets.push("e" + m);
+                }
                 View.CUser.petForFight = 0;
                 View.CUser.uname = "深蓝的天空";
                 this._root = fairygui.UIPackage.createObject("main", "Main").asCom;
@@ -1397,6 +1442,8 @@ var View;
             constructor(owner) {
                 this._owner = owner;
                 this._root = owner.root.getChild("c0").asCom;
+                this._list = this._root.getChild("n53").asList;
+                this._pets = [];
             }
             Dispose() {
             }
@@ -1412,8 +1459,12 @@ var View;
                 this._root.getChild("atk").asTextField.text = "" + View.CUser.atk;
                 this._root.getChild("img").asCom.getChild("icon").asLoader.url = fairygui.UIPackage.getItemURL("main", "u" + View.CUser.img);
                 this._root.getChild("img").onClick(this, this.OnImageBtnClick);
+                this.CreatePets();
             }
             Exit() {
+                for (let pet of this._pets)
+                    pet.dispose();
+                this._list.removeChildrenToPool();
             }
             Update(deltaTime) {
             }
@@ -1421,6 +1472,24 @@ var View;
             }
             OnImageBtnClick(e) {
                 this._owner.panelIndex = 5;
+            }
+            CreatePets() {
+                let pets = View.CUser.pets.slice(0);
+                let count = RC.Numerics.MathUtils.Min(3, pets.length);
+                for (let i = 0; i < count; ++i) {
+                    let pos = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(0, pets.length));
+                    let id = pets.splice(pos, 1)[0];
+                    let def = Shared.Model.ModelFactory.GetEntityData(id);
+                    let pet = fairygui.UIPackage.createObject("global", def.model).asMovieClip;
+                    this._root.getChild("pet" + i).asCom.addChild(pet);
+                    pet.center();
+                    let action = def.ddown.getValue("idle");
+                    pet.setPlaySettings(action.start, action.end, -1);
+                    pet.playing = true;
+                    this._pets.push(pet);
+                    let item = this._list.addItemFromPool().asCom;
+                    item.getChild("title").asTextField.text = def.name;
+                }
             }
         }
         UI.ZCPanel = ZCPanel;

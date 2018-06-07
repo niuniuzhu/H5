@@ -125,6 +125,7 @@
     <image id="tbt35t" name="shoufuchenggong.png" path="/assets/fight/"/>
     <image id="tbt35u" name="05吞噬、收伏、放生02.jpg" path="/assets/fight/"/>
     <image id="tbt35v" name="anniuwenzi_14.png" path="/assets/fight/"/>
+    <component id="lrpy5w" name="shouye_item.xml" path="/coms/"/>
   </resources>
   <publish name="main" npot="true"/>
 </packageDescription>

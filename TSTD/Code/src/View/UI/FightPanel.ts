@@ -1,6 +1,6 @@
 namespace View.UI {
 	export class FightPanel implements IMainPanel {
-		private static readonly COUNT_DOWN = 10000;
+		private static readonly COUNT_DOWN = 15000;
 
 		private readonly _owner: UIMain;
 		private readonly _root: fairygui.GComponent;

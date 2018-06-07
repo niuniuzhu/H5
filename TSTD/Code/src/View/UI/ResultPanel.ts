@@ -62,8 +62,11 @@ namespace View.UI {
 
 		private TunshiSuccess(): void {
 			this._root.getController("c1").selectedIndex = 2;
-			let def = Shared.Model.ModelFactory.GetEntityData(this._owner.fightPanel.fight.opponent.id);
+			let id = this.opponent.id;
+			let def = Shared.Model.ModelFactory.GetEntityData(id);
 			this._root.getChild("n27").asTextField.text = `你成功收复了${def.name}作为麾下灵兽,恭喜!`;
+			if (View.CUser.pets.indexOf(id) < 0)
+				View.CUser.pets.push(id);
 		}
 	}
 }

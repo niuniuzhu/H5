@@ -35,10 +35,19 @@ namespace View.UI {
 
 			View.CUser.img = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(0, 6));
 			View.CUser.lvl = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(20, 40));
-			View.CUser.hp = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(1, 2));
+			View.CUser.hp = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(1000, 1200));
 			View.CUser.exp = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(120, 300));
 			View.CUser.atk = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(100, 200));
-			View.CUser.pets = ["e0", "e1", "e2", "e3", "e4"];
+			View.CUser.pets = [];
+			let candidate: number[] = [];
+			for (let i = 0; i < 30; ++i) {
+				candidate.push(i);
+			}
+			for (let i = 0; i < 10; ++i) {
+				let pos = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(0, candidate.length));
+				let m = candidate.splice(pos, 1)[0];
+				View.CUser.pets.push("e" + m);
+			}
 			View.CUser.petForFight = 0;
 			View.CUser.uname = "深蓝的天空";
 

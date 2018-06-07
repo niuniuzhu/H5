@@ -7,9 +7,9 @@ namespace View.UI {
 		constructor(owner: UIMain) {
 			this._owner = owner;
 			this._root = owner.root.getChild("c2").asCom;
-
 			this._root.getChild("back_btn").onClick(this, this.OnBackBtnClick);
 			this._root.getChild("atk_btn").onClick(this, this.OnAtkBtnClick);
+			this._root.getController("c1").on(fairygui.Events.STATE_CHANGED, this, this.OnControllerIndexChanged);
 		}
 
 		public Dispose(): void {
@@ -17,12 +17,7 @@ namespace View.UI {
 
 		public Enter(): void {
 			this._root.getController("c1").selectedIndex = 0;
-			this._opponentId = "e" + RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(0, 5));
-			let def = Shared.Model.ModelFactory.GetEntityData(this._opponentId);
-			this._root.getChild("name").asTextField.text = def.name;
-			this._root.getChild("type").asTextField.text = def.type;
-			this._root.getChild("lvl").asTextField.text = "" + CUser.lvl;
-			// todo img
+			this.SearchOpponent();
 		}
 
 		public Exit(): void {
@@ -41,6 +36,19 @@ namespace View.UI {
 		private OnAtkBtnClick(e: laya.events.Event): any {
 			this._owner.fightPanel.opponentId = this._opponentId;
 			this._owner.panelIndex = 6;
+		}
+
+		private OnControllerIndexChanged(): void {
+			this.SearchOpponent();
+		}
+
+		private SearchOpponent(): void {
+			this._opponentId = "e" + RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(0, 30));
+			let def = Shared.Model.ModelFactory.GetEntityData(this._opponentId);
+			this._root.getChild("name").asTextField.text = def.name;
+			this._root.getChild("type").asTextField.text = def.type;
+			this._root.getChild("lvl").asTextField.text = "" + RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(CUser.lvl - 3, CUser.lvl + 3));
+			// todo img
 		}
 	}
 }

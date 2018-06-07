@@ -27,21 +27,28 @@
     <movieclip id="tbt33q" name="n3.jta" path="/assets/models/鸟系/" exported="true"/>
     <movieclip id="tbt33r" name="n4.jta" path="/assets/models/鸟系/" exported="true"/>
     <movieclip id="tbt33s" name="n5.jta" path="/assets/models/鸟系/" exported="true"/>
-    <movieclip id="tbt33t" name="s1.jta" path="/assets/models/神灵系/" exported="true"/>
-    <movieclip id="tbt33u" name="s2.jta" path="/assets/models/神灵系/" exported="true"/>
-    <movieclip id="tbt33v" name="s3.jta" path="/assets/models/神灵系/" exported="true"/>
-    <movieclip id="tbt33w" name="s4.jta" path="/assets/models/神灵系/" exported="true"/>
-    <movieclip id="tbt33x" name="s5.jta" path="/assets/models/神灵系/" exported="true"/>
-    <movieclip id="tbt33y" name="s1.jta" path="/assets/models/神兽系/" exported="true"/>
-    <movieclip id="tbt33z" name="s2.jta" path="/assets/models/神兽系/" exported="true"/>
-    <movieclip id="tbt340" name="s3.jta" path="/assets/models/神兽系/" exported="true"/>
-    <movieclip id="tbt341" name="s4.jta" path="/assets/models/神兽系/" exported="true"/>
-    <movieclip id="tbt342" name="s5.jta" path="/assets/models/神兽系/" exported="true"/>
+    <movieclip id="tbt33t" name="sl1.jta" path="/assets/models/神灵系/" exported="true"/>
+    <movieclip id="tbt33u" name="sl2.jta" path="/assets/models/神灵系/" exported="true"/>
+    <movieclip id="tbt33v" name="sl3.jta" path="/assets/models/神灵系/" exported="true"/>
+    <movieclip id="tbt33w" name="sl4.jta" path="/assets/models/神灵系/" exported="true"/>
+    <movieclip id="tbt33x" name="sl5.jta" path="/assets/models/神灵系/" exported="true"/>
+    <movieclip id="tbt33y" name="ss1.jta" path="/assets/models/神兽系/" exported="true"/>
+    <movieclip id="tbt33z" name="ss2.jta" path="/assets/models/神兽系/" exported="true"/>
+    <movieclip id="tbt340" name="ss3.jta" path="/assets/models/神兽系/" exported="true"/>
+    <movieclip id="tbt341" name="ss4.jta" path="/assets/models/神兽系/" exported="true"/>
+    <movieclip id="tbt342" name="ss5.jta" path="/assets/models/神兽系/" exported="true"/>
     <movieclip id="tbt343" name="s1.jta" path="/assets/models/水系/" exported="true"/>
     <movieclip id="tbt344" name="s2.jta" path="/assets/models/水系/" exported="true"/>
     <movieclip id="tbt345" name="s3.jta" path="/assets/models/水系/" exported="true"/>
     <movieclip id="tbt346" name="s4.jta" path="/assets/models/水系/" exported="true"/>
     <movieclip id="tbt347" name="s5.jta" path="/assets/models/水系/" exported="true"/>
+    <movieclip id="lrpy48" name="捕捉.jta" path="/assets/fx/"/>
+    <movieclip id="lrpy49" name="攻击1.jta" path="/assets/fx/"/>
+    <movieclip id="lrpy4a" name="攻击2.jta" path="/assets/fx/"/>
+    <movieclip id="lrpy4b" name="攻击3.jta" path="/assets/fx/"/>
+    <movieclip id="lrpy4c" name="hit.jta" path="/assets/fx/" exported="true"/>
+    <movieclip id="lrpy4d" name="解锁.jta" path="/assets/fx/"/>
+    <movieclip id="lrpy4e" name="吞噬.jta" path="/assets/fx/"/>
   </resources>
   <publish name="global" npot="true"/>
 </packageDescription>

@@ -26,16 +26,32 @@ namespace View {
 		}
 
 		public BeginFight(playerAction: boolean, completeHandler: () => void) {
-			let opponentAction = RC.Numerics.MathUtils.Random(0, 1) > 0.2 ? true : false;
+			this.playerAction(playerAction, completeHandler);
+		}
+
+		private playerAction(playerAction: boolean, completeHandler: () => void): void {
 			if (playerAction) {
 				let offset = RC.Numerics.MathUtils.Floor(this._player.atk * 0.1);
 				this._opponent.hp -= this._player.atk + RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(-offset, offset));
+				this._opponent.Hit();
+				this._player.Attack((() => {
+					this.opponentAction(completeHandler);
+				}).bind(this));
 			}
+			else
+				this.opponentAction(completeHandler);
+		}
+
+		private opponentAction(completeHandler: () => void): void {
+			let opponentAction = RC.Numerics.MathUtils.Random(0, 1) > 0.15 ? true : false;
 			if (opponentAction) {
 				let offset = RC.Numerics.MathUtils.Floor(this._player.atk * 0.1);
 				this._player.hp -= this._opponent.atk + RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(-offset, offset));
+				this._player.Hit();
+				this._opponent.Attack((() => completeHandler()).bind(this));
 			}
-			this._player.Attack((() => completeHandler()).bind(this));
+			else
+				completeHandler();
 		}
 	}
 }

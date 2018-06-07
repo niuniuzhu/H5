@@ -9,6 +9,7 @@ namespace View {
 		private readonly _ddown: RC.Collections.Dictionary<string, Shared.Model.EAction>;
 		private readonly _team: number;
 		private readonly _root: fairygui.GMovieClip;
+		private readonly _hitFx: fairygui.GMovieClip;
 
 		constructor(id: string, container: fairygui.GComponent, team: number) {
 			this.id = id;
@@ -23,6 +24,14 @@ namespace View {
 			this._root.setPivot(0.5, 0.5);
 			this._root.center();
 			this._root.playing = false;
+
+			this._hitFx = fairygui.UIPackage.createObject("global", "hit").asMovieClip;
+			container.addChild(this._hitFx);
+			this._hitFx.setPivot(0.5, 0.5);
+			this._hitFx.center();
+			this._hitFx.playing = false;
+			this._hitFx.visible = false;
+
 			this.Idle();
 		}
 
@@ -54,6 +63,13 @@ namespace View {
 			let action = this.GetAction("die");
 			this._root.setPlaySettings(action.start, action.end, 0);
 			this._root.playing = true;
+		}
+
+		public Hit(): void {
+			this._hitFx.visible = true;
+			this._hitFx.frame = 0;
+			this._hitFx.setPlaySettings(0, -1, 1, 0, new laya.utils.Handler(this, (() => this._hitFx.visible = false).bind(this)));
+			this._hitFx.playing = true;
 		}
 	}
 }

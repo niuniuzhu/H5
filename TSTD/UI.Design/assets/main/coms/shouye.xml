@@ -18,10 +18,16 @@
     <text id="n40_u0cg" name="name" xy="149,59" size="145,36" fontSize="28" color="#f4ff00" align="center" vAlign="middle" text="深蓝的天空"/>
     <text id="n41_u0cg" name="atk" xy="539,58" size="25,32" font="ui://dhvv3tkxe280p" fontSize="20" color="#ffffff" align="center" vAlign="middle" text="0"/>
     <image id="n42_u0cg" name="n42" src="u0cg3c" fileName="assets/zc/ti.png" xy="135,8"/>
-    <image id="n44_tbt3" name="n44" src="u0cg3n" fileName="assets/zc/heidi01.png" xy="564,971" group="n48_tbt3"/>
-    <image id="n45_tbt3" name="n45" src="tbt35n" fileName="assets/zc/lingshouanniu.png" xy="572,1109" group="n48_tbt3"/>
-    <image id="n46_tbt3" name="n46" src="tbt35n" fileName="assets/zc/lingshouanniu.png" xy="572,1045" group="n48_tbt3"/>
-    <image id="n47_tbt3" name="n47" src="tbt35n" fileName="assets/zc/lingshouanniu.png" xy="572,981" group="n48_tbt3"/>
-    <group id="n48_tbt3" name="n48" xy="564,971" size="150,201" advanced="true"/>
+    <component id="n49_lrpy" name="pet0" src="yer1u" fileName="coms/place.xml" xy="401,372" size="1,1" group="n52_lrpy" scale="0.5,0.5"/>
+    <component id="n50_lrpy" name="pet1" src="yer1u" fileName="coms/place.xml" xy="204,904" size="1,1" group="n52_lrpy" scale="0.5,0.5"/>
+    <component id="n51_lrpy" name="pet2" src="yer1u" fileName="coms/place.xml" xy="620,777" size="1,1" group="n52_lrpy" scale="0.5,0.5"/>
+    <group id="n52_lrpy" name="n52" xy="204,372" size="417,533" advanced="true"/>
+    <image id="n44_tbt3" name="n44" src="u0cg3n" fileName="assets/zc/heidi01.png" xy="564,1172" pivot="0,1" anchor="true" size="150,201">
+      <relation target="n53_lrpy" sidePair="width-width,height-height"/>
+    </image>
+    <list id="n53_lrpy" name="n53" xy="569,980" size="140,181" overflow="scroll" lineGap="12" defaultItem="ui://dhvv3tkxlrpy5w" vAlign="bottom" autoClearItems="true">
+      <item/>
+      <item/>
+    </list>
   </displayList>
 </component>

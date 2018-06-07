@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="720,1280" designImageAlpha="28" designImageLayer="1">
-  <controller name="c1" pages="0,首页,1,消息,2,探索,3,任务,4,灵兽,5,玩家信息,6,战斗,7,结果" selected="7"/>
+  <controller name="c1" pages="0,首页,1,消息,2,探索,3,任务,4,灵兽,5,玩家信息,6,战斗,7,结果" selected="0"/>
   <displayList>
-    <component id="n56_tbt3" name="c7" src="tbt35o" fileName="coms/result.xml" xy="0,0"/>
+    <component id="n56_tbt3" name="c7" src="tbt35o" fileName="coms/result.xml" xy="0,0">
+      <gearDisplay controller="c1" pages="7"/>
+    </component>
     <component id="n54_u0cg" name="c6" src="u0cg48" fileName="coms/fight.xml" xy="0,0">
       <gearDisplay controller="c1" pages="6"/>
     </component>
