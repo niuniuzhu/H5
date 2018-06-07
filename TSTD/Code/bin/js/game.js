@@ -7,6 +7,16 @@ var Game;
             Laya.stage.alignH = Laya.Stage.ALIGN_LEFT;
             Laya.stage.alignV = Laya.Stage.ALIGN_TOP;
             Laya.stage.screenMode = Laya.Stage.SCREEN_VERTICAL;
+            let urls = [];
+            urls.push({ url: "res/ui/loading.fui", type: Laya.Loader.BUFFER });
+            urls.push({ url: "res/ui/loading@atlas0.png", type: Laya.Loader.IMAGE });
+            Laya.loader.load(urls, Laya.Handler.create(this, this.OnLoadingResComplete));
+        }
+        OnLoadingResComplete() {
+            fairygui.UIPackage.addPackage("res/ui/loading");
+            Laya.stage.addChild(fairygui.GRoot.inst.displayObject);
+            this._loading = fairygui.UIPackage.createObject("loading", "Main").asCom;
+            fairygui.GRoot.inst.addChild(this._loading);
             this.LoadDefs();
         }
         LoadDefs() {
@@ -33,6 +43,8 @@ var Game;
         }
         StartGame() {
             console.log("start game...");
+            this._loading.dispose();
+            this._loading = null;
             View.UI.UIManager.Init(new RC.Numerics.Vec2(600, 800));
             fairygui.GRoot.inst.on(fairygui.Events.SIZE_CHANGED, this, this.OnResize);
             Laya.timer.frameLoop(1, this, this.Update);

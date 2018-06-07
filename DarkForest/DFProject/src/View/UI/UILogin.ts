@@ -13,11 +13,11 @@ namespace View.UI {
 
 		public Enter(param: any): void {
 			this._root = fairygui.UIPackage.createObject("login", "Main").asCom;
-			this._root.getChild("login_btn").onClick(this, this.OnLoginBtnClick);
 			fairygui.GRoot.inst.addChild(this._root);
 			this._root.width = fairygui.GRoot.inst.width;
 			this._root.height = fairygui.GRoot.inst.height;
 			this._root.addRelation(fairygui.GRoot.inst, fairygui.RelationType.Size);
+			this._root.getChild("login_btn").onClick(this, this.OnLoginBtnClick);
 			this._root.getChild("reg_btn").onClick(this,this.OnRegBtnClick);
 		}
 
