@@ -39,10 +39,6 @@
     <group id="n22_tbt3" name="n22" xy="0,364" size="720,775" advanced="true">
       <gearDisplay controller="c1" pages="1"/>
     </group>
-    <component id="n24_tbt3" name="n24" src="tbt35s" fileName="coms/ts_bar.xml" xy="112,653" visible="false">
-      <gearDisplay controller="c1" pages="0"/>
-      <ProgressBar max="100"/>
-    </component>
     <image id="n25_tbt3" name="n25" src="tbt35t" fileName="assets/fight/shoufuchenggong.png" xy="121,376" group="n29_tbt3">
       <gearDisplay controller="c1" pages="2"/>
     </image>
@@ -54,5 +50,12 @@
     <group id="n29_tbt3" name="n29" xy="0,376" size="720,764" advanced="true">
       <gearDisplay controller="c1" pages="2"/>
     </group>
+    <movieclip id="n30_lrpy" name="n30" src="lrpy4e" fileName="assets/fx/吞噬.jta" pkg="evwornmp" xy="45,321" size="582,375" aspect="true" visible="false">
+      <gearDisplay controller="c1" pages="0"/>
+    </movieclip>
+    <component id="n24_tbt3" name="n24" src="tbt35s" fileName="coms/ts_bar.xml" xy="112,678" visible="false">
+      <gearDisplay controller="c1" pages="0"/>
+      <ProgressBar max="100"/>
+    </component>
   </displayList>
 </component>

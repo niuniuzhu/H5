@@ -48,7 +48,7 @@
     <movieclip id="lrpy4b" name="攻击3.jta" path="/assets/fx/"/>
     <movieclip id="lrpy4c" name="hit.jta" path="/assets/fx/" exported="true"/>
     <movieclip id="lrpy4d" name="解锁.jta" path="/assets/fx/"/>
-    <movieclip id="lrpy4e" name="吞噬.jta" path="/assets/fx/"/>
+    <movieclip id="lrpy4e" name="吞噬.jta" path="/assets/fx/" exported="true"/>
   </resources>
   <publish name="global" npot="true"/>
 </packageDescription>

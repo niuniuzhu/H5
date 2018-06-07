@@ -43,6 +43,10 @@ namespace View {
 		}
 
 		private opponentAction(completeHandler: () => void): void {
+			if (this._opponent.hp <= 0) {
+				completeHandler();
+				return;
+			}
 			let opponentAction = RC.Numerics.MathUtils.Random(0, 1) > 0.15 ? true : false;
 			if (opponentAction) {
 				let offset = RC.Numerics.MathUtils.Floor(this._player.atk * 0.1);

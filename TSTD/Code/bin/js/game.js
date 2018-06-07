@@ -661,6 +661,10 @@ var View;
                 this.opponentAction(completeHandler);
         }
         opponentAction(completeHandler) {
+            if (this._opponent.hp <= 0) {
+                completeHandler();
+                return;
+            }
             let opponentAction = RC.Numerics.MathUtils.Random(0, 1) > 0.15 ? true : false;
             if (opponentAction) {
                 let offset = RC.Numerics.MathUtils.Floor(this._player.atk * 0.1);
@@ -1103,6 +1107,16 @@ var View;
             }
             set win(value) {
                 this._root.getController("c1").selectedIndex = value ? 0 : 1;
+                if (value == false) {
+                    let exp = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(8, 18));
+                    this._root.getChild("n22").asTextField.text = "" + exp;
+                    View.CUser.exp -= exp;
+                    View.CUser.exp = RC.Numerics.MathUtils.Max(0, View.CUser.exp);
+                }
+                else {
+                    let exp = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(18, 28));
+                    View.CUser.exp += exp;
+                }
             }
             Dispose() {
             }
@@ -1128,11 +1142,13 @@ var View;
                 this._bar.visible = true;
                 this._bar.value = 0;
                 this._eating = true;
+                this._root.getChild("n30").asMovieClip.visible = true;
             }
             OnTunshiEnd(e) {
                 fairygui.GRoot.inst.displayObject.off(Laya.Event.MOUSE_UP, this, this.OnTunshiEnd);
                 this._bar.visible = false;
                 this._eating = false;
+                this._root.getChild("n30").asMovieClip.visible = false;
             }
             TunshiSuccess() {
                 this._root.getController("c1").selectedIndex = 2;
