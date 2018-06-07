@@ -49,7 +49,7 @@ namespace View.UI {
 			let key = this.PointOverKey(v, this._keyRadius);
 			if (key != null) {
 				if (this._touched.indexOf(key) < 0) {
-					key.state = 2;
+					key.state = 1;
 					if (this._touched.length > 0)
 						this.UpdateVisual(key, this._touched[this._touched.length - 1]);
 					this._touched.push(key);
