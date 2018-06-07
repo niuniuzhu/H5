@@ -21,7 +21,7 @@
 			"name": "草叶兽",
 			"type": "草食系",
 			"model": "c1",
-			"icon": "c1",
+			"icon": "ic1",
 			"actions": {
 				"idle": [
 					1,
@@ -47,7 +47,7 @@
 			"name": "巨岩兽",
 			"type": "草食系",
 			"model": "c2",
-			"icon": "c2",
+			"icon": "ic2",
 			"actions": {
 				"idle": [
 					1,
@@ -73,7 +73,7 @@
 			"name": "仙马",
 			"type": "草食系",
 			"model": "c3",
-			"icon": "c3",
+			"icon": "ic3",
 			"actions": {
 				"idle": [
 					1,
@@ -99,7 +99,7 @@
 			"name": "仙木精",
 			"type": "草食系",
 			"model": "c4",
-			"icon": "c4",
+			"icon": "ic4",
 			"actions": {
 				"idle": [
 					1,
@@ -125,7 +125,7 @@
 			"name": "树灵",
 			"type": "草食系",
 			"model": "c5",
-			"icon": "c5",
+			"icon": "ic5",
 			"actions": {
 				"idle": [
 					1,
@@ -151,7 +151,7 @@
 			"name": "山妖",
 			"type": "猛兽系",
 			"model": "m1",
-			"icon": "m1",
+			"icon": "im1",
 			"actions": {
 				"idle": [
 					1,
@@ -177,7 +177,7 @@
 			"name": "妖猫",
 			"type": "猛兽系",
 			"model": "m2",
-			"icon": "m2",
+			"icon": "im2",
 			"actions": {
 				"idle": [
 					1,
@@ -203,7 +203,7 @@
 			"name": "灵狼",
 			"type": "猛兽系",
 			"model": "m3",
-			"icon": "m3",
+			"icon": "im3",
 			"actions": {
 				"idle": [
 					1,
@@ -229,7 +229,7 @@
 			"name": "九尾狐",
 			"type": "猛兽系",
 			"model": "m4",
-			"icon": "m4",
+			"icon": "im4",
 			"actions": {
 				"idle": [
 					1,
@@ -255,7 +255,7 @@
 			"name": "兽王",
 			"type": "猛兽系",
 			"model": "m5",
-			"icon": "m5",
+			"icon": "im5",
 			"actions": {
 				"idle": [
 					1,
@@ -281,7 +281,7 @@
 			"name": "飞鹰",
 			"type": "鸟系",
 			"model": "n1",
-			"icon": "n1",
+			"icon": "in1",
 			"actions": {
 				"idle": [
 					1,
@@ -307,7 +307,7 @@
 			"name": "灵鸟",
 			"type": "鸟系",
 			"model": "n2",
-			"icon": "n2",
+			"icon": "in2",
 			"actions": {
 				"idle": [
 					1,
@@ -333,7 +333,7 @@
 			"name": "狂禽",
 			"type": "鸟系",
 			"model": "n3",
-			"icon": "n3",
+			"icon": "in3",
 			"actions": {
 				"idle": [
 					1,
@@ -359,7 +359,7 @@
 			"name": "尸雀",
 			"type": "鸟系",
 			"model": "n4",
-			"icon": "n4",
+			"icon": "in4",
 			"actions": {
 				"idle": [
 					1,
@@ -385,7 +385,7 @@
 			"name": "凤凰",
 			"type": "鸟系",
 			"model": "n5",
-			"icon": "n5",
+			"icon": "in5",
 			"actions": {
 				"idle": [
 					1,
@@ -411,7 +411,7 @@
 			"name": "火灵",
 			"type": "神灵系",
 			"model": "sl1",
-			"icon": "sl1",
+			"icon": "isl1",
 			"actions": {
 				"idle": [
 					1,
@@ -437,7 +437,7 @@
 			"name": "鬼女",
 			"type": "神灵系",
 			"model": "sl2",
-			"icon": "sl2",
+			"icon": "isl2",
 			"actions": {
 				"idle": [
 					1,
@@ -463,7 +463,7 @@
 			"name": "冥差",
 			"type": "神灵系",
 			"model": "sl3",
-			"icon": "sl3",
+			"icon": "isl3",
 			"actions": {
 				"idle": [
 					1,
@@ -489,7 +489,7 @@
 			"name": "仙使",
 			"type": "神灵系",
 			"model": "sl4",
-			"icon": "sl4",
+			"icon": "isl4",
 			"actions": {
 				"idle": [
 					1,
@@ -515,7 +515,7 @@
 			"name": "天将",
 			"type": "神灵系",
 			"model": "sl5",
-			"icon": "sl5",
+			"icon": "isl5",
 			"actions": {
 				"idle": [
 					1,
@@ -541,7 +541,7 @@
 			"name": "遁地精",
 			"type": "神兽系",
 			"model": "ss1",
-			"icon": "ss1",
+			"icon": "iss1",
 			"actions": {
 				"idle": [
 					1,
@@ -567,7 +567,7 @@
 			"name": "牛仙",
 			"type": "神兽系",
 			"model": "ss2",
-			"icon": "ss2",
+			"icon": "iss2",
 			"actions": {
 				"idle": [
 					1,
@@ -593,7 +593,7 @@
 			"name": "九头龙",
 			"type": "神兽系",
 			"model": "ss3",
-			"icon": "ss3",
+			"icon": "iss3",
 			"actions": {
 				"idle": [
 					1,
@@ -619,7 +619,7 @@
 			"name": "白虎兽",
 			"type": "神兽系",
 			"model": "ss4",
-			"icon": "ss4",
+			"icon": "iss4",
 			"actions": {
 				"idle": [
 					1,
@@ -645,7 +645,7 @@
 			"name": "神龙",
 			"type": "神兽系",
 			"model": "ss5",
-			"icon": "ss5",
+			"icon": "iss5",
 			"actions": {
 				"idle": [
 					1,
@@ -671,7 +671,7 @@
 			"name": "小鱼妖",
 			"type": "水系",
 			"model": "s1",
-			"icon": "s1",
+			"icon": "is1",
 			"actions": {
 				"idle": [
 					1,
@@ -697,7 +697,7 @@
 			"name": "鳝精",
 			"type": "水系",
 			"model": "s2",
-			"icon": "s2",
+			"icon": "is2",
 			"actions": {
 				"idle": [
 					1,
@@ -723,7 +723,7 @@
 			"name": "蟹精",
 			"type": "水系",
 			"model": "s3",
-			"icon": "s3",
+			"icon": "is3",
 			"actions": {
 				"idle": [
 					1,
@@ -749,7 +749,7 @@
 			"name": "玄龟",
 			"type": "水系",
 			"model": "s4",
-			"icon": "s4",
+			"icon": "is4",
 			"actions": {
 				"idle": [
 					1,
@@ -775,7 +775,7 @@
 			"name": "海妖",
 			"type": "水系",
 			"model": "s5",
-			"icon": "s5",
+			"icon": "is5",
 			"actions": {
 				"idle": [
 					1,

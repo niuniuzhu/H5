@@ -9,6 +9,7 @@ namespace Game {
 			Laya.stage.alignV = Laya.Stage.ALIGN_TOP;
 			Laya.stage.screenMode = Laya.Stage.SCREEN_VERTICAL;
 			// laya.utils.Stat.show(0, 0);
+			Laya.stage.addChild(fairygui.GRoot.inst.displayObject);
 
 			let urls = [];
 			urls.push({ url: "res/ui/loading.fui", type: Laya.Loader.BUFFER });
@@ -18,7 +19,6 @@ namespace Game {
 
 		private OnLoadingResComplete(): void {
 			fairygui.UIPackage.addPackage("res/ui/loading");
-			Laya.stage.addChild(fairygui.GRoot.inst.displayObject);
 			this._loading = fairygui.UIPackage.createObject("loading", "Main").asCom;
 			fairygui.GRoot.inst.addChild(this._loading);
 			this.LoadDefs();

@@ -49,6 +49,36 @@
     <movieclip id="lrpy4c" name="hit.jta" path="/assets/fx/" exported="true"/>
     <movieclip id="lrpy4d" name="解锁.jta" path="/assets/fx/"/>
     <movieclip id="lrpy4e" name="吞噬.jta" path="/assets/fx/" exported="true"/>
+    <image id="jiqm4f" name="ic1.jpg" path="/assets/icons/草食系/" exported="true"/>
+    <image id="jiqm4g" name="ic2.jpg" path="/assets/icons/草食系/" exported="true"/>
+    <image id="jiqm4h" name="ic3.jpg" path="/assets/icons/草食系/" exported="true"/>
+    <image id="jiqm4i" name="ic4.jpg" path="/assets/icons/草食系/" exported="true"/>
+    <image id="jiqm4j" name="ic5.jpg" path="/assets/icons/草食系/" exported="true"/>
+    <image id="jiqm4k" name="im1.jpg" path="/assets/icons/猛兽系/" exported="true"/>
+    <image id="jiqm4l" name="im2.jpg" path="/assets/icons/猛兽系/" exported="true"/>
+    <image id="jiqm4m" name="im3.jpg" path="/assets/icons/猛兽系/" exported="true"/>
+    <image id="jiqm4n" name="im4.jpg" path="/assets/icons/猛兽系/" exported="true"/>
+    <image id="jiqm4o" name="im5.jpg" path="/assets/icons/猛兽系/" exported="true"/>
+    <image id="jiqm4p" name="in1.jpg" path="/assets/icons/鸟系/" exported="true"/>
+    <image id="jiqm4q" name="in2.jpg" path="/assets/icons/鸟系/" exported="true"/>
+    <image id="jiqm4r" name="in3.jpg" path="/assets/icons/鸟系/" exported="true"/>
+    <image id="jiqm4s" name="in4.jpg" path="/assets/icons/鸟系/" exported="true"/>
+    <image id="jiqm4t" name="in5.jpg" path="/assets/icons/鸟系/" exported="true"/>
+    <image id="jiqm4u" name="isl1.jpg" path="/assets/icons/神灵系/" exported="true"/>
+    <image id="jiqm4v" name="isl2.jpg" path="/assets/icons/神灵系/" exported="true"/>
+    <image id="jiqm4w" name="isl3.jpg" path="/assets/icons/神灵系/" exported="true"/>
+    <image id="jiqm4x" name="isl4.jpg" path="/assets/icons/神灵系/" exported="true"/>
+    <image id="jiqm4y" name="isl5.jpg" path="/assets/icons/神灵系/" exported="true"/>
+    <image id="jiqm4z" name="iss1.jpg" path="/assets/icons/神兽系/" exported="true"/>
+    <image id="jiqm50" name="iss2.jpg" path="/assets/icons/神兽系/" exported="true"/>
+    <image id="jiqm51" name="iss3.jpg" path="/assets/icons/神兽系/" exported="true"/>
+    <image id="jiqm52" name="iss4.jpg" path="/assets/icons/神兽系/" exported="true"/>
+    <image id="jiqm53" name="iss5.jpg" path="/assets/icons/神兽系/" exported="true"/>
+    <image id="jiqm54" name="is1.jpg" path="/assets/icons/水系/" exported="true"/>
+    <image id="jiqm55" name="is2.jpg" path="/assets/icons/水系/" exported="true"/>
+    <image id="jiqm56" name="is3.jpg" path="/assets/icons/水系/" exported="true"/>
+    <image id="jiqm57" name="is4.jpg" path="/assets/icons/水系/" exported="true"/>
+    <image id="jiqm58" name="is5.jpg" path="/assets/icons/水系/" exported="true"/>
   </resources>
   <publish name="global" npot="true"/>
 </packageDescription>

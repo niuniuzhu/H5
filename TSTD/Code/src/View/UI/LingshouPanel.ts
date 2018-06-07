@@ -23,7 +23,7 @@ namespace View.UI {
 				item.getChild("lvl").asTextField.text = "" + RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(3, 10));
 				item.getChild("type").asTextField.text = def.type;
 				let img = item.getChild("img").asButton;
-				img.icon = fairygui.UIPackage.getItemURL("global", def.model);
+				img.icon = fairygui.UIPackage.getItemURL("global", def.icon);
 				let loader = img.getChild("icon").asLoader;
 				loader.playing = false;
 				loader.frame = 0;

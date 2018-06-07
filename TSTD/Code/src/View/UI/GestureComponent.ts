@@ -47,17 +47,21 @@ namespace View.UI {
 			let p = this._keypad.globalToLocal(e.stageX, e.stageY);
 			let v = new RC.Numerics.Vec2(p.x, p.y)
 			let key = this.PointOverKey(v, this._keyRadius);
-			if (key != null && this._touched.indexOf(key) < 0) {
-				key.state = 2;
-				if (this._touched.length > 0)
-					this.UpdateVisual(key, this._touched[this._touched.length - 1]);
-				this._touched.push(key);
-				this._keyLine.AttachTo(key);
-				if (this._touched.length == this._path.length) {
-					this.HandleTouchEnd();
+			if (key != null) {
+				if (this._touched.indexOf(key) < 0) {
+					key.state = 2;
+					if (this._touched.length > 0)
+						this.UpdateVisual(key, this._touched[this._touched.length - 1]);
+					this._touched.push(key);
+					this._keyLine.AttachTo(key);
+					if (this._touched.length == this._path.length) {
+						this.HandleTouchEnd();
+					}
 				}
+				this._keyLine.UpdateVisual(new RC.Numerics.Vec2(key.x, key.y));
 			}
-			this._keyLine.UpdateVisual(v);
+			else
+				this._keyLine.UpdateVisual(v);
 		}
 
 		private OnTouchEnd(e: laya.events.Event): void {

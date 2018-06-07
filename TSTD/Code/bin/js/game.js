@@ -7,6 +7,7 @@ var Game;
             Laya.stage.alignH = Laya.Stage.ALIGN_LEFT;
             Laya.stage.alignV = Laya.Stage.ALIGN_TOP;
             Laya.stage.screenMode = Laya.Stage.SCREEN_VERTICAL;
+            Laya.stage.addChild(fairygui.GRoot.inst.displayObject);
             let urls = [];
             urls.push({ url: "res/ui/loading.fui", type: Laya.Loader.BUFFER });
             urls.push({ url: "res/ui/loading@atlas0.png", type: Laya.Loader.IMAGE });
@@ -14,7 +15,6 @@ var Game;
         }
         OnLoadingResComplete() {
             fairygui.UIPackage.addPackage("res/ui/loading");
-            Laya.stage.addChild(fairygui.GRoot.inst.displayObject);
             this._loading = fairygui.UIPackage.createObject("loading", "Main").asCom;
             fairygui.GRoot.inst.addChild(this._loading);
             this.LoadDefs();
@@ -808,17 +808,21 @@ var View;
                 let p = this._keypad.globalToLocal(e.stageX, e.stageY);
                 let v = new RC.Numerics.Vec2(p.x, p.y);
                 let key = this.PointOverKey(v, this._keyRadius);
-                if (key != null && this._touched.indexOf(key) < 0) {
-                    key.state = 2;
-                    if (this._touched.length > 0)
-                        this.UpdateVisual(key, this._touched[this._touched.length - 1]);
-                    this._touched.push(key);
-                    this._keyLine.AttachTo(key);
-                    if (this._touched.length == this._path.length) {
-                        this.HandleTouchEnd();
+                if (key != null) {
+                    if (this._touched.indexOf(key) < 0) {
+                        key.state = 2;
+                        if (this._touched.length > 0)
+                            this.UpdateVisual(key, this._touched[this._touched.length - 1]);
+                        this._touched.push(key);
+                        this._keyLine.AttachTo(key);
+                        if (this._touched.length == this._path.length) {
+                            this.HandleTouchEnd();
+                        }
                     }
+                    this._keyLine.UpdateVisual(new RC.Numerics.Vec2(key.x, key.y));
                 }
-                this._keyLine.UpdateVisual(v);
+                else
+                    this._keyLine.UpdateVisual(v);
             }
             OnTouchEnd(e) {
                 if (this._touched.length == 0) {
@@ -1029,7 +1033,7 @@ var View;
                     item.getChild("lvl").asTextField.text = "" + RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(3, 10));
                     item.getChild("type").asTextField.text = def.type;
                     let img = item.getChild("img").asButton;
-                    img.icon = fairygui.UIPackage.getItemURL("global", def.model);
+                    img.icon = fairygui.UIPackage.getItemURL("global", def.icon);
                     let loader = img.getChild("icon").asLoader;
                     loader.playing = false;
                     loader.frame = 0;
@@ -1221,7 +1225,7 @@ var View;
                 this._root.getChild("type").asTextField.text = def.type;
                 this._root.getChild("lvl").asTextField.text = "" + RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(View.CUser.lvl - 3, View.CUser.lvl + 3));
                 let img = this._root.getChild("img").asButton;
-                img.icon = fairygui.UIPackage.getItemURL("global", def.model);
+                img.icon = fairygui.UIPackage.getItemURL("global", def.icon);
                 let loader = img.getChild("icon").asLoader;
                 loader.playing = false;
                 loader.frame = 0;
@@ -1398,7 +1402,6 @@ var View;
             static get login() { return this._login; }
             static get battle() { return this._main; }
             static Init(resolution) {
-                Laya.stage.addChild(fairygui.GRoot.inst.displayObject);
                 fairygui.UIPackage.addPackage("res/ui/global");
                 fairygui.UIConfig.globalModalWaiting = fairygui.UIPackage.getItemURL("global", "qtm011");
                 fairygui.UIConfig.windowModalWaiting = fairygui.UIPackage.getItemURL("global", "qtm011");

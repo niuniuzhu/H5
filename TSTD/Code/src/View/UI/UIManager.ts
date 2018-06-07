@@ -8,8 +8,6 @@ namespace View.UI {
 		public static get battle(): UIMain { return this._main; }
 
 		public static Init(resolution: RC.Numerics.Vec2): void {
-			Laya.stage.addChild(fairygui.GRoot.inst.displayObject);
-
 			fairygui.UIPackage.addPackage("res/ui/global");
 			fairygui.UIConfig.globalModalWaiting = fairygui.UIPackage.getItemURL("global", "qtm011");
 			fairygui.UIConfig.windowModalWaiting = fairygui.UIPackage.getItemURL("global", "qtm011");
