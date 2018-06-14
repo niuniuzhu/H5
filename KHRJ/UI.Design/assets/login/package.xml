@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="eo62ycl1" jpegQuality="80" compressPNG="true">
+  <resources>
+    <image id="enjt1" name="01登录03.jpg" path="/assets/"/>
+    <image id="enjt2" name="01登录01.jpg" path="/assets/"/>
+    <image id="enjt3" name="01登录02.jpg" path="/assets/"/>
+    <component id="enjt4" name="Main.xml" path="/coms/" exported="true"/>
+    <image id="enjt5" name="anniuwenzi_03.png" path="/assets/"/>
+    <image id="enjt6" name="anniuwenzi_05.png" path="/assets/"/>
+    <image id="enjt7" name="anniuwenzi_06.png" path="/assets/"/>
+    <image id="enjt8" name="biaoti01.png" path="/assets/"/>
+    <image id="enjt9" name="biaoti02.png" path="/assets/"/>
+    <image id="enjta" name="biaoti03.png" path="/assets/"/>
+    <image id="enjtb" name="dikuang01.png" path="/assets/"/>
+    <image id="enjtc" name="dikuang02.png" path="/assets/"/>
+    <image id="enjtd" name="anniuwenzi_01.png" path="/assets/"/>
+    <image id="enjte" name="anniuwenzi_02.png" path="/assets/"/>
+    <component id="s4ruf" name="area_btn.xml" path="/coms/"/>
+  </resources>
+  <publish name="login"/>
+</packageDescription>

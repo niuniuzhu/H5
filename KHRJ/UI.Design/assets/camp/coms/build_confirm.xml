@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="624,412" designImage="ui://ehu8eqals4ru3" designImageOffsetX="-47" designImageOffsetY="-433" designImageLayer="1">
+  <displayList>
+    <component id="n13_s4ru" name="n13" src="pxg1c" fileName="coms/frame.xml" pkg="llk0udxn" xy="0,0"/>
+    <text id="n14_s4ru" name="n14" xy="34,200" size="555,39" fontSize="30" color="#ffffff" align="center" vAlign="middle" autoSize="none" strokeColor="#371f12" text=""/>
+    <component id="n15_s4ru" name="cancel_btn" src="pxg1a" fileName="coms/button2.xml" pkg="llk0udxn" xy="67,299">
+      <Button icon="ui://llk0udxnpxg12"/>
+    </component>
+    <component id="n16_s4ru" name="confirm_btn" src="pxg19" fileName="coms/button1.xml" pkg="llk0udxn" xy="329,299">
+      <Button icon="ui://llk0udxnpxg13"/>
+    </component>
+  </displayList>
+</component>

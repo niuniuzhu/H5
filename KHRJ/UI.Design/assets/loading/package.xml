@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="ehmcidf6" jpegQuality="80" compressPNG="true">
+  <resources>
+    <component id="s4ru0" name="Main.xml" path="/" exported="true"/>
+    <movieclip id="s4ru1" name="qtm011.jta" path="/"/>
+  </resources>
+  <publish name="loading"/>
+</packageDescription>

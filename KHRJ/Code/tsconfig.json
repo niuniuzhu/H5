@@ -1,0 +1,17 @@
+{
+	"compilerOptions": {
+		"module": "amd",
+		"target": "es6",
+		"inlineSourceMap": false,
+		"inlineSources": false,
+		"sourceMap": true,
+		"removeComments": true,
+		// "alwaysStrict": true,
+		// "strict": true,
+		"outFile": "./bin/js/game.js",
+		// "noImplicitReturns": true
+	},
+	"exclude": [
+		"node_modules"
+	]
+}

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="llk0udxn" jpegQuality="80" compressPNG="true">
+  <resources>
+    <image id="pxg10" name="anniu01.png" path="/assets/"/>
+    <image id="pxg11" name="anniu02.png" path="/assets/"/>
+    <image id="pxg12" name="anniuwenzi_04.png" path="/assets/" exported="true"/>
+    <image id="pxg13" name="anniuwenzi_07.png" path="/assets/" exported="true"/>
+    <image id="pxg14" name="fanghui.png" path="/assets/" exported="true"/>
+    <image id="pxg15" name="kuang01.png" path="/assets/"/>
+    <image id="pxg16" name="shihu.png" path="/assets/" exported="true"/>
+    <image id="pxg17" name="shilian.png" path="/assets/" exported="true"/>
+    <image id="pxg18" name="shimao.png" path="/assets/" exported="true"/>
+    <component id="pxg19" name="button1.xml" path="/coms/" exported="true"/>
+    <component id="pxg1a" name="button2.xml" path="/coms/" exported="true"/>
+    <component id="pxg1b" name="button3.xml" path="/coms/" exported="true"/>
+    <component id="pxg1c" name="frame.xml" path="/coms/" exported="true"/>
+    <image id="s4rud" name="touxiangtilikuang.png" path="/assets/"/>
+    <component id="s4rue" name="top.xml" path="/coms/" exported="true"/>
+    <sound id="s4ruf" name="click.wav" path="/assets/" exported="true"/>
+    <movieclip id="s4rug" name="qtm011.jta" path="/assets/" exported="true"/>
+  </resources>
+  <publish name="global"/>
+</packageDescription>

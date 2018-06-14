@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="et2mcyps" jpegQuality="80" compressPNG="true">
+  <resources>
+    <component id="s4ru0" name="Main.xml" path="/coms/" exported="true"/>
+    <image id="s4ru1" name="02主界面01.jpg" path="/assets/"/>
+    <image id="s4ru2" name="tili.png" path="/assets/" scale=""/>
+    <image id="s4ru4" name="yindi.png" path="/assets/"/>
+    <component id="s4ru5" name="yingdi.xml" path="/coms/"/>
+    <component id="s4ru6" name="tili.xml" path="/coms/"/>
+  </resources>
+  <publish name="main"/>
+</packageDescription>

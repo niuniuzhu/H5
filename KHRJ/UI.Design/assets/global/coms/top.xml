@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="661,148">
+  <displayList>
+    <image id="n0_s4ru" name="n0" src="s4rud" fileName="assets/touxiangtilikuang.png" xy="0,0"/>
+    <loader id="n1_s4ru" name="icon" xy="8,7" size="131,133" align="center" vAlign="middle" fill="scale"/>
+  </displayList>
+</component>

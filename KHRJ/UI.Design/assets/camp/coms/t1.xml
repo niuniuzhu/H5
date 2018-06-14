@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="148,148">
+  <displayList>
+    <image id="n18_s4ru" name="n18" src="s4ru5" fileName="assets/dikuang03.png" xy="0,0"/>
+    <image id="n19_s4ru" name="n19" src="pxg17" fileName="assets/shilian.png" pkg="llk0udxn" xy="17,20"/>
+    <text id="n20_s4ru" name="atk" xy="110,115" size="29,29" fontSize="22" color="#ffffff" align="center" vAlign="middle" text="40"/>
+  </displayList>
+</component>

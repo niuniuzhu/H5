@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="624,412" extention="Label">
+  <displayList>
+    <image id="n0_pxg1" name="frame" src="pxg15" fileName="assets/kuang01.png" xy="0,0"/>
+    <loader id="n1_enjt" name="icon" xy="0,0" size="624,64" align="center" vAlign="middle"/>
+  </displayList>
+</component>

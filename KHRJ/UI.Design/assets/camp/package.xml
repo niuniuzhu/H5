@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="ehu8eqal" jpegQuality="80" compressPNG="true">
+  <resources>
+    <component id="s4ru0" name="Main.xml" path="/coms/" exported="true"/>
+    <image id="s4ru1" name="03营地04.jpg" path="/assets/"/>
+    <image id="s4ru3" name="03营地02.jpg" path="/assets/"/>
+    <image id="s4ru4" name="03营地03.jpg" path="/assets/"/>
+    <image id="s4ru5" name="dikuang03.png" path="/assets/"/>
+    <image id="s4ru6" name="gongju.png" path="/assets/"/>
+    <image id="s4ru7" name="guangbi.png" path="/assets/"/>
+    <image id="s4ru8" name="jinbi.png" path="/assets/"/>
+    <image id="s4ru9" name="xuanzhe.png" path="/assets/"/>
+    <image id="s4rua" name="zhaomu.png" path="/assets/"/>
+    <image id="s4rub" name="zhuzao.png" path="/assets/"/>
+    <component id="s4ruc" name="zhuzao_btn.xml" path="/coms/"/>
+    <component id="s4rud" name="zhaomu_btn.xml" path="/coms/"/>
+    <component id="s4rue" name="gongju_btn.xml" path="/coms/"/>
+    <image id="s4ruf" name="03营地01.jpg" path="/assets/"/>
+    <image id="s4rug" name="mucai.png" path="/assets/"/>
+    <image id="s4ruh" name="shitou.png" path="/assets/"/>
+    <component id="s4rui" name="build_confirm.xml" path="/coms/" exported="true"/>
+    <component id="s4ruj" name="tools_confirm.xml" path="/coms/" exported="true"/>
+    <component id="s4ruk" name="t0.xml" path="/coms/"/>
+    <component id="s4rul" name="t1.xml" path="/coms/"/>
+    <component id="s4rum" name="t2.xml" path="/coms/"/>
+  </resources>
+  <publish name="camp"/>
+</packageDescription>

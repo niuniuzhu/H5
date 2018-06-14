@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="720,1280" designImageLayer="1">
+  <controller name="c1" pages="0,,1,,2," selected="0"/>
+  <displayList>
+    <graph id="n12_enjt" name="n12" xy="0,0" size="720,1280" alpha="0.7" type="rect" lineSize="0" fillColor="#ff000000"/>
+    <component id="n1_enjt" name="n1" src="pxg1c" fileName="coms/frame.xml" pkg="llk0udxn" xy="48,434">
+      <gearDisplay controller="c1" pages="0"/>
+      <Label icon="ui://eo62ycl1enjt8"/>
+    </component>
+    <component id="n15_s4ru" name="n15" src="pxg1c" fileName="coms/frame.xml" pkg="llk0udxn" xy="48,434">
+      <gearDisplay controller="c1" pages="1"/>
+      <Label icon="ui://eo62ycl1enjt9"/>
+    </component>
+    <component id="n18_s4ru" name="n18" src="pxg1c" fileName="coms/frame.xml" pkg="llk0udxn" xy="48,434">
+      <gearDisplay controller="c1" pages="2"/>
+      <Label icon="ui://eo62ycl1enjta"/>
+    </component>
+    <text id="n2_enjt" name="n2" xy="165,557" size="83,49" fontSize="38" color="#ffffff" bold="true" text="账号">
+      <gearDisplay controller="c1" pages="0,1"/>
+    </text>
+    <text id="n3_enjt" name="n3" xy="165,642" size="83,49" fontSize="38" color="#ffffff" bold="true" text="密码">
+      <gearDisplay controller="c1" pages="0,1"/>
+    </text>
+    <image id="n4_enjt" name="n4" src="enjtb" fileName="assets/dikuang01.png" xy="264,550">
+      <gearDisplay controller="c1" pages="0,1"/>
+    </image>
+    <image id="n5_enjt" name="n5" src="enjtb" fileName="assets/dikuang01.png" xy="264,635">
+      <gearDisplay controller="c1" pages="0,1"/>
+    </image>
+    <text id="n6_enjt" name="name" xy="280,561" size="264,39" input="true" fontSize="30" color="#ffd662" autoSize="none" bold="true" strokeColor="#371f12" strokeSize="2" text="夏天的风">
+      <gearDisplay controller="c1" pages="0"/>
+    </text>
+    <text id="n7_enjt" name="password" xy="280,646" size="264,39" input="true" password="true" fontSize="30" color="#ffd662" autoSize="none" bold="true" strokeColor="#371f12" strokeSize="2" text="123456">
+      <gearDisplay controller="c1" pages="0"/>
+    </text>
+    <component id="n8_enjt" name="enter_reg_btn" src="pxg1a" fileName="coms/button2.xml" pkg="llk0udxn" xy="116,733">
+      <gearDisplay controller="c1" pages="0"/>
+      <Button icon="ui://eo62ycl1enjte" controller="c1" page="1"/>
+    </component>
+    <component id="n9_enjt" name="login_btn" src="pxg1a" fileName="coms/button2.xml" pkg="llk0udxn" xy="376,733">
+      <gearDisplay controller="c1" pages="0"/>
+      <Button icon="ui://eo62ycl1enjtd" controller="c1" page="2"/>
+    </component>
+    <component id="n11_enjt" name="exit_btn" src="pxg19" fileName="coms/button1.xml" pkg="llk0udxn" xy="246,960">
+      <Button icon="ui://eo62ycl1enjt5"/>
+    </component>
+    <text id="n13_s4ru" name="reg_name" xy="280,561" size="264,39" input="true" fontSize="30" color="#ffd662" autoSize="none" bold="true" strokeColor="#371f12" strokeSize="2" text="">
+      <gearDisplay controller="c1" pages="1"/>
+    </text>
+    <text id="n14_s4ru" name="reg_password" xy="280,646" size="264,39" input="true" password="true" fontSize="30" color="#ffd662" autoSize="none" bold="true" strokeColor="#371f12" strokeSize="2" text="">
+      <gearDisplay controller="c1" pages="1"/>
+    </text>
+    <component id="n17_s4ru" name="reg_btn" src="pxg1a" fileName="coms/button2.xml" pkg="llk0udxn" xy="376,733">
+      <gearDisplay controller="c1" pages="1"/>
+      <Button icon="ui://eo62ycl1enjte" controller="c1" page="0"/>
+    </component>
+    <component id="n19_s4ru" name="n19" src="s4ruf" fileName="coms/area_btn.xml" xy="215,552">
+      <gearDisplay controller="c1" pages="2"/>
+      <Button title="一区"/>
+    </component>
+    <component id="n20_s4ru" name="n20" src="s4ruf" fileName="coms/area_btn.xml" xy="215,635">
+      <gearDisplay controller="c1" pages="2"/>
+      <Button title="二区"/>
+    </component>
+    <component id="n16_s4ru" name="cancel_btn" src="pxg1a" fileName="coms/button2.xml" pkg="llk0udxn" xy="116,733">
+      <gearDisplay controller="c1" pages="1,2"/>
+      <Button icon="ui://llk0udxnpxg12" controller="c1" page="0"/>
+    </component>
+    <component id="n21_s4ru" name="enter_btn" src="pxg1a" fileName="coms/button2.xml" pkg="llk0udxn" xy="376,733">
+      <gearDisplay controller="c1" pages="2"/>
+      <Button icon="ui://eo62ycl1enjt6" controller="c1" page="0"/>
+    </component>
+  </displayList>
+</component>

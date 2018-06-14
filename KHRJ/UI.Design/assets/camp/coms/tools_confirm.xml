@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="624,412" designImage="ui://ehu8eqals4ru1" designImageOffsetX="-47" designImageOffsetY="-433" designImageLayer="1">
+  <displayList>
+    <component id="n13_s4ru" name="n13" src="pxg1c" fileName="coms/frame.xml" pkg="llk0udxn" xy="0,0"/>
+    <component id="n17_s4ru" name="t0" src="s4ruk" fileName="coms/t0.xml" xy="60,160"/>
+    <component id="n18_s4ru" name="t1" src="s4rul" fileName="coms/t1.xml" xy="239,160"/>
+    <component id="n19_s4ru" name="t2" src="s4rum" fileName="coms/t2.xml" xy="416,160"/>
+  </displayList>
+</component>

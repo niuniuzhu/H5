@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="720,1280">
+  <displayList>
+    <graph id="n0_s4ru" name="n0" xy="0,0" size="720,1280" type="rect" lineSize="0" fillColor="#ff333333"/>
+    <movieclip id="n1_s4ru" name="n1" src="s4ru1" fileName="qtm011.jta" xy="335,624"/>
+    <text id="n2_s4ru" name="n2" xy="295,680" size="129,36" fontSize="28" color="#cccccc" strokeColor="#512e1d" text="Loading..."/>
+  </displayList>
+</component>
