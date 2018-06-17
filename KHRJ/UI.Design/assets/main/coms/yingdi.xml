@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="159,156">
+<component size="159,156" extention="Button">
   <displayList>
     <image id="n6_s4ru" name="n6" src="s4ru4" fileName="assets/yindi.png" xy="0,0"/>
   </displayList>
+  <Button/>
 </component>

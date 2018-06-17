@@ -7,7 +7,9 @@
 		"main.fui,0",
 		"main@atlas0.png,1",
 		"camp.fui,0",
-		"camp@atlas0.png,1"
+		"camp@atlas0.png,1",
+		"level.fui,0",
+		"level@atlas0.png,1"
 	],
 	"entities": {
 		"e0": {

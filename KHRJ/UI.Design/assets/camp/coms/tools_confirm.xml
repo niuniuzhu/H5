@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="624,412" designImage="ui://ehu8eqals4ru1" designImageOffsetX="-47" designImageOffsetY="-433" designImageLayer="1">
+  <controller name="c1" pages="0,,1,,2," selected="2"/>
   <displayList>
     <component id="n13_s4ru" name="n13" src="pxg1c" fileName="coms/frame.xml" pkg="llk0udxn" xy="0,0"/>
     <component id="n17_s4ru" name="t0" src="s4ruk" fileName="coms/t0.xml" xy="60,160"/>
     <component id="n18_s4ru" name="t1" src="s4rul" fileName="coms/t1.xml" xy="239,160"/>
     <component id="n19_s4ru" name="t2" src="s4rum" fileName="coms/t2.xml" xy="416,160"/>
+    <image id="n20_s4ru" name="n20" src="s4ru9" fileName="assets/xuanzhe.png" xy="405,151">
+      <gearXY controller="c1" pages="1,2" values="227,151|405,151" default="48,151"/>
+    </image>
+    <component id="n21_s4ru" name="close_btn" src="s4rup" fileName="coms/close_btn.xml" xy="559,11"/>
   </displayList>
 </component>

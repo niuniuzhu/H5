@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="720,1280" designImage="ui://7ivbvicqs86xp" designImageLayer="1">
+  <displayList>
+    <image id="n1_h0nz" name="n1" src="h0nz1" fileName="assets/tiles/关卡.png" xy="0,0"/>
+    <component id="n2_s86x" name="place" src="s86xo" fileName="coms/place.xml" xy="20,253" size="680,650"/>
+    <image id="n9_s86x" name="n9" src="s86x14" fileName="assets/dikuang06.png" xy="16,18"/>
+    <image id="n10_s86x" name="n10" src="s86x15" fileName="assets/dikuang07.png" xy="0,1085"/>
+    <loader id="n21_s86x" name="icon" xy="294,1128" size="132,132"/>
+    <component id="n13_s86x" name="leave_btn" src="s86x1d" fileName="coms/exit_btn.xml" xy="523,1128" size="133,130"/>
+    <loader id="n15_s86x" name="tool" xy="64,1126" size="131,132" align="center" vAlign="middle" fill="scale"/>
+    <text id="n16_s86x" name="name" xy="27,32" size="214,38" fontSize="28" color="#ffd662" align="center" vAlign="middle" autoSize="none" strokeColor="#371f12" strokeSize="2" text=""/>
+    <text id="n17_s86x" name="wood" xy="349,32" size="21,36" fontSize="28" color="#ffffff" align="center" vAlign="middle" strokeColor="#512e1d" text="0"/>
+    <text id="n18_s86x" name="stone" xy="542,32" size="21,36" fontSize="28" color="#ffffff" align="center" vAlign="middle" strokeColor="#512e1d" text="0"/>
+    <text id="n19_s86x" name="atk" xy="223,1225" size="44,36" fontSize="28" color="#ffffff" align="center" vAlign="middle" autoSize="none" strokeColor="#281c10" text="0"/>
+    <text id="n20_s86x" name="hp" xy="453,1225" size="44,36" fontSize="28" color="#ffffff" align="center" vAlign="middle" autoSize="none" strokeColor="#281c10" text="0"/>
+  </displayList>
+</component>

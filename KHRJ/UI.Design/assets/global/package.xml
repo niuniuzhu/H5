@@ -7,9 +7,9 @@
     <image id="pxg13" name="anniuwenzi_07.png" path="/assets/" exported="true"/>
     <image id="pxg14" name="fanghui.png" path="/assets/" exported="true"/>
     <image id="pxg15" name="kuang01.png" path="/assets/"/>
-    <image id="pxg16" name="shihu.png" path="/assets/" exported="true"/>
-    <image id="pxg17" name="shilian.png" path="/assets/" exported="true"/>
-    <image id="pxg18" name="shimao.png" path="/assets/" exported="true"/>
+    <image id="pxg16" name="t2.png" path="/assets/" exported="true"/>
+    <image id="pxg17" name="t1.png" path="/assets/" exported="true"/>
+    <image id="pxg18" name="t0.png" path="/assets/" exported="true"/>
     <component id="pxg19" name="button1.xml" path="/coms/" exported="true"/>
     <component id="pxg1a" name="button2.xml" path="/coms/" exported="true"/>
     <component id="pxg1b" name="button3.xml" path="/coms/" exported="true"/>
@@ -18,6 +18,8 @@
     <component id="s4rue" name="top.xml" path="/coms/" exported="true"/>
     <sound id="s4ruf" name="click.wav" path="/assets/" exported="true"/>
     <movieclip id="s4rug" name="qtm011.jta" path="/assets/" exported="true"/>
+    <image id="h0nzh" name="营地空白.jpg" path="/assets/" exported="true"/>
+    <image id="h0nzi" name="img0.png" path="/assets/" exported="true"/>
   </resources>
   <publish name="global"/>
 </packageDescription>

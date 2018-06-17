@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="47,45" extention="Button">
+  <displayList>
+    <image id="n21_s4ru" name="n21" src="s4ru7" fileName="assets/guangbi.png" xy="0,0"/>
+  </displayList>
+  <Button/>
+</component>

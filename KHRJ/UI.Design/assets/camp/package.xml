@@ -23,6 +23,13 @@
     <component id="s4ruk" name="t0.xml" path="/coms/"/>
     <component id="s4rul" name="t1.xml" path="/coms/"/>
     <component id="s4rum" name="t2.xml" path="/coms/"/>
+    <component id="s4ruo" name="back_btn.xml" path="/coms/"/>
+    <component id="s4rup" name="close_btn.xml" path="/coms/"/>
+    <image id="h0nzr" name="营地房子png.png" path="/assets/"/>
+    <component id="h0nzs" name="building.xml" path="/coms/"/>
+    <component id="h0nzt" name="time_bar.xml" path="/coms/"/>
+    <movieclip id="h0nzu" name="野人.jta" path="/assets/"/>
+    <component id="h0nzv" name="place.xml" path="/coms/"/>
   </resources>
   <publish name="camp"/>
 </packageDescription>

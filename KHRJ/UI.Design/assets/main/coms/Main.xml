@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="720,1280" designImage="ui://et2mcypss4ru1" designImageLayer="1">
+<component size="720,1280" designImageLayer="1">
   <displayList>
+    <image id="n9_h0nz" name="n9" src="h0nz7" fileName="assets/主界面.png" xy="0,0"/>
     <component id="n1_s4ru" name="n1" src="s4rue" fileName="coms/top.xml" pkg="llk0udxn" xy="29,11"/>
     <text id="n2_s4ru" name="n2" xy="210,34" size="48,36" fontSize="28" color="#ffffff" strokeColor="#512e1d" strokeSize="2" text="LV:"/>
     <text id="n3_s4ru" name="n3" xy="499,34" size="70,36" fontSize="28" color="#ffffff" strokeColor="#512e1d" strokeSize="2" text="EXP:"/>
     <text id="n4_s4ru" name="lvl" xy="257,34" size="21,36" fontSize="28" color="#ffffff" strokeColor="#512e1d" strokeSize="2" text="0"/>
-    <text id="n5_s4ru" name="lvl" xy="568,34" size="21,36" fontSize="28" color="#ffffff" strokeColor="#512e1d" strokeSize="2" text="0"/>
+    <text id="n5_s4ru" name="exp" xy="568,34" size="21,36" fontSize="28" color="#ffffff" strokeColor="#512e1d" strokeSize="2" text="0"/>
     <component id="n6_s4ru" name="camp" src="s4ru5" fileName="coms/yingdi.xml" xy="280,1118"/>
     <list id="n8_s4ru" name="n8" xy="200,95" size="480,48" layout="flow_hz" overflow="scroll" defaultItem="ui://et2mcypss4ru6">
       <item/>
@@ -19,5 +20,9 @@
       <item/>
       <item/>
     </list>
+    <component id="n10_s86x" name="c0" src="s86x8" fileName="coms/place_btn.xml" xy="342,401" size="89,68"/>
+    <component id="n11_s86x" name="c1" src="s86x8" fileName="coms/place_btn.xml" xy="285,531" size="89,68"/>
+    <component id="n12_s86x" name="c2" src="s86x8" fileName="coms/place_btn.xml" xy="121,634" size="89,68"/>
+    <component id="n13_s86x" name="c3" src="s86x8" fileName="coms/place_btn.xml" xy="246,875" size="89,68"/>
   </displayList>
 </component>

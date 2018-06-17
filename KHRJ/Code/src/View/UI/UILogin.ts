@@ -4,24 +4,24 @@ namespace View.UI {
 
 		constructor() {
 			fairygui.UIPackage.addPackage("res/ui/login");
-		}
 
-		public Dispose(): void {
-		}
-
-		public Enter(param?: any[]): void {
 			this._root = fairygui.UIPackage.createObject("login", "Main").asCom;
-			fairygui.GRoot.inst.addChild(this._root);
-			this._root.width = fairygui.GRoot.inst.width;
-			this._root.height = fairygui.GRoot.inst.height;
-			this._root.addRelation(fairygui.GRoot.inst, fairygui.RelationType.Size);
-
 			this._root.getChild("enter_btn").onClick(this, this.OnEnterBtnClick);
 			this._root.getChild("reg_btn").onClick(this, this.OnRegBtnClick);
 		}
 
-		public Leave(): void {
+		public Dispose(): void {
 			this._root.dispose();
+		}
+
+		public Enter(param?: any[]): void {
+			fairygui.GRoot.inst.addChild(this._root);
+			this._root.width = fairygui.GRoot.inst.width;
+			this._root.height = fairygui.GRoot.inst.height;
+		}
+
+		public Leave(): void {
+			this._root.removeFromParent();
 			this._root = null;
 		}
 

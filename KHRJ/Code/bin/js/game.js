@@ -229,23 +229,144 @@ var View;
 (function (View) {
     var UI;
     (function (UI) {
-        class UILogin {
+        class UICamp {
             constructor() {
-                fairygui.UIPackage.addPackage("res/ui/login");
+                fairygui.UIPackage.addPackage("res/ui/camp");
+                this._confirm = fairygui.UIPackage.createObject("camp", "build_confirm").asCom;
+                this._confirm.getChild("confirm_btn").onClick(this, this.OnBuildComplete);
+                this._confirm.getChild("cancel_btn").onClick(this, () => fairygui.GRoot.inst.hidePopup());
+                this._confirm2 = fairygui.UIPackage.createObject("camp", "build_confirm").asCom;
+                this._confirm2.getChild("confirm_btn").onClick(this, this.OnRecruitComplete);
+                this._confirm2.getChild("cancel_btn").onClick(this, () => fairygui.GRoot.inst.hidePopup());
+                this._tools = fairygui.UIPackage.createObject("camp", "tools_confirm").asCom;
+                this._tools.getChild("close_btn").onClick(this, () => fairygui.GRoot.inst.hidePopup());
+                this._tools.getChild("t0").onClick(this, () => {
+                    View.CUser.tool = 0;
+                    View.CUser.atk = 10;
+                    fairygui.GRoot.inst.hidePopup();
+                });
+                this._tools.getChild("t1").onClick(this, () => {
+                    View.CUser.tool = 1;
+                    View.CUser.atk = 15;
+                    fairygui.GRoot.inst.hidePopup();
+                });
+                this._tools.getChild("t2").onClick(this, () => {
+                    View.CUser.tool = 2;
+                    View.CUser.atk = 20;
+                    fairygui.GRoot.inst.hidePopup();
+                });
+                this._root = fairygui.UIPackage.createObject("camp", "Main").asCom;
+                this._root.getChild("btn0").onClick(this, this.ShowBuildConfirm);
+                this._root.getChild("btn1").onClick(this, this.ShowRecruitConfirm);
+                this._root.getChild("btn2").onClick(this, this.ShowToolSelect);
+                this._root.getChild("btn3").onClick(this, () => UI.UIManager.EnterMain());
             }
+            get root() { return this._root; }
             Dispose() {
+                this._confirm.dispose();
+                this._tools.dispose();
+                this._root.dispose();
             }
             Enter(param) {
-                this._root = fairygui.UIPackage.createObject("login", "Main").asCom;
                 fairygui.GRoot.inst.addChild(this._root);
                 this._root.width = fairygui.GRoot.inst.width;
                 this._root.height = fairygui.GRoot.inst.height;
-                this._root.addRelation(fairygui.GRoot.inst, fairygui.RelationType.Size);
+                this._root.getChild("n1").asCom.getChild("icon").asLoader.url = fairygui.UIPackage.getItemURL("global", "img" + View.CUser.img);
+                this._root.getChild("wood").asTextField.text = "" + View.CUser.wood;
+                this._root.getChild("stone").asTextField.text = "" + View.CUser.stone;
+            }
+            Leave() {
+                this._root.removeFromParent();
+            }
+            Update(deltaTime) {
+            }
+            OnResize(e) {
+            }
+            ShowBuildConfirm() {
+                fairygui.GRoot.inst.showPopup(this._confirm);
+                this._confirm.center();
+                this._confirm.getChild("n14").asTextField.text = "建筑营地需要消耗石材和木材";
+            }
+            ShowRecruitConfirm() {
+                fairygui.GRoot.inst.showPopup(this._confirm2);
+                this._confirm2.center();
+                this._confirm2.getChild("n14").asTextField.text = "招募原始人需要消耗石材和木材";
+            }
+            ShowToolSelect() {
+                fairygui.GRoot.inst.showPopup(this._tools);
+                this._tools.center();
+                let controller = this._tools.getController("c1");
+                controller.setSelectedIndex(View.CUser.tool);
+            }
+            OnBuildComplete() {
+                console.log("Build");
+                fairygui.GRoot.inst.hidePopup();
+            }
+            OnRecruitComplete() {
+                console.log("Recruit");
+                fairygui.GRoot.inst.hidePopup();
+            }
+        }
+        UI.UICamp = UICamp;
+    })(UI = View.UI || (View.UI = {}));
+})(View || (View = {}));
+var View;
+(function (View) {
+    var UI;
+    (function (UI) {
+        class UILevel {
+            constructor() {
+                fairygui.UIPackage.addPackage("res/ui/level");
+                this._root = fairygui.UIPackage.createObject("level", "Main").asCom;
+                this._root.getChild("leave_btn").onClick(this, () => UI.UIManager.EnterMain());
+            }
+            Dispose() {
+                this._root.dispose();
+            }
+            Enter(param) {
+                fairygui.GRoot.inst.addChild(this._root);
+                this._root.width = fairygui.GRoot.inst.width;
+                this._root.height = fairygui.GRoot.inst.height;
+                this._root.getChild("icon").asLoader.url = fairygui.UIPackage.getItemURL("global", "img" + View.CUser.img);
+                this._root.getChild("tool").asLoader.url = fairygui.UIPackage.getItemURL("global", "t" + View.CUser.tool);
+                this._root.getChild("atk").asTextField.text = "" + View.CUser.atk;
+                this._root.getChild("hp").asTextField.text = "" + View.CUser.hp;
+                this._root.getChild("wood").asTextField.text = "" + View.CUser.wood;
+                this._root.getChild("stone").asTextField.text = "" + View.CUser.stone;
+                this._root.getChild("name").asTextField.text = "野兽洞窟";
+            }
+            Leave() {
+                this._root.removeFromParent();
+            }
+            Update(deltaTime) {
+            }
+            OnResize(e) {
+            }
+        }
+        UI.UILevel = UILevel;
+    })(UI = View.UI || (View.UI = {}));
+})(View || (View = {}));
+var View;
+(function (View) {
+    var UI;
+    (function (UI) {
+        class UILogin {
+            constructor() {
+                fairygui.UIPackage.addPackage("res/ui/login");
+                this._root = fairygui.UIPackage.createObject("login", "Main").asCom;
                 this._root.getChild("enter_btn").onClick(this, this.OnEnterBtnClick);
                 this._root.getChild("reg_btn").onClick(this, this.OnRegBtnClick);
             }
-            Leave() {
+            Dispose() {
                 this._root.dispose();
+            }
+            Enter(param) {
+                fairygui.GRoot.inst.addChild(this._root);
+                this._root.width = fairygui.GRoot.inst.width;
+                this._root.height = fairygui.GRoot.inst.height;
+            }
+            Leave() {
+                this._root.removeFromParent();
                 this._root = null;
             }
             Update(deltaTime) {
@@ -270,25 +391,37 @@ var View;
         class UIMain {
             constructor() {
                 fairygui.UIPackage.addPackage("res/ui/main");
-                View.CUser.img = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(0, 6));
+                View.CUser.img = 0;
                 View.CUser.lvl = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(20, 40));
                 View.CUser.hp = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(760, 950));
+                View.CUser.atk = 10;
+                View.CUser.tool = 0;
+                View.CUser.wood = 100;
+                View.CUser.stone = 100;
                 View.CUser.exp = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(120, 300));
                 View.CUser.tl = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(130, 220));
                 View.CUser.uname = "深蓝的天空";
+                this._root = fairygui.UIPackage.createObject("main", "Main").asCom;
+                this._root.getChild("camp").onClick(this, () => UI.UIManager.EnterCamp());
+                this._root.getChild("c0").onClick(this, () => UI.UIManager.EnterLevel(0));
+                this._root.getChild("c1").onClick(this, () => UI.UIManager.EnterLevel(1));
+                this._root.getChild("c2").onClick(this, () => UI.UIManager.EnterLevel(2));
+                this._root.getChild("c3").onClick(this, () => UI.UIManager.EnterLevel(3));
             }
             get root() { return this._root; }
             Dispose() {
+                this._root.dispose();
             }
             Enter(param) {
-                this._root = fairygui.UIPackage.createObject("main", "Main").asCom;
                 fairygui.GRoot.inst.addChild(this._root);
                 this._root.width = fairygui.GRoot.inst.width;
                 this._root.height = fairygui.GRoot.inst.height;
-                this._root.addRelation(fairygui.GRoot.inst, fairygui.RelationType.Size);
+                this._root.getChild("n1").asCom.getChild("icon").asLoader.url = fairygui.UIPackage.getItemURL("global", "img" + View.CUser.img);
+                this._root.getChild("lvl").asTextField.text = "" + View.CUser.lvl;
+                this._root.getChild("exp").asTextField.text = "" + View.CUser.exp;
             }
             Leave() {
-                this._root.dispose();
+                this._root.removeFromParent();
             }
             Update(deltaTime) {
             }
@@ -304,7 +437,9 @@ var View;
     (function (UI) {
         class UIManager {
             static get login() { return this._login; }
-            static get battle() { return this._main; }
+            static get main() { return this._main; }
+            static get camp() { return this._camp; }
+            static get level() { return this._level; }
             static Init(resolution) {
                 fairygui.UIPackage.addPackage("res/ui/global");
                 fairygui.UIConfig.globalModalWaiting = fairygui.UIPackage.getItemURL("global", "qtm011");
@@ -312,6 +447,8 @@ var View;
                 fairygui.UIConfig.buttonSound = fairygui.UIPackage.getItemURL("global", "click");
                 this._login = new UI.UILogin();
                 this._main = new UI.UIMain();
+                this._camp = new UI.UICamp();
+                this._level = new UI.UILevel();
             }
             static Dispose() {
                 if (this._currModule != null) {
@@ -327,7 +464,7 @@ var View;
                 if (this._currModule != null)
                     this._currModule.OnResize(e);
             }
-            static EnterModule(module, param) {
+            static EnterModule(module, ...param) {
                 if (this._currModule != null)
                     this._currModule.Leave();
                 module.Enter(param);
@@ -343,6 +480,12 @@ var View;
             }
             static EnterMain() {
                 this.EnterModule(this._main);
+            }
+            static EnterCamp() {
+                this.EnterModule(this._camp);
+            }
+            static EnterLevel(index) {
+                this.EnterModule(this._level, index);
             }
         }
         UI.UIManager = UIManager;

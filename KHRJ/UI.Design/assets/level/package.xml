@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="7ivbvicq" jpegQuality="80" compressPNG="true">
+  <resources>
+    <component id="h0nz0" name="Main.xml" path="/coms/" exported="true"/>
+    <image id="h0nz1" name="关卡.png" path="/assets/tiles/"/>
+    <image id="h0nz2" name="格子1底部.png" path="/assets/tiles/"/>
+    <image id="h0nz3" name="格子2.png" path="/assets/tiles/"/>
+    <image id="h0nz4" name="格子2灰底.png" path="/assets/tiles/"/>
+    <image id="h0nz5" name="格子3.png" path="/assets/tiles/"/>
+    <image id="h0nz6" name="格子3灰底.png" path="/assets/tiles/"/>
+    <image id="h0nz7" name="格子1.png" path="/assets/tiles/"/>
+    <component id="h0nz8" name="g0.xml" path="/coms/" exported="true"/>
+    <component id="h0nz9" name="g1.xml" path="/coms/" exported="true"/>
+    <component id="h0nza" name="g2.xml" path="/coms/" exported="true"/>
+    <image id="h0nzb" name="虎.png" path="/assets/tiles/"/>
+    <image id="h0nzc" name="树.png" path="/assets/tiles/"/>
+    <image id="h0nzd" name="猩猩.png" path="/assets/tiles/"/>
+    <image id="h0nze" name="野猪.png" path="/assets/tiles/"/>
+    <image id="h0nzf" name="蜘蛛.png" path="/assets/tiles/"/>
+    <image id="h0nzg" name="草药.png" path="/assets/tiles/"/>
+    <component id="h0nzh" name="m0.xml" path="/coms/" exported="true"/>
+    <component id="h0nzi" name="m2.xml" path="/coms/" exported="true"/>
+    <component id="h0nzj" name="m1.xml" path="/coms/" exported="true"/>
+    <component id="h0nzk" name="m3.xml" path="/coms/" exported="true"/>
+    <component id="h0nzl" name="m4.xml" path="/coms/" exported="true"/>
+    <component id="h0nzm" name="m5.xml" path="/coms/" exported="true"/>
+    <image id="h0nzn" name="通关人物.png" path="/assets/tiles/"/>
+    <component id="s86xo" name="place.xml" path="/coms/"/>
+    <image id="s86xp" name="04关卡02.jpg" path="/assets/"/>
+    <image id="s86xq" name="0.png" path="/assets/"/>
+    <image id="s86xr" name="1.png" path="/assets/"/>
+    <image id="s86xs" name="2.png" path="/assets/"/>
+    <image id="s86xt" name="3.png" path="/assets/"/>
+    <image id="s86xu" name="4.png" path="/assets/"/>
+    <image id="s86xv" name="5.png" path="/assets/"/>
+    <image id="s86xw" name="6.png" path="/assets/"/>
+    <image id="s86xx" name="7.png" path="/assets/"/>
+    <image id="s86xy" name="8.png" path="/assets/"/>
+    <image id="s86xz" name="9.png" path="/assets/"/>
+    <image id="s86x10" name="anniuwenzi_08.png" path="/assets/"/>
+    <image id="s86x11" name="anniuwenzi_09.png" path="/assets/"/>
+    <image id="s86x12" name="dikuang04.png" path="/assets/"/>
+    <image id="s86x13" name="dikuang05.png" path="/assets/"/>
+    <image id="s86x14" name="dikuang06.png" path="/assets/"/>
+    <image id="s86x15" name="dikuang07.png" path="/assets/"/>
+    <image id="s86x16" name="dikuang08.png" path="/assets/"/>
+    <image id="s86x17" name="dikuang09.png" path="/assets/"/>
+    <image id="s86x18" name="dikuang10.png" path="/assets/"/>
+    <image id="s86x19" name="dikuang11.png" path="/assets/"/>
+    <image id="s86x1a" name="gongxitongguan.png" path="/assets/"/>
+    <image id="s86x1b" name="shibai.png" path="/assets/"/>
+    <image id="s86x1c" name="x.png" path="/assets/"/>
+    <component id="s86x1d" name="exit_btn.xml" path="/coms/"/>
+  </resources>
+  <publish name="level"/>
+</packageDescription>

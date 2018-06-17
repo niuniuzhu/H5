@@ -1,16 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="720,1280" designImage="ui://ehu8eqals4ru3" designImageLayer="1">
+<component size="720,1280" designImageLayer="1">
   <displayList>
-    <graph id="n15_s4ru" name="n15" xy="0,0" size="720,1280" alpha="0.7" type="rect" lineSize="0" fillColor="#ff000000"/>
+    <image id="n16_h0nz" name="n16" src="h0nzh" fileName="assets/营地空白.jpg" pkg="llk0udxn" xy="0,0"/>
+    <component id="n17_h0nz" name="n17" src="h0nzs" fileName="coms/building.xml" xy="0,0" visible="false" touchable="false"/>
+    <component id="n21_h0nz" name="place0" src="h0nzv" fileName="coms/place.xml" xy="39,849" size="329,179" group="n25_h0nz"/>
+    <component id="n22_h0nz" name="place1" src="h0nzv" fileName="coms/place.xml" xy="9,632" size="80,179" group="n25_h0nz"/>
+    <component id="n23_h0nz" name="place2" src="h0nzv" fileName="coms/place.xml" xy="526,882" size="97,164" group="n25_h0nz"/>
+    <component id="n24_h0nz" name="place3" src="h0nzv" fileName="coms/place.xml" xy="90,160" size="178,141" group="n25_h0nz"/>
+    <group id="n25_h0nz" name="n25" xy="9,160" size="614,886"/>
+    <component id="n18_h0nz" name="bar0" src="h0nzt" fileName="coms/time_bar.xml" xy="111,356" visible="false">
+      <ProgressBar max="100"/>
+    </component>
+    <component id="n19_h0nz" name="bar1" src="h0nzt" fileName="coms/time_bar.xml" xy="482,518" visible="false">
+      <ProgressBar max="100"/>
+    </component>
     <component id="n1_s4ru" name="n1" src="s4rue" fileName="coms/top.xml" pkg="llk0udxn" xy="29,11"/>
     <text id="n2_s4ru" name="pplt" xy="278,103" size="45,36" fontSize="28" color="#ffffff" strokeColor="#512e1d" strokeSize="2" text="0/0"/>
     <component id="n4_s4ru" name="btn0" src="s4ruc" fileName="coms/zhuzao_btn.xml" xy="5,1190"/>
     <component id="n5_s4ru" name="btn1" src="s4rud" fileName="coms/zhaomu_btn.xml" xy="183,1190"/>
     <component id="n6_s4ru" name="btn2" src="s4rue" fileName="coms/gongju_btn.xml" xy="361,1190"/>
-    <image id="n7_s4ru" name="btn3" src="pxg14" fileName="assets/fanghui.png" pkg="llk0udxn" xy="539,1190"/>
+    <component id="n7_s4ru" name="btn3" src="s4ruo" fileName="coms/back_btn.xml" xy="539,1190"/>
     <image id="n9_s4ru" name="n9" src="s4ruh" fileName="assets/shitou.png" xy="407,22"/>
     <image id="n10_s4ru" name="n10" src="s4rug" fileName="assets/mucai.png" xy="211,22"/>
     <text id="n11_s4ru" name="wood" xy="278,32" size="21,36" fontSize="28" color="#ffffff" strokeColor="#512e1d" strokeSize="2" text="0"/>
     <text id="n12_s4ru" name="stone" xy="475,32" size="21,36" fontSize="28" color="#ffffff" strokeColor="#512e1d" strokeSize="2" text="0"/>
+    <image id="n26_h0nz" name="n26" src="h0nzi" fileName="assets/头像.png" pkg="llk0udxn" xy="216,91" size="51,51" aspect="true"/>
   </displayList>
+  <transition name="t0">
+    <item time="0" type="Alpha" target="n19_h0nz" tween="true" startValue="0" endValue="1" duration="18"/>
+    <item time="0" type="Alpha" target="n17_h0nz" tween="true" startValue="0" endValue="1" duration="18"/>
+    <item time="0" type="Alpha" target="n18_h0nz" tween="true" startValue="0" endValue="1" duration="18"/>
+    <item time="0" type="Visible" target="n18_h0nz" value="true"/>
+    <item time="0" type="Visible" target="n17_h0nz" value="true"/>
+    <item time="0" type="Visible" target="n19_h0nz" value="true"/>
+  </transition>
 </component>
