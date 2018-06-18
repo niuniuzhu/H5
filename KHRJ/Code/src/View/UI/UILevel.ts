@@ -1,6 +1,7 @@
 namespace View.UI {
 	export class UILevel implements IUIModule {
-		private _root: fairygui.GComponent;
+		private readonly _root: fairygui.GComponent;
+		private _tileMap: TileMap;
 
 		constructor() {
 			fairygui.UIPackage.addPackage("res/ui/level");
@@ -23,9 +24,12 @@ namespace View.UI {
 			this._root.getChild("wood").asTextField.text = "" + View.CUser.wood;
 			this._root.getChild("stone").asTextField.text = "" + View.CUser.stone;
 			this._root.getChild("name").asTextField.text = "野兽洞窟";
+			this._tileMap = new TileMap(this._root.getChild("place").asCom);
 		}
 
 		public Leave(): void {
+			this._tileMap.Dispose();
+			this._tileMap = null;
 			this._root.removeFromParent();
 		}
 

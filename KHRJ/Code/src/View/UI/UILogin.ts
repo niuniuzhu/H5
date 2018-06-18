@@ -1,6 +1,6 @@
 namespace View.UI {
 	export class UILogin implements IUIModule {
-		private _root: fairygui.GComponent;
+		private readonly _root: fairygui.GComponent;
 
 		constructor() {
 			fairygui.UIPackage.addPackage("res/ui/login");
@@ -22,7 +22,6 @@ namespace View.UI {
 
 		public Leave(): void {
 			this._root.removeFromParent();
-			this._root = null;
 		}
 
 		public Update(deltaTime: number): void {

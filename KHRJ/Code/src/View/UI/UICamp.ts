@@ -1,9 +1,9 @@
 namespace View.UI {
 	export class UICamp implements IUIModule {
-		private _root: fairygui.GComponent;
-		private _confirm: fairygui.GComponent;
-		private _confirm2: fairygui.GComponent;
-		private _tools: fairygui.GComponent;
+		private readonly _root: fairygui.GComponent;
+		private readonly _confirm: fairygui.GComponent;
+		private readonly _confirm2: fairygui.GComponent;
+		private readonly _tools: fairygui.GComponent;
 
 		public get root(): fairygui.GComponent { return this._root; }
 

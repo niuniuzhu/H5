@@ -3740,6 +3740,15 @@ var RC;
             static Random(min, max) {
                 return Math.random() * (max - min) + min;
             }
+            static RandomFloor(min, max) {
+                return this.Floor(this.Random(min, max));
+            }
+            static RandomRound(min, max) {
+                return this.Round(this.Random(min, max));
+            }
+            static RandomCeil(min, max) {
+                return this.Ceil(this.Random(min, max));
+            }
             static Sin(f) {
                 return Math.sin(f);
             }

@@ -638,6 +638,9 @@ declare namespace RC.Numerics {
         static readonly INFINITY: number;
         static readonly NEGATIVE_INFINITY: number;
         static Random(min: number, max: number): number;
+        static RandomFloor(min: number, max: number): number;
+        static RandomRound(min: number, max: number): number;
+        static RandomCeil(min: number, max: number): number;
         static Sin(f: number): number;
         static Cos(f: number): number;
         static Tan(f: number): number;

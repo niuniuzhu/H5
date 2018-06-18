@@ -71,6 +71,18 @@ namespace RC.Numerics {
 			return Math.random() * (max - min) + min;
 		}
 
+		public static RandomFloor(min: number, max: number): number {
+			return this.Floor(this.Random(min, max));
+		}
+
+		public static RandomRound(min: number, max: number): number {
+			return this.Round(this.Random(min, max));
+		}
+
+		public static RandomCeil(min: number, max: number): number {
+			return this.Ceil(this.Random(min, max));
+		}
+
 		/// <summary>
 		///   <para>Returns the sine of angle f in radians.</para>
 		/// </summary>
