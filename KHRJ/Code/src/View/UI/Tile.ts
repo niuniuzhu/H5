@@ -31,6 +31,7 @@ namespace View.UI {
 
 		public get index(): number { return this._index; }
 		public get itemID(): number { return this._itemID; }
+		public get isMonster(): boolean { return this._itemID > 1; }
 		public get monster(): Player { return this._monster; }
 
 		constructor(parent: fairygui.GComponent, index: number, flipHandler: (index: number) => void, triggerHandler: (index: number) => void) {
@@ -89,6 +90,7 @@ namespace View.UI {
 			this._sprite.grayed = true;
 			this._item.grayed = true;
 			this._sprite.touchable = false;
+			this._itemID = -1;
 		}
 
 		public CoordToIndex(x: number, y: number): number {

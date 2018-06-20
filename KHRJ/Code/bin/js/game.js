@@ -283,6 +283,7 @@ var View;
             get disable() { return this._disable; }
             get index() { return this._index; }
             get itemID() { return this._itemID; }
+            get isMonster() { return this._itemID > 1; }
             get monster() { return this._monster; }
             Dispose() {
                 this._state = 0;
@@ -314,6 +315,7 @@ var View;
                 this._sprite.grayed = true;
                 this._item.grayed = true;
                 this._sprite.touchable = false;
+                this._itemID = -1;
             }
             CoordToIndex(x, y) {
                 return y * Tile.H + x;
@@ -395,25 +397,27 @@ var View;
                 let canPlaceRight = index % UI.Tile.H != UI.Tile.H - 1;
                 let canPlaceUp = RC.Numerics.MathUtils.Floor(index / UI.Tile.H) != 0;
                 let canPlaceDown = RC.Numerics.MathUtils.Floor(index / UI.Tile.H) != UI.Tile.V - 1;
-                if (canPlaceLeft && this._tiles[index - 1].itemID >= 0)
+                if (canPlaceLeft && this._tiles[index - 1].isMonster)
                     return false;
-                if (canPlaceRight && this._tiles[index + 1].itemID >= 0)
+                if (canPlaceRight && this._tiles[index + 1].isMonster)
                     return false;
-                if (canPlaceUp && this._tiles[index - UI.Tile.H].itemID >= 0)
+                if (canPlaceUp && this._tiles[index - UI.Tile.H].isMonster)
                     return false;
-                if (canPlaceDown && this._tiles[index + UI.Tile.H].itemID >= 0)
+                if (canPlaceDown && this._tiles[index + UI.Tile.H].isMonster)
                     return false;
-                if (canPlaceLeft && canPlaceUp && this._tiles[index - UI.Tile.H - 1].itemID >= 0)
+                if (canPlaceLeft && canPlaceUp && this._tiles[index - UI.Tile.H - 1].isMonster)
                     return false;
-                if (canPlaceRight && canPlaceUp && this._tiles[index - UI.Tile.H + 1].itemID >= 0)
+                if (canPlaceRight && canPlaceUp && this._tiles[index - UI.Tile.H + 1].isMonster)
                     return false;
-                if (canPlaceLeft && canPlaceDown && this._tiles[index + UI.Tile.H - 1].itemID >= 0)
+                if (canPlaceLeft && canPlaceDown && this._tiles[index + UI.Tile.H - 1].isMonster)
                     return false;
-                if (canPlaceRight && canPlaceDown && this._tiles[index + UI.Tile.H + 1].itemID >= 0)
+                if (canPlaceRight && canPlaceDown && this._tiles[index + UI.Tile.H + 1].isMonster)
                     return false;
                 return true;
             }
             DisableAround(index) {
+                if (!this._tiles[index].isMonster)
+                    return;
                 let canPlaceLeft = index % UI.Tile.H != 0;
                 let canPlaceRight = index % UI.Tile.H != UI.Tile.H - 1;
                 let canPlaceUp = RC.Numerics.MathUtils.Floor(index / UI.Tile.H) != 0;

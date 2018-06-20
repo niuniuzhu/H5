@@ -72,26 +72,28 @@ namespace View.UI {
 			let canPlaceRight = index % Tile.H != Tile.H - 1;
 			let canPlaceUp = RC.Numerics.MathUtils.Floor(index / Tile.H) != 0;
 			let canPlaceDown = RC.Numerics.MathUtils.Floor(index / Tile.H) != Tile.V - 1;
-			if (canPlaceLeft && this._tiles[index - 1].itemID >= 0)
+			if (canPlaceLeft && this._tiles[index - 1].isMonster)
 				return false;
-			if (canPlaceRight && this._tiles[index + 1].itemID >= 0)
+			if (canPlaceRight && this._tiles[index + 1].isMonster)
 				return false;
-			if (canPlaceUp && this._tiles[index - Tile.H].itemID >= 0)
+			if (canPlaceUp && this._tiles[index - Tile.H].isMonster)
 				return false;
-			if (canPlaceDown && this._tiles[index + Tile.H].itemID >= 0)
+			if (canPlaceDown && this._tiles[index + Tile.H].isMonster)
 				return false;
-			if (canPlaceLeft && canPlaceUp && this._tiles[index - Tile.H - 1].itemID >= 0)
+			if (canPlaceLeft && canPlaceUp && this._tiles[index - Tile.H - 1].isMonster)
 				return false;
-			if (canPlaceRight && canPlaceUp && this._tiles[index - Tile.H + 1].itemID >= 0)
+			if (canPlaceRight && canPlaceUp && this._tiles[index - Tile.H + 1].isMonster)
 				return false;
-			if (canPlaceLeft && canPlaceDown && this._tiles[index + Tile.H - 1].itemID >= 0)
+			if (canPlaceLeft && canPlaceDown && this._tiles[index + Tile.H - 1].isMonster)
 				return false;
-			if (canPlaceRight && canPlaceDown && this._tiles[index + Tile.H + 1].itemID >= 0)
+			if (canPlaceRight && canPlaceDown && this._tiles[index + Tile.H + 1].isMonster)
 				return false;
 			return true;
 		}
 
 		public DisableAround(index: number): void {
+			if (!this._tiles[index].isMonster)
+				return;
 			let canPlaceLeft = index % Tile.H != 0;
 			let canPlaceRight = index % Tile.H != Tile.H - 1;
 			let canPlaceUp = RC.Numerics.MathUtils.Floor(index / Tile.H) != 0;
