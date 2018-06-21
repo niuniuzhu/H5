@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="720,1280" designImageLayer="1">
+  <controller name="c1" pages="0,,1," selected="0"/>
+  <displayList>
+    <graph id="n15_tazu" name="n15" xy="0,0" size="720,1280" type="rect" lineSize="0" fillColor="#b3000000"/>
+    <image id="n2_tazu" name="n2" src="tazu1k" fileName="assets/通关人物.png" xy="171,322"/>
+    <image id="n1_tazu" name="n1" src="s86x1a" fileName="assets/gongxitongguan.png" xy="138,146" group="n9_tazu"/>
+    <image id="n4_tazu" name="n4" src="s86x16" fileName="assets/dikuang08.png" xy="1,567" group="n9_tazu"/>
+    <image id="n6_tazu" name="n6" src="s86x18" fileName="assets/dikuang10.png" xy="109,857" group="n9_tazu"/>
+    <component id="n7_tazu" name="next_btn" src="pxg19" fileName="coms/button1.xml" pkg="llk0udxn" xy="406,991" group="n9_tazu">
+      <Button icon="ui://7ivbvicqs86x10"/>
+    </component>
+    <group id="n9_tazu" name="n9" xy="1,146" size="720,926" advanced="true" collapsed="true">
+      <gearDisplay controller="c1" pages="0"/>
+    </group>
+    <image id="n10_tazu" name="n10" src="s86x1b" fileName="assets/shibai.png" xy="231,145" group="n14_tazu"/>
+    <image id="n11_tazu" name="n11" src="s86x17" fileName="assets/dikuang09.png" xy="0,567" group="n14_tazu"/>
+    <image id="n12_tazu" name="n12" src="s86x19" fileName="assets/dikuang11.png" xy="109,857" group="n14_tazu"/>
+    <component id="n13_tazu" name="again_btn" src="pxg19" fileName="coms/button1.xml" pkg="llk0udxn" xy="407,991" group="n14_tazu">
+      <Button icon="ui://7ivbvicqs86x11"/>
+    </component>
+    <group id="n14_tazu" name="n14" xy="0,145" size="720,927" advanced="true" collapsed="true">
+      <gearDisplay controller="c1" pages="1"/>
+    </group>
+    <component id="n8_tazu" name="cancel_btn" src="pxg1a" fileName="coms/button2.xml" pkg="llk0udxn" xy="88,991">
+      <Button icon="ui://llk0udxnpxg12"/>
+    </component>
+    <text id="n5_tazu" name="exp" xy="357,631" size="35,47" font="ui://7ivbvicqtazu1l" fontSize="12" text="0"/>
+  </displayList>
+</component>

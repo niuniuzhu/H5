@@ -1,17 +1,9 @@
 {
-	"docs": [
-		"7ivbvicq",
-		"h0nz0",
-		"7ivbvicq",
-		"h0nz8"
-	],
 	"expanded_nodes": [
 		"7ivbvicq",
 		"/"
 	],
-	"active_doc": [
-		"7ivbvicq",
-		"h0nz8"
-	],
-	"hidden_packages": []
+	"active_doc": null,
+	"hidden_packages": [],
+	"docs": []
 }

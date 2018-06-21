@@ -257,14 +257,23 @@ var View;
                     if (this._disable)
                         return;
                     if (this._state == 0) {
-                        this.state = 1;
-                        flipHandler(this._index);
+                        parent.touchable = false;
+                        let fx = fairygui.UIPackage.createObject("level", "dig").asMovieClip;
+                        this._sprite.addChild(fx);
+                        fx.setPlaySettings(0, -1, 1, 0, new laya.utils.Handler(this, () => {
+                            fx.dispose();
+                            parent.touchable = true;
+                            this.state = 1;
+                            flipHandler(this._index);
+                        }));
+                        fx.playing = true;
                     }
                     else {
                         triggerHandler(this._index);
                     }
                 });
             }
+            get sprite() { return this._sprite; }
             set state(value) {
                 if (this._state == value)
                     return;
@@ -285,6 +294,8 @@ var View;
             get itemID() { return this._itemID; }
             get isMonster() { return this._itemID > 1; }
             get monster() { return this._monster; }
+            get touchable() { return this._sprite.parent.touchable; }
+            set touchable(value) { this._sprite.parent.touchable = value; }
             Dispose() {
                 this._state = 0;
                 this._disable = false;
@@ -306,14 +317,20 @@ var View;
                     this._sprite.addChild(this._item);
                     this._item.touchable = false;
                     this._item.center();
-                    this._monster = new View.Player();
-                    this._monster.atk = RC.Numerics.MathUtils.Floor(View.CUser.atk * 0.6) + RC.Numerics.MathUtils.RandomFloor(-3, 3);
-                    this._monster.hp = RC.Numerics.MathUtils.Floor(View.CUser.hp * 0.6);
+                    if (this.isMonster) {
+                        this._monster = new View.Player();
+                        this._monster.atk = RC.Numerics.MathUtils.Floor(View.CUser.atk * 0.6) + RC.Numerics.MathUtils.RandomFloor(-3, 3);
+                        this._monster.hp = 1;
+                    }
                 }
             }
             Die() {
-                this._sprite.grayed = true;
-                this._item.grayed = true;
+                if (this.isMonster)
+                    this._item.grayed = true;
+                else {
+                    this._item.dispose();
+                    this._item = null;
+                }
                 this._sprite.touchable = false;
                 this._itemID = -1;
             }
@@ -334,61 +351,97 @@ var View;
     var UI;
     (function (UI) {
         class TileMap {
-            constructor(root) {
-                this._root = root;
+            constructor(owner) {
+                this._owner = owner;
                 this._tiles = [];
                 this._player = new View.Player();
                 this._player.atk = View.CUser.atk;
+                this._player.hp = View.CUser.hp;
                 let count = UI.Tile.V * UI.Tile.H;
                 for (let i = 0; i < count; ++i) {
-                    let tile = new UI.Tile(this._root, i, this.OnTileClick.bind(this), this.OnTileTrigger.bind(this));
+                    let tile = new UI.Tile(this._owner.tileContainer, i, this.OnTileClick.bind(this), this.OnTileTrigger.bind(this));
                     this._tiles[i] = tile;
                 }
             }
+            get player() { return this._player; }
             Dispose() {
                 for (let tile of this._tiles)
                     tile.Dispose();
             }
             OnTileClick(index) {
-                let itemID = this._tiles[index].itemID;
-                if (itemID >= 0)
+                if (this._tiles[index].isMonster)
                     this.DisableAround(index);
-                switch (itemID) {
-                    case 0:
-                        break;
-                    case 1:
-                        break;
-                    case 2:
-                        break;
-                    case 3:
-                        break;
-                    case 4:
-                        break;
-                    case 5:
-                        break;
-                }
+                else
+                    this.CheckWin();
             }
             OnTileTrigger(index) {
                 let itemID = this._tiles[index].itemID;
                 switch (itemID) {
                     case 0:
-                        this._player.hp += RC.Numerics.MathUtils.RandomFloor(10, 30);
+                        this._player.hp += RC.Numerics.MathUtils.RandomFloor(15, 35);
+                        View.CUser.wood += RC.Numerics.MathUtils.RandomFloor(8, 20);
+                        View.CUser.stone += RC.Numerics.MathUtils.RandomFloor(8, 20);
+                        this._player.hp = RC.Numerics.MathUtils.Min(View.CUser.hp, this._player.hp);
+                        this.UpdatePlayerInfo();
+                        this._tiles[index].Die();
                         break;
                     case 1:
+                        this._player.hp += RC.Numerics.MathUtils.RandomFloor(25, 45);
                         View.CUser.wood += RC.Numerics.MathUtils.RandomFloor(10, 30);
                         View.CUser.stone += RC.Numerics.MathUtils.RandomFloor(10, 30);
+                        this.UpdatePlayerInfo();
+                        this._tiles[index].Die();
                         break;
                     case 2:
                     case 3:
                     case 4:
                     case 5:
-                        let monster = this._tiles[index].monster;
-                        this._player.hp -= monster.atk + RC.Numerics.MathUtils.RandomFloor(-10, 10);
-                        monster.hp -= this._player.atk + RC.Numerics.MathUtils.RandomFloor(-10, 10);
-                        if (monster.hp <= 0) {
-                            this._tiles[index].Die();
-                            this.EnableAround(index);
-                        }
+                        let tile = this._tiles[index];
+                        let monster = tile.monster;
+                        tile.touchable = false;
+                        let fx = fairygui.UIPackage.createObject("level", "hit").asMovieClip;
+                        tile.sprite.addChild(fx);
+                        fx.center();
+                        fx.setPlaySettings(0, -1, 1, 0, new laya.utils.Handler(this, () => {
+                            fx.dispose();
+                            let hurt = this._player.atk + RC.Numerics.MathUtils.RandomFloor(-10, 10);
+                            let hurtText = fairygui.UIPackage.createObject("level", "hurt").asCom;
+                            hurtText.getChild("text").asTextField.text = "" + hurt;
+                            hurtText.getTransition("t0").play(new laya.utils.Handler(() => hurtText.dispose()));
+                            tile.sprite.addChild(hurtText);
+                            hurtText.center();
+                            monster.hp -= hurt;
+                            monster.hp = RC.Numerics.MathUtils.Max(0, monster.hp);
+                            if (monster.hp <= 0) {
+                                tile.Die();
+                                this.EnableAround(index);
+                                tile.touchable = true;
+                                this.CheckWin();
+                                return;
+                            }
+                            let holder = this._owner.root.getChild("hit_holder").asCom;
+                            let fx2 = fairygui.UIPackage.createObject("level", "hit").asMovieClip;
+                            holder.addChild(fx2);
+                            fx2.center();
+                            fx2.setPlaySettings(0, -1, 1, 0, new laya.utils.Handler(this, () => {
+                                fx2.dispose();
+                                let hurt = monster.atk + RC.Numerics.MathUtils.RandomFloor(-10, 10);
+                                let hurtText = fairygui.UIPackage.createObject("level", "hurt").asCom;
+                                hurtText.getChild("text").asTextField.text = "" + hurt;
+                                hurtText.getTransition("t0").play(new laya.utils.Handler(() => hurtText.dispose()));
+                                holder.addChild(hurtText);
+                                hurtText.center();
+                                this._player.hp -= hurt;
+                                this._player.hp = RC.Numerics.MathUtils.Max(0, this._player.hp);
+                                this.UpdatePlayerInfo();
+                                tile.touchable = true;
+                                if (this._player.hp <= 0) {
+                                    this._owner.OnFail();
+                                }
+                            }));
+                            fx2.playing = true;
+                        }));
+                        fx.playing = true;
                         break;
                 }
             }
@@ -416,8 +469,6 @@ var View;
                 return true;
             }
             DisableAround(index) {
-                if (!this._tiles[index].isMonster)
-                    return;
                 let canPlaceLeft = index % UI.Tile.H != 0;
                 let canPlaceRight = index % UI.Tile.H != UI.Tile.H - 1;
                 let canPlaceUp = RC.Numerics.MathUtils.Floor(index / UI.Tile.H) != 0;
@@ -460,6 +511,16 @@ var View;
                     this._tiles[index + UI.Tile.H - 1].disable = false;
                 if (canPlaceRight && canPlaceDown && this.CanFlip(index + UI.Tile.H + 1))
                     this._tiles[index + UI.Tile.H + 1].disable = false;
+            }
+            UpdatePlayerInfo() {
+                this._owner.UpdatePlayerInfo();
+            }
+            CheckWin() {
+                for (let tile of this._tiles) {
+                    if (tile.state == 0 || tile.isMonster)
+                        return;
+                }
+                this._owner.OnWin();
             }
         }
         UI.TileMap = TileMap;
@@ -559,31 +620,60 @@ var View;
                 fairygui.UIPackage.addPackage("res/ui/level");
                 this._root = fairygui.UIPackage.createObject("level", "Main").asCom;
                 this._root.getChild("leave_btn").onClick(this, () => UI.UIManager.EnterMain());
+                this._result = fairygui.UIPackage.createObject("level", "result").asCom;
+                this._result.getChild("cancel_btn").onClick(this, () => {
+                    UI.UIManager.EnterMain();
+                });
+                this._result.getChild("next_btn").onClick(this, () => {
+                    UI.UIManager.EnterMain();
+                    UI.UIManager.EnterLevel(0);
+                });
+                this._result.getChild("again_btn").onClick(this, () => {
+                    UI.UIManager.EnterMain();
+                    UI.UIManager.EnterLevel(0);
+                });
             }
+            get root() { return this._root; }
+            get tileContainer() { return this._root.getChild("place").asCom; }
             Dispose() {
+                this._result.dispose();
                 this._root.dispose();
             }
             Enter(param) {
                 fairygui.GRoot.inst.addChild(this._root);
+                this._tileMap = new UI.TileMap(this);
                 this._root.width = fairygui.GRoot.inst.width;
                 this._root.height = fairygui.GRoot.inst.height;
                 this._root.getChild("icon").asLoader.url = fairygui.UIPackage.getItemURL("global", "img" + View.CUser.img);
                 this._root.getChild("tool").asLoader.url = fairygui.UIPackage.getItemURL("global", "t" + View.CUser.tool);
-                this._root.getChild("atk").asTextField.text = "" + View.CUser.atk;
-                this._root.getChild("hp").asTextField.text = "" + View.CUser.hp;
-                this._root.getChild("wood").asTextField.text = "" + View.CUser.wood;
-                this._root.getChild("stone").asTextField.text = "" + View.CUser.stone;
                 this._root.getChild("name").asTextField.text = "野兽洞窟";
-                this._tileMap = new UI.TileMap(this._root.getChild("place").asCom);
+                this.UpdatePlayerInfo();
             }
             Leave() {
                 this._tileMap.Dispose();
                 this._tileMap = null;
                 this._root.removeFromParent();
+                this._result.removeFromParent();
             }
             Update(deltaTime) {
             }
             OnResize(e) {
+            }
+            UpdatePlayerInfo() {
+                this._root.getChild("atk").asTextField.text = "" + this._tileMap.player.atk;
+                this._root.getChild("hp").asTextField.text = "" + this._tileMap.player.hp;
+                this._root.getChild("wood").asTextField.text = "" + View.CUser.wood;
+                this._root.getChild("stone").asTextField.text = "" + View.CUser.stone;
+            }
+            OnWin() {
+                this._root.addChild(this._result);
+                this._result.getController("c1").selectedIndex = 0;
+                this._result.getChild("exp").asTextField.text = "" + RC.Numerics.MathUtils.RandomFloor(40, 80);
+            }
+            OnFail() {
+                this._root.addChild(this._result);
+                this._result.getController("c1").selectedIndex = 1;
+                this._result.getChild("exp").asTextField.text = "" + RC.Numerics.MathUtils.RandomFloor(20, 50);
             }
         }
         UI.UILevel = UILevel;
@@ -636,7 +726,7 @@ var View;
                 View.CUser.img = 0;
                 View.CUser.lvl = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(20, 40));
                 View.CUser.hp = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(100, 130));
-                View.CUser.atk = 10;
+                View.CUser.atk = 20;
                 View.CUser.tool = 0;
                 View.CUser.wood = 100;
                 View.CUser.stone = 100;

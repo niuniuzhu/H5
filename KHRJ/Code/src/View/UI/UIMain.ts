@@ -10,7 +10,7 @@ namespace View.UI {
 			View.CUser.img = 0;
 			View.CUser.lvl = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(20, 40));
 			View.CUser.hp = RC.Numerics.MathUtils.Floor(RC.Numerics.MathUtils.Random(100, 130));
-			View.CUser.atk = 10;
+			View.CUser.atk = 20;
 			View.CUser.tool = 0;
 			View.CUser.wood = 100;
 			View.CUser.stone = 100;

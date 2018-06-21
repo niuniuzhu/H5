@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="86,59">
+  <displayList>
+    <text id="n0_tazu" name="text" xy="0,0" size="86,59" fontSize="48" color="#ff0000" align="center" vAlign="middle" autoSize="none" strokeColor="#000000" text="0"/>
+  </displayList>
+  <transition name="t0">
+    <item time="0" type="Alpha" target="n0_tazu" tween="true" startValue="1" endValue="0" duration="30"/>
+    <item time="0" type="XY" target="n0_tazu" tween="true" startValue="0,0" endValue="0,-50" duration="30" ease="Quad.In"/>
+  </transition>
+</component>

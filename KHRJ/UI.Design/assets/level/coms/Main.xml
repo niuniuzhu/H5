@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="720,1280" designImage="ui://7ivbvicqs86xp" designImageLayer="1">
+<component size="720,1280" designImageLayer="1">
+  <controller name="c1" pages="0,,1," selected="0"/>
   <displayList>
     <image id="n1_h0nz" name="n1" src="h0nz1" fileName="assets/tiles/关卡.png" xy="0,0"/>
     <component id="n2_s86x" name="place" src="s86xo" fileName="coms/place.xml" xy="20,253" size="680,650"/>
@@ -13,5 +14,6 @@
     <text id="n18_s86x" name="stone" xy="542,32" size="21,36" fontSize="28" color="#ffffff" align="center" vAlign="middle" strokeColor="#512e1d" text="0"/>
     <text id="n19_s86x" name="atk" xy="223,1225" size="44,36" fontSize="28" color="#ffffff" align="center" vAlign="middle" autoSize="none" strokeColor="#281c10" text="0"/>
     <text id="n20_s86x" name="hp" xy="453,1225" size="44,36" fontSize="28" color="#ffffff" align="center" vAlign="middle" autoSize="none" strokeColor="#281c10" text="0"/>
+    <component id="n22_tazu" name="hit_holder" src="s86xo" fileName="coms/place.xml" xy="294,1128" size="132,132"/>
   </displayList>
 </component>

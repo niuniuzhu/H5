@@ -11,6 +11,8 @@ namespace View.UI {
 		private _disable: boolean;
 		private _monster: Player;
 
+		public get sprite(): fairygui.GComponent { return this._sprite; }
+
 		public set state(value: number) {
 			if (this._state == value)
 				return;
@@ -33,6 +35,8 @@ namespace View.UI {
 		public get itemID(): number { return this._itemID; }
 		public get isMonster(): boolean { return this._itemID > 1; }
 		public get monster(): Player { return this._monster; }
+		public get touchable(): boolean { return this._sprite.parent.touchable; }
+		public set touchable(value: boolean) { this._sprite.parent.touchable = value; }
 
 		constructor(parent: fairygui.GComponent, index: number, flipHandler: (index: number) => void, triggerHandler: (index: number) => void) {
 			this._sprite = fairygui.UIPackage.createObject("level", "g" + RC.Numerics.MathUtils.RandomFloor(0, 3)).asCom;
@@ -49,8 +53,16 @@ namespace View.UI {
 				if (this._disable)
 					return;
 				if (this._state == 0) {
-					this.state = 1;
-					flipHandler(this._index);
+					parent.touchable = false;
+					let fx = fairygui.UIPackage.createObject("level", "dig").asMovieClip;
+					this._sprite.addChild(fx);
+					fx.setPlaySettings(0, -1, 1, 0, new laya.utils.Handler(this, () => {
+						fx.dispose();
+						parent.touchable = true;
+						this.state = 1;
+						flipHandler(this._index);
+					}));
+					fx.playing = true;
 				}
 				else {
 					triggerHandler(this._index);
@@ -69,7 +81,7 @@ namespace View.UI {
 			}
 		}
 
-		public GenItem(): void {
+		private GenItem(): void {
 			if (RC.Numerics.MathUtils.Random(0, 1) >= 0.5) {
 				this._item = null;
 				this._itemID = -1;
@@ -80,15 +92,21 @@ namespace View.UI {
 				this._sprite.addChild(this._item);
 				this._item.touchable = false;
 				this._item.center();
-				this._monster = new Player();
-				this._monster.atk = RC.Numerics.MathUtils.Floor(View.CUser.atk * 0.6) + RC.Numerics.MathUtils.RandomFloor(-3, 3);
-				this._monster.hp = RC.Numerics.MathUtils.Floor(View.CUser.hp * 0.6);
+				if (this.isMonster) {
+					this._monster = new Player();
+					this._monster.atk = RC.Numerics.MathUtils.Floor(View.CUser.atk * 0.6) + RC.Numerics.MathUtils.RandomFloor(-3, 3);
+					this._monster.hp = 1;//RC.Numerics.MathUtils.Floor(View.CUser.hp * 0.6);}
+				}
 			}
 		}
 
 		public Die(): void {
-			this._sprite.grayed = true;
-			this._item.grayed = true;
+			if (this.isMonster)
+				this._item.grayed = true;
+			else {
+				this._item.dispose();
+				this._item = null;
+			}
 			this._sprite.touchable = false;
 			this._itemID = -1;
 		}

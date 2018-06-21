@@ -51,6 +51,14 @@
     <image id="s86x1b" name="shibai.png" path="/assets/"/>
     <image id="s86x1c" name="x.png" path="/assets/"/>
     <component id="s86x1d" name="exit_btn.xml" path="/coms/"/>
+    <movieclip id="e6cs1e" name="dig.jta" path="/assets/" exported="true"/>
+    <movieclip id="e6cs1f" name="hit.jta" path="/assets/" exported="true"/>
+    <component id="tazu1g" name="hurt.xml" path="/coms/" exported="true"/>
+    <image id="tazu1h" name="04关卡05.jpg" path="/assets/"/>
+    <image id="tazu1i" name="04关卡04.jpg" path="/assets/"/>
+    <component id="tazu1j" name="result.xml" path="/coms/" exported="true"/>
+    <image id="tazu1k" name="通关人物.png" path="/assets/"/>
+    <font id="tazu1l" name="Font1.fnt" path="/coms/" exported="true"/>
   </resources>
   <publish name="level"/>
 </packageDescription>
