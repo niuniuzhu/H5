@@ -12,6 +12,7 @@ namespace View.UI {
 		private _monster: Player;
 
 		public get sprite(): fairygui.GComponent { return this._sprite; }
+		public get item(): fairygui.GComponent { return this._item; }
 
 		public set state(value: number) {
 			if (this._state == value)
@@ -95,7 +96,7 @@ namespace View.UI {
 				if (this.isMonster) {
 					this._monster = new Player();
 					this._monster.atk = RC.Numerics.MathUtils.Floor(View.CUser.atk * 0.6) + RC.Numerics.MathUtils.RandomFloor(-3, 3);
-					this._monster.hp = 1;//RC.Numerics.MathUtils.Floor(View.CUser.hp * 0.6);}
+					this._monster.hp = RC.Numerics.MathUtils.Floor(View.CUser.hp * 0.6);
 				}
 			}
 		}

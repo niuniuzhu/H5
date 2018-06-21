@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="624,412" designImageOffsetX="-47" designImageOffsetY="-433" designImageLayer="1">
+  <displayList>
+    <component id="n13_s4ru" name="n13" src="pxg1c" fileName="coms/frame.xml" xy="0,0"/>
+    <text id="n14_s4ru" name="text" xy="34,103" size="555,183" fontSize="30" color="#ffffff" align="center" vAlign="middle" autoSize="none" strokeColor="#371f12" text=""/>
+    <component id="n16_s4ru" name="confirm_btn" src="pxg19" fileName="coms/button1.xml" xy="198,299">
+      <Button icon="ui://llk0udxnpxg13"/>
+    </component>
+  </displayList>
+</component>

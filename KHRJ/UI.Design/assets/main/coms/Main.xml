@@ -8,7 +8,7 @@
     <text id="n4_s4ru" name="lvl" xy="257,34" size="21,36" fontSize="28" color="#ffffff" strokeColor="#512e1d" strokeSize="2" text="0"/>
     <text id="n5_s4ru" name="exp" xy="568,34" size="21,36" fontSize="28" color="#ffffff" strokeColor="#512e1d" strokeSize="2" text="0"/>
     <component id="n6_s4ru" name="camp" src="s4ru5" fileName="coms/yingdi.xml" xy="280,1118"/>
-    <list id="n8_s4ru" name="n8" xy="200,95" size="480,48" layout="flow_hz" overflow="scroll" defaultItem="ui://et2mcypss4ru6">
+    <list id="n8_s4ru" name="tl" xy="200,95" size="480,48" layout="row" overflow="scroll" defaultItem="ui://et2mcypss4ru6">
       <item/>
       <item/>
       <item/>

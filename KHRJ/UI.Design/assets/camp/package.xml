@@ -28,7 +28,7 @@
     <image id="h0nzr" name="营地房子png.png" path="/assets/"/>
     <component id="h0nzs" name="building.xml" path="/coms/"/>
     <component id="h0nzt" name="time_bar.xml" path="/coms/"/>
-    <movieclip id="h0nzu" name="野人.jta" path="/assets/"/>
+    <movieclip id="h0nzu" name="man.jta" path="/assets/" exported="true"/>
     <component id="h0nzv" name="place.xml" path="/coms/"/>
   </resources>
   <publish name="camp"/>

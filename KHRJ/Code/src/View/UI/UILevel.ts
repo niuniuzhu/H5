@@ -9,17 +9,30 @@ namespace View.UI {
 
 		constructor() {
 			fairygui.UIPackage.addPackage("res/ui/level");
-			this._root = fairygui.UIPackage.createObject("level", "Main").asCom;
-			this._root.getChild("leave_btn").onClick(this, () => UIManager.EnterMain());
-			this._result = fairygui.UIPackage.createObject("level", "result").asCom;
-			this._result.getChild("cancel_btn").onClick(this, ()=>{
+
+			let confirm = fairygui.UIPackage.createObject("global", "confirm").asCom;
+			confirm.getChild("confirm_btn").onClick(this, () => {
+				fairygui.GRoot.inst.hidePopup();
 				UIManager.EnterMain();
 			});
-			this._result.getChild("next_btn").onClick(this, ()=>{
+			confirm.getChild("cancel_btn").onClick(this, () => fairygui.GRoot.inst.hidePopup());
+
+			this._root = fairygui.UIPackage.createObject("level", "Main").asCom;
+			this._root.getChild("leave_btn").onClick(this, () => {
+				confirm.getChild("text").asTextField.text = "确定离开关卡回到主界面?";
+				fairygui.GRoot.inst.showPopup(confirm);
+				confirm.center();
+			});
+
+			this._result = fairygui.UIPackage.createObject("level", "result").asCom;
+			this._result.getChild("cancel_btn").onClick(this, () => {
+				UIManager.EnterMain();
+			});
+			this._result.getChild("next_btn").onClick(this, () => {
 				UIManager.EnterMain();
 				UIManager.EnterLevel(0);
 			});
-			this._result.getChild("again_btn").onClick(this, ()=>{
+			this._result.getChild("again_btn").onClick(this, () => {
 				UIManager.EnterMain();
 				UIManager.EnterLevel(0);
 			});
@@ -64,13 +77,17 @@ namespace View.UI {
 		public OnWin(): void {
 			this._root.addChild(this._result);
 			this._result.getController("c1").selectedIndex = 0;
-			this._result.getChild("exp").asTextField.text = "" + RC.Numerics.MathUtils.RandomFloor(40, 80);
+			let exp = RC.Numerics.MathUtils.RandomFloor(40, 80);
+			this._result.getChild("exp").asTextField.text = "" + exp;
+			View.CUser.exp += exp;
 		}
 
 		public OnFail(): void {
 			this._root.addChild(this._result);
 			this._result.getController("c1").selectedIndex = 1;
-			this._result.getChild("exp").asTextField.text = "" + RC.Numerics.MathUtils.RandomFloor(20, 50);
+			let exp = RC.Numerics.MathUtils.RandomFloor(20, 50);
+			this._result.getChild("exp").asTextField.text = "" + exp;
+			View.CUser.exp += exp;
 		}
 	}
 }

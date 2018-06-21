@@ -9,5 +9,6 @@
     <component id="n16_s4ru" name="confirm_btn" src="pxg19" fileName="coms/button1.xml" pkg="llk0udxn" xy="329,299">
       <Button icon="ui://llk0udxnpxg13"/>
     </component>
+    <text id="n17_tazu" name="n17" xy="34,239" size="555,39" fontSize="26" color="#ff0000" align="center" vAlign="middle" autoSize="none" strokeColor="#371f12" text=""/>
   </displayList>
 </component>

@@ -3,7 +3,7 @@
   <displayList>
     <graph id="n0_h0nz" name="n0" xy="0,0" size="165,12" type="rect" fillColor="#ff666666"/>
     <graph id="n2_h0nz" name="bar" xy="1,1" size="163,10" type="rect" lineSize="0" lineColor="#ff0066ff" fillColor="#ffff9900"/>
-    <text id="n3_h0nz" name="n3" xy="0,-7" size="165,19" fontSize="12" color="#ffffff" align="center" vAlign="middle" autoSize="none" strokeColor="#000000" text="00:00"/>
+    <text id="n3_h0nz" name="title" xy="0,-13" size="165,31" fontSize="24" color="#ffffff" align="center" vAlign="middle" autoSize="none" strokeColor="#000000" text="00:00"/>
   </displayList>
   <ProgressBar/>
 </component>
