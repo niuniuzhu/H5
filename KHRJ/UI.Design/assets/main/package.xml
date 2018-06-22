@@ -7,7 +7,7 @@
     <image id="s4ru4" name="yindi.png" path="/assets/"/>
     <component id="s4ru5" name="yingdi.xml" path="/coms/"/>
     <component id="s4ru6" name="tili.xml" path="/coms/"/>
-    <image id="h0nz7" name="主界面.png" path="/assets/"/>
+    <image id="h0nz7" name="主界面.jpg" path="/assets/" scale=""/>
     <component id="s86x8" name="place_btn.xml" path="/coms/"/>
   </resources>
   <publish name="main"/>

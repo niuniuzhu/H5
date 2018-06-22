@@ -34,74 +34,98 @@ namespace View.UI {
 
 		private OnTileTrigger(index: number): void {
 			let itemID = this._tiles[index].itemID;
+			let tile = this._tiles[index];
 			switch (itemID) {
 				case 0:
-					this._player.hp += RC.Numerics.MathUtils.RandomFloor(15, 35);
-					View.CUser.wood += RC.Numerics.MathUtils.RandomFloor(8, 20);
-					View.CUser.stone += RC.Numerics.MathUtils.RandomFloor(8, 20);
-					this._player.hp = RC.Numerics.MathUtils.Min(View.CUser.hp, this._player.hp);
-					this.UpdatePlayerInfo();
-					this._tiles[index].Die();
+					{
+						tile.touchable = false;
+						let fx = fairygui.UIPackage.createObject("level", "hit").asMovieClip;
+						tile.sprite.addChild(fx);
+						fx.center();
+						fx.setPlaySettings(0, -1, 1, 0, new laya.utils.Handler(this, () => {
+							fx.dispose();
+							this._player.hp += RC.Numerics.MathUtils.RandomFloor(15, 35);
+							View.CUser.wood += RC.Numerics.MathUtils.RandomFloor(8, 20);
+							View.CUser.stone += RC.Numerics.MathUtils.RandomFloor(8, 20);
+							this._player.hp = RC.Numerics.MathUtils.Min(View.CUser.hp, this._player.hp);
+							this.UpdatePlayerInfo();
+							this._tiles[index].Die();
+							tile.touchable = true;
+						}));
+						fx.playing = true;
+					}
 					break;
 				case 1:
-					this._player.hp += RC.Numerics.MathUtils.RandomFloor(25, 45);
-					View.CUser.wood += RC.Numerics.MathUtils.RandomFloor(10, 30);
-					View.CUser.stone += RC.Numerics.MathUtils.RandomFloor(10, 30);
-					this.UpdatePlayerInfo();
-					this._tiles[index].Die();
+					{
+						tile.touchable = false;
+						let fx = fairygui.UIPackage.createObject("level", "hit").asMovieClip;
+						tile.sprite.addChild(fx);
+						fx.center();
+						fx.setPlaySettings(0, -1, 1, 0, new laya.utils.Handler(this, () => {
+							fx.dispose();
+							this._player.hp += RC.Numerics.MathUtils.RandomFloor(25, 45);
+							View.CUser.wood += RC.Numerics.MathUtils.RandomFloor(10, 30);
+							View.CUser.stone += RC.Numerics.MathUtils.RandomFloor(10, 30);
+							this.UpdatePlayerInfo();
+							this._tiles[index].Die();
+							tile.touchable = true;
+						}));
+						fx.playing = true;
+					}
 					break;
 				case 2:
 				case 3:
 				case 4:
 				case 5:
-					let tile = this._tiles[index];
-					let monster = tile.monster;
-					tile.touchable = false;
-					let fx = fairygui.UIPackage.createObject("level", "hit").asMovieClip;
-					tile.sprite.addChild(fx);
-					fx.center();
-					fx.setPlaySettings(0, -1, 1, 0, new laya.utils.Handler(this, () => {
-						fx.dispose();
-						let hurt = this._player.atk + RC.Numerics.MathUtils.RandomFloor(-10, 10);
-						let hurtText = fairygui.UIPackage.createObject("level", "hurt").asCom;
-						hurtText.getChild("text").asTextField.text = "" + hurt;
-						hurtText.getTransition("t0").play(new laya.utils.Handler(() => hurtText.dispose()));
-						tile.sprite.addChild(hurtText);
-						hurtText.center();
-						monster.hp -= hurt;
-						monster.hp = RC.Numerics.MathUtils.Max(0, monster.hp);
-						if (monster.hp <= 0) {
-							tile.Die();
-							this.EnableAround(index);
-							tile.touchable = true;
-							this.CheckWin();
-							return;
-						}
-						// player hit
-						let holder = this._owner.root.getChild("hit_holder").asCom;
-						let fx2 = fairygui.UIPackage.createObject("level", "hit").asMovieClip;
-						holder.addChild(fx2);
-						fx2.center();
-						fx2.setPlaySettings(0, -1, 1, 0, new laya.utils.Handler(this, () => {
-							fx2.dispose();
-							let hurt = monster.atk + RC.Numerics.MathUtils.RandomFloor(-10, 10);
+					{
+						let monster = tile.monster;
+						tile.touchable = false;
+						let fx = fairygui.UIPackage.createObject("level", "hit").asMovieClip;
+						tile.sprite.addChild(fx);
+						fx.center();
+						fx.setPlaySettings(0, -1, 1, 0, new laya.utils.Handler(this, () => {
+							fx.dispose();
+							let hurt = this._player.atk + RC.Numerics.MathUtils.RandomFloor(-10, 10);
 							let hurtText = fairygui.UIPackage.createObject("level", "hurt").asCom;
 							hurtText.getChild("text").asTextField.text = "" + hurt;
 							hurtText.getTransition("t0").play(new laya.utils.Handler(() => hurtText.dispose()));
-							holder.addChild(hurtText);
+							tile.sprite.addChild(hurtText);
 							hurtText.center();
-							this._player.hp -= hurt;
-							this._player.hp = RC.Numerics.MathUtils.Max(0, this._player.hp);
-							this.UpdatePlayerInfo();
-							tile.touchable = true;
-							if (this._player.hp <= 0) {
-								this._owner.OnFail();
+							monster.hp -= hurt;
+							monster.hp = RC.Numerics.MathUtils.Max(0, monster.hp);
+							if (monster.hp <= 0) {
+								tile.Die();
+								this.EnableAround(index);
+								tile.touchable = true;
+								this.CheckWin();
+								return;
 							}
+							// player hit
+							let holder = this._owner.root.getChild("hit_holder").asCom;
+							let fx2 = fairygui.UIPackage.createObject("level", "hit").asMovieClip;
+							holder.addChild(fx2);
+							fx2.center();
+							fx2.setPlaySettings(0, -1, 1, 0, new laya.utils.Handler(this, () => {
+								fx2.dispose();
+								let hurt = monster.atk + RC.Numerics.MathUtils.RandomFloor(-10, 10);
+								let hurtText = fairygui.UIPackage.createObject("level", "hurt").asCom;
+								hurtText.getChild("text").asTextField.text = "" + hurt;
+								hurtText.getTransition("t0").play(new laya.utils.Handler(() => hurtText.dispose()));
+								holder.addChild(hurtText);
+								hurtText.center();
+								this._player.hp -= hurt;
+								this._player.hp = RC.Numerics.MathUtils.Max(0, this._player.hp);
+								this.UpdatePlayerInfo();
+								if (this._player.hp <= 0) {
+									this._owner.OnFail();
+								}
+								tile.touchable = true;
+							}));
+							fx2.playing = true;
 						}));
-						fx2.playing = true;
-					}));
-					fx.playing = true;
-					break;
+						fx.playing = true;
+						break;
+					}
 			}
 		}
 

@@ -30,6 +30,7 @@ namespace View.UI {
 			this._root.getChild("c1").onClick(this, () => this.EnterLevel(1));
 			this._root.getChild("c2").onClick(this, () => this.EnterLevel(2));
 			this._root.getChild("c3").onClick(this, () => this.EnterLevel(3));
+			this._root.getChild("c4").onClick(this, () => this.EnterLevel(4));
 		}
 
 		public Dispose(): void {

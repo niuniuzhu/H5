@@ -51,7 +51,7 @@ namespace View.UI {
 			this._bar0 = this._root.getChild("bar0").asProgress;
 			this._bar1 = this._root.getChild("bar1").asProgress;
 
-			this._maxpplt = 100;
+			this._maxpplt = 20;
 			this._pplt = 0;
 			this._mans = [];
 		}
