@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Sockets;
 
 namespace Core.Net
@@ -6,17 +7,22 @@ namespace Core.Net
 	public class KCPConnector : IConnector
 	{
 		public Socket socket { get; set; }
-		public INetSession session => this._session;
+		public INetSession session { get; }
 		public bool connected => this.socket != null && this.socket.Connected;
+		[Obsolete( "Unused" )]
+		public int recvBufSize { get; set; }
+		[Obsolete( "Unused" )]
+		public PacketEncodeHandler packetEncodeHandler { get; set; }
+		[Obsolete( "Unused" )]
+		public PacketDecodeHandler packetDecodeHandler { get; set; }
 
-		private readonly IKCPSession _session;
 		private readonly SocketAsyncEventArgs _connEventArgs;
 		private string _ip;
 		private int _port;
 
-		public KCPConnector( IKCPSession session )
+		public KCPConnector( INetSession session )
 		{
-			this._session = session;
+			this.session = session;
 			this._connEventArgs = new SocketAsyncEventArgs { UserToken = this };
 			this._connEventArgs.Completed += this.OnIOComplete;
 		}
@@ -88,12 +94,14 @@ namespace Core.Net
 				this.Close();
 				return;
 			}
-			this._session.connection.state = KCPConnectionState.Connecting;
-			this._session.connection.socket = this.socket;
-			this._session.connection.localEndPoint = this.socket.LocalEndPoint;
-			this._session.connection.remoteEndPoint = this.socket.RemoteEndPoint;
-			this._session.connection.StartReceive();
-			this._session.connection.SendHandShake();
+
+			IKCPConnection kcpConnection = ( IKCPConnection ) this.session.connection;
+			kcpConnection.state = KCPConnectionState.Connecting;
+			kcpConnection.socket = this.socket;
+			kcpConnection.localEndPoint = this.socket.LocalEndPoint;
+			kcpConnection.remoteEndPoint = this.socket.RemoteEndPoint;
+			kcpConnection.StartReceive();
+			kcpConnection.SendHandShake();
 			this.socket = null;
 		}
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using System.Reflection;
 using System.Threading;
 
@@ -18,7 +19,7 @@ namespace Core.Net
 		{
 		}
 
-		public T Pop<T>() where T : INetSession
+		public T Pop<T>( ProtoType protoType ) where T : INetSession
 		{
 			Type type = typeof( T );
 			if ( !this._typeToObjects.TryGetValue( type, out ConcurrentQueue<INetSession> objs ) )
@@ -35,7 +36,7 @@ namespace Core.Net
 
 				return ( T )Activator.CreateInstance( typeof( T ), BindingFlags.NonPublic | BindingFlags.Instance,
 													   null,
-													   new object[] { id }, null );
+													   new object[] { id, protoType }, null );
 			}
 			objs.TryDequeue( out INetSession session );
 			return ( T )session;

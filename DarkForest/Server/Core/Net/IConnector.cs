@@ -7,6 +7,9 @@ namespace Core.Net
 		Socket socket { get; set; }
 		INetSession session { get; }
 		bool connected { get; }
+		int recvBufSize { get; set; }
+		PacketEncodeHandler packetEncodeHandler { set; get; }
+		PacketDecodeHandler packetDecodeHandler { get; set; }
 		void Dispose();
 		void Close();
 		bool Connect( string ip, int port );

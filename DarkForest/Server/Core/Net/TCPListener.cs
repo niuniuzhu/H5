@@ -132,19 +132,21 @@ namespace Core.Net
 				}
 
 				//调用委托创建session
-				if ( !( this.sessionCreater() is ITCPSession session ) )
+				INetSession session = this.sessionCreater( ProtoType.TCP );
+				if ( session == null )
 				{
 					Logger.Error( "create session failed" );
 					this.Close( acceptSocket );
 					break;
 				}
 
-				session.connection.socket = acceptSocket;
-				session.connection.localEndPoint = acceptSocket.LocalEndPoint;
-				session.connection.remoteEndPoint = acceptSocket.RemoteEndPoint;
-				session.connection.packetEncodeHandler = this.packetEncodeHandler;
-				session.connection.packetDecodeHandler = this.packetDecodeHandler;
-				session.connection.recvBufSize = this.recvBufSize;
+				ITCPConnection tcpConnection = ( ITCPConnection )session.connection;
+				tcpConnection.socket = acceptSocket;
+				tcpConnection.localEndPoint = acceptSocket.LocalEndPoint;
+				tcpConnection.remoteEndPoint = acceptSocket.RemoteEndPoint;
+				tcpConnection.packetEncodeHandler = this.packetEncodeHandler;
+				tcpConnection.packetDecodeHandler = this.packetDecodeHandler;
+				tcpConnection.recvBufSize = this.recvBufSize;
 
 				NetEvent netEvent = NetEventMgr.instance.pool.Pop();
 				netEvent.type = NetEvent.Type.Establish;

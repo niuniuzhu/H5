@@ -1,4 +1,5 @@
 ﻿using Core.Misc;
+using Core.Net;
 using Shared;
 using Shared.Net;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace LoginServer.Net
 	{
 		private readonly List<OneBsInfo> m_BS_List = new List<OneBsInfo>();
 
-		protected BalanceSession( uint id ) : base( id )
+		protected BalanceSession( uint id, ProtoType type ) : base( id, type )
 		{
 		}
 

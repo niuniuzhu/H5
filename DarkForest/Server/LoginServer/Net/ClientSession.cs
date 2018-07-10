@@ -1,10 +1,11 @@
-﻿using Shared.Net;
+﻿using Core.Net;
+using Shared.Net;
 
 namespace LoginServer.Net
 {
 	public class ClientSession : SrvCliSession
 	{
-		protected ClientSession( uint id ) : base( id )
+		protected ClientSession( uint id, ProtoType type ) : base( id, type )
 		{
 			//完整登陆流程:
 			//1,客户端连接LS,请求登陆

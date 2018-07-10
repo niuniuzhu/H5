@@ -201,18 +201,20 @@ namespace Core.Net
 				if ( this.VerifyHandshake( data, ref offset, ref size ) )
 				{
 					//调用委托创建session
-					if ( !( this.sessionCreater() is IKCPSession session ) )
+					INetSession session = this.sessionCreater( ProtoType.KCP );
+					if ( session == null )
 					{
 						Logger.Error( "create session failed" );
 						this.Close( receiveData.conn );
 						continue;
 					}
 
-					session.connection.state = KCPConnectionState.Connected;
-					session.connection.socket = receiveData.conn;
-					session.connection.localEndPoint = receiveData.localEndPoint;
-					session.connection.remoteEndPoint = receiveData.remoteEndPoint;
-					session.connection.recvBufSize = this.recvBufSize;
+					IKCPConnection kcpConnection = ( IKCPConnection )session.connection;
+					kcpConnection.state = KCPConnectionState.Connected;
+					kcpConnection.socket = receiveData.conn;
+					kcpConnection.localEndPoint = receiveData.localEndPoint;
+					kcpConnection.remoteEndPoint = receiveData.remoteEndPoint;
+					kcpConnection.recvBufSize = this.recvBufSize;
 
 					NetEvent netEvent = NetEventMgr.instance.pool.Pop();
 					netEvent.type = NetEvent.Type.Establish;
@@ -224,10 +226,10 @@ namespace Core.Net
 					int handshakeAckOffset = ByteUtils.Encode32u( handshakeAckData, 0, KCPConfig.CONN_KEY );
 					handshakeAckOffset += ByteUtils.Encode16u( handshakeAckData, handshakeAckOffset, KCPConfig.HANDSHAKE_SIGNATURE );
 					handshakeAckOffset += ByteUtils.Encode32u( handshakeAckData, handshakeAckOffset, session.id );
-					session.connection.SendDirect( handshakeAckData, 0, handshakeAckOffset );
+					kcpConnection.SendDirect( handshakeAckData, 0, handshakeAckOffset );
 
 					//开始ping
-					session.connection.StartPing();
+					kcpConnection.StartPing();
 					continue;
 				}
 				{
@@ -235,13 +237,15 @@ namespace Core.Net
 					if ( !this.VerifyConnID( data, ref offset, ref size, ref sessionID ) )
 						continue;
 
-					if ( !( this.sessionGetter( sessionID ) is IKCPSession session ) )
+					INetSession session = this.sessionGetter( sessionID );
+					if ( session == null )
 					{
 						Logger.Error( "create session failed" );
 						this.Close( receiveData.conn );
 						continue;
 					}
-					session.connection.ProcessData( data, offset, size );
+					IKCPConnection kcpConnection = ( IKCPConnection )session.connection;
+					kcpConnection.ProcessData( data, offset, size );
 				}
 				receiveData.Clear();
 				this._receiveDataPool.Push( receiveData );

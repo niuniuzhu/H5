@@ -1,4 +1,6 @@
-﻿using Core.Misc;
+﻿using System;
+using System.Net.Sockets;
+using Core.Misc;
 using Core.Net;
 
 namespace Shared.Net
@@ -42,10 +44,22 @@ namespace Shared.Net
 		/// </summary>
 		private long _deactiveTime;
 
-		protected NetSession( uint id )
+		protected NetSession( uint id, ProtoType type )
 		{
 			this.id = id;
-			this.connection = new Connection( this );
+			switch ( type )
+			{
+				case ProtoType.TCP:
+					this.connection = new TCPConnection( this );
+					break;
+
+				case ProtoType.KCP:
+					this.connection = new KCPConnection( this );
+					break;
+
+				default:
+					throw new NotSupportedException();
+			}
 			this.msgCenter = new MsgCenter();
 			this._closed = true;
 		}

@@ -3,23 +3,22 @@ using System.Net.Sockets;
 
 namespace Core.Net
 {
-	public class TCPConnector : ITCPConnector
+	public class TCPConnector : IConnector
 	{
 		public Socket socket { get; set; }
-		public INetSession session => this._session;
+		public INetSession session { get; }
 		public int recvBufSize { get; set; }
 		public PacketEncodeHandler packetEncodeHandler { get; set; }
 		public PacketDecodeHandler packetDecodeHandler { get; set; }
 		public bool connected => this.socket != null && this.socket.Connected;
 
-		private readonly ITCPSession _session;
 		private readonly SocketAsyncEventArgs _connEventArgs;
 		private string _ip;
 		private int _port;
 
-		public TCPConnector( ITCPSession session )
+		public TCPConnector( INetSession session )
 		{
-			this._session = session;
+			this.session = session;
 			this._connEventArgs = new SocketAsyncEventArgs { UserToken = this };
 			this._connEventArgs.Completed += this.OnIOComplete;
 		}
@@ -95,13 +94,14 @@ namespace Core.Net
 				return;
 			}
 
-			this._session.connection.socket = this.socket;
-			this._session.connection.localEndPoint = this.socket.LocalEndPoint;
-			this._session.connection.remoteEndPoint = this.socket.RemoteEndPoint;
-			this._session.connection.recvBufSize = this.recvBufSize;
-			this._session.connection.packetEncodeHandler = this.packetEncodeHandler;
-			this._session.connection.packetDecodeHandler = this.packetDecodeHandler;
-			this._session.connection.StartReceive();
+			ITCPConnection tcpConnection = ( ITCPConnection )this.session.connection;
+			tcpConnection.socket = this.socket;
+			tcpConnection.localEndPoint = this.socket.LocalEndPoint;
+			tcpConnection.remoteEndPoint = this.socket.RemoteEndPoint;
+			tcpConnection.recvBufSize = this.recvBufSize;
+			tcpConnection.packetEncodeHandler = this.packetEncodeHandler;
+			tcpConnection.packetDecodeHandler = this.packetDecodeHandler;
+			tcpConnection.StartReceive();
 			this.socket = null;
 
 			NetEvent netEvent = NetEventMgr.instance.pool.Pop();

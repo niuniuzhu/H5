@@ -1,4 +1,6 @@
-﻿using Core.Misc;
+﻿using System;
+using System.Net.Sockets;
+using Core.Misc;
 using Core.Net;
 
 namespace Shared.Net
@@ -13,9 +15,21 @@ namespace Shared.Net
 
 		private long _reconnTime;
 
-		protected CliSession( uint id ) : base( id )
+		protected CliSession( uint id, ProtoType type ) : base( id, type )
 		{
-			this.connector = new Connector( this );
+			switch ( type )
+			{
+				case ProtoType.TCP:
+					this.connector = new TCPConnector( this );
+					break;
+
+				case ProtoType.KCP:
+					this.connector = new KCPConnector( this );
+					break;
+
+				default:
+					throw new NotSupportedException();
+			}
 			this.reconnectTag = true;
 		}
 

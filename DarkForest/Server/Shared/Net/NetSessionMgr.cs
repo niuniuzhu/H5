@@ -1,9 +1,8 @@
-﻿using System;
-using Core.Misc;
+﻿using Core.Misc;
 using Core.Net;
 using Google.Protobuf;
+using System;
 using System.Collections.Generic;
-using System.Net.Sockets;
 
 namespace Shared.Net
 {
@@ -32,7 +31,7 @@ namespace Shared.Net
 		/// <param name="pos">在列表中的位置</param>
 		/// <param name="sessionCreateHandler">创建session的委托</param>
 		/// <returns></returns>
-		public bool CreateListener( int port, int recvsize, ProtocolType protoType, int pos, SessionCreater sessionCreateHandler )
+		public bool CreateListener( int port, int recvsize, ProtoType protoType, int pos, SessionCreater sessionCreateHandler )
 		{
 			if ( pos >= Consts.MAX_COUNT_LISTENER ) return false;
 			if ( this._listeners[pos] != null ) return false;
@@ -40,13 +39,13 @@ namespace Shared.Net
 			IListener listener;
 			switch ( protoType )
 			{
-				case ProtocolType.Tcp:
+				case ProtoType.TCP:
 					listener = new TCPListener();
 					( ( TCPListener )listener ).packetEncodeHandler = LengthEncoder.Encode;
 					( ( TCPListener )listener ).packetDecodeHandler = LengthEncoder.Decode;
 					break;
 
-				case ProtocolType.Udp:
+				case ProtoType.KCP:
 					listener = new KCPListener();
 					break;
 
@@ -69,7 +68,7 @@ namespace Shared.Net
 		/// <param name="recvsize">接受缓冲区大小</param>
 		/// <param name="logicId">逻辑id(目前仅用于连接场景服务器时记下连接器和逻辑id的映射)</param>
 		/// <returns></returns>
-		public virtual bool CreateConnector( SessionType sessionType, string ip, int port, ProtocolType protoType, int recvsize, int logicId )
+		public virtual bool CreateConnector( SessionType sessionType, string ip, int port, ProtoType protoType, int recvsize, int logicId )
 		{
 			CliSession session = this.CreateConnectorSession( sessionType );
 			this.AddSession( session );
@@ -247,7 +246,7 @@ namespace Shared.Net
 				Logger.Warn( $"invalid sessionID:{sessionId}", 2, 5 );
 				return;
 			}
-			session.Send( buffer, buffer.Length );
+			session.Send( buffer, 0, buffer.Length );
 		}
 
 		private void Send( SessionType sessionType, byte[] buffer, bool once )
@@ -257,7 +256,7 @@ namespace Shared.Net
 				NetSession session = kv.Value;
 				if ( session.type != sessionType )
 					continue;
-				session.Send( buffer, buffer.Length );
+				session.Send( buffer, 0, buffer.Length );
 				if ( once ) break;
 			}
 		}
