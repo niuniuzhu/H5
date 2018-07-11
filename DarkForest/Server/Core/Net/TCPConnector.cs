@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Sockets;
+using Core.Misc;
 
 namespace Core.Net
 {
@@ -52,7 +53,7 @@ namespace Core.Net
 			}
 			catch ( SocketException e )
 			{
-				this.OnError( $"create socket error, code:{e.SocketErrorCode}" );
+				Logger.Log( $"create socket error, code:{e.SocketErrorCode}" );
 				return false;
 			}
 
@@ -67,7 +68,7 @@ namespace Core.Net
 			}
 			catch ( SocketException e )
 			{
-				this.OnError( $"socket connect error, address:{this._ip}:{this._port}, code:{e.SocketErrorCode} " );
+				Logger.Log( $"socket connect error, address:{this._ip}:{this._port}, code:{e.SocketErrorCode} " );
 				return false;
 			}
 			if ( !asyncResult )
@@ -96,7 +97,6 @@ namespace Core.Net
 
 			ITCPConnection tcpConnection = ( ITCPConnection )this.session.connection;
 			tcpConnection.socket = this.socket;
-			tcpConnection.localEndPoint = this.socket.LocalEndPoint;
 			tcpConnection.remoteEndPoint = this.socket.RemoteEndPoint;
 			tcpConnection.recvBufSize = this.recvBufSize;
 			tcpConnection.packetEncodeHandler = this.packetEncodeHandler;

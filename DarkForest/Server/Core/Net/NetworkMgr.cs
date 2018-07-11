@@ -95,7 +95,7 @@ namespace Core.Net
 				kv.Value.OnHeartBeat( dt );
 		}
 
-		public void FireEvents()
+		private void FireEvents()
 		{
 			this._eventQueue.Switch();
 			while ( !this._eventQueue.isEmpty )
@@ -121,7 +121,7 @@ namespace Core.Net
 						netEvent.session.OnSend();
 						break;
 				}
-				this.PushEvent( netEvent );
+				this._eventPool.Push( netEvent );
 			}
 		}
 	}

@@ -13,12 +13,7 @@ namespace Core.Net
 		/// <summary>
 		/// 远程终端
 		/// </summary>
-		EndPoint remoteEndPoint { get; set; }
-
-		/// <summary>
-		/// 本地终端
-		/// </summary>
-		EndPoint localEndPoint { get; set; }
+		EndPoint remoteEndPoint { set; }
 
 		/// <summary>
 		/// 此连接关联的session

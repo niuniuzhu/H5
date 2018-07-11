@@ -261,7 +261,7 @@ namespace Shared
 
 	public static class Consts
 	{
-		public const ProtoType PROTOCOL_TYPE = ProtoType.TCP;
+		public const ProtoType PROTOCOL_TYPE = ProtoType.KCP;
 
 		/// <summary>
 		/// 心跳间隔

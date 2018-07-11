@@ -9,7 +9,7 @@
 
 		public const int SIZE_OF_SIGNATURE = sizeof( ushort );
 		public const int SIZE_OF_CONN_KEY = sizeof( uint );
-		public const int SIZE_OF_PEER_ID = sizeof( ushort );
+		public const int SIZE_OF_SESSION_ID = sizeof( uint );
 
 		public const uint CONN_KEY = 0x11223344;
 		public const byte INTERNAL_MODULE = 0x63;//外部协议模块id从100开始
@@ -26,7 +26,7 @@
 		public static int BUFFER_SIZE = 512;
 		public static int CONNECTION_TIMEOUT = 5000;
 		public static int HANDSHAKE_INTERVAL = 1000;
-		public static int PING_INTERVAL = 5000;
+		public static int PING_INTERVAL = 1000;
 		public static int PING_TIME_OUT = 15000;
 	}
 }

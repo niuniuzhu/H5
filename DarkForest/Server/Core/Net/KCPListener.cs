@@ -9,10 +9,9 @@ namespace Core.Net
 {
 	public class ReceiveData
 	{
-		public readonly StreamBuffer buffer = new StreamBuffer();
 		public Socket conn;
-		public readonly EndPoint localEndPoint = new IPEndPoint( IPAddress.Any, 0 );
-		public readonly EndPoint remoteEndPoint = new IPEndPoint( IPAddress.Any, 0 );
+		public readonly IPEndPoint remoteEndPoint = new IPEndPoint( IPAddress.Any, 0 );
+		public readonly StreamBuffer buffer = new StreamBuffer();
 
 		public void Clear()
 		{
@@ -27,7 +26,6 @@ namespace Core.Net
 		public PacketEncodeHandler packetEncodeHandler { get; set; }
 		public PacketDecodeHandler packetDecodeHandler { get; set; }
 		public SessionCreater sessionCreater { get; set; }
-		public SessionGeter sessionGetter { get; set; }
 
 		public int recvBufSize { get; set; } = 10240;
 
@@ -97,10 +95,9 @@ namespace Core.Net
 			if ( acceptEventArgs == null )
 			{
 				acceptEventArgs = new SocketAsyncEventArgs { RemoteEndPoint = new IPEndPoint( IPAddress.Any, 0 ) };
+				acceptEventArgs.SetBuffer( new byte[this.recvBufSize], 0, this.recvBufSize );
 				acceptEventArgs.Completed += this.OnReceiveComplete;
 			}
-			else
-				acceptEventArgs.AcceptSocket = null;
 
 			bool asyncResult;
 			try
@@ -125,7 +122,6 @@ namespace Core.Net
 
 		private void ProcessReceive( SocketAsyncEventArgs acceptEventArgs )
 		{
-			Socket acceptSocket = acceptEventArgs.AcceptSocket;
 			do
 			{
 				if ( acceptEventArgs.SocketError != SocketError.Success )
@@ -141,8 +137,8 @@ namespace Core.Net
 				ReceiveData receiveData = this._receiveDataPool.Pop();
 				receiveData.buffer.Write( acceptEventArgs.Buffer, acceptEventArgs.Offset, acceptEventArgs.BytesTransferred );
 				receiveData.conn = this._socket;
-				receiveData.localEndPoint.Create( new SocketAddress( this._socket.AddressFamily ) );
-				receiveData.remoteEndPoint.Create( new SocketAddress( acceptSocket.AddressFamily ) );
+				receiveData.remoteEndPoint.Address = ( ( IPEndPoint ) acceptEventArgs.RemoteEndPoint ).Address;
+				receiveData.remoteEndPoint.Port = ( ( IPEndPoint ) acceptEventArgs.RemoteEndPoint ).Port;
 				this._buffer.Post( receiveData );
 			} while ( false );
 			this.StartReceive( acceptEventArgs );
@@ -178,12 +174,12 @@ namespace Core.Net
 
 		private bool VerifyConnID( byte[] data, ref int offset, ref int size, ref uint id )
 		{
-			if ( size < KCPConfig.SIZE_OF_PEER_ID )
+			if ( size < KCPConfig.SIZE_OF_SESSION_ID )
 				return false;
 
 			ByteUtils.Decode32u( data, offset, ref id );
-			offset += KCPConfig.SIZE_OF_PEER_ID;
-			size -= KCPConfig.SIZE_OF_PEER_ID;
+			offset += KCPConfig.SIZE_OF_SESSION_ID;
+			size -= KCPConfig.SIZE_OF_SESSION_ID;
 			return true;
 		}
 
@@ -215,7 +211,6 @@ namespace Core.Net
 					IKCPConnection kcpConnection = ( IKCPConnection )session.connection;
 					kcpConnection.state = KCPConnectionState.Connected;
 					kcpConnection.socket = receiveData.conn;
-					kcpConnection.localEndPoint = receiveData.localEndPoint;
 					kcpConnection.remoteEndPoint = receiveData.remoteEndPoint;
 					kcpConnection.recvBufSize = this.recvBufSize;
 
@@ -225,7 +220,7 @@ namespace Core.Net
 					NetworkMgr.instance.PushEvent( netEvent );
 
 					//回应握手消息
-					byte[] handshakeAckData = new byte[KCPConfig.SIZE_OF_CONN_KEY + KCPConfig.SIZE_OF_SIGNATURE + KCPConfig.SIZE_OF_PEER_ID];
+					byte[] handshakeAckData = new byte[KCPConfig.SIZE_OF_CONN_KEY + KCPConfig.SIZE_OF_SIGNATURE + KCPConfig.SIZE_OF_SESSION_ID];
 					int handshakeAckOffset = ByteUtils.Encode32u( handshakeAckData, 0, KCPConfig.CONN_KEY );
 					handshakeAckOffset += ByteUtils.Encode16u( handshakeAckData, handshakeAckOffset, KCPConfig.HANDSHAKE_SIGNATURE );
 					handshakeAckOffset += ByteUtils.Encode32u( handshakeAckData, handshakeAckOffset, session.id );
@@ -240,7 +235,7 @@ namespace Core.Net
 					if ( !this.VerifyConnID( data, ref offset, ref size, ref sessionID ) )
 						continue;
 
-					INetSession session = this.sessionGetter( sessionID );
+					INetSession session = NetworkMgr.instance.GetSession( sessionID );
 					if ( session == null )
 					{
 						Logger.Error( "create session failed" );

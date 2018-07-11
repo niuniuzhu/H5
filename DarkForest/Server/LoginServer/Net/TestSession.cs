@@ -1,4 +1,5 @@
-﻿using Core.Net;
+﻿using Core.Misc;
+using Core.Net;
 using Shared.Net;
 
 namespace LoginServer.Net
@@ -7,6 +8,11 @@ namespace LoginServer.Net
 	{
 		private TestSession( uint id, ProtoType type ) : base( id, type )
 		{
+		}
+
+		public override void OnEstablish()
+		{
+			Logger.Log( "test" );
 		}
 	}
 }

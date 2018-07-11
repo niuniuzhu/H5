@@ -1,6 +1,6 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
+using Core.Misc;
 
 namespace Core.Net
 {
@@ -9,28 +9,20 @@ namespace Core.Net
 		public Socket socket { get; set; }
 		public INetSession session { get; }
 		public bool connected => this.socket != null && this.socket.Connected;
-		[Obsolete( "Unused" )]
 		public int recvBufSize { get; set; }
-		[Obsolete( "Unused" )]
 		public PacketEncodeHandler packetEncodeHandler { get; set; }
-		[Obsolete( "Unused" )]
 		public PacketDecodeHandler packetDecodeHandler { get; set; }
 
-		private readonly SocketAsyncEventArgs _connEventArgs;
 		private string _ip;
 		private int _port;
 
 		public KCPConnector( INetSession session )
 		{
 			this.session = session;
-			this._connEventArgs = new SocketAsyncEventArgs { UserToken = this };
-			this._connEventArgs.Completed += this.OnIOComplete;
 		}
 
 		public void Dispose()
 		{
-			this._connEventArgs.Completed -= this.OnIOComplete;
-			this._connEventArgs.Dispose();
 		}
 
 		public void Close()
@@ -56,53 +48,27 @@ namespace Core.Net
 			}
 			catch ( SocketException e )
 			{
-				this.OnError( $"create socket error, code:{e.SocketErrorCode}" );
+				Logger.Log( $"create socket error, code:{e.SocketErrorCode}" );
 				return false;
 			}
-
-			this._connEventArgs.RemoteEndPoint = new IPEndPoint( IPAddress.Parse( this._ip ), this._port );
-			bool asyncResult;
 			try
 			{
-				asyncResult = this.socket.ConnectAsync( this._connEventArgs );
+				this.socket.Bind( new IPEndPoint( IPAddress.Any, 0 ) );
 			}
 			catch ( SocketException e )
 			{
-				this.OnError( $"socket connect error, address:{this._ip}:{this._port}, code:{e.SocketErrorCode} " );
+				Logger.Error( $"socket bind at {this._port} fail, code:{e.SocketErrorCode}" );
 				return false;
 			}
-			if ( !asyncResult )
-				this.ProcessConnect( this._connEventArgs );
-			return true;
-		}
-
-		private void OnIOComplete( object sender, SocketAsyncEventArgs asyncEventArgs )
-		{
-			switch ( asyncEventArgs.LastOperation )
-			{
-				case SocketAsyncOperation.Connect:
-					this.ProcessConnect( asyncEventArgs );
-					break;
-			}
-		}
-
-		private void ProcessConnect( SocketAsyncEventArgs connectEventArgs )
-		{
-			if ( connectEventArgs.SocketError != SocketError.Success )
-			{
-				this.OnError( $"socket connect error, address:{this._ip}:{this._port}, code:{connectEventArgs.SocketError}" );
-				this.Close();
-				return;
-			}
-
-			IKCPConnection kcpConnection = ( IKCPConnection ) this.session.connection;
+			IKCPConnection kcpConnection = ( IKCPConnection )this.session.connection;
 			kcpConnection.state = KCPConnectionState.Connecting;
 			kcpConnection.socket = this.socket;
-			kcpConnection.localEndPoint = this.socket.LocalEndPoint;
-			kcpConnection.remoteEndPoint = this.socket.RemoteEndPoint;
+			kcpConnection.recvBufSize = this.recvBufSize;
+			kcpConnection.remoteEndPoint = new IPEndPoint( IPAddress.Parse( this._ip ), this._port );
 			kcpConnection.StartReceive();
 			kcpConnection.SendHandShake();
 			this.socket = null;
+			return true;
 		}
 
 		private void OnError( string error )

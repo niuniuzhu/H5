@@ -9,11 +9,14 @@ namespace Core.Net
 	{
 		public KCPConnectionState state { get; set; }
 		public Socket socket { get; set; }
-		public EndPoint remoteEndPoint { get; set; }
-		public EndPoint localEndPoint { get; set; }
+		public EndPoint remoteEndPoint
+		{
+			private get => this._recvEventArgs.RemoteEndPoint;
+			set => this._recvEventArgs.RemoteEndPoint = value;
+		}
 		public INetSession session { get; }
 		public int recvBufSize { set => this._recvEventArgs.SetBuffer( new byte[value], 0, value ); }
-		public bool connected => this.socket != null && this.socket.Connected;
+		public bool connected => true;
 
 		private readonly KCPProxy _kcpProxy;
 		private readonly SocketAsyncEventArgs _recvEventArgs;
@@ -26,12 +29,12 @@ namespace Core.Net
 			this.session = session;
 			this._kcpProxy = new KCPProxy( this.session.id, this.OnKCPOutout );
 			this._recvEventArgs = new SocketAsyncEventArgs { UserToken = this };
-			this._recvEventArgs.Completed += this.OnIOComplete;
+			this._recvEventArgs.Completed += this.OnReceiveComplete;
 		}
 
 		public void Dispose()
 		{
-			this._recvEventArgs.Completed -= this.OnIOComplete;
+			this._recvEventArgs.Completed -= this.OnReceiveComplete;
 			this._recvEventArgs.Dispose();
 		}
 
@@ -46,8 +49,7 @@ namespace Core.Net
 			this._kcpProxy.Release();
 			this._remoteConnID = 0;
 			this._pingTime = 0;
-			if ( this.connected )
-				this.socket.Shutdown( SocketShutdown.Both );
+			this.socket.Shutdown( SocketShutdown.Both );
 			this.socket.Close();
 			this.socket = null;
 			this.state = KCPConnectionState.Disconnect;
@@ -77,17 +79,12 @@ namespace Core.Net
 
 		public bool Send( byte[] data, int offset, int size )
 		{
-			if ( !this.connected )
-				return false;
 			this._kcpProxy.Send( data, offset, size );
 			return true;
 		}
 
 		public void SendDirect( byte[] data, int offset, int size )
 		{
-			if ( !this.connected )
-				return;
-
 			this.socket.SendTo( data, offset, size, SocketFlags.None, this.remoteEndPoint );
 
 			NetEvent netEvent = NetworkMgr.instance.PopEvent();
@@ -101,7 +98,7 @@ namespace Core.Net
 			bool asyncResult;
 			try
 			{
-				asyncResult = this.socket.ReceiveAsync( this._recvEventArgs );
+				asyncResult = this.socket.ReceiveFromAsync( this._recvEventArgs );
 			}
 			catch ( SocketException e )
 			{
@@ -113,15 +110,7 @@ namespace Core.Net
 			return true;
 		}
 
-		private void OnIOComplete( object sender, SocketAsyncEventArgs asyncEventArgs )
-		{
-			switch ( asyncEventArgs.LastOperation )
-			{
-				case SocketAsyncOperation.Receive:
-					this.ProcessReceive( asyncEventArgs );
-					break;
-			}
-		}
+		private void OnReceiveComplete( object sender, SocketAsyncEventArgs asyncEventArgs ) => this.ProcessReceive( asyncEventArgs );
 
 		private void ProcessReceive( SocketAsyncEventArgs recvEventArgs )
 		{
@@ -168,7 +157,10 @@ namespace Core.Net
 					case KCPConnectionState.Connected:
 						//处理ping
 						if ( this.IsPing( data, offset, size ) )
+						{
+							this.SendPong();
 							break;
+						}
 						this.ProcessData( data, offset, size );
 						break;
 				}
@@ -180,7 +172,9 @@ namespace Core.Net
 		public void ProcessData( byte[] data, int offset, int size )
 		{
 			if ( this.IsPong( data, offset, size ) )
+			{
 				return;
+			}
 			this._kcpProxy.ProcessData( data, offset, size, this.OnKCPOutput );
 		}
 
@@ -210,6 +204,15 @@ namespace Core.Net
 			this.SendDirect( data, 0, offset );
 		}
 
+		private void SendPong()
+		{
+			byte[] data = new byte[KCPConfig.SIZE_OF_CONN_KEY + KCPConfig.SIZE_OF_SESSION_ID + KCPConfig.SIZE_OF_SIGNATURE];
+			int offset = ByteUtils.Encode32u( data, 0, KCPConfig.CONN_KEY );
+			offset += ByteUtils.Encode32u( data, offset, this._remoteConnID );
+			offset += ByteUtils.Encode16u( data, offset, KCPConfig.PONG_SIGNATURE );
+			this.SendDirect( data, 0, offset );
+		}
+
 		public void SendHandShake()
 		{
 			byte[] data = new byte[KCPConfig.SIZE_OF_CONN_KEY + KCPConfig.SIZE_OF_SIGNATURE];
@@ -233,7 +236,7 @@ namespace Core.Net
 			switch ( this.state )
 			{
 				case KCPConnectionState.Connected:
-					this._pingScheduler.Update( dt );
+					this._pingScheduler?.Update( dt );
 					break;
 			}
 		}
@@ -268,12 +271,12 @@ namespace Core.Net
 
 		private bool VerifyConnID( byte[] data, ref int offset, ref int size, ref uint id )
 		{
-			if ( size < KCPConfig.SIZE_OF_PEER_ID )
+			if ( size < KCPConfig.SIZE_OF_SESSION_ID )
 				return false;
 
 			ByteUtils.Decode32u( data, offset, ref id );
-			offset += KCPConfig.SIZE_OF_PEER_ID;
-			size -= KCPConfig.SIZE_OF_PEER_ID;
+			offset += KCPConfig.SIZE_OF_SESSION_ID;
+			size -= KCPConfig.SIZE_OF_SESSION_ID;
 			return true;
 		}
 

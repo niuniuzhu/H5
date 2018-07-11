@@ -145,7 +145,6 @@ namespace Core.Net
 
 				ITCPConnection tcpConnection = ( ITCPConnection )session.connection;
 				tcpConnection.socket = acceptSocket;
-				tcpConnection.localEndPoint = acceptSocket.LocalEndPoint;
 				tcpConnection.remoteEndPoint = acceptSocket.RemoteEndPoint;
 				tcpConnection.packetEncodeHandler = this.packetEncodeHandler;
 				tcpConnection.packetDecodeHandler = this.packetDecodeHandler;
