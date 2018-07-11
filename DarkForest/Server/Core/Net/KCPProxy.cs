@@ -11,9 +11,9 @@ namespace Core.Net
 		private long _nextKcpUpdateTime;
 		private long _time;
 
-		internal KCPProxy( uint id, Action<byte[], int> output )
+		internal KCPProxy( Action<byte[], int> output )
 		{
-			this._kcp = new KCP( id, output );
+			this._kcp = new KCP( KCPConfig.CONN_KEY, output );
 			this._kcp.NoDelay( KCPConfig.KCP_NO_DELAY, KCPConfig.KCP_INTERVAL, KCPConfig.KCP_RESEND,
 							   KCPConfig.KCP_NC );
 			this._kcp.WndSize( KCPConfig.KCP_SND_WIN, KCPConfig.KCP_REV_WIN );

@@ -20,18 +20,18 @@
 		void StartPing();
 
 		/// <summary>
-		/// 不通过KCP层直接发送
-		/// </summary>
-		void SendDirect( byte[] data, int offset, int size );
-
-		/// <summary>
 		/// 处理接收的数据
 		/// </summary>
-		void ProcessData( byte[] data, int offset, int size );
+		void SendDataToMainThread( byte[] data, int offset, int size );
 
 		/// <summary>
 		/// 发送握手消息
 		/// </summary>
 		void SendHandShake();
+
+		/// <summary>
+		/// 发送握手回应消息
+		/// </summary>
+		void SendHandShakeAck();
 	}
 }

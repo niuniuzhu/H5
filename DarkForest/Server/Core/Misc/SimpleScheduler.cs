@@ -1,18 +1,23 @@
-﻿namespace Core.Misc
+﻿using System;
+
+namespace Core.Misc
 {
 	public class SimpleScheduler
 	{
-		public delegate void Handler();
-
 		private long _interval;
-		private Handler _handler;
+		private Action<int> _handler;
 		private long _currTime;
+		private int _count;
 
-		public void Start( long interval, Handler handler )
+		public void Start( long interval, Action<int> handler, bool triggerAtStart = false )
 		{
 			this._interval = interval;
 			this._handler = handler;
 			this._currTime = 0;
+			if ( triggerAtStart )
+			{
+				this._handler?.Invoke( this._count++ );
+			}
 		}
 
 		public void Stop()
@@ -25,7 +30,7 @@
 			this._currTime += dt;
 			if ( this._currTime >= this._interval )
 			{
-				this._handler?.Invoke();
+				this._handler?.Invoke( this._count++ );
 				this._currTime = 0;
 			}
 		}
