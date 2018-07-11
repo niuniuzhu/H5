@@ -1,20 +1,12 @@
 ﻿using Core.Misc;
 using Core.Net;
-using Shared;
 using Shared.Net;
-using System.Collections.Generic;
 
 namespace LoginServer.Net
 {
 	public class BalanceSession : SrvCliSession
 	{
-		private readonly List<OneBsInfo> m_BS_List = new List<OneBsInfo>();
-
 		protected BalanceSession( uint id, ProtoType type ) : base( id, type )
-		{
-		}
-
-		protected override void SendInitData()
 		{
 		}
 
@@ -26,12 +18,6 @@ namespace LoginServer.Net
 		protected override void OnClose()
 		{
 			Logger.Info( $"BS({this.logicID}) DisConnected." );
-		}
-
-		private ErrorCode MsgInitHandler( byte[] data, int offset, int size, int msgID )
-		{
-			this.SetInited( true, true );
-			return ErrorCode.Success;
 		}
 	}
 }

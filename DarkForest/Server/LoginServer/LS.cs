@@ -14,19 +14,15 @@ namespace LoginServer
 		public LSNetSessionMgr netSessionMgr { get; }
 		public LSConfig lsConfig { get; }
 
-		private readonly UpdateContext _context;
-		private long _timestamp;
-
 		private LS()
 		{
 			this.lsConfig = new LSConfig();
-			this._context = new UpdateContext();
 			this.netSessionMgr = new LSNetSessionMgr();
 		}
 
 		public void Dispose()
 		{
-			this.netSessionMgr.Dispose();
+			NetworkMgr.instance.Dispose();
 			NetSessionPool.instance.Dispose();
 		}
 
@@ -40,37 +36,18 @@ namespace LoginServer
 
 		public ErrorCode Start()
 		{
-			this.netSessionMgr.CreateListener( this.lsConfig.bs_listen_port, 102400, Consts.PROTOCOL_TYPE,
-			                                   0, this.netSessionMgr.CreateBlanceSession );
-			this.netSessionMgr.CreateListener( this.lsConfig.client_listen_port, 102400, Consts.PROTOCOL_TYPE,
-			                                   1, this.netSessionMgr.CreateClientSession );
+			this.netSessionMgr.CreateListener( 0, this.lsConfig.bs_listen_port, 102400, Consts.PROTOCOL_TYPE,
+											   this.netSessionMgr.CreateBlanceSession );
+			this.netSessionMgr.CreateListener( 1, this.lsConfig.client_listen_port, 102400, Consts.PROTOCOL_TYPE,
+											   this.netSessionMgr.CreateClientSession );
+			bool connector = this.netSessionMgr.CreateConnector<TestSession>( SessionType.ClientB2L, "127.0.0.1",
+																 this.lsConfig.bs_listen_port, Consts.PROTOCOL_TYPE, 102400, 0 );
 			return ErrorCode.Success;
 		}
 
 		public void Update( long elapsed, long dt )
 		{
-			this._timestamp += dt;
-			while ( this._timestamp >= Consts.HEART_PACK )
-			{
-				++this._context.ticks;
-				this._context.utcTime = TimeUtils.utcTime;
-				this._context.time = elapsed;
-				this._context.deltaTime = Consts.HEART_PACK;
-				this._timestamp -= Consts.HEART_PACK;
-				ErrorCode eResult = this.OnHeartBeat( this._context );
-				if ( ErrorCode.Success != eResult )
-				{
-					Logger.Error( $"fail with error code {eResult}!, please amend the error and try again!" );
-					return;
-				}
-			}
-			this.netSessionMgr.Update();
-		}
-
-		private ErrorCode OnHeartBeat( UpdateContext context )
-		{
-			this.netSessionMgr.OnHeartBeat( context );
-			return ErrorCode.Success;
+			NetworkMgr.instance.Update( elapsed, dt );
 		}
 	}
 }

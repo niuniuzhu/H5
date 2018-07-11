@@ -1,7 +1,6 @@
-﻿using System;
-using System.Net.Sockets;
-using Core.Misc;
+﻿using Core.Misc;
 using Core.Net;
+using System;
 
 namespace Shared.Net
 {
@@ -59,7 +58,7 @@ namespace Shared.Net
 			return this.connector.Connect( ip, port );
 		}
 
-		public void OnConnError( string error )
+		public override void OnConnError( string error )
 		{
 			Logger.Error( error );
 			this._reconFlag = true;
@@ -75,8 +74,9 @@ namespace Shared.Net
 			this.SendInitData();
 		}
 
-		public override void OnHeartBeat( UpdateContext context )
+		public override void OnHeartBeat( long dt )
 		{
+			base.OnHeartBeat( dt );
 			this.Reconnect();
 		}
 	}

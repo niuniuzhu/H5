@@ -19,17 +19,5 @@ namespace LoginServer.Net
 			//9,客户端连接GS
 			//10,GS把登陆信息转发到CS
 		}
-
-		protected override void SendInitData()
-		{
-		}
-
-		protected override void OnRealEstablish()
-		{
-		}
-
-		protected override void OnClose()
-		{
-		}
 	}
 }

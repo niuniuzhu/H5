@@ -107,11 +107,11 @@ namespace Core.Net
 
 		private void OnError( string error )
 		{
-			NetEvent netEvent = NetEventMgr.instance.pool.Pop();
+			NetEvent netEvent = NetworkMgr.instance.PopEvent();
 			netEvent.type = NetEvent.Type.ConnErr;
 			netEvent.session = this.session;
 			netEvent.error = error;
-			NetEventMgr.instance.Push( netEvent );
+			NetworkMgr.instance.PushEvent( netEvent );
 		}
 	}
 }

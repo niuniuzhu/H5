@@ -11,11 +11,16 @@ namespace Shared.Net
 		{
 		}
 
-		protected override void InternalClose()
+		protected override void OnClose()
 		{
-			base.InternalClose();
+			base.OnClose();
 			//由于此session是被动创建的
 			this.owner.RemoveSession( this );
+			NetSessionPool.instance.Push( this );
+		}
+
+		public override void OnConnError( string error )
+		{
 		}
 
 		public override void OnEstablish()

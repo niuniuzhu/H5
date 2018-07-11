@@ -20,10 +20,5 @@ namespace LoginServer.Net
 			session.type = SessionType.ServerLsOnlyGc;
 			return session;
 		}
-
-		protected override CliSession CreateConnectorSession( SessionType sessionType )
-		{
-			return null;
-		}
 	}
 }

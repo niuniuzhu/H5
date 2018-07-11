@@ -66,5 +66,16 @@ namespace Core.Net
 		/// </summary>
 		/// <returns></returns>
 		bool StartReceive();
+
+		/// <summary>
+		/// 内部更新
+		/// </summary>
+		void Update( UpdateContext updateContext );
+
+		/// <summary>
+		/// 心跳
+		/// </summary>
+		/// <param name="dt"></param>
+		void OnHeartBeat( long dt );
 	}
 }

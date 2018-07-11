@@ -1,17 +1,13 @@
-﻿using System;
-using System.Net.Sockets;
-using Core.Misc;
+﻿using Core.Misc;
 using Core.Net;
 
 namespace Shared.Net
 {
-	public abstract class NetSession : INetSession
+	public abstract class NetSession : BaseNetSession
 	{
 		public NetSessionMgr owner { get; set; }
-		public uint id { get; }
 		public int logicID { get; set; }
 		public SessionType type { get; set; }
-		public IConnection connection { get; }
 		public MsgCenter msgCenter { get; }
 
 		/// <summary>
@@ -30,11 +26,6 @@ namespace Shared.Net
 		protected bool _reconFlag;
 
 		/// <summary>
-		/// 连接关闭标记
-		/// </summary>
-		protected bool _closed;
-
-		/// <summary>
 		/// 建立连接的时间戳
 		/// </summary>
 		private long _activeTime;
@@ -44,54 +35,21 @@ namespace Shared.Net
 		/// </summary>
 		private long _deactiveTime;
 
-		protected NetSession( uint id, ProtoType type )
+		protected NetSession( uint id, ProtoType type ) : base( id, type )
 		{
-			this.id = id;
-			switch ( type )
-			{
-				case ProtoType.TCP:
-					this.connection = new TCPConnection( this );
-					break;
-
-				case ProtoType.KCP:
-					this.connection = new KCPConnection( this );
-					break;
-
-				default:
-					throw new NotSupportedException();
-			}
 			this.msgCenter = new MsgCenter();
 			this._closed = true;
-		}
-
-		public virtual void Dispose()
-		{
-		}
-
-		public virtual void Release()
-		{
 		}
 
 		/// <summary>
 		/// 关闭session
 		/// </summary>
-		public void Close()
+		protected override void InternalClose()
 		{
-			if ( this._closed )
-				return;
-			this._closed = true;
 			this._inited = false;
 			this._remoteInited = false;
 			this._deactiveTime = TimeUtils.utcTime;
 			this._reconFlag = true;
-			this.InternalClose();
-			this.connection.Close();
-			this.OnClose();
-			NetSessionPool.instance.Push( this );
-		}
-
-		protected virtual void InternalClose()
-		{
 		}
 
 		/// <summary>
@@ -118,9 +76,23 @@ namespace Shared.Net
 		}
 
 		/// <summary>
+		/// 向远端发送初始化消息
+		/// </summary>
+		protected virtual void SendInitData()
+		{
+		}
+
+		/// <summary>
+		/// 建立可信的连接后调用
+		/// </summary>
+		protected virtual void OnRealEstablish()
+		{
+		}
+
+		/// <summary>
 		/// 建立连接后调用
 		/// </summary>
-		public virtual void OnEstablish()
+		public override void OnEstablish()
 		{
 			this._inited = false;
 			this._remoteInited = false;
@@ -131,9 +103,16 @@ namespace Shared.Net
 		}
 
 		/// <summary>
+		/// 关闭连接后调用
+		/// </summary>
+		protected override void OnClose()
+		{
+		}
+
+		/// <summary>
 		/// 通信过程出现错误后调用
 		/// </summary>
-		public virtual void OnError( string error )
+		public override void OnError( string error )
 		{
 			//Logger.Error( error );
 			this.Close();
@@ -142,7 +121,7 @@ namespace Shared.Net
 		/// <summary>
 		/// 收到数据后调用
 		/// </summary>
-		public void OnRecv( byte[] data, int offset, int size )
+		public override void OnRecv( byte[] data, int offset, int size )
 		{
 			if ( this._closed )
 				return;
@@ -172,31 +151,7 @@ namespace Shared.Net
 		/// <summary>
 		/// 发送数据后调用
 		/// </summary>
-		public void OnSend()
-		{
-		}
-
-		public bool Send( byte[] data, int offset, int size ) => this.connection.Send( data, offset, size );
-
-		/// <summary>
-		/// 向远端发送初始化消息
-		/// </summary>
-		protected abstract void SendInitData();
-
-		/// <summary>
-		/// 建立可信的连接后调用
-		/// </summary>
-		protected abstract void OnRealEstablish();
-
-		/// <summary>
-		/// 关闭连接后调用
-		/// </summary>
-		protected abstract void OnClose();
-
-		/// <summary>
-		/// 每次心跳调用
-		/// </summary>
-		public virtual void OnHeartBeat( UpdateContext context )
+		public override void OnSend()
 		{
 		}
 	}

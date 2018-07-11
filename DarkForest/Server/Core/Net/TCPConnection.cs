@@ -132,10 +132,10 @@ namespace Core.Net
 				return;
 			}
 
-			NetEvent netEvent = NetEventMgr.instance.pool.Pop();
+			NetEvent netEvent = NetworkMgr.instance.PopEvent();
 			netEvent.type = NetEvent.Type.Send;
 			netEvent.session = this.session;
-			NetEventMgr.instance.Push( netEvent );
+			NetworkMgr.instance.PushEvent( netEvent );
 		}
 
 		private void ProcessReceive( SocketAsyncEventArgs recvEventArgs )
@@ -180,11 +180,11 @@ namespace Core.Net
 			else
 				data = this._cache.ToArray();
 
-			NetEvent netEvent = NetEventMgr.instance.pool.Pop();
+			NetEvent netEvent = NetworkMgr.instance.PopEvent();
 			netEvent.type = NetEvent.Type.Recv;
 			netEvent.session = this.session;
 			netEvent.data = data;
-			NetEventMgr.instance.Push( netEvent );
+			NetworkMgr.instance.PushEvent( netEvent );
 
 			//缓冲区里可能还有未处理的数据,继续递归处理
 			this.ProcessData();
@@ -192,11 +192,19 @@ namespace Core.Net
 
 		private void OnError( string error )
 		{
-			NetEvent netEvent = NetEventMgr.instance.pool.Pop();
+			NetEvent netEvent = NetworkMgr.instance.PopEvent();
 			netEvent.type = NetEvent.Type.Error;
 			netEvent.session = this.session;
 			netEvent.error = error;
-			NetEventMgr.instance.Push( netEvent );
+			NetworkMgr.instance.PushEvent( netEvent );
+		}
+
+		public void Update( UpdateContext updateContext )
+		{
+		}
+
+		public void OnHeartBeat( long dt )
+		{
 		}
 	}
 }

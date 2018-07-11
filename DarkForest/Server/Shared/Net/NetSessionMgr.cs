@@ -8,45 +8,33 @@ namespace Shared.Net
 {
 	public abstract class NetSessionMgr
 	{
-		private readonly IListener[] _listeners = new IListener[Consts.MAX_COUNT_LISTENER];
-		private readonly Dictionary<uint, NetSession> _idToSession = new Dictionary<uint, NetSession>();
-		private readonly Queue<NetEvent> _events = new Queue<NetEvent>();
-
-		public void Dispose()
-		{
-			foreach ( IListener listener in this._listeners )
-				listener?.Dispose();
-			foreach ( KeyValuePair<uint, NetSession> kv in this._idToSession )
-				kv.Value.Close();
-			this._idToSession.Clear();
-			this._events.Clear();
-		}
+		private readonly Dictionary<SessionType, List<INetSession>> _typeToSession = new Dictionary<SessionType, List<INetSession>>();
 
 		/// <summary>
 		/// 创建监听器
 		/// </summary>
+		/// <param name="id">监听器标识</param>
 		/// <param name="port">监听端口</param>
 		/// <param name="recvsize">接受缓冲区大小</param>
 		/// <param name="protoType">协议类型</param>
-		/// <param name="pos">在列表中的位置</param>
 		/// <param name="sessionCreateHandler">创建session的委托</param>
 		/// <returns></returns>
-		public bool CreateListener( int port, int recvsize, ProtoType protoType, int pos, SessionCreater sessionCreateHandler )
+		public bool CreateListener( uint id, int port, int recvsize, ProtoType protoType, SessionCreater sessionCreateHandler )
 		{
-			if ( pos >= Consts.MAX_COUNT_LISTENER ) return false;
-			if ( this._listeners[pos] != null ) return false;
+			if ( NetworkMgr.instance.ContainsListener( id ) )
+				return false;
 
 			IListener listener;
 			switch ( protoType )
 			{
 				case ProtoType.TCP:
-					listener = new TCPListener();
+					listener = new TCPListener( id );
 					( ( TCPListener )listener ).packetEncodeHandler = LengthEncoder.Encode;
 					( ( TCPListener )listener ).packetDecodeHandler = LengthEncoder.Decode;
 					break;
 
 				case ProtoType.KCP:
-					listener = new KCPListener();
+					listener = new KCPListener( id );
 					break;
 
 				default:
@@ -54,8 +42,8 @@ namespace Shared.Net
 			}
 			listener.sessionCreater = sessionCreateHandler;
 			listener.recvBufSize = recvsize;
-			this._listeners[pos] = listener;
-			return this._listeners[pos].Start( port );
+			NetworkMgr.instance.AddListener( listener );
+			return listener.Start( port );
 		}
 
 		/// <summary>
@@ -68,40 +56,44 @@ namespace Shared.Net
 		/// <param name="recvsize">接受缓冲区大小</param>
 		/// <param name="logicId">逻辑id(目前仅用于连接场景服务器时记下连接器和逻辑id的映射)</param>
 		/// <returns></returns>
-		public virtual bool CreateConnector( SessionType sessionType, string ip, int port, ProtoType protoType, int recvsize, int logicId )
+		public bool CreateConnector<T>( SessionType sessionType, string ip, int port, ProtoType protoType, int recvsize, int logicId ) where T : CliSession
 		{
-			CliSession session = this.CreateConnectorSession( sessionType );
-			this.AddSession( session );
+			CliSession session = NetSessionPool.instance.Pop<T>( protoType );
+			session.owner = this;
+			session.type = sessionType;
 			session.logicID = logicId;
 			session.connector.recvBufSize = recvsize;
 			session.connector.packetDecodeHandler = LengthEncoder.Decode;
+			this.AddSession( session );
 			return session.Connect( ip, port );
+		}
+
+		public void AddSession( NetSession session )
+		{
+			if ( !this._typeToSession.TryGetValue( session.type, out List<INetSession> sessions ) )
+			{
+				sessions = new List<INetSession>();
+				this._typeToSession[session.type] = sessions;
+			}
+			sessions.Add( session );
+			NetworkMgr.instance.AddSession( session );
+		}
+
+		public bool RemoveSession( NetSession session )
+		{
+			if ( !this._typeToSession.TryGetValue( session.type, out List<INetSession> sessions ) )
+				return false;
+
+			if ( !sessions.Remove( session ) )
+				return false;
+
+			return NetworkMgr.instance.RemoveSession( session );
 		}
 
 		/// <summary>
 		/// 停止监听器
 		/// </summary>
-		/// <param name="pos">列表中的位置</param>
-		public void StopListener( int pos )
-		{
-			if ( pos < Consts.MAX_COUNT_LISTENER )
-				this._listeners[pos].Stop();
-		}
-
-		protected abstract CliSession CreateConnectorSession( SessionType sessionType );
-
-		public void AddSession( NetSession session ) => this._idToSession[session.id] = session;
-
-		public bool RemoveSession( NetSession session ) => this._idToSession.Remove( session.id );
-
-		/// <summary>
-		/// 获取指定id的session
-		/// </summary>
-		public NetSession GetSession( uint sessionID )
-		{
-			this._idToSession.TryGetValue( sessionID, out NetSession session );
-			return session;
-		}
+		public void StopListener( uint id ) => NetworkMgr.instance.GetListener( id )?.Stop();
 
 		/// <summary>
 		/// 发送消息到指定的session
@@ -240,63 +232,30 @@ namespace Shared.Net
 
 		private void Send( uint sessionId, byte[] buffer )
 		{
-			NetSession session = this.GetSession( sessionId );
+			INetSession session = NetworkMgr.instance.GetSession( sessionId );
 			if ( session == null )
 			{
 				Logger.Warn( $"invalid sessionID:{sessionId}", 2, 5 );
 				return;
 			}
-			session.Send( buffer, 0, buffer.Length );
+			session.connection.Send( buffer, 0, buffer.Length );
 		}
 
-		private void Send( SessionType sessionType, byte[] buffer, bool once )
+		private bool Send( SessionType sessionType, byte[] buffer, bool once )
 		{
-			foreach ( KeyValuePair<uint, NetSession> kv in this._idToSession )
+			if ( !this._typeToSession.TryGetValue( sessionType, out List<INetSession> sessions ) )
+				return false;
+
+			if ( once )
+				sessions[0].connection.Send( buffer, 0, buffer.Length );
+			else
 			{
-				NetSession session = kv.Value;
-				if ( session.type != sessionType )
-					continue;
-				session.Send( buffer, 0, buffer.Length );
-				if ( once ) break;
+				foreach ( INetSession session in sessions )
+					session.connection.Send( buffer, 0, buffer.Length );
 			}
+			return true;
 		}
 
-		public void DisconnectOne( uint sessionId ) => this.GetSession( sessionId )?.Close();
-
-		public void OnHeartBeat( UpdateContext context )
-		{
-			foreach ( KeyValuePair<uint, NetSession> kv in this._idToSession )
-				kv.Value.OnHeartBeat( context );
-		}
-
-		public void Update()
-		{
-			NetEventMgr.instance.PopEvents( this._events );
-			while ( this._events.Count > 0 )
-			{
-				NetEvent netEvent = this._events.Dequeue();
-				switch ( netEvent.type )
-				{
-					case NetEvent.Type.Invalid:
-						break;
-					case NetEvent.Type.Establish:
-						netEvent.session.OnEstablish();
-						break;
-					case NetEvent.Type.ConnErr:
-						( ( CliSession )netEvent.session ).OnConnError( netEvent.error );
-						break;
-					case NetEvent.Type.Error:
-						netEvent.session.OnError( netEvent.error );
-						break;
-					case NetEvent.Type.Recv:
-						netEvent.session.OnRecv( netEvent.data, 0, netEvent.data.Length );
-						break;
-					case NetEvent.Type.Send:
-						netEvent.session.OnSend();
-						break;
-				}
-				NetEventMgr.instance.pool.Push( netEvent );
-			}
-		}
+		public void DisconnectOne( uint sessionId ) => NetworkMgr.instance.GetSession( sessionId )?.Close();
 	}
 }

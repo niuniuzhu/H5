@@ -9,6 +9,8 @@ namespace Core.Net
 
 	public interface IListener
 	{
+		uint id { get; }
+
 		/// <summary>
 		/// 当有连接到达时调用该委托创建session
 		/// </summary>

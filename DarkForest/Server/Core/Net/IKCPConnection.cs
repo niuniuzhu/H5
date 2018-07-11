@@ -33,10 +33,5 @@
 		/// 发送握手消息
 		/// </summary>
 		void SendHandShake();
-
-		/// <summary>
-		/// 内部更新
-		/// </summary>
-		void Update( long time );
 	}
 }

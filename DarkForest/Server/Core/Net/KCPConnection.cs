@@ -90,10 +90,10 @@ namespace Core.Net
 
 			this.socket.SendTo( data, offset, size, SocketFlags.None, this.remoteEndPoint );
 
-			NetEvent netEvent = NetEventMgr.instance.pool.Pop();
+			NetEvent netEvent = NetworkMgr.instance.PopEvent();
 			netEvent.type = NetEvent.Type.Send;
 			netEvent.session = this.session;
-			NetEventMgr.instance.Push( netEvent );
+			NetworkMgr.instance.PushEvent( netEvent );
 		}
 
 		public bool StartReceive()
@@ -159,10 +159,10 @@ namespace Core.Net
 
 						this.state = KCPConnectionState.Connected;
 
-						NetEvent netEvent = NetEventMgr.instance.pool.Pop();
+						NetEvent netEvent = NetworkMgr.instance.PopEvent();
 						netEvent.type = NetEvent.Type.Establish;
 						netEvent.session = this.session;
-						NetEventMgr.instance.Push( netEvent );
+						NetworkMgr.instance.PushEvent( netEvent );
 						break;
 
 					case KCPConnectionState.Connected:
@@ -186,20 +186,20 @@ namespace Core.Net
 
 		private void OnKCPOutput( byte[] outData )
 		{
-			NetEvent netEvent = NetEventMgr.instance.pool.Pop();
+			NetEvent netEvent = NetworkMgr.instance.PopEvent();
 			netEvent.type = NetEvent.Type.Recv;
 			netEvent.session = this.session;
 			netEvent.data = outData;
-			NetEventMgr.instance.Push( netEvent );
+			NetworkMgr.instance.PushEvent( netEvent );
 		}
 
 		private void OnError( string error )
 		{
-			NetEvent netEvent = NetEventMgr.instance.pool.Pop();
+			NetEvent netEvent = NetworkMgr.instance.PopEvent();
 			netEvent.type = NetEvent.Type.Error;
 			netEvent.session = this.session;
 			netEvent.error = error;
-			NetEventMgr.instance.Push( netEvent );
+			NetworkMgr.instance.PushEvent( netEvent );
 		}
 
 		private void SendPing()
@@ -218,12 +218,21 @@ namespace Core.Net
 			this.SendDirect( data, 0, offset );
 		}
 
-		public void Update( long dt )
+		public void Update( UpdateContext updateContext )
 		{
 			switch ( this.state )
 			{
 				case KCPConnectionState.Connected:
-					this._kcpProxy.Update( dt );
+					this._kcpProxy.Update( updateContext.deltaTime );
+					break;
+			}
+		}
+
+		public void OnHeartBeat( long dt )
+		{
+			switch ( this.state )
+			{
+				case KCPConnectionState.Connected:
 					this._pingScheduler.Update( dt );
 					break;
 			}

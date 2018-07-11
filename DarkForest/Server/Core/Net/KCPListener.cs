@@ -23,6 +23,7 @@ namespace Core.Net
 
 	public class KCPListener : IKCPListener
 	{
+		public uint id { get; }
 		public PacketEncodeHandler packetEncodeHandler { get; set; }
 		public PacketDecodeHandler packetDecodeHandler { get; set; }
 		public SessionCreater sessionCreater { get; set; }
@@ -34,6 +35,8 @@ namespace Core.Net
 		private readonly BufferBlock<ReceiveData> _buffer = new BufferBlock<ReceiveData>();
 		private readonly ThreadSafeObejctPool<ReceiveData> _receiveDataPool = new ThreadSafeObejctPool<ReceiveData>();
 		private bool _running;
+
+		public KCPListener( uint id ) => this.id = id;
 
 		public void Dispose() => this.Stop();
 
@@ -216,10 +219,10 @@ namespace Core.Net
 					kcpConnection.remoteEndPoint = receiveData.remoteEndPoint;
 					kcpConnection.recvBufSize = this.recvBufSize;
 
-					NetEvent netEvent = NetEventMgr.instance.pool.Pop();
+					NetEvent netEvent = NetworkMgr.instance.PopEvent();
 					netEvent.type = NetEvent.Type.Establish;
 					netEvent.session = session;
-					NetEventMgr.instance.Push( netEvent );
+					NetworkMgr.instance.PushEvent( netEvent );
 
 					//回应握手消息
 					byte[] handshakeAckData = new byte[KCPConfig.SIZE_OF_CONN_KEY + KCPConfig.SIZE_OF_SIGNATURE + KCPConfig.SIZE_OF_PEER_ID];

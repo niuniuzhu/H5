@@ -7,6 +7,7 @@ namespace Core.Net
 {
 	public class TCPListener : ITCPListener
 	{
+		public uint id { get; }
 		public PacketEncodeHandler packetEncodeHandler { get; set; }
 		public PacketDecodeHandler packetDecodeHandler { get; set; }
 		public SessionCreater sessionCreater { get; set; }
@@ -20,6 +21,8 @@ namespace Core.Net
 		}
 
 		private Socket _socket;
+
+		public TCPListener( uint id ) => this.id = id;
 
 		public void Dispose() => this.Stop();
 
@@ -148,10 +151,10 @@ namespace Core.Net
 				tcpConnection.packetDecodeHandler = this.packetDecodeHandler;
 				tcpConnection.recvBufSize = this.recvBufSize;
 
-				NetEvent netEvent = NetEventMgr.instance.pool.Pop();
+				NetEvent netEvent = NetworkMgr.instance.PopEvent();
 				netEvent.type = NetEvent.Type.Establish;
 				netEvent.session = session;
-				NetEventMgr.instance.Push( netEvent );
+				NetworkMgr.instance.PushEvent( netEvent );
 
 				//开始接收数据
 				session.connection.StartReceive();

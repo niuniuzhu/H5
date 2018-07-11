@@ -1,8 +1,7 @@
-﻿namespace Shared.Net
+﻿namespace Core.Net
 {
 	public class UpdateContext
 	{
-		public uint ticks;
 		public long utcTime;
 		public long time;
 		public long deltaTime;
