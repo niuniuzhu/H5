@@ -155,12 +155,6 @@ namespace Core.Net
 						break;
 
 					case KCPConnectionState.Connected:
-						//处理ping
-						if ( this.IsPing( data, offset, size ) )
-						{
-							this.SendPong();
-							break;
-						}
 						this.ProcessData( data, offset, size );
 						break;
 				}
@@ -171,6 +165,11 @@ namespace Core.Net
 
 		public void ProcessData( byte[] data, int offset, int size )
 		{
+			if ( this.IsPing( data, offset, size ) )
+			{
+				this.SendPong();
+				return;
+			}
 			if ( this.IsPong( data, offset, size ) )
 			{
 				return;
