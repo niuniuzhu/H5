@@ -233,10 +233,17 @@ namespace Core.Net
 
 		public void Release()
 		{
+			Array.Resize( ref this._sndQueue, 0 );
+			Array.Resize( ref this._rcvQueue, 0 );
+			Array.Resize( ref this._sndBuf, 0 );
+			Array.Resize( ref this._rcvBuf, 0 );
+			Array.Resize( ref this._acklist, 0 );
 			Array.Clear( this._sndQueue, 0, this._sndQueue.Length );
 			Array.Clear( this._rcvQueue, 0, this._rcvQueue.Length );
 			Array.Clear( this._sndBuf, 0, this._sndBuf.Length );
 			Array.Clear( this._rcvBuf, 0, this._rcvBuf.Length );
+			Array.Clear( this._acklist, 0, this._acklist.Length );
+			Array.Clear( this._buffer, 0, this._buffer.Length );
 			this._sndUna = 0;
 			this._sndNxt = 0;
 			this._rcvNxt = 0;

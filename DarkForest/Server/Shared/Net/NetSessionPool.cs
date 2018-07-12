@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Core.Net;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Net.Sockets;
 using System.Reflection;
 using System.Threading;
 
-namespace Core.Net
+namespace Shared.Net
 {
 	public class NetSessionPool
 	{

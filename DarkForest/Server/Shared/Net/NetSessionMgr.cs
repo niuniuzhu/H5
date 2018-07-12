@@ -9,7 +9,7 @@ namespace Shared.Net
 	public abstract class NetSessionMgr
 	{
 		private readonly Dictionary<SessionType, List<INetSession>> _typeToSession = new Dictionary<SessionType, List<INetSession>>();
-		private readonly List<NetSession> _sessionsToRemove = new List<NetSession>();
+		private readonly List<SNetSession> _sessionsToRemove = new List<SNetSession>();
 
 		/// <summary>
 		/// 创建监听器
@@ -65,11 +65,12 @@ namespace Shared.Net
 			session.logicID = logicId;
 			session.connector.recvBufSize = recvsize;
 			session.connector.packetDecodeHandler = LengthEncoder.Decode;
+			NetworkMgr.instance.AddSession( session );
 			this.AddSession( session );
 			return session.Connect( ip, port );
 		}
 
-		public void AddSession( NetSession session )
+		public void AddSession( SNetSession session )
 		{
 			if ( !this._typeToSession.TryGetValue( session.type, out List<INetSession> sessions ) )
 			{
@@ -77,10 +78,9 @@ namespace Shared.Net
 				this._typeToSession[session.type] = sessions;
 			}
 			sessions.Add( session );
-			NetworkMgr.instance.AddSession( session );
 		}
 
-		public void RemoveSession( NetSession session )
+		public void RemoveSession( SNetSession session )
 		{
 			if ( !this._sessionsToRemove.Contains( session ) )
 				this._sessionsToRemove.Add( session );
@@ -91,10 +91,9 @@ namespace Shared.Net
 			int count = this._sessionsToRemove.Count;
 			for ( int i = 0; i < count; i++ )
 			{
-				NetSession session = this._sessionsToRemove[i];
+				SNetSession session = this._sessionsToRemove[i];
 				List<INetSession> sessions = this._typeToSession[session.type];
 				sessions.Remove( session );
-				NetworkMgr.instance.RemoveSession( session );
 				NetSessionPool.instance.Push( session );
 			}
 			this._sessionsToRemove.Clear();

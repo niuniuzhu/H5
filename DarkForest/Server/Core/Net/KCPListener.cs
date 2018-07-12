@@ -168,14 +168,13 @@ namespace Core.Net
 					//调用委托创建session
 					INetSession session = this.sessionCreater( ProtoType.KCP );
 					if ( session == null )
-					{
 						Logger.Error( "create session failed" );
-						this.Close( receiveData.conn );
-					}
 					else
 					{
-						IKCPConnection kcpConnection = ( IKCPConnection )session.connection;
-						kcpConnection.socket = receiveData.conn;
+						session.isPassive = true;
+						KCPConnection kcpConnection = ( KCPConnection )session.connection;
+						kcpConnection.socket = this._socket;
+						kcpConnection.isRefSocket = true;
 						kcpConnection.remoteEndPoint = receiveData.remoteEndPoint;
 						kcpConnection.recvBufSize = this.recvBufSize;
 						kcpConnection.activeTime = TimeUtils.utcTime;
@@ -195,13 +194,12 @@ namespace Core.Net
 					uint connID = ByteUtils.Decode32u( data, offset );
 					INetSession session = NetworkMgr.instance.GetSession( connID );
 					if ( session == null )
+						Logger.Error( "get session failed" );
+					else
 					{
-						Logger.Error( "create session failed" );
-						this.Close( receiveData.conn );
-						continue;
+						KCPConnection kcpConnection = ( KCPConnection )session.connection;
+						kcpConnection.SendDataToMainThread( data, offset, size );
 					}
-					IKCPConnection kcpConnection = ( IKCPConnection )session.connection;
-					kcpConnection.SendDataToMainThread( data, offset, size );
 				}
 				receiveData.Clear();
 				this._receiveDataPool.Push( receiveData );

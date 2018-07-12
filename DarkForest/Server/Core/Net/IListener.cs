@@ -5,7 +5,6 @@ namespace Core.Net
 	public delegate byte[] PacketEncodeHandler( byte[] data, int offset, int size );
 	public delegate int PacketDecodeHandler( byte[] buf, int offset, int size, out byte[] data );
 	public delegate INetSession SessionCreater( ProtoType type );
-	public delegate INetSession SessionGeter( uint id );
 
 	public interface IListener
 	{

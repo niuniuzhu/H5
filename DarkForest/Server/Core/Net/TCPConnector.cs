@@ -95,7 +95,7 @@ namespace Core.Net
 				return;
 			}
 
-			ITCPConnection tcpConnection = ( ITCPConnection )this.session.connection;
+			TCPConnection tcpConnection = ( TCPConnection )this.session.connection;
 			tcpConnection.socket = this.socket;
 			tcpConnection.remoteEndPoint = this.socket.RemoteEndPoint;
 			tcpConnection.recvBufSize = this.recvBufSize;

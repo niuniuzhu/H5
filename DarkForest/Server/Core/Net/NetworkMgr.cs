@@ -15,6 +15,7 @@ namespace Core.Net
 		private readonly ThreadSafeObejctPool<NetEvent> _eventPool = new ThreadSafeObejctPool<NetEvent>();
 		private readonly Dictionary<uint, IListener> _idToListeners = new Dictionary<uint, IListener>();
 		private readonly Dictionary<uint, INetSession> _idToSession = new Dictionary<uint, INetSession>();
+		private readonly List<INetSession> _sessionsToRemove = new List<INetSession>();
 		private readonly UpdateContext _updateContext = new UpdateContext();
 		private long _lastHeartBeatTime;
 
@@ -39,7 +40,11 @@ namespace Core.Net
 
 		public bool AddSession( INetSession session ) => this._idToSession.TryAdd( session.id, session );
 
-		public bool RemoveSession( INetSession session ) => this._idToSession.Remove( session.id );
+		public void RemoveSession( INetSession session )
+		{
+			if ( !this._sessionsToRemove.Contains( session ) )
+				this._sessionsToRemove.Add( session );
+		}
 
 		public bool ContainsSession( uint id ) => this._idToSession.ContainsKey( id );
 
@@ -81,6 +86,15 @@ namespace Core.Net
 			}
 			this.FireEvents();
 			this.UpdateSessions( this._updateContext );
+			this.RemoveSessions();
+		}
+
+		private void RemoveSessions()
+		{
+			int count = this._sessionsToRemove.Count;
+			for ( int i = 0; i < count; i++ )
+				this._idToSession.Remove( this._sessionsToRemove[i].id );
+			this._sessionsToRemove.Clear();
 		}
 
 		private void UpdateSessions( UpdateContext updateContext )
@@ -103,22 +117,20 @@ namespace Core.Net
 				NetEvent netEvent = this._eventQueue.Pop();
 				switch ( netEvent.type )
 				{
-					case NetEvent.Type.Invalid:
-						break;
 					case NetEvent.Type.Establish:
-						netEvent.session.OnEstablish();
+						netEvent.session._OnEstablish();
 						break;
 					case NetEvent.Type.ConnErr:
-						netEvent.session.OnConnError( netEvent.error );
+						netEvent.session._OnConnError( netEvent.error );
 						break;
 					case NetEvent.Type.Error:
-						netEvent.session.OnError( netEvent.error );
+						netEvent.session._OnError( netEvent.error );
 						break;
 					case NetEvent.Type.Recv:
-						netEvent.session.OnRecv( netEvent.data, 0, netEvent.data.Length );
+						netEvent.session._OnRecv( netEvent.data, 0, netEvent.data.Length );
 						break;
 					case NetEvent.Type.Send:
-						netEvent.session.OnSend();
+						netEvent.session._OnSend();
 						break;
 				}
 				this._eventPool.Push( netEvent );

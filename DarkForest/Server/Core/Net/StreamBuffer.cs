@@ -41,6 +41,8 @@ namespace Core.Net
 		/// </summary>
 		public long bytesAvailable => this._ms.Length - this._ms.Position;
 
+		public object data;
+
 		public StreamBuffer()
 		{
 			this._ms = new MemoryStream();

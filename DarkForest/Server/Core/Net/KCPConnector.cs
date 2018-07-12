@@ -60,7 +60,7 @@ namespace Core.Net
 				Logger.Error( $"socket bind at {this._port} fail, code:{e.SocketErrorCode}" );
 				return false;
 			}
-			IKCPConnection kcpConnection = ( IKCPConnection )this.session.connection;
+			KCPConnection kcpConnection = ( KCPConnection )this.session.connection;
 			kcpConnection.state = KCPConnectionState.Connecting;
 			kcpConnection.socket = this.socket;
 			kcpConnection.recvBufSize = this.recvBufSize;

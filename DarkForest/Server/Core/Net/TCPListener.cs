@@ -143,7 +143,8 @@ namespace Core.Net
 					break;
 				}
 
-				ITCPConnection tcpConnection = ( ITCPConnection )session.connection;
+				session.isPassive = true;
+				TCPConnection tcpConnection = ( TCPConnection )session.connection;
 				tcpConnection.socket = acceptSocket;
 				tcpConnection.remoteEndPoint = acceptSocket.RemoteEndPoint;
 				tcpConnection.packetEncodeHandler = this.packetEncodeHandler;

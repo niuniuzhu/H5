@@ -12,6 +12,11 @@
 		IConnection connection { get; }
 
 		/// <summary>
+		/// 是否被动创建
+		/// </summary>
+		bool isPassive { get; set; }
+
+		/// <summary>
 		/// 销毁此实例
 		/// </summary>
 		void Dispose();
@@ -24,27 +29,27 @@
 		/// <summary>
 		/// 连接失败后调用
 		/// </summary>
-		void OnConnError( string error );
+		void _OnConnError( string error );
 
 		/// <summary>
 		/// 连接建立后调用
 		/// </summary>
-		void OnEstablish();
+		void _OnEstablish();
 
 		/// <summary>
 		/// 收到数据后调用
 		/// </summary>
-		void OnRecv( byte[] data, int offset, int size );
+		void _OnRecv( byte[] data, int offset, int size );
 
 		/// <summary>
 		/// 发送数据后调用
 		/// </summary>
-		void OnSend();
+		void _OnSend();
 
 		/// <summary>
 		/// 通信过程出现错误后调用
 		/// </summary>
-		void OnError( string error );
+		void _OnError( string error );
 
 		/// <summary>
 		/// 内部更新

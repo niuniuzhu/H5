@@ -6,10 +6,30 @@ using System.Net.Sockets;
 
 namespace Core.Net
 {
-	public class KCPConnection : IKCPConnection
+	public enum KCPConnectionState
 	{
-		public KCPConnectionState state { get; set; }
+		Disconnect,
+		Connecting,
+		Connected
+	}
+
+	public enum DataTransType
+	{
+		Direct,
+		KCP
+	}
+
+	public class KCPConnection : IConnection
+	{
+		/// <summary>
+		/// 连接状态
+		/// </summary>
+		public KCPConnectionState state { private get; set; }
 		public Socket socket { get; set; }
+		/// <summary>
+		/// 是否一个引用的socket
+		/// </summary>
+		public bool isRefSocket { private get; set; }
 		public EndPoint remoteEndPoint
 		{
 			private get => this._recvEventArgs.RemoteEndPoint;
@@ -21,14 +41,13 @@ namespace Core.Net
 		}
 		public INetSession session { get; }
 		public int recvBufSize { set => this._recvEventArgs.SetBuffer( new byte[value], 0, value ); }
-		public bool connected => true;
 		public long activeTime { get; set; }
 
+		private uint _connID;
 		private readonly KCPProxy _kcpProxy;
 		private readonly SocketAsyncEventArgs _sendEventArgs;
 		private readonly SocketAsyncEventArgs _recvEventArgs;
 		private SimpleScheduler _pingScheduler;
-		private uint _connID;
 		private readonly SwitchQueue<StreamBuffer> _sendQueue = new SwitchQueue<StreamBuffer>();
 		private readonly SwitchQueue<StreamBuffer> _recvQueue = new SwitchQueue<StreamBuffer>();
 		private readonly ThreadSafeObejctPool<StreamBuffer> _bufferPool = new ThreadSafeObejctPool<StreamBuffer>();
@@ -57,17 +76,23 @@ namespace Core.Net
 		{
 			if ( this.socket == null )
 				return;
-			this._kcpProxy.Release();
-			this._connID = 0;
-			this.activeTime = 0;
-			this.socket.Close();
+
+			if ( !this.isRefSocket )
+				this.socket.Close();
 			this.socket = null;
-			this.state = KCPConnectionState.Disconnect;
+
 			if ( this._pingScheduler != null )
 			{
 				this._pingScheduler.Stop();
 				this._pingScheduler = null;
 			}
+			this._sendQueue.Clear();
+			this._recvQueue.Clear();
+			this._kcpProxy.Release();
+			this._connID = 0;
+			this.activeTime = 0;
+			this.state = KCPConnectionState.Disconnect;
+
 		}
 
 		private void OnError( string error )
@@ -78,8 +103,6 @@ namespace Core.Net
 			netEvent.error = error;
 			NetworkMgr.instance.PushEvent( netEvent );
 		}
-
-		public void SetOpt( SocketOptionName optionName, object opt ) => this.socket.SetSocketOption( SocketOptionLevel.Socket, optionName, opt );
 
 		private void OnKCPOutout( byte[] data, int size )
 		{
@@ -95,6 +118,7 @@ namespace Core.Net
 		public bool Send( byte[] data, int offset, int size )
 		{
 			StreamBuffer buffer = this._bufferPool.Pop();
+			buffer.data = DataTransType.KCP;
 			buffer.Write( false );
 			buffer.Write( data, offset, size );
 			this._sendQueue.Push( buffer );
@@ -212,12 +236,16 @@ namespace Core.Net
 			{
 				byte[] data = recvEventArgs.Buffer;
 				int offset = recvEventArgs.Offset;
+				//验证ConnKey
 				if ( VerifyConnKey( data, ref offset, ref size ) )
-					this.SendDataToMainThread( data, offset, size );//发送到主线程处理数据
+					this.SendDataToMainThread( data, offset, size );
 			}
 			this.StartReceive();
 		}
 
+		/// <summary>
+		/// 把数据发送到主线程处理
+		/// </summary>
 		public void SendDataToMainThread( byte[] data, int offset, int size )
 		{
 			StreamBuffer buffer = this._bufferPool.Pop();
@@ -225,6 +253,9 @@ namespace Core.Net
 			this._recvQueue.Push( buffer );
 		}
 
+		/// <summary>
+		/// 处理非KCP传输的数据(主线程)
+		/// </summary>
 		private void ProcessData( byte[] data, int offset, int size, uint transConnID )
 		{
 			uint connID = 0;
@@ -247,7 +278,6 @@ namespace Core.Net
 			{
 				if ( transConnID != this._connID )
 					return;
-
 				if ( IsPingTimeout( data, offset, size ) )
 				{
 					Logger.Log( "timeout" );
@@ -256,6 +286,9 @@ namespace Core.Net
 			}
 		}
 
+		/// <summary>
+		/// 处理KCP传输的数据(主线程)
+		/// </summary>
 		private void ProcessKCPData( byte[] data )
 		{
 			byte flag = 0;
@@ -284,6 +317,9 @@ namespace Core.Net
 			}
 		}
 
+		/// <summary>
+		/// 开始ping远程连接,通常由监听者调用
+		/// </summary>
 		public void StartPing()
 		{
 			this._pingScheduler = new SimpleScheduler();
@@ -293,6 +329,7 @@ namespace Core.Net
 		private void SendPing( int count )
 		{
 			StreamBuffer buffer = this._bufferPool.Pop();
+			buffer.data = DataTransType.KCP;
 			buffer.Write( true );//内部协议
 			buffer.Write( KCPConfig.PING_SIGNATURE );
 			this._sendQueue.Push( buffer );
@@ -301,34 +338,39 @@ namespace Core.Net
 		private void SendPong()
 		{
 			StreamBuffer buffer = this._bufferPool.Pop();
+			buffer.data = DataTransType.KCP;
 			buffer.Write( true );//内部协议
 			buffer.Write( KCPConfig.PONG_SIGNATURE );
 			this._sendQueue.Push( buffer );
 		}
 
+		/// <summary>
+		/// 发送握手消息
+		/// </summary>
 		public void SendHandShake()
 		{
 			StreamBuffer buffer = this._bufferPool.Pop();
+			buffer.data = DataTransType.Direct;
 			buffer.Write( KCPConfig.CONN_KEY );//connKey
 			buffer.Write( ( uint )0 );//connID
 			buffer.Write( ( byte )0 );//不通过kcp传输
 			buffer.Write( KCPConfig.HANDSHAKE_SIGNATURE );
-			this.SendDirect( buffer.GetBuffer(), 0, ( int )buffer.length );
-			buffer.Clear();
-			this._bufferPool.Push( buffer );
+			this._sendQueue.Push( buffer );
 		}
 
+		/// <summary>
+		/// 发送握手回应消息
+		/// </summary>
 		public void SendHandShakeAck()
 		{
 			StreamBuffer buffer = this._bufferPool.Pop();
+			buffer.data = DataTransType.Direct;
 			buffer.Write( KCPConfig.CONN_KEY );//connKey
 			buffer.Write( ( uint )0 );//connID
 			buffer.Write( ( byte )0 );//不通过kcp传输
 			buffer.Write( KCPConfig.ACK_HANDSHAKE_SIGNATURE );
 			buffer.Write( this.session.id );
-			this.SendDirect( buffer.GetBuffer(), 0, ( int )buffer.length );
-			buffer.Clear();
-			this._bufferPool.Push( buffer );
+			this._sendQueue.Push( buffer );
 		}
 
 		public void SendPingTimeout()
@@ -361,7 +403,6 @@ namespace Core.Net
 		private static void DecodeConnID( byte[] data, ref int offset, ref int size, ref uint connID )
 		{
 			ByteUtils.Decode32u( data, offset, ref connID );
-
 			offset += KCPConfig.SIZE_OF_SESSION_ID;
 			size -= KCPConfig.SIZE_OF_SESSION_ID;
 		}
@@ -438,7 +479,17 @@ namespace Core.Net
 			while ( !this._sendQueue.isEmpty )
 			{
 				StreamBuffer buffer = this._sendQueue.Pop();
-				this._kcpProxy.Send( buffer.GetBuffer(), 0, ( int )buffer.length );
+				DataTransType dataTransType = ( DataTransType )buffer.data;
+				switch ( dataTransType )
+				{
+					case DataTransType.Direct:
+						this.SendDirect( buffer.GetBuffer(), 0, ( int )buffer.length );
+						break;
+
+					case DataTransType.KCP:
+						this._kcpProxy.Send( buffer.GetBuffer(), 0, ( int )buffer.length );
+						break;
+				}
 				buffer.Clear();
 				this._bufferPool.Push( buffer );
 			}

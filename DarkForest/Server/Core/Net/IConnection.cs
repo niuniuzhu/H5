@@ -26,11 +26,6 @@ namespace Core.Net
 		int recvBufSize { set; }
 
 		/// <summary>
-		/// 是否已连接
-		/// </summary>
-		bool connected { get; }
-
-		/// <summary>
 		/// 活动时间戳
 		/// </summary>
 		long activeTime { get; set; }
@@ -44,11 +39,6 @@ namespace Core.Net
 		/// 关闭此连接
 		/// </summary>
 		void Close();
-
-		/// <summary>
-		/// 设置套接字参数
-		/// </summary>
-		void SetOpt( SocketOptionName optionName, object opt );
 
 		/// <summary>
 		/// 开始接收数据

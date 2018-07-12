@@ -10,7 +10,7 @@ namespace LoginServer.Net
 		{
 		}
 
-		public override void OnEstablish()
+		protected override void OnEstablish()
 		{
 			base.OnEstablish();
 			Logger.Info( $"BS({this.logicID}) Connected." );

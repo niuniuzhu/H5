@@ -3,14 +3,20 @@ using System.Net.Sockets;
 
 namespace Core.Net
 {
-	public class TCPConnection : ITCPConnection
+	public class TCPConnection : IConnection
 	{
 		public Socket socket { get; set; }
 		public EndPoint remoteEndPoint { get; set; }
 		public EndPoint localEndPoint { get; set; }
 		public INetSession session { get; }
 		public int recvBufSize { set => this._recvEventArgs.SetBuffer( new byte[value], 0, value ); }
+		/// <summary>
+		/// 包编码器
+		/// </summary>
 		public PacketEncodeHandler packetEncodeHandler { get; set; }
+		/// <summary>
+		/// 包解码器
+		/// </summary>
 		public PacketDecodeHandler packetDecodeHandler { get; set; }
 		public bool connected => this.socket != null && this.socket.Connected;
 		public long activeTime { get; set; }
@@ -51,6 +57,9 @@ namespace Core.Net
 			this.packetDecodeHandler = null;
 		}
 
+		/// <summary>
+		/// 设置套接字参数
+		/// </summary>
 		public void SetOpt( SocketOptionName optionName, object opt ) => this.socket.SetSocketOption( SocketOptionLevel.Socket, optionName, opt );
 
 		public bool StartReceive()
@@ -83,7 +92,7 @@ namespace Core.Net
 			}
 			catch ( SocketException e )
 			{
-				this.OnError( $"socket send error, code:{e.SocketErrorCode} " );
+				this.OnError( $"socket send error, code:{e.SocketErrorCode}" );
 				return false;
 			}
 			if ( !asyncResult )
@@ -91,6 +100,9 @@ namespace Core.Net
 			return true;
 		}
 
+		/// <summary>
+		/// 同步发送数据
+		/// </summary>
 		public int SendSync( byte[] data, int offset, int size )
 		{
 			int sendLen;

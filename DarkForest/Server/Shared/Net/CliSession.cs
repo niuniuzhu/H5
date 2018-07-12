@@ -7,7 +7,7 @@ namespace Shared.Net
 	/// <summary>
 	/// 作为客户端的session,通常是主动发起连接后创建的session
 	/// </summary>
-	public abstract class CliSession : NetSession
+	public abstract class CliSession : SNetSession
 	{
 		public IConnector connector { get; }
 		public bool reconnectTag { get; set; }
@@ -61,29 +61,25 @@ namespace Shared.Net
 			return this.connector.Connect( ip, port );
 		}
 
-		protected override void InternalClose()
+		protected override void OnClose()
 		{
-			base.InternalClose();
+			base.OnClose();
 			this._reconFlag = true;
 			this._reconnTime = TimeUtils.utcTime + Consts.RECONN_INTERVAL;
 		}
 
-		public override void OnConnError( string error )
+		protected override void OnConnError( string error )
 		{
+			base.OnConnError( error );
 			Logger.Error( error );
 			this._reconFlag = true;
 			this._reconnTime = TimeUtils.utcTime + Consts.RECONN_INTERVAL;
 		}
 
-		public override void OnEstablish()
+		protected override void OnEstablish()
 		{
 			base.OnEstablish();
-			//标记远端连接已经初始化,那么在往后收到的远端初始化消息后,不会重复发送初始化消息,否则会进入死循环
-			//参考NetSession.SetInited
-			this._remoteInited = true;
 			this._reconFlag = false;
-			//向远端发送初始化数据
-			this.SendInitData();
 		}
 
 		public override void OnHeartBeat( long dt )
