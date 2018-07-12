@@ -120,28 +120,37 @@ namespace Core.Net
 
 		private void OnReceiveComplete( object sender, SocketAsyncEventArgs acceptEventArgs ) => this.ProcessReceive( acceptEventArgs );
 
-		private void ProcessReceive( SocketAsyncEventArgs acceptEventArgs )
+		private void ProcessReceive( SocketAsyncEventArgs recvEventArgs )
 		{
 			do
 			{
-				if ( acceptEventArgs.SocketError != SocketError.Success )
+				if ( recvEventArgs.SocketError != SocketError.Success )
 				{
 					//网络错误
-					Logger.Error( $"process accept fail,code{acceptEventArgs.SocketError}" );
+					Logger.Error( $"process receive fail,code{recvEventArgs.SocketError}" );
 					break;
 				}
 
 				if ( this._socket == null )
 					break;
 
+				int size = recvEventArgs.BytesTransferred;
+				if ( size < KCPConfig.SIZE_OF_HEAD )
+					break;
+
+				byte[] data = recvEventArgs.Buffer;
+				int offset = recvEventArgs.Offset;
+				if ( !KCPConnection.VerifyConnKey( data, ref offset, ref size ) )
+					break;
+
 				ReceiveData receiveData = this._receiveDataPool.Pop();
-				receiveData.buffer.Write( acceptEventArgs.Buffer, acceptEventArgs.Offset, acceptEventArgs.BytesTransferred );
+				receiveData.buffer.Write( data, offset, size );
 				receiveData.conn = this._socket;
-				receiveData.remoteEndPoint.Address = ( ( IPEndPoint )acceptEventArgs.RemoteEndPoint ).Address;
-				receiveData.remoteEndPoint.Port = ( ( IPEndPoint )acceptEventArgs.RemoteEndPoint ).Port;
+				receiveData.remoteEndPoint.Address = ( ( IPEndPoint )recvEventArgs.RemoteEndPoint ).Address;
+				receiveData.remoteEndPoint.Port = ( ( IPEndPoint )recvEventArgs.RemoteEndPoint ).Port;
 				this._receiveDatas.Post( receiveData );
 			} while ( false );
-			this.StartReceive( acceptEventArgs );
+			this.StartReceive( recvEventArgs );
 		}
 
 		private async void ConsumeAsync()
@@ -153,9 +162,8 @@ namespace Core.Net
 				int offset = 0;
 				int size = ( int )receiveData.buffer.length;
 
-				uint connID = 0;
 				//验证握手消息
-				if ( this.VerifyHandshake( data, ref offset, ref size, ref connID ) )
+				if ( VerifyHandshake( data, ref offset, ref size ) )
 				{
 					//调用委托创建session
 					INetSession session = this.sessionCreater( ProtoType.KCP );
@@ -167,10 +175,11 @@ namespace Core.Net
 					else
 					{
 						IKCPConnection kcpConnection = ( IKCPConnection )session.connection;
-						kcpConnection.state = KCPConnectionState.Connected;
 						kcpConnection.socket = receiveData.conn;
 						kcpConnection.remoteEndPoint = receiveData.remoteEndPoint;
 						kcpConnection.recvBufSize = this.recvBufSize;
+						kcpConnection.activeTime = TimeUtils.utcTime;
+						kcpConnection.state = KCPConnectionState.Connected;
 
 						NetEvent netEvent = NetworkMgr.instance.PopEvent();
 						netEvent.type = NetEvent.Type.Establish;
@@ -183,38 +192,34 @@ namespace Core.Net
 				}
 				else
 				{
-					if ( this.VerifyConnID( data, ref offset, ref size, ref connID ) )
+					uint connID = ByteUtils.Decode32u( data, offset );
+					INetSession session = NetworkMgr.instance.GetSession( connID );
+					if ( session == null )
 					{
-						INetSession session = NetworkMgr.instance.GetSession( connID );
-						if ( session == null )
-						{
-							Logger.Error( "create session failed" );
-							this.Close( receiveData.conn );
-							continue;
-						}
-						IKCPConnection kcpConnection = ( IKCPConnection )session.connection;
-						kcpConnection.SendDataToMainThread( data, offset, size );
+						Logger.Error( "create session failed" );
+						this.Close( receiveData.conn );
+						continue;
 					}
+					IKCPConnection kcpConnection = ( IKCPConnection )session.connection;
+					kcpConnection.SendDataToMainThread( data, offset, size );
 				}
 				receiveData.Clear();
 				this._receiveDataPool.Push( receiveData );
 			}
 		}
 
-		private bool VerifyHandshake( byte[] data, ref int offset, ref int size, ref uint connID )
+		private static bool VerifyHandshake( byte[] data, ref int offset, ref int size )
 		{
-			if ( size < KCPConfig.SIZE_OF_SESSION_ID + KCPConfig.SIZE_OF_CONN_KEY + KCPConfig.SIZE_OF_SIGNATURE )
-				return false;
-
 			int mOffset = offset;
 
+			uint connID = 0;
 			mOffset += ByteUtils.Decode32u( data, mOffset, ref connID );
 			if ( connID != KCPConfig.INVALID_SESSION_ID )
 				return false;
 
-			uint key = 0;
-			mOffset += ByteUtils.Decode32u( data, mOffset, ref key );
-			if ( key != KCPConfig.CONN_KEY )
+			byte isKCPTrans = 0;
+			mOffset += ByteUtils.Decode8u( data, mOffset, ref isKCPTrans );
+			if ( isKCPTrans > 0 )
 				return false;
 
 			ushort signature = 0;
@@ -225,20 +230,6 @@ namespace Core.Net
 			offset = mOffset;
 			size -= mOffset;
 
-			return true;
-		}
-
-		private bool VerifyConnID( byte[] data, ref int offset, ref int size, ref uint connID )
-		{
-			if ( size < KCPConfig.SIZE_OF_SESSION_ID )
-				return false;
-
-			ByteUtils.Decode32u( data, offset, ref connID );
-			if ( connID == KCPConfig.INVALID_SESSION_ID )
-				return false;
-
-			offset += KCPConfig.SIZE_OF_SESSION_ID;
-			size -= KCPConfig.SIZE_OF_SESSION_ID;
 			return true;
 		}
 

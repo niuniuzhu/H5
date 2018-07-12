@@ -1,16 +1,26 @@
 ﻿namespace Core.Net
 {
+	/*kcp协议
+	 uint connKey
+	 uint connID
+	 byte 是否通过kcp传输
+	 如果是通过kcp传输(不通过kcp传输的一定是内部协议)
+		byte 是否内部协议
+	 ...	内容
+	 */
 	public static class KCPConfig
 	{
-		//外部协议第一个字节从0x64开始,应避免第一个字节与外部协议冲突
-		public const ushort HANDSHAKE_SIGNATURE = 0x6200;
-		public const ushort PING_SIGNATURE = 0x6201;
-		public const ushort PONG_SIGNATURE = 0x6202;
+		public const ushort HANDSHAKE_SIGNATURE = 0;
+		public const ushort ACK_HANDSHAKE_SIGNATURE = 1;
+		public const ushort PING_SIGNATURE = 2;
+		public const ushort PONG_SIGNATURE = 3;
+		public const ushort TIMEOUT_SIGNATURE = 4;
 
 		public const int SIZE_OF_INTERNAL_FLAG = sizeof( byte );
 		public const int SIZE_OF_SIGNATURE = sizeof( ushort );
 		public const int SIZE_OF_CONN_KEY = sizeof( uint );
 		public const int SIZE_OF_SESSION_ID = sizeof( uint );
+		public const int SIZE_OF_HEAD = sizeof( byte ) + SIZE_OF_CONN_KEY + SIZE_OF_SESSION_ID;
 
 		public const uint CONN_KEY = 0x11223344;
 		public const byte INTERNAL_MODULE = 0x63;//外部协议模块id从100开始
@@ -29,6 +39,6 @@
 		public static int CONNECTION_TIMEOUT = 5000;
 		public static int HANDSHAKE_INTERVAL = 1000;
 		public static int PING_INTERVAL = 5000;
-		public static int PING_TIME_OUT = 15000;
+		public static int PING_TIMEOUT = 3000;
 	}
 }

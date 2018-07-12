@@ -47,6 +47,7 @@ namespace LoginServer
 
 		public void Update( long elapsed, long dt )
 		{
+			this.netSessionMgr.Update();
 			NetworkMgr.instance.Update( elapsed, dt );
 		}
 	}

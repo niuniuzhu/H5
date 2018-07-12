@@ -12,6 +12,11 @@ namespace Shared.Net
 		public IConnector connector { get; }
 		public bool reconnectTag { get; set; }
 
+		/// <summary>
+		/// 重连标记
+		/// </summary>
+		private bool _reconFlag;
+
 		private long _reconnTime;
 
 		protected CliSession( uint id, ProtoType type ) : base( id, type )
@@ -42,11 +47,9 @@ namespace Shared.Net
 			if ( !this._reconFlag || !this.reconnectTag )
 				return;
 
-			long curTime = TimeUtils.utcTime;
-			if ( curTime < this._reconnTime )
+			if ( TimeUtils.utcTime < this._reconnTime )
 				return;
 
-			this._reconnTime = curTime + Consts.RECONN_DETECT_INTERVAL;
 			if ( !this.connector.ReConnect() )
 				return;
 
@@ -58,10 +61,18 @@ namespace Shared.Net
 			return this.connector.Connect( ip, port );
 		}
 
+		protected override void InternalClose()
+		{
+			base.InternalClose();
+			this._reconFlag = true;
+			this._reconnTime = TimeUtils.utcTime + Consts.RECONN_INTERVAL;
+		}
+
 		public override void OnConnError( string error )
 		{
 			Logger.Error( error );
 			this._reconFlag = true;
+			this._reconnTime = TimeUtils.utcTime + Consts.RECONN_INTERVAL;
 		}
 
 		public override void OnEstablish()
@@ -70,6 +81,7 @@ namespace Shared.Net
 			//标记远端连接已经初始化,那么在往后收到的远端初始化消息后,不会重复发送初始化消息,否则会进入死循环
 			//参考NetSession.SetInited
 			this._remoteInited = true;
+			this._reconFlag = false;
 			//向远端发送初始化数据
 			this.SendInitData();
 		}

@@ -32,8 +32,6 @@ namespace Core.Net
 
 		public virtual void Dispose() => this.connection.Dispose();
 
-		public virtual void Release() => this.connection.Release();
-
 		public void Close()
 		{
 			if ( this._closed )

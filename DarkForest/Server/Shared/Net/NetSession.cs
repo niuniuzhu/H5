@@ -21,11 +21,6 @@ namespace Shared.Net
 		protected bool _remoteInited;
 
 		/// <summary>
-		/// 重连标记
-		/// </summary>
-		protected bool _reconFlag;
-
-		/// <summary>
 		/// 建立连接的时间戳
 		/// </summary>
 		private long _activeTime;
@@ -49,7 +44,6 @@ namespace Shared.Net
 			this._inited = false;
 			this._remoteInited = false;
 			this._deactiveTime = TimeUtils.utcTime;
-			this._reconFlag = true;
 		}
 
 		/// <summary>
@@ -96,7 +90,6 @@ namespace Shared.Net
 		{
 			this._inited = false;
 			this._remoteInited = false;
-			this._reconFlag = false;
 			this._closed = false;
 			this._activeTime = TimeUtils.utcTime;
 			this._deactiveTime = 0;

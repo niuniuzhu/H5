@@ -44,7 +44,6 @@ namespace Core.Net
 
 		public void Push( INetSession session )
 		{
-			session.Release();
 			this._typeToObjects[session.GetType()].Enqueue( session );
 		}
 

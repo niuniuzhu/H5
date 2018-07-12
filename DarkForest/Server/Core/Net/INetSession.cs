@@ -17,11 +17,6 @@
 		void Dispose();
 
 		/// <summary>
-		/// 释放内存
-		/// </summary>
-		void Release();
-
-		/// <summary>
 		/// 关闭Session
 		/// </summary>
 		void Close();

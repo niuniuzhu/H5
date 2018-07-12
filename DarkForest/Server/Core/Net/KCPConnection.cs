@@ -1,6 +1,6 @@
-﻿using System;
-using Core.Misc;
+﻿using Core.Misc;
 using Core.Structure;
+using System;
 using System.Net;
 using System.Net.Sockets;
 
@@ -13,17 +13,22 @@ namespace Core.Net
 		public EndPoint remoteEndPoint
 		{
 			private get => this._recvEventArgs.RemoteEndPoint;
-			set => this._recvEventArgs.RemoteEndPoint = value;
+			set
+			{
+				this._sendEventArgs.RemoteEndPoint = value;
+				this._recvEventArgs.RemoteEndPoint = value;
+			}
 		}
 		public INetSession session { get; }
 		public int recvBufSize { set => this._recvEventArgs.SetBuffer( new byte[value], 0, value ); }
 		public bool connected => true;
+		public long activeTime { get; set; }
 
 		private readonly KCPProxy _kcpProxy;
+		private readonly SocketAsyncEventArgs _sendEventArgs;
 		private readonly SocketAsyncEventArgs _recvEventArgs;
 		private SimpleScheduler _pingScheduler;
 		private uint _connID;
-		private long _pingTime;
 		private readonly SwitchQueue<StreamBuffer> _sendQueue = new SwitchQueue<StreamBuffer>();
 		private readonly SwitchQueue<StreamBuffer> _recvQueue = new SwitchQueue<StreamBuffer>();
 		private readonly ThreadSafeObejctPool<StreamBuffer> _bufferPool = new ThreadSafeObejctPool<StreamBuffer>();
@@ -33,18 +38,19 @@ namespace Core.Net
 			this.session = session;
 			this._connID = this.session.id;
 			this._kcpProxy = new KCPProxy( this.OnKCPOutout );
+			this._sendEventArgs = new SocketAsyncEventArgs { UserToken = this };
 			this._recvEventArgs = new SocketAsyncEventArgs { UserToken = this };
-			this._recvEventArgs.Completed += this.OnReceiveComplete;
+			this._sendEventArgs.Completed += this.OnIOComplete;
+			this._recvEventArgs.Completed += this.OnIOComplete;
 		}
 
 		public void Dispose()
 		{
-			this._recvEventArgs.Completed -= this.OnReceiveComplete;
+			this._sendEventArgs.Completed -= this.OnIOComplete;
+			this._recvEventArgs.Completed -= this.OnIOComplete;
+			this._sendEventArgs.Dispose();
 			this._recvEventArgs.Dispose();
-		}
-
-		public void Release()
-		{
+			this._kcpProxy.Dispose();
 		}
 
 		public void Close()
@@ -53,8 +59,7 @@ namespace Core.Net
 				return;
 			this._kcpProxy.Release();
 			this._connID = 0;
-			this._pingTime = 0;
-			this.socket.Shutdown( SocketShutdown.Both );
+			this.activeTime = 0;
 			this.socket.Close();
 			this.socket = null;
 			this.state = KCPConnectionState.Disconnect;
@@ -78,8 +83,10 @@ namespace Core.Net
 
 		private void OnKCPOutout( byte[] data, int size )
 		{
-			byte[] sdata = new byte[size + KCPConfig.SIZE_OF_SESSION_ID];
-			int offset = ByteUtils.Encode32u( sdata, 0, this._connID );
+			byte[] sdata = new byte[size + sizeof( byte ) + KCPConfig.SIZE_OF_CONN_KEY + KCPConfig.SIZE_OF_SESSION_ID];
+			int offset = ByteUtils.Encode32u( sdata, 0, KCPConfig.CONN_KEY );//connKey
+			offset += ByteUtils.Encode32u( sdata, offset, this._connID );//connID
+			offset += ByteUtils.Encode8u( sdata, offset, 1 );//通过kcp传输
 			Buffer.BlockCopy( data, 0, sdata, offset, size );
 			offset += size;
 			this.SendDirect( sdata, 0, offset );
@@ -94,14 +101,50 @@ namespace Core.Net
 			return true;
 		}
 
-		private void SendDirect( byte[] data, int offset, int size )
+		private bool SendDirect( byte[] data, int offset, int size )
 		{
-			this.socket.SendTo( data, offset, size, SocketFlags.None, this.remoteEndPoint );
+			this._sendEventArgs.SetBuffer( data, offset, size );
+			bool asyncResult;
+			try
+			{
+				asyncResult = this.socket.SendToAsync( this._sendEventArgs );
+			}
+			catch ( ObjectDisposedException )
+			{
+				return false;
+			}
+			catch ( SocketException e )
+			{
+				this.OnError( $"socket send error, code:{e.SocketErrorCode} " );
+				return false;
+			}
+			if ( !asyncResult )
+				this.ProcessSend( this._sendEventArgs );
+			return true;
+		}
+
+		private int SendDirectSync( byte[] data, int offset, int size )
+		{
+			int ret;
+			try
+			{
+				ret = this.socket.SendTo( data, offset, size, SocketFlags.None, this.remoteEndPoint );
+			}
+			catch ( ObjectDisposedException )
+			{
+				return -1;
+			}
+			catch ( SocketException e )
+			{
+				this.OnError( e.ToString() );
+				return -1;
+			}
 
 			NetEvent netEvent = NetworkMgr.instance.PopEvent();
 			netEvent.type = NetEvent.Type.Send;
 			netEvent.session = this.session;
 			NetworkMgr.instance.PushEvent( netEvent );
+			return ret;
 		}
 
 		public bool StartReceive()
@@ -121,7 +164,34 @@ namespace Core.Net
 			return true;
 		}
 
-		private void OnReceiveComplete( object sender, SocketAsyncEventArgs asyncEventArgs ) => this.ProcessReceive( asyncEventArgs );
+		private void OnIOComplete( object sender, SocketAsyncEventArgs asyncEventArgs )
+		{
+			switch ( asyncEventArgs.LastOperation )
+			{
+				case SocketAsyncOperation.ReceiveFrom:
+					this.ProcessReceive( asyncEventArgs );
+					break;
+
+				case SocketAsyncOperation.SendTo:
+					this.ProcessSend( asyncEventArgs );
+					break;
+			}
+		}
+
+		private void ProcessSend( SocketAsyncEventArgs sendEventArgs )
+		{
+			if ( sendEventArgs.SocketError != SocketError.Success )
+			{
+				//网络错误
+				this.OnError( $"socket send error, code:{sendEventArgs.SocketError}" );
+				return;
+			}
+
+			NetEvent netEvent = NetworkMgr.instance.PopEvent();
+			netEvent.type = NetEvent.Type.Send;
+			netEvent.session = this.session;
+			NetworkMgr.instance.PushEvent( netEvent );
+		}
 
 		private void ProcessReceive( SocketAsyncEventArgs recvEventArgs )
 		{
@@ -138,33 +208,13 @@ namespace Core.Net
 				this.OnError( $"Receive zero bytes, remote endpoint: {this.remoteEndPoint}, code:{SocketError.NoData}" );
 				return;
 			}
-			//处理数据
-			byte[] data = recvEventArgs.Buffer;
-			int offset = recvEventArgs.Offset;
-			uint connID = 0;
-			switch ( this.state )
+			if ( size >= KCPConfig.SIZE_OF_HEAD )
 			{
-				case KCPConnectionState.Connecting:
-					//验证握手回应消息
-					if ( this.VerifyHandshakeAck( data, ref offset, ref size, ref connID ) )
-					{
-						this._connID = connID;
-						this.state = KCPConnectionState.Connected;
-
-						NetEvent netEvent = NetworkMgr.instance.PopEvent();
-						netEvent.type = NetEvent.Type.Establish;
-						netEvent.session = this.session;
-						NetworkMgr.instance.PushEvent( netEvent );
-					}
-					break;
-
-				case KCPConnectionState.Connected:
-					//验证connID
-					if ( this.VerifyConnID( data, ref offset, ref size, ref connID ) && connID == this._connID )
-						this.SendDataToMainThread( data, offset, size );
-					break;
+				byte[] data = recvEventArgs.Buffer;
+				int offset = recvEventArgs.Offset;
+				if ( VerifyConnKey( data, ref offset, ref size ) )
+					this.SendDataToMainThread( data, offset, size );//发送到主线程处理数据
 			}
-			//重新开始接收
 			this.StartReceive();
 		}
 
@@ -175,22 +225,53 @@ namespace Core.Net
 			this._recvQueue.Push( buffer );
 		}
 
-		private void OnKCPOutput( byte[] data )
+		private void ProcessData( byte[] data, int offset, int size, uint transConnID )
+		{
+			uint connID = 0;
+			if ( transConnID == 0 )//未建立连接
+			{
+				//验证握手回应消息
+				if ( VerifyHandshakeAck( data, ref offset, ref size, ref connID ) )
+				{
+					this._connID = connID;
+					this.activeTime = TimeUtils.utcTime;
+					this.state = KCPConnectionState.Connected;
+
+					NetEvent netEvent = NetworkMgr.instance.PopEvent();
+					netEvent.type = NetEvent.Type.Establish;
+					netEvent.session = this.session;
+					NetworkMgr.instance.PushEvent( netEvent );
+				}
+			}
+			else
+			{
+				if ( transConnID != this._connID )
+					return;
+
+				if ( IsPingTimeout( data, offset, size ) )
+				{
+					Logger.Log( "timeout" );
+					this.session.Close();
+				}
+			}
+		}
+
+		private void ProcessKCPData( byte[] data )
 		{
 			byte flag = 0;
 			int offset = ByteUtils.Decode8u( data, 0, ref flag );
 			int size = data.Length - offset;
 			if ( flag > 0 ) //内部协议
 			{
-				if ( this.IsPing( data, offset, size ) )
+				if ( IsPing( data, offset, size ) )
 				{
+					this.activeTime = TimeUtils.utcTime;
 					this.SendPong();
-					return;
 				}
-				if ( this.IsPong( data, offset, size ) )
+				if ( IsPong( data, offset, size ) )
 				{
+					this.activeTime = TimeUtils.utcTime;
 					Logger.Log( "pong" );
-					return;
 				}
 			}
 			else
@@ -212,7 +293,7 @@ namespace Core.Net
 		private void SendPing( int count )
 		{
 			StreamBuffer buffer = this._bufferPool.Pop();
-			buffer.Write( true );
+			buffer.Write( true );//内部协议
 			buffer.Write( KCPConfig.PING_SIGNATURE );
 			this._sendQueue.Push( buffer );
 		}
@@ -220,7 +301,7 @@ namespace Core.Net
 		private void SendPong()
 		{
 			StreamBuffer buffer = this._bufferPool.Pop();
-			buffer.Write( true );
+			buffer.Write( true );//内部协议
 			buffer.Write( KCPConfig.PONG_SIGNATURE );
 			this._sendQueue.Push( buffer );
 		}
@@ -228,8 +309,9 @@ namespace Core.Net
 		public void SendHandShake()
 		{
 			StreamBuffer buffer = this._bufferPool.Pop();
-			buffer.Write( ( uint )0 );
-			buffer.Write( KCPConfig.CONN_KEY );
+			buffer.Write( KCPConfig.CONN_KEY );//connKey
+			buffer.Write( ( uint )0 );//connID
+			buffer.Write( ( byte )0 );//不通过kcp传输
 			buffer.Write( KCPConfig.HANDSHAKE_SIGNATURE );
 			this.SendDirect( buffer.GetBuffer(), 0, ( int )buffer.length );
 			buffer.Clear();
@@ -239,42 +321,58 @@ namespace Core.Net
 		public void SendHandShakeAck()
 		{
 			StreamBuffer buffer = this._bufferPool.Pop();
-			buffer.Write( ( uint )0 );
-			buffer.Write( KCPConfig.HANDSHAKE_SIGNATURE );
+			buffer.Write( KCPConfig.CONN_KEY );//connKey
+			buffer.Write( ( uint )0 );//connID
+			buffer.Write( ( byte )0 );//不通过kcp传输
+			buffer.Write( KCPConfig.ACK_HANDSHAKE_SIGNATURE );
 			buffer.Write( this.session.id );
 			this.SendDirect( buffer.GetBuffer(), 0, ( int )buffer.length );
 			buffer.Clear();
 			this._bufferPool.Push( buffer );
 		}
 
-		private bool VerifyConnID( byte[] data, ref int offset, ref int size, ref uint connID )
+		public void SendPingTimeout()
 		{
-			if ( size < KCPConfig.SIZE_OF_SESSION_ID )
+			StreamBuffer buffer = this._bufferPool.Pop();
+			buffer.Write( KCPConfig.CONN_KEY );//connKey
+			buffer.Write( this.session.id );//connID
+			buffer.Write( ( byte )0 );//不通过kcp传输
+			buffer.Write( KCPConfig.TIMEOUT_SIGNATURE );
+			this.SendDirectSync( buffer.GetBuffer(), 0, ( int )buffer.length );
+			buffer.Clear();
+			this._bufferPool.Push( buffer );
+		}
+
+		public static bool VerifyConnKey( byte[] data, ref int offset, ref int size )
+		{
+			if ( size < KCPConfig.SIZE_OF_CONN_KEY )
 				return false;
 
-			ByteUtils.Decode32u( data, offset, ref connID );
-			if ( connID == KCPConfig.INVALID_SESSION_ID )
+			uint connKey = 0;
+			ByteUtils.Decode32u( data, offset, ref connKey );
+			if ( connKey != KCPConfig.CONN_KEY )
 				return false;
 
-			offset += KCPConfig.SIZE_OF_SESSION_ID;
-			size -= KCPConfig.SIZE_OF_SESSION_ID;
+			offset += KCPConfig.SIZE_OF_CONN_KEY;
+			size -= KCPConfig.SIZE_OF_CONN_KEY;
 			return true;
 		}
 
-		private bool VerifyHandshakeAck( byte[] data, ref int offset, ref int size, ref uint connID )
+		private static void DecodeConnID( byte[] data, ref int offset, ref int size, ref uint connID )
 		{
-			if ( size < KCPConfig.SIZE_OF_SESSION_ID + KCPConfig.SIZE_OF_SIGNATURE + KCPConfig.SIZE_OF_SESSION_ID )
-				return false;
+			ByteUtils.Decode32u( data, offset, ref connID );
 
+			offset += KCPConfig.SIZE_OF_SESSION_ID;
+			size -= KCPConfig.SIZE_OF_SESSION_ID;
+		}
+
+		private static bool VerifyHandshakeAck( byte[] data, ref int offset, ref int size, ref uint connID )
+		{
 			int mOffset = offset;
-
-			mOffset += ByteUtils.Decode32u( data, mOffset, ref connID );
-			if ( connID != KCPConfig.INVALID_SESSION_ID )
-				return false;
 
 			ushort signature = 0;
 			mOffset += ByteUtils.Decode16u( data, mOffset, ref signature );
-			if ( signature != KCPConfig.HANDSHAKE_SIGNATURE )
+			if ( signature != KCPConfig.ACK_HANDSHAKE_SIGNATURE )
 				return false;
 
 			mOffset += ByteUtils.Decode32u( data, mOffset, ref connID );
@@ -287,7 +385,7 @@ namespace Core.Net
 			return true;
 		}
 
-		private bool IsPing( byte[] data, int offset, int size )
+		private static bool IsPing( byte[] data, int offset, int size )
 		{
 			if ( size < KCPConfig.SIZE_OF_SIGNATURE )
 				return false;
@@ -297,18 +395,41 @@ namespace Core.Net
 			if ( signature != KCPConfig.PING_SIGNATURE )
 				return false;
 
-			this._pingTime = TimeUtils.utcTime;
 			return true;
 		}
 
-		private bool IsPong( byte[] data, int offset, int size )
+		private static bool IsPong( byte[] data, int offset, int size )
 		{
 			if ( size < KCPConfig.SIZE_OF_SIGNATURE )
 				return false;
 
 			ushort signature = 0;
 			ByteUtils.Decode16u( data, offset, ref signature );
-			return signature == KCPConfig.PONG_SIGNATURE;
+			if ( signature != KCPConfig.PONG_SIGNATURE )
+				return false;
+
+			return true;
+		}
+
+		private static bool IsPingTimeout( byte[] data, int offset, int size )
+		{
+			if ( size < KCPConfig.SIZE_OF_SIGNATURE )
+				return false;
+
+			ushort signature = 0;
+			ByteUtils.Decode16u( data, offset, ref signature );
+			if ( signature != KCPConfig.TIMEOUT_SIGNATURE )
+				return false;
+
+			return true;
+		}
+
+		public static bool IsKCPTransport( byte[] data, ref int offset, ref int size )
+		{
+			bool result = data[offset] > 0;
+			offset += sizeof( byte );
+			size -= sizeof( byte );
+			return result;
 		}
 
 		public void Update( UpdateContext updateContext )
@@ -321,20 +442,31 @@ namespace Core.Net
 				buffer.Clear();
 				this._bufferPool.Push( buffer );
 			}
-			switch ( this.state )
+
+			this._recvQueue.Switch();
+			while ( !this._recvQueue.isEmpty )
 			{
-				case KCPConnectionState.Connected:
-					this._recvQueue.Switch();
-					while ( !this._recvQueue.isEmpty )
-					{
-						StreamBuffer buffer = this._recvQueue.Pop();
-						this._kcpProxy.ProcessData( buffer.GetBuffer(), 0, ( int )buffer.length, this.OnKCPOutput );
-						buffer.Clear();
-						this._bufferPool.Push( buffer );
-					}
-					this._kcpProxy.Update( updateContext.deltaTime );
-					break;
+				StreamBuffer buffer = this._recvQueue.Pop();
+
+				byte[] data = buffer.GetBuffer();
+				int offset = 0;
+				int size = ( int )buffer.length;
+
+				uint transConnID = 0;
+				DecodeConnID( data, ref offset, ref size, ref transConnID );
+
+				if ( IsKCPTransport( data, ref offset, ref size ) )
+				{
+					if ( transConnID == this._connID )
+						this._kcpProxy.ProcessData( data, offset, size, this.ProcessKCPData );
+				}
+				else
+					this.ProcessData( data, offset, size, transConnID );
+
+				buffer.Clear();
+				this._bufferPool.Push( buffer );
 			}
+			this._kcpProxy.Update( updateContext.deltaTime );
 		}
 
 		public void OnHeartBeat( long dt )

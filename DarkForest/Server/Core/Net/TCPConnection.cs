@@ -13,6 +13,7 @@ namespace Core.Net
 		public PacketEncodeHandler packetEncodeHandler { get; set; }
 		public PacketDecodeHandler packetDecodeHandler { get; set; }
 		public bool connected => this.socket != null && this.socket.Connected;
+		public long activeTime { get; set; }
 
 		private readonly SocketAsyncEventArgs _sendEventArgs;
 		private readonly SocketAsyncEventArgs _recvEventArgs;
@@ -33,10 +34,6 @@ namespace Core.Net
 			this._recvEventArgs.Completed -= this.OnIOComplete;
 			this._sendEventArgs.Dispose();
 			this._recvEventArgs.Dispose();
-		}
-
-		public void Release()
-		{
 		}
 
 		public void Close()
@@ -106,6 +103,11 @@ namespace Core.Net
 				this.OnError( $"SendSync buffer error, code:{e.SocketErrorCode} " );
 				return -1;
 			}
+
+			NetEvent netEvent = NetworkMgr.instance.PopEvent();
+			netEvent.type = NetEvent.Type.Send;
+			netEvent.session = this.session;
+			NetworkMgr.instance.PushEvent( netEvent );
 			return sendLen;
 		}
 
@@ -188,6 +190,10 @@ namespace Core.Net
 
 			//缓冲区里可能还有未处理的数据,继续递归处理
 			this.ProcessData();
+		}
+
+		public void SendPingTimeout()
+		{
 		}
 
 		private void OnError( string error )

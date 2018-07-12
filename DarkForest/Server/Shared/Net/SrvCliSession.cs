@@ -1,4 +1,5 @@
-﻿using Core.Net;
+﻿using Core.Misc;
+using Core.Net;
 
 namespace Shared.Net
 {
@@ -16,7 +17,6 @@ namespace Shared.Net
 			base.OnClose();
 			//由于此session是被动创建的
 			this.owner.RemoveSession( this );
-			NetSessionPool.instance.Push( this );
 		}
 
 		public override void OnConnError( string error )
@@ -28,6 +28,21 @@ namespace Shared.Net
 			//由于此session是被动创建的
 			this.owner.AddSession( this );
 			base.OnEstablish();
+		}
+
+		public override void Update( UpdateContext updateContext )
+		{
+			base.Update( updateContext );
+			this.CheckActive();
+		}
+
+		private void CheckActive()
+		{
+			if ( TimeUtils.utcTime > this.connection.activeTime + KCPConfig.PING_TIMEOUT )
+			{
+				this.connection.SendPingTimeout();
+				this.Close();
+			}
 		}
 	}
 }

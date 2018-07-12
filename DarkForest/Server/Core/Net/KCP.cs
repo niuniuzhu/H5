@@ -209,7 +209,7 @@ namespace Core.Net
 		private int _fastresend;
 		private int _nocwnd;
 
-		private readonly Action<byte[], int> _output;
+		private Action<byte[], int> _output;
 
 		// create a new kcp control object, 'conv' must equal in two endpoint
 		// from the same connection.
@@ -237,24 +237,14 @@ namespace Core.Net
 			Array.Clear( this._rcvQueue, 0, this._rcvQueue.Length );
 			Array.Clear( this._sndBuf, 0, this._sndBuf.Length );
 			Array.Clear( this._rcvBuf, 0, this._rcvBuf.Length );
-			this._mtu = 0;
-			this._mss = 0;
 			this._sndUna = 0;
 			this._sndNxt = 0;
 			this._rcvNxt = 0;
-			this._ssthresh = 0;
 			this._rxRttval = 0;
 			this._rxSrtt = 0;
-			this._rxRto = 0;
-			this._rxMinrto = 0;
-			this._sndWnd = 0;
-			this._rcvWnd = 0;
-			this._rmtWnd = 0;
 			this._cwnd = 0;
 			this._probe = 0;
 			this._current = 0;
-			this._interval = 0;
-			this._tsFlush = 0;
 			this._xmit = 0;
 			this._nodelay = 0;
 			this._updated = 0;

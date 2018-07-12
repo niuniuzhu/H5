@@ -9,6 +9,7 @@ namespace Shared.Net
 	public abstract class NetSessionMgr
 	{
 		private readonly Dictionary<SessionType, List<INetSession>> _typeToSession = new Dictionary<SessionType, List<INetSession>>();
+		private readonly List<NetSession> _sessionsToRemove = new List<NetSession>();
 
 		/// <summary>
 		/// 创建监听器
@@ -79,15 +80,24 @@ namespace Shared.Net
 			NetworkMgr.instance.AddSession( session );
 		}
 
-		public bool RemoveSession( NetSession session )
+		public void RemoveSession( NetSession session )
 		{
-			if ( !this._typeToSession.TryGetValue( session.type, out List<INetSession> sessions ) )
-				return false;
+			if ( !this._sessionsToRemove.Contains( session ) )
+				this._sessionsToRemove.Add( session );
+		}
 
-			if ( !sessions.Remove( session ) )
-				return false;
-
-			return NetworkMgr.instance.RemoveSession( session );
+		public void Update()
+		{
+			int count = this._sessionsToRemove.Count;
+			for ( int i = 0; i < count; i++ )
+			{
+				NetSession session = this._sessionsToRemove[i];
+				List<INetSession> sessions = this._typeToSession[session.type];
+				sessions.Remove( session );
+				NetworkMgr.instance.RemoveSession( session );
+				NetSessionPool.instance.Push( session );
+			}
+			this._sessionsToRemove.Clear();
 		}
 
 		/// <summary>

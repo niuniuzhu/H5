@@ -10,13 +10,15 @@ namespace LoginServer.Net
 		{
 		}
 
-		protected override void OnRealEstablish()
+		public override void OnEstablish()
 		{
+			base.OnEstablish();
 			Logger.Info( $"BS({this.logicID}) Connected." );
 		}
 
 		protected override void OnClose()
 		{
+			base.OnClose();
 			Logger.Info( $"BS({this.logicID}) DisConnected." );
 		}
 	}
