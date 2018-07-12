@@ -10,6 +10,7 @@ namespace Shared.Net
 	{
 		private readonly Dictionary<SessionType, List<INetSession>> _typeToSession = new Dictionary<SessionType, List<INetSession>>();
 		private readonly List<SNetSession> _sessionsToRemove = new List<SNetSession>();
+		private readonly ThreadSafeObejctPool<StreamBuffer> _bufferPool = new ThreadSafeObejctPool<StreamBuffer>();
 
 		/// <summary>
 		/// 创建监听器
@@ -126,13 +127,13 @@ namespace Shared.Net
 		/// <param name="msgID">中介端需要处理的消息id</param>
 		public void SendMsgToSession( uint sessionId, byte[] data, int offset, int size, int msgID )
 		{
-			StreamBuffer sBuffer = StreamBufferPool.Pop();
-			sBuffer.Write( size + 2 * sizeof( int ) );
-			sBuffer.Write( msgID );
-			sBuffer.Write( data, offset, size );
-			byte[] buffer = sBuffer.ToArray();
-			StreamBufferPool.Push( sBuffer );
-			this.Send( sessionId, buffer );
+			StreamBuffer buffer = this._bufferPool.Pop();
+			buffer.Write( size + 2 * sizeof( int ) );
+			buffer.Write( msgID );
+			buffer.Write( data, offset, size );
+			this.Send( sessionId, buffer.GetBuffer(), 0, ( int )buffer.length );
+			buffer.Clear();
+			this._bufferPool.Push( buffer );
 		}
 
 		public void TranMsgToSession( uint sessionId, IMessage msg, int msgID, int transID, uint gcNet )
@@ -154,15 +155,15 @@ namespace Shared.Net
 		public void TranMsgToSession( uint sessionId, byte[] data, int offset, int size, int msgID, int transID, uint gcNet )
 		{
 			transID = transID == 0 ? msgID : transID;
-			StreamBuffer sBuffer = StreamBufferPool.Pop();
-			sBuffer.Write( size + 4 * sizeof( int ) );
-			sBuffer.Write( transID );
-			sBuffer.Write( msgID );
-			sBuffer.Write( gcNet );
-			sBuffer.Write( data, offset, size );
-			byte[] buffer = sBuffer.ToArray();
-			StreamBufferPool.Push( sBuffer );
-			this.Send( sessionId, buffer );
+			StreamBuffer buffer = this._bufferPool.Pop();
+			buffer.Write( size + 4 * sizeof( int ) );
+			buffer.Write( transID );
+			buffer.Write( msgID );
+			buffer.Write( gcNet );
+			buffer.Write( data, offset, size );
+			this.Send( sessionId, buffer.GetBuffer(), 0, ( int )buffer.length );
+			buffer.Clear();
+			this._bufferPool.Push( buffer );
 		}
 
 		/// <summary>
@@ -189,13 +190,13 @@ namespace Shared.Net
 		/// <param name="once">在查询消息类型时是否只对第一个结果生效</param>
 		public void SendMsgToSession( SessionType sessionType, byte[] data, int offset, int size, int msgID, bool once = true )
 		{
-			StreamBuffer sBuffer = StreamBufferPool.Pop();
-			sBuffer.Write( size + 2 * sizeof( int ) );
-			sBuffer.Write( msgID );
-			sBuffer.Write( data, offset, size );
-			byte[] buffer = sBuffer.ToArray();
-			StreamBufferPool.Push( sBuffer );
-			this.Send( sessionType, buffer, once );
+			StreamBuffer buffer = this._bufferPool.Pop();
+			buffer.Write( size + 2 * sizeof( int ) );
+			buffer.Write( msgID );
+			buffer.Write( data, offset, size );
+			this.Send( sessionType, buffer.GetBuffer(), 0, ( int )buffer.length, once );
+			buffer.Clear();
+			this._bufferPool.Push( buffer );
 		}
 
 		/// <summary>
@@ -228,18 +229,18 @@ namespace Shared.Net
 		public void TranMsgToSession( SessionType sessionType, byte[] data, int offset, int size, int msgID, int transID, uint gcNet, bool once = true )
 		{
 			transID = transID == 0 ? msgID : transID;
-			StreamBuffer sBuffer = StreamBufferPool.Pop();
-			sBuffer.Write( size + 4 * sizeof( int ) );
-			sBuffer.Write( transID );
-			sBuffer.Write( msgID );
-			sBuffer.Write( gcNet );
-			sBuffer.Write( data, offset, size );
-			byte[] buffer = sBuffer.ToArray();
-			StreamBufferPool.Push( sBuffer );
-			this.Send( sessionType, buffer, once );
+			StreamBuffer buffer = this._bufferPool.Pop();
+			buffer.Write( size + 4 * sizeof( int ) );
+			buffer.Write( transID );
+			buffer.Write( msgID );
+			buffer.Write( gcNet );
+			buffer.Write( data, offset, size );
+			this.Send( sessionType, buffer.GetBuffer(), 0, ( int )buffer.length, once );
+			buffer.Clear();
+			this._bufferPool.Push( buffer );
 		}
 
-		private void Send( uint sessionId, byte[] buffer )
+		private void Send( uint sessionId, byte[] buffer, int offset, int size )
 		{
 			INetSession session = NetworkMgr.instance.GetSession( sessionId );
 			if ( session == null )
@@ -250,7 +251,7 @@ namespace Shared.Net
 			session.connection.Send( buffer, 0, buffer.Length );
 		}
 
-		private bool Send( SessionType sessionType, byte[] buffer, bool once )
+		private bool Send( SessionType sessionType, byte[] buffer, int offset, int size, bool once )
 		{
 			if ( !this._typeToSession.TryGetValue( sessionType, out List<INetSession> sessions ) )
 				return false;
