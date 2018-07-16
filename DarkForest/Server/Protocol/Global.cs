@@ -25,16 +25,16 @@ namespace Protos {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "CgxHbG9iYWwucHJvdG8SBlByb3RvcyI4CghSZXNwb25zZSIsCgZSZXNwSUQS",
-            "DAoIVW5kZWZpbmUQABIUCg9HQ1RvTFNfQXNrTG9naW4QyAEiTQoGUGFja2V0",
-            "EgsKA3BpZBgBIAEoDRIRCglpc1JlcXVlc3QYAiABKAgSEgoKaXNSZXNwb25z",
-            "ZRgDIAEoCBIPCgdyZXBzUGlkGAQgASgNKlcKBU1zZ0lEEgwKCFVuZGVmaW5l",
-            "EAASEwoPR0NUb0xTX0Fza0xvZ2luEGQSFwoSTFNUb0dDX0xvZ2luUmVzdWx0",
-            "EMgBEhIKDUxTVG9HQ19CU0FkZHIQyQFiBnByb3RvMw=="));
+            "DAoIVW5kZWZpbmUQABIUCg9HQ1RvTFNfQXNrTG9naW4QyAEiOQoGUGFja2V0",
+            "EgsKA3BpZBgBIAEoDRIRCglpc1JlcXVlc3QYAiABKAgSDwoHcmVwc1BpZBgD",
+            "IAEoDSpXCgVNc2dJRBIMCghVbmRlZmluZRAAEhMKD0dDVG9MU19Bc2tMb2dp",
+            "bhBkEhcKEkxTVG9HQ19Mb2dpblJlc3VsdBDIARISCg1MU1RvR0NfQlNBZGRy",
+            "EMkBYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Protos.MsgID), }, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Protos.Response), global::Protos.Response.Parser, null, null, new[]{ typeof(global::Protos.Response.Types.RespID) }, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.Packet), global::Protos.Packet.Parser, new[]{ "Pid", "IsRequest", "IsResponse", "RepsPid" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.Packet), global::Protos.Packet.Parser, new[]{ "Pid", "IsRequest", "RepsPid" }, null, null, null)
           }));
     }
     #endregion
@@ -191,7 +191,6 @@ namespace Protos {
     public Packet(Packet other) : this() {
       pid_ = other.pid_;
       isRequest_ = other.isRequest_;
-      isResponse_ = other.isResponse_;
       repsPid_ = other.repsPid_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -229,22 +228,8 @@ namespace Protos {
       }
     }
 
-    /// <summary>Field number for the "isResponse" field.</summary>
-    public const int IsResponseFieldNumber = 3;
-    private bool isResponse_;
-    /// <summary>
-    ///是否一个回应包
-    /// </summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool IsResponse {
-      get { return isResponse_; }
-      set {
-        isResponse_ = value;
-      }
-    }
-
     /// <summary>Field number for the "repsPid" field.</summary>
-    public const int RepsPidFieldNumber = 4;
+    public const int RepsPidFieldNumber = 3;
     private uint repsPid_;
     /// <summary>
     ///回应对应请求的包id
@@ -272,7 +257,6 @@ namespace Protos {
       }
       if (Pid != other.Pid) return false;
       if (IsRequest != other.IsRequest) return false;
-      if (IsResponse != other.IsResponse) return false;
       if (RepsPid != other.RepsPid) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -282,7 +266,6 @@ namespace Protos {
       int hash = 1;
       if (Pid != 0) hash ^= Pid.GetHashCode();
       if (IsRequest != false) hash ^= IsRequest.GetHashCode();
-      if (IsResponse != false) hash ^= IsResponse.GetHashCode();
       if (RepsPid != 0) hash ^= RepsPid.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -305,12 +288,8 @@ namespace Protos {
         output.WriteRawTag(16);
         output.WriteBool(IsRequest);
       }
-      if (IsResponse != false) {
-        output.WriteRawTag(24);
-        output.WriteBool(IsResponse);
-      }
       if (RepsPid != 0) {
-        output.WriteRawTag(32);
+        output.WriteRawTag(24);
         output.WriteUInt32(RepsPid);
       }
       if (_unknownFields != null) {
@@ -325,9 +304,6 @@ namespace Protos {
         size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Pid);
       }
       if (IsRequest != false) {
-        size += 1 + 1;
-      }
-      if (IsResponse != false) {
         size += 1 + 1;
       }
       if (RepsPid != 0) {
@@ -349,9 +325,6 @@ namespace Protos {
       }
       if (other.IsRequest != false) {
         IsRequest = other.IsRequest;
-      }
-      if (other.IsResponse != false) {
-        IsResponse = other.IsResponse;
       }
       if (other.RepsPid != 0) {
         RepsPid = other.RepsPid;
@@ -376,10 +349,6 @@ namespace Protos {
             break;
           }
           case 24: {
-            IsResponse = input.ReadBool();
-            break;
-          }
-          case 32: {
             RepsPid = input.ReadUInt32();
             break;
           }

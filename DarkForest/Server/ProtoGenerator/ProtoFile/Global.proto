@@ -21,6 +21,5 @@ message Response {
 message Packet{
 	uint32 pid = 1;			//运行时包id
 	bool isRequest = 2;		//是否一个请求包
-	bool isResponse = 3;	//是否一个回应包
-	uint32 repsPid = 4;		//回应对应请求的包id
+	uint32 repsPid = 3;		//回应对应请求的包id
 }
