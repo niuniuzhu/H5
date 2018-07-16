@@ -1,0 +1,12 @@
+﻿syntax = "proto3";
+package Protos.GCToLS;
+
+import "Global.proto";
+
+message AskLogin
+{
+	Packet packet = 1;
+	uint32 platform = 2;
+	string uin = 3;
+	string sessionid = 4;
+}

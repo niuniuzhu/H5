@@ -1,0 +1,26 @@
+﻿syntax = "proto3";
+package Protos;
+
+enum MsgID {
+	Undefine = 0;
+
+	GCToLS_AskLogin = 100;
+	
+	LSToGC_LoginResult = 200;
+	LSToGC_BSAddr = 201;
+}
+
+message Response {
+	enum RespID {
+		Undefine = 0;
+		
+		GCToLS_AskLogin = 200;
+	}
+}
+
+message Packet{
+	uint32 pid = 1;			//运行时包id
+	bool isRequest = 2;		//是否一个请求包
+	bool isResponse = 3;	//是否一个回应包
+	uint32 repsPid = 4;		//回应对应请求的包id
+}

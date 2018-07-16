@@ -1,0 +1,25 @@
+﻿syntax = "proto3";
+package Protos.LSToGC;
+
+import "Global.proto";
+
+message LoginResult
+{
+	Packet packet = 1;
+	int32 result = 2;
+}
+
+message ServerInfo
+{
+	Packet packet = 1;
+	string serverName = 2;
+	string serverAddr = 3;
+	int32 serverPort = 4;
+	int32 serverState = 5;
+}
+
+message BSAddr
+{
+	Packet packet = 1;
+	repeated ServerInfo serverinfo = 2;
+}
