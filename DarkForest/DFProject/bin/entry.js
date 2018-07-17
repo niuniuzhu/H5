@@ -1,1 +1,1 @@
-var gameMain = new Game.GameMain();
+var gameMain = new SocketTest.Main();

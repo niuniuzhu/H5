@@ -20,7 +20,7 @@ namespace Core.Net
 		}
 	}
 
-	public class KCPListener : IKCPListener
+	public class KCPListener : IListener
 	{
 		public uint id { get; }
 		public PacketEncodeHandler packetEncodeHandler { get; set; }
@@ -71,6 +71,8 @@ namespace Core.Net
 
 		public bool Stop()
 		{
+			if ( this._socket == null )
+				return false;
 			this._running = false;
 			Socket socket = this._socket;
 			this._socket = null;

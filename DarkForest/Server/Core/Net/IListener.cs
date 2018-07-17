@@ -1,6 +1,4 @@
-﻿using System.Net.Sockets;
-
-namespace Core.Net
+﻿namespace Core.Net
 {
 	public delegate byte[] PacketEncodeHandler( byte[] data, int offset, int size );
 	public delegate int PacketDecodeHandler( byte[] buf, int offset, int size, out byte[] data );
@@ -24,11 +22,6 @@ namespace Core.Net
 		/// 销毁此实例
 		/// </summary>
 		void Dispose();
-
-		/// <summary>
-		/// 设置套接字参数
-		/// </summary>
-		void SetOpt( SocketOptionName optionName, object opt );
 
 		/// <summary>
 		/// 开始监听

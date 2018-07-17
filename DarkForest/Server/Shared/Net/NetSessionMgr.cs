@@ -39,6 +39,10 @@ namespace Shared.Net
 					listener = new KCPListener( id );
 					break;
 
+				case ProtoType.WebSocket:
+					listener = new WSListener( id );
+					break;
+
 				default:
 					throw new NotSupportedException();
 			}

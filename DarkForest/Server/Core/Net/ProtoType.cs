@@ -3,6 +3,7 @@
 	public enum ProtoType
 	{
 		TCP,
-		KCP
+		KCP,
+		WebSocket
 	}
 }

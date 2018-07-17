@@ -48,6 +48,36 @@ var Game;
     }
     Game.GameMain = GameMain;
 })(Game || (Game = {}));
+var SocketTest;
+(function (SocketTest) {
+    class Main {
+        constructor() {
+            Laya.init(600, 400, Laya.WebGL);
+            this.byte = new Laya.Byte();
+            this.byte.endian = Laya.Byte.LITTLE_ENDIAN;
+            this.socket = new Laya.Socket();
+            this.socket.endian = Laya.Byte.LITTLE_ENDIAN;
+            this.socket.connectByUrl("ws://localhost:4649/Chat");
+            this.socket.on(Laya.Event.OPEN, this, this.openHandler);
+            this.socket.on(Laya.Event.MESSAGE, this, this.receiveHandler);
+            this.socket.on(Laya.Event.CLOSE, this, this.closeHandler);
+            this.socket.on(Laya.Event.ERROR, this, this.errorHandler);
+        }
+        openHandler(event = null) {
+            console.log("正确建立连接");
+        }
+        receiveHandler(msg = null) {
+            console.log("接收到数据触发函数:" + msg);
+        }
+        closeHandler(e = null) {
+            console.log("关闭事件");
+        }
+        errorHandler(e = null) {
+            console.log("连接出错");
+        }
+    }
+    SocketTest.Main = Main;
+})(SocketTest || (SocketTest = {}));
 var Shared;
 (function (Shared) {
     let Attr;
@@ -727,7 +757,7 @@ var View;
             this._direction = RC.Numerics.Vec3.forward;
             this._seekerPos = this._position.Clone();
             this._seekerDir = this._direction.Clone();
-            this._restriMin = RC.Numerics.Vec3.zero;
+            this._restriMin = new RC.Numerics.Vec3(-RC.Numerics.MathUtils.MAX_VALUE, -RC.Numerics.MathUtils.MAX_VALUE, -RC.Numerics.MathUtils.MAX_VALUE);
             this._restriMax = new RC.Numerics.Vec3(RC.Numerics.MathUtils.MAX_VALUE, RC.Numerics.MathUtils.MAX_VALUE, RC.Numerics.MathUtils.MAX_VALUE);
             this._localToWorldMat = RC.Numerics.Mat4.FromTRS(this._position, RC.Numerics.Quat.Euler(new RC.Numerics.Vec3(90, 0, 0)), new RC.Numerics.Vec3(1, -1, 1));
             this._worldToLocalMat = RC.Numerics.Mat4.NonhomogeneousInvert(this._localToWorldMat);
@@ -1922,11 +1952,11 @@ var View;
             }
             Enter(param) {
                 this._root = fairygui.UIPackage.createObject("login", "Main").asCom;
-                this._root.getChild("login_btn").onClick(this, this.OnLoginBtnClick);
                 fairygui.GRoot.inst.addChild(this._root);
                 this._root.width = fairygui.GRoot.inst.width;
                 this._root.height = fairygui.GRoot.inst.height;
                 this._root.addRelation(fairygui.GRoot.inst, fairygui.RelationType.Size);
+                this._root.getChild("login_btn").onClick(this, this.OnLoginBtnClick);
                 this._root.getChild("reg_btn").onClick(this, this.OnRegBtnClick);
             }
             Leave() {

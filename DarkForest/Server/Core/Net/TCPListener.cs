@@ -5,7 +5,7 @@ using System.Net.Sockets;
 
 namespace Core.Net
 {
-	public class TCPListener : ITCPListener
+	public class TCPListener : IListener
 	{
 		public uint id { get; }
 		public PacketEncodeHandler packetEncodeHandler { get; set; }
@@ -66,6 +66,8 @@ namespace Core.Net
 
 		public bool Stop()
 		{
+			if ( this._socket == null )
+				return false;
 			Socket socket = this._socket;
 			this._socket = null;
 			return this.Close( socket );
