@@ -118,6 +118,41 @@ namespace Shared.Net
 		}
 
 		/// <summary>
+		/// 发送消息到指定的session类型
+		/// </summary>
+		/// <param name="sessionType">session类型</param>
+		/// <param name="msg">消息</param>
+		/// <param name="msgID">消息id</param>
+		/// <param name="once">在查询消息类型时是否只对第一个结果生效</param>
+		public void SendMsgToSession( SessionType sessionType, IMessage msg, int msgID, bool once = true )
+		{
+			byte[] data = msg.ToByteArray();
+			this.SendMsgToSession( sessionType, data, 0, data.Length, msgID, once );
+		}
+
+		public void TranMsgToSession( uint sessionId, IMessage msg, int msgID, int transID, uint gcNet )
+		{
+			byte[] data = msg.ToByteArray();
+			this.TranMsgToSession( sessionId, data, 0, data.Length, msgID, transID, gcNet );
+		}
+
+		/// <summary>
+		/// 发送消息到指定session,通常该消息是一条转发消息
+		/// </summary>
+		/// <param name="sessionType">session类型</param>
+		/// <param name="msg">消息</param>
+		/// <param name="msgID">中介端需要处理的消息id</param>
+		/// <param name="transID">目标端需要处理的消息id</param>
+		/// <param name="gcNet">目标端的网络id</param>
+		/// <param name="once">在查询消息类型时是否只对第一个结果生效</param>
+		public void TranMsgToSession( SessionType sessionType, IMessage msg, int msgID, int transID,
+		                              uint gcNet, bool once = true )
+		{
+			byte[] data = msg.ToByteArray();
+			this.TranMsgToSession( sessionType, data, 0, data.Length, msgID, transID, gcNet, once );
+		}
+
+		/// <summary>
 		/// 发送消息到指定的session
 		/// </summary>
 		/// <param name="sessionId">session id</param>
@@ -125,7 +160,7 @@ namespace Shared.Net
 		/// <param name="offset">data的偏移量</param>
 		/// <param name="size">data的有用的数据长度</param>
 		/// <param name="msgID">中介端需要处理的消息id</param>
-		public void SendMsgToSession( uint sessionId, byte[] data, int offset, int size, int msgID )
+		private void SendMsgToSession( uint sessionId, byte[] data, int offset, int size, int msgID )
 		{
 			StreamBuffer buffer = this._bufferPool.Pop();
 			buffer.Write( size + 2 * sizeof( int ) );
@@ -136,10 +171,24 @@ namespace Shared.Net
 			this._bufferPool.Push( buffer );
 		}
 
-		public void TranMsgToSession( uint sessionId, IMessage msg, int msgID, int transID, uint gcNet )
+		/// <summary>
+		/// 发送消息到指定的session类型
+		/// </summary>
+		/// <param name="sessionType">session类型</param>
+		/// <param name="data">需要发送的数据</param>
+		/// <param name="offset">data的偏移量</param>
+		/// <param name="size">data的有用的数据长度</param>
+		/// <param name="msgID">消息id</param>
+		/// <param name="once">在查询消息类型时是否只对第一个结果生效</param>
+		private void SendMsgToSession( SessionType sessionType, byte[] data, int offset, int size, int msgID, bool once = true )
 		{
-			byte[] data = msg.ToByteArray();
-			this.TranMsgToSession( sessionId, data, 0, data.Length, msgID, transID, gcNet );
+			StreamBuffer buffer = this._bufferPool.Pop();
+			buffer.Write( size + 2 * sizeof( int ) );
+			buffer.Write( msgID );
+			buffer.Write( data, offset, size );
+			this.Send( sessionType, buffer.GetBuffer(), 0, ( int )buffer.length, once );
+			buffer.Clear();
+			this._bufferPool.Push( buffer );
 		}
 
 		/// <summary>
@@ -152,7 +201,7 @@ namespace Shared.Net
 		/// <param name="msgID">中介端需要处理的消息id</param>
 		/// <param name="transID">目标端需要处理的消息id</param>
 		/// <param name="gcNet">目标端的网络id</param>
-		public void TranMsgToSession( uint sessionId, byte[] data, int offset, int size, int msgID, int transID, uint gcNet )
+		private void TranMsgToSession( uint sessionId, byte[] data, int offset, int size, int msgID, int transID, uint gcNet )
 		{
 			transID = transID == 0 ? msgID : transID;
 			StreamBuffer buffer = this._bufferPool.Pop();
@@ -167,55 +216,6 @@ namespace Shared.Net
 		}
 
 		/// <summary>
-		/// 发送消息到指定的session类型
-		/// </summary>
-		/// <param name="sessionType">session类型</param>
-		/// <param name="msg">消息</param>
-		/// <param name="msgID">消息id</param>
-		/// <param name="once">在查询消息类型时是否只对第一个结果生效</param>
-		public void SendMsgToSession( SessionType sessionType, IMessage msg, int msgID, bool once = true )
-		{
-			byte[] data = msg.ToByteArray();
-			this.SendMsgToSession( sessionType, data, 0, data.Length, msgID, once );
-		}
-
-		/// <summary>
-		/// 发送消息到指定的session类型
-		/// </summary>
-		/// <param name="sessionType">session类型</param>
-		/// <param name="data">需要发送的数据</param>
-		/// <param name="offset">data的偏移量</param>
-		/// <param name="size">data的有用的数据长度</param>
-		/// <param name="msgID">消息id</param>
-		/// <param name="once">在查询消息类型时是否只对第一个结果生效</param>
-		public void SendMsgToSession( SessionType sessionType, byte[] data, int offset, int size, int msgID, bool once = true )
-		{
-			StreamBuffer buffer = this._bufferPool.Pop();
-			buffer.Write( size + 2 * sizeof( int ) );
-			buffer.Write( msgID );
-			buffer.Write( data, offset, size );
-			this.Send( sessionType, buffer.GetBuffer(), 0, ( int )buffer.length, once );
-			buffer.Clear();
-			this._bufferPool.Push( buffer );
-		}
-
-		/// <summary>
-		/// 发送消息到指定session,通常该消息是一条转发消息
-		/// </summary>
-		/// <param name="sessionType">session类型</param>
-		/// <param name="msg">消息</param>
-		/// <param name="msgID">中介端需要处理的消息id</param>
-		/// <param name="transID">目标端需要处理的消息id</param>
-		/// <param name="gcNet">目标端的网络id</param>
-		/// <param name="once">在查询消息类型时是否只对第一个结果生效</param>
-		public void TranMsgToSession( SessionType sessionType, IMessage msg, int msgID, int transID,
-									  uint gcNet, bool once = true )
-		{
-			byte[] data = msg.ToByteArray();
-			this.TranMsgToSession( sessionType, data, 0, data.Length, msgID, transID, gcNet, once );
-		}
-
-		/// <summary>
 		/// 发送消息到指定session,通常该消息是一条转发消息
 		/// </summary>
 		/// <param name="sessionType">session类型</param>
@@ -226,7 +226,7 @@ namespace Shared.Net
 		/// <param name="transID">目标端需要处理的消息id</param>
 		/// <param name="gcNet">目标端的网络id</param>
 		/// <param name="once">在查询消息类型时是否只对第一个结果生效</param>
-		public void TranMsgToSession( SessionType sessionType, byte[] data, int offset, int size, int msgID, int transID, uint gcNet, bool once = true )
+		private void TranMsgToSession( SessionType sessionType, byte[] data, int offset, int size, int msgID, int transID, uint gcNet, bool once = true )
 		{
 			transID = transID == 0 ? msgID : transID;
 			StreamBuffer buffer = this._bufferPool.Pop();
@@ -248,7 +248,7 @@ namespace Shared.Net
 				Logger.Warn( $"invalid sessionID:{sessionId}", 2, 5 );
 				return;
 			}
-			session.connection.Send( buffer, 0, buffer.Length );
+			session.connection.Send( buffer, offset, size );
 		}
 
 		private bool Send( SessionType sessionType, byte[] buffer, int offset, int size, bool once )
@@ -257,12 +257,10 @@ namespace Shared.Net
 				return false;
 
 			if ( once )
-				sessions[0].connection.Send( buffer, 0, buffer.Length );
+				sessions[0].connection.Send( buffer, offset, size );
 			else
-			{
 				foreach ( INetSession session in sessions )
-					session.connection.Send( buffer, 0, buffer.Length );
-			}
+					session.connection.Send( buffer, offset, size );
 			return true;
 		}
 

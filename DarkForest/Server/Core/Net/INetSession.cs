@@ -6,6 +6,7 @@
 		/// ID
 		/// </summary>
 		uint id { get; }
+
 		/// <summary>
 		/// 此实例持有的连接实例
 		/// </summary>

@@ -1,4 +1,6 @@
 ﻿using Core.Net;
+using Google.Protobuf;
+using Shared;
 using Shared.Net;
 
 namespace LoginServer.Net
@@ -18,6 +20,16 @@ namespace LoginServer.Net
 			//8,BS通知客户端GS地址
 			//9,客户端连接GS
 			//10,GS把登陆信息转发到CS
+			this.msgCenter.Register( ( int )Protos.MsgID.GctoLsAskLogin, this.OnGctoLsAskLogin );
+		}
+
+		private ErrorCode OnGctoLsAskLogin( byte[] data, int offset, int size, int msgid )
+		{
+			//收到第1消息：请求登录，放入登录队列
+			Protos.GCToLS.AskLogin login = new Protos.GCToLS.AskLogin();
+			login.MergeFrom( data, offset, size );
+
+			return ErrorCode.Success;
 		}
 	}
 }
