@@ -372,7 +372,7 @@ namespace Core.Net
 			this._sendQueue.Push( buffer );
 		}
 
-		public void SendPingTimeout()
+		public void NotifyClose()
 		{
 			StreamBuffer buffer = this._bufferPool.Pop();
 			buffer.Write( KCPConfig.CONN_KEY );//connKey

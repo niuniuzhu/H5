@@ -54,7 +54,7 @@ namespace Core.Net
 		/// <summary>
 		/// 发送ping超时消息
 		/// </summary>
-		void SendPingTimeout();
+		void NotifyClose();
 
 		/// <summary>
 		/// 内部更新

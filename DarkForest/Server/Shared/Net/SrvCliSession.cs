@@ -22,7 +22,7 @@ namespace Shared.Net
 		{
 			if ( TimeUtils.utcTime > this.connection.activeTime + KCPConfig.PING_TIMEOUT )
 			{
-				this.connection.SendPingTimeout();
+				this.connection.NotifyClose();
 				this.Close();
 			}
 		}

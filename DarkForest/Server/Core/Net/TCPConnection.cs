@@ -77,7 +77,7 @@ namespace Core.Net
 			return true;
 		}
 
-		public bool Send( byte[] data, int offset, int size )
+		public virtual bool Send( byte[] data, int offset, int size )
 		{
 			if ( !this.connected )
 				return false;
@@ -101,7 +101,7 @@ namespace Core.Net
 		/// <summary>
 		/// 同步发送数据
 		/// </summary>
-		public int SendSync( byte[] data, int offset, int size )
+		public virtual int SendSync( byte[] data, int offset, int size )
 		{
 			int sendLen;
 			try
@@ -198,11 +198,11 @@ namespace Core.Net
 			netEvent.data = data;
 			NetworkMgr.instance.PushEvent( netEvent );
 
-			//缓冲区里可能还有未处理的数据,继续递归处理
+			//缓冲区里可能还有未处理的数据,递归处理
 			this.ProcessData( cache );
 		}
 
-		public void SendPingTimeout()
+		public void NotifyClose()
 		{
 		}
 

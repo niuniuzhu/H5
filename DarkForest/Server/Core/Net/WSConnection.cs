@@ -10,6 +10,16 @@ namespace Core.Net
 {
 	public class WSConnection : TCPConnection
 	{
+		private enum FrameType : byte
+		{
+			Continuation,
+			Text,
+			Binary,
+			Close = 8,
+			Ping = 9,
+			Pong = 10,
+		}
+
 		private const string WebSocketResponseGuid = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 		private const string PATTERN = @"^(?<method>[^\s]+)\s(?<path>[^\s]+)\sHTTP\/1\.1\r\n" + // request line
 							   @"((?<field_name>[^:\r\n]+):(?([^\r\n])\s)*(?<field_value>[^\r\n]*)\r\n)+" + //headers
@@ -28,6 +38,7 @@ namespace Core.Net
 		internal HashSet<string> subProtocols;
 
 		private bool _handshakeComplete;
+		private readonly ThreadSafeObejctPool<StreamBuffer> _bufferPool = new ThreadSafeObejctPool<StreamBuffer>();
 
 		public WSConnection( INetSession session ) : base( session )
 		{
@@ -37,6 +48,26 @@ namespace Core.Net
 		{
 			this._handshakeComplete = false;
 			base.Close();
+		}
+
+		public override bool Send( byte[] data, int offset, int size )
+		{
+			StreamBuffer buffer = this._bufferPool.Pop();
+			Hybi13FrameData( buffer, data, offset, size, FrameType.Binary );
+			bool result = base.Send( buffer.GetBuffer(), 0, ( int )buffer.length );
+			buffer.Clear();
+			this._bufferPool.Push( buffer );
+			return result;
+		}
+
+		public override int SendSync( byte[] data, int offset, int size )
+		{
+			StreamBuffer buffer = this._bufferPool.Pop();
+			Hybi13FrameData( buffer, data, offset, size, FrameType.Binary );
+			int result = base.SendSync( buffer.GetBuffer(), 0, ( int )buffer.length );
+			buffer.Clear();
+			this._bufferPool.Push( buffer );
+			return result;
 		}
 
 		protected override void ProcessData( StreamBuffer cache )
@@ -82,6 +113,7 @@ namespace Core.Net
 
 			//todo
 			Logger.Log( Encoding.UTF8.GetString( data ) );
+			this.Send( data, 0, data.Length );
 
 			NetEvent netEvent = NetworkMgr.instance.PopEvent();
 			netEvent.type = NetEvent.Type.Recv;
@@ -89,7 +121,7 @@ namespace Core.Net
 			netEvent.data = data;
 			NetworkMgr.instance.PushEvent( netEvent );
 
-			//缓冲区里可能还有未处理的数据,继续递归处理
+			//缓冲区里可能还有未处理的数据,递归处理
 			this.ProcessData( cache );
 		}
 
@@ -114,7 +146,8 @@ namespace Core.Net
 
 			CaptureCollection fields = match.Groups["field_name"].Captures;
 			CaptureCollection values = match.Groups["field_value"].Captures;
-			for ( int i = 0; i < fields.Count; i++ )
+			int count = fields.Count;
+			for ( int i = 0; i < count; i++ )
 			{
 				string name = fields[i].ToString();
 				string value = values[i].ToString();
@@ -144,18 +177,14 @@ namespace Core.Net
 
 		private static byte[] ProcessDraft76Handshake( WSHttpRequest request, string subProtocol )
 		{
-			Logger.Log( "Building Draft76 Response" );
-
 			StringBuilder builder = new StringBuilder();
 			builder.Append( "HTTP/1.1 101 WebSocket Protocol Handshake\r\n" );
 			builder.Append( "Upgrade: WebSocket\r\n" );
 			builder.Append( "Connection: Upgrade\r\n" );
 			builder.AppendFormat( "Sec-WebSocket-Origin: {0}\r\n", request["Origin"] );
 			builder.AppendFormat( "Sec-WebSocket-Location: {0}://{1}{2}\r\n", request.scheme, request["Host"], request.path );
-
 			if ( !string.IsNullOrEmpty( subProtocol ) )
 				builder.AppendFormat( "Sec-WebSocket-Protocol: {0}\r\n", subProtocol );
-
 			builder.Append( "\r\n" );
 
 			string key1 = request["Sec-WebSocket-Key1"];
@@ -199,10 +228,7 @@ namespace Core.Net
 
 		private static byte[] ProcessHybi13Handshake( WSHttpRequest request, string subProtocol )
 		{
-			Logger.Log( "Building Hybi-14 Response" );
-
 			StringBuilder builder = new StringBuilder();
-
 			builder.Append( "HTTP/1.1 101 Switching Protocols\r\n" );
 			builder.Append( "Connection: Upgrade\r\n" );
 			builder.Append( "Upgrade: websocket\r\n" );
@@ -225,7 +251,6 @@ namespace Core.Net
 
 		private static byte[] ProcessFlashSocketPolicyRequest()
 		{
-			Logger.Log( "Building Flash Socket Policy Response" );
 			return Encoding.UTF8.GetBytes( PolicyResponse );
 		}
 
@@ -273,6 +298,33 @@ namespace Core.Net
 			for ( ulong i = 0; i < mPackageLength; i++ )
 				mDataPackage[i] = ( byte )( mDataPackage[i] ^ Masking_key[i % 4] );
 			return mDataPackage;
+		}
+
+		private static void Hybi13FrameData( StreamBuffer inBuffer, byte[] data, int offset, int size, FrameType frameType )
+		{
+			const int fin = 0, rsv1 = 0, rsv2 = 0, rsv3 = 0;
+			int op = 2;
+			int combind = op | rsv3 << 4 | rsv2 << 3 | rsv1 << 2 | rsv1 << 1 | fin;
+			inBuffer.Write( ( byte )combind );
+
+			//todo 需要加mask吗?
+
+			if ( size > ushort.MaxValue )
+			{
+				inBuffer.Write( ( byte )127 );
+				byte[] lengthBytes = ( ( ulong )size ).ToBigEndianBytes();
+				inBuffer.Write( lengthBytes, 0, lengthBytes.Length );
+			}
+			else if ( size > 125 )
+			{
+				inBuffer.Write( ( byte )126 );
+				byte[] lengthBytes = ( ( ushort )size ).ToBigEndianBytes();
+				inBuffer.Write( lengthBytes, 0, lengthBytes.Length );
+			}
+			else
+				inBuffer.Write( ( byte )size );
+
+			inBuffer.Write( data, offset, size );
 		}
 	}
 }
