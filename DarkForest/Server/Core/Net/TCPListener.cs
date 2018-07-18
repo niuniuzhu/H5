@@ -129,39 +129,49 @@ namespace Core.Net
 					this.Close( acceptSocket );
 					break;
 				}
-
 				if ( this._socket == null )
 				{
 					this.Close( acceptSocket );
 					break;
 				}
 
-				//调用委托创建session
-				INetSession session = this.sessionCreater( ProtoType.TCP );
-				if ( session == null )
-				{
-					Logger.Error( "create session failed" );
-					this.Close( acceptSocket );
-					break;
-				}
-
-				session.isPassive = true;
-				TCPConnection tcpConnection = ( TCPConnection )session.connection;
-				tcpConnection.socket = new SocketWrapper( acceptSocket );
-				tcpConnection.remoteEndPoint = acceptSocket.RemoteEndPoint;
-				tcpConnection.packetEncodeHandler = this.packetEncodeHandler;
-				tcpConnection.packetDecodeHandler = this.packetDecodeHandler;
-				tcpConnection.recvBufSize = this.recvBufSize;
-
-				NetEvent netEvent = NetworkMgr.instance.PopEvent();
-				netEvent.type = NetEvent.Type.Establish;
-				netEvent.session = session;
-				NetworkMgr.instance.PushEvent( netEvent );
-
-				//开始接收数据
-				session.connection.StartReceive();
+				this.PreprocessData( acceptEventArgs );
+				this.CreateSession( acceptSocket );
 			} while ( false );
+
 			this.StartAccept( acceptEventArgs );
+		}
+
+		protected virtual void PreprocessData( SocketAsyncEventArgs acceptEventArgs )
+		{
+		}
+
+		private void CreateSession( Socket acceptSocket )
+		{
+			//调用委托创建session
+			INetSession session = this.sessionCreater( ProtoType.TCP );
+			if ( session == null )
+			{
+				Logger.Error( "create session failed" );
+				this.Close( acceptSocket );
+				return;
+			}
+
+			session.isPassive = true;
+			TCPConnection tcpConnection = ( TCPConnection )session.connection;
+			tcpConnection.socket = new SocketWrapper( acceptSocket );
+			tcpConnection.remoteEndPoint = acceptSocket.RemoteEndPoint;
+			tcpConnection.packetEncodeHandler = this.packetEncodeHandler;
+			tcpConnection.packetDecodeHandler = this.packetDecodeHandler;
+			tcpConnection.recvBufSize = this.recvBufSize;
+
+			NetEvent netEvent = NetworkMgr.instance.PopEvent();
+			netEvent.type = NetEvent.Type.Establish;
+			netEvent.session = session;
+			NetworkMgr.instance.PushEvent( netEvent );
+
+			//开始接收数据
+			session.connection.StartReceive();
 		}
 	}
 }
