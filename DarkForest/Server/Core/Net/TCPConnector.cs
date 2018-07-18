@@ -96,7 +96,7 @@ namespace Core.Net
 			}
 
 			TCPConnection tcpConnection = ( TCPConnection )this.session.connection;
-			tcpConnection.socket = this.socket;
+			tcpConnection.socket = new SocketWrapper( this.socket );
 			tcpConnection.remoteEndPoint = this.socket.RemoteEndPoint;
 			tcpConnection.recvBufSize = this.recvBufSize;
 			tcpConnection.packetEncodeHandler = this.packetEncodeHandler;

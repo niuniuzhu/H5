@@ -175,7 +175,7 @@ namespace Core.Net
 					{
 						session.isPassive = true;
 						KCPConnection kcpConnection = ( KCPConnection )session.connection;
-						kcpConnection.socket = this._socket;
+						kcpConnection.socket = new SocketWrapper( this._socket );
 						kcpConnection.isRefSocket = true;
 						kcpConnection.remoteEndPoint = receiveData.remoteEndPoint;
 						kcpConnection.recvBufSize = this.recvBufSize;

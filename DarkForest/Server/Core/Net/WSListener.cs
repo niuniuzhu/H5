@@ -26,21 +26,45 @@ namespace Core.Net
 			this._socket = new WebSocketServer( "ws://0.0.0.0:" + port );
 			this._socket.Start( socket =>
 			{
-				socket.OnOpen = this.ProcessAccept;
-				socket.OnClose = this.ProcessClose;
+				socket.OnOpen = () => this.ProcessAccept( socket );
+				socket.OnClose = () => this.ProcessClose( socket );
 				socket.OnBinary = this.ProcessReceive;
 			} );
 			return true;
 		}
 
-		private void ProcessClose()
+		private void ProcessClose( IWebSocketConnection socket )
 		{
 			Logger.Log( "close!" );
 		}
 
-		private void ProcessAccept()
+		private void ProcessAccept( IWebSocketConnection acceptSocket )
 		{
 			Logger.Log( "open!" );
+			//调用委托创建session
+			INetSession session = this.sessionCreater( ProtoType.TCP );
+			if ( session == null )
+			{
+				Logger.Error( "create session failed" );
+				acceptSocket.Close();
+				return;
+			}
+
+			session.isPassive = true;
+			TCPConnection tcpConnection = ( TCPConnection )session.connection;
+			tcpConnection.socket = new SocketWrapper( acceptSocket );
+			tcpConnection.remoteEndPoint = acceptSocket.RemoteEndPoint;
+			tcpConnection.packetEncodeHandler = this.packetEncodeHandler;
+			tcpConnection.packetDecodeHandler = this.packetDecodeHandler;
+			tcpConnection.recvBufSize = this.recvBufSize;
+
+			NetEvent netEvent = NetworkMgr.instance.PopEvent();
+			netEvent.type = NetEvent.Type.Establish;
+			netEvent.session = session;
+			NetworkMgr.instance.PushEvent( netEvent );
+
+			//开始接收数据
+			session.connection.StartReceive();
 		}
 
 		private void ProcessReceive( byte[] bytes )

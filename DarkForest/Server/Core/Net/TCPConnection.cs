@@ -5,7 +5,7 @@ namespace Core.Net
 {
 	public class TCPConnection : IConnection
 	{
-		public Socket socket { get; set; }
+		public SocketWrapper socket { get; set; }
 		public EndPoint remoteEndPoint { get; set; }
 		public EndPoint localEndPoint { get; set; }
 		public INetSession session { get; }
@@ -56,11 +56,6 @@ namespace Core.Net
 			this.packetEncodeHandler = null;
 			this.packetDecodeHandler = null;
 		}
-
-		/// <summary>
-		/// 设置套接字参数
-		/// </summary>
-		public void SetOpt( SocketOptionName optionName, object opt ) => this.socket.SetSocketOption( SocketOptionLevel.Socket, optionName, opt );
 
 		public bool StartReceive()
 		{

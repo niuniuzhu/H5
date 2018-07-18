@@ -147,7 +147,7 @@ namespace Core.Net
 
 				session.isPassive = true;
 				TCPConnection tcpConnection = ( TCPConnection )session.connection;
-				tcpConnection.socket = acceptSocket;
+				tcpConnection.socket = new SocketWrapper( acceptSocket );
 				tcpConnection.remoteEndPoint = acceptSocket.RemoteEndPoint;
 				tcpConnection.packetEncodeHandler = this.packetEncodeHandler;
 				tcpConnection.packetDecodeHandler = this.packetDecodeHandler;

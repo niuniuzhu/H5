@@ -25,7 +25,7 @@ namespace Core.Net
 		/// 连接状态
 		/// </summary>
 		public KCPConnectionState state { private get; set; }
-		public Socket socket { get; set; }
+		public SocketWrapper socket { get; set; }
 		/// <summary>
 		/// 是否一个引用的socket
 		/// </summary>
