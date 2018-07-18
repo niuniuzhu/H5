@@ -16,15 +16,14 @@ namespace Shared.Net
 		/// 创建监听器
 		/// </summary>
 		/// <param name="id">监听器标识</param>
-		/// <param name="port">监听端口</param>
 		/// <param name="recvsize">接受缓冲区大小</param>
 		/// <param name="protoType">协议类型</param>
 		/// <param name="sessionCreateHandler">创建session的委托</param>
 		/// <returns></returns>
-		public bool CreateListener( uint id, int port, int recvsize, ProtoType protoType, SessionCreater sessionCreateHandler )
+		public IListener CreateListener( uint id, int recvsize, ProtoType protoType, SessionCreater sessionCreateHandler )
 		{
 			if ( NetworkMgr.instance.ContainsListener( id ) )
-				return false;
+				return null;
 
 			IListener listener;
 			switch ( protoType )
@@ -49,7 +48,7 @@ namespace Shared.Net
 			listener.sessionCreater = sessionCreateHandler;
 			listener.recvBufSize = recvsize;
 			NetworkMgr.instance.AddListener( listener );
-			return listener.Start( port );
+			return listener;
 		}
 
 		/// <summary>

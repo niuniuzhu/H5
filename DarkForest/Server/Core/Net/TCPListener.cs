@@ -73,7 +73,7 @@ namespace Core.Net
 			return this.Close( socket );
 		}
 
-		private bool Close( Socket socket )
+		protected bool Close( Socket socket )
 		{
 			if ( socket == null )
 				return false;
@@ -129,24 +129,31 @@ namespace Core.Net
 					this.Close( acceptSocket );
 					break;
 				}
+
 				if ( this._socket == null )
 				{
 					this.Close( acceptSocket );
 					break;
 				}
 
-				this.PreprocessData( acceptEventArgs );
-				this.CreateSession( acceptSocket );
+				INetSession session = this.CreateSession( acceptSocket );
+				if ( session == null )
+					break;
+
+				NetEvent netEvent = NetworkMgr.instance.PopEvent();
+				netEvent.type = NetEvent.Type.Establish;
+				netEvent.session = session;
+				NetworkMgr.instance.PushEvent( netEvent );
+
+				//开始接收数据
+				session.connection.StartReceive();
+
 			} while ( false );
 
 			this.StartAccept( acceptEventArgs );
 		}
 
-		protected virtual void PreprocessData( SocketAsyncEventArgs acceptEventArgs )
-		{
-		}
-
-		private void CreateSession( Socket acceptSocket )
+		protected virtual INetSession CreateSession( Socket acceptSocket )
 		{
 			//调用委托创建session
 			INetSession session = this.sessionCreater( ProtoType.TCP );
@@ -154,24 +161,17 @@ namespace Core.Net
 			{
 				Logger.Error( "create session failed" );
 				this.Close( acceptSocket );
-				return;
+				return null;
 			}
-
 			session.isPassive = true;
 			TCPConnection tcpConnection = ( TCPConnection )session.connection;
+			tcpConnection.activeTime = TimeUtils.utcTime;
 			tcpConnection.socket = new SocketWrapper( acceptSocket );
 			tcpConnection.remoteEndPoint = acceptSocket.RemoteEndPoint;
 			tcpConnection.packetEncodeHandler = this.packetEncodeHandler;
 			tcpConnection.packetDecodeHandler = this.packetDecodeHandler;
 			tcpConnection.recvBufSize = this.recvBufSize;
-
-			NetEvent netEvent = NetworkMgr.instance.PopEvent();
-			netEvent.type = NetEvent.Type.Establish;
-			netEvent.session = session;
-			NetworkMgr.instance.PushEvent( netEvent );
-
-			//开始接收数据
-			session.connection.StartReceive();
+			return session;
 		}
 	}
 }

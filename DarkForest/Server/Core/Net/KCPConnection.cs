@@ -173,6 +173,8 @@ namespace Core.Net
 
 		public bool StartReceive()
 		{
+			if ( this.socket == null )
+				return false;
 			bool asyncResult;
 			try
 			{
@@ -279,10 +281,7 @@ namespace Core.Net
 				if ( transConnID != this._connID )
 					return;
 				if ( IsPingTimeout( data, offset, size ) )
-				{
-					Logger.Log( "timeout" );
-					this.session.Close();
-				}
+					this.OnError( "timeout" );
 			}
 		}
 

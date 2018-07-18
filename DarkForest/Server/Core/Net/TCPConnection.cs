@@ -42,7 +42,7 @@ namespace Core.Net
 			this._recvEventArgs.Dispose();
 		}
 
-		public void Close()
+		public virtual void Close()
 		{
 			if ( this.socket == null )
 				return;
@@ -55,10 +55,13 @@ namespace Core.Net
 			this._cache.Clear();
 			this.packetEncodeHandler = null;
 			this.packetDecodeHandler = null;
+			this.activeTime = 0;
 		}
 
 		public bool StartReceive()
 		{
+			if ( this.socket == null )
+				return false;
 			bool asyncResult;
 			try
 			{
@@ -165,14 +168,14 @@ namespace Core.Net
 			//写入缓冲区
 			this._cache.Write( recvEventArgs.Buffer, recvEventArgs.Offset, recvEventArgs.BytesTransferred );
 			//处理数据
-			this.ProcessData();
+			this.ProcessData( this._cache );
 			//重新开始接收
 			this.StartReceive();
 		}
 
-		private void ProcessData()
+		protected virtual void ProcessData( StreamBuffer cache )
 		{
-			if ( this._cache.length == 0 )
+			if ( cache.length == 0 )
 				return;
 
 			byte[] data;
@@ -180,14 +183,14 @@ namespace Core.Net
 			{
 				//解码数据,返回解码后的数据长度
 				//完成解码后数据的包头(整个数据的长度)已经被剥离
-				int len = this.packetDecodeHandler( this._cache.GetBuffer(), 0, this._cache.position, out data );
+				int len = this.packetDecodeHandler( cache.GetBuffer(), 0, cache.position, out data );
 				if ( data == null )
 					return;
 				//截断当前缓冲区
-				this._cache.Strip( len, ( int )this._cache.length - len );
+				cache.Strip( len, ( int )cache.length - len );
 			}
 			else
-				data = this._cache.ToArray();
+				data = cache.ToArray();
 
 			NetEvent netEvent = NetworkMgr.instance.PopEvent();
 			netEvent.type = NetEvent.Type.Recv;
@@ -196,7 +199,7 @@ namespace Core.Net
 			NetworkMgr.instance.PushEvent( netEvent );
 
 			//缓冲区里可能还有未处理的数据,继续递归处理
-			this.ProcessData();
+			this.ProcessData( cache );
 		}
 
 		public void SendPingTimeout()

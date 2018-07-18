@@ -1,25 +1,15 @@
-﻿using Fleck;
-using System;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
-using System.Threading.Tasks;
 
 namespace Core.Net
 {
 	public class SocketWrapper
 	{
 		private Socket _socket;
-		private IWebSocketConnection _wsServer;
 
-		public bool Connected => this._socket?.Connected ?? this._wsServer.IsAvailable;
-
-		Action<byte[]> OnBinary { get => this._wsServer.OnBinary; set => this._wsServer.OnBinary = value; }
-
-		private Action<Exception> OnError { get => this._wsServer.OnError; set => this._wsServer.OnError = value; }
+		public bool Connected => this._socket?.Connected ?? false;
 
 		public SocketWrapper( Socket socket ) => this._socket = socket;
-
-		public SocketWrapper( IWebSocketConnection wsConnection ) => this._wsServer = wsConnection;
 
 		public void SetSocketOption( SocketOptionLevel optionLevel, SocketOptionName optionName, object optionValue ) =>
 			this._socket.SetSocketOption( optionLevel, optionName, optionValue );
@@ -39,20 +29,8 @@ namespace Core.Net
 
 		public void Shutdown( SocketShutdown how ) => this._socket.Shutdown( how );
 
-		Task Send( string message ) => this._wsServer.Send( message );
+		public void Close() => this._socket?.Close();
 
-		Task Send( byte[] message ) => this._wsServer.Send( message );
-
-		public void Close()
-		{
-			this._socket?.Close();
-			this._wsServer?.Close();
-		}
-
-		public void Release()
-		{
-			this._socket = null;
-			this._wsServer = null;
-		}
+		public void Release() => this._socket = null;
 	}
 }

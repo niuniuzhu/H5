@@ -53,7 +53,7 @@ namespace Core.Net
 			}
 			catch ( SocketException e )
 			{
-				Logger.Log( $"create socket error, code:{e.SocketErrorCode}" );
+				Logger.Debug( $"create socket error, code:{e.SocketErrorCode}" );
 				return false;
 			}
 
@@ -68,7 +68,7 @@ namespace Core.Net
 			}
 			catch ( SocketException e )
 			{
-				Logger.Log( $"socket connect error, address:{this._ip}:{this._port}, code:{e.SocketErrorCode} " );
+				Logger.Debug( $"socket connect error, address:{this._ip}:{this._port}, code:{e.SocketErrorCode} " );
 				return false;
 			}
 			if ( !asyncResult )

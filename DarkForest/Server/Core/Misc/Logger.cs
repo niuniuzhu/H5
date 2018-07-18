@@ -39,9 +39,9 @@ namespace Core.Misc
 			_log.Debug( $"{obj}{Environment.NewLine}{ GetStacks( startFrame, count )}" );
 		}
 
-		public static void Log( object obj, int startFrame = 2, int count = 1 )
+		public static void Log( object obj )
 		{
-			_log.Debug( $"{ GetStacks( startFrame, count )}: {obj}" );
+			_log.Debug( obj );
 		}
 
 		public static void Warn( object obj, int startFrame = 2, int count = 1 )

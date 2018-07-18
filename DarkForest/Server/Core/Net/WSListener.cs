@@ -1,84 +1,48 @@
 ﻿using Core.Misc;
-using Fleck;
+using System;
+using System.Collections.Generic;
+using System.Net.Sockets;
 
 namespace Core.Net
 {
-	public class WSListener : IListener
+	public class WSListener : TCPListener
 	{
-		public uint id { get; }
-		public SessionCreater sessionCreater { get; set; }
-		public int recvBufSize { get; set; }
+		private Uri _uri = new Uri( "ws://0.0.0.0:0" );
+		private readonly HashSet<string> _subProtocols = new HashSet<string>();
 
-		public bool noDelay
+		public WSListener( uint id ) : base( id )
 		{
-			get => this._socket.ListenerSocket.NoDelay;
-			set => this._socket.ListenerSocket.NoDelay = value;
 		}
 
-		private WebSocketServer _socket;
+		public void AddSubProtocol( string protocol ) => this._subProtocols.Add( protocol );
 
-		public WSListener( uint id ) => this.id = id;
-
-		public void Dispose() => this.Stop();
-
-		public bool Start( int port, bool reuseAddr = true )
+		public bool Start( Uri uri, bool reuseAddr = true )
 		{
-			this._socket = new WebSocketServer( "ws://0.0.0.0:" + port );
-			this._socket.Start( socket =>
-			{
-				socket.OnOpen = () => this.ProcessAccept( socket );
-				socket.OnClose = () => this.ProcessClose( socket );
-				socket.OnBinary = this.ProcessReceive;
-			} );
-			return true;
+			this._uri = uri;
+			return this.Start( uri.Port, reuseAddr );
 		}
 
-		private void ProcessClose( IWebSocketConnection socket )
+		protected override INetSession CreateSession( Socket acceptSocket )
 		{
-			Logger.Log( "close!" );
-		}
-
-		private void ProcessAccept( IWebSocketConnection acceptSocket )
-		{
-			Logger.Log( "open!" );
 			//调用委托创建session
-			INetSession session = this.sessionCreater( ProtoType.TCP );
+			INetSession session = this.sessionCreater( ProtoType.WebSocket );
 			if ( session == null )
 			{
 				Logger.Error( "create session failed" );
-				acceptSocket.Close();
-				return;
+				this.Close( acceptSocket );
+				return null;
 			}
-
 			session.isPassive = true;
-			TCPConnection tcpConnection = ( TCPConnection )session.connection;
-			tcpConnection.socket = new SocketWrapper( acceptSocket );
-			tcpConnection.remoteEndPoint = acceptSocket.RemoteEndPoint;
-			tcpConnection.packetEncodeHandler = this.packetEncodeHandler;
-			tcpConnection.packetDecodeHandler = this.packetDecodeHandler;
-			tcpConnection.recvBufSize = this.recvBufSize;
-
-			NetEvent netEvent = NetworkMgr.instance.PopEvent();
-			netEvent.type = NetEvent.Type.Establish;
-			netEvent.session = session;
-			NetworkMgr.instance.PushEvent( netEvent );
-
-			//开始接收数据
-			session.connection.StartReceive();
-		}
-
-		private void ProcessReceive( byte[] bytes )
-		{
-			Logger.Log( "receive" );
-		}
-
-		public bool Stop()
-		{
-			if ( this._socket == null )
-				return false;
-			this._socket.Dispose();
-			this._socket = null;
-			return true;
+			WSConnection wsConnection = ( WSConnection )session.connection;
+			wsConnection.activeTime = TimeUtils.utcTime;
+			wsConnection.scheme = this._uri.Scheme;
+			wsConnection.subProtocols = this._subProtocols;
+			wsConnection.socket = new SocketWrapper( acceptSocket );
+			wsConnection.remoteEndPoint = acceptSocket.RemoteEndPoint;
+			wsConnection.packetEncodeHandler = this.packetEncodeHandler;
+			wsConnection.packetDecodeHandler = this.packetDecodeHandler;
+			wsConnection.recvBufSize = this.recvBufSize;
+			return session;
 		}
 	}
 }

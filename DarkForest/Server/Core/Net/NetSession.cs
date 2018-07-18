@@ -29,6 +29,10 @@ namespace Core.Net
 					this.connection = new KCPConnection( this );
 					break;
 
+				case ProtoType.WebSocket:
+					this.connection = new WSConnection( this );
+					break;
+
 				default:
 					throw new NotSupportedException();
 			}

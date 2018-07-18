@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoginServer", "LoginServer\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Protocol", "Protocol\Protocol.csproj", "{90A20388-0FD8-470C-84A2-326D5A1F03BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtoGenerator", "ProtoGenerator\ProtoGenerator.csproj", "{20FBD3DB-9A14-4659-BDB1-4BA79138FE16}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProtoGenerator", "ProtoGenerator\ProtoGenerator.csproj", "{20FBD3DB-9A14-4659-BDB1-4BA79138FE16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSTest", "WSTest\WSTest.csproj", "{9829D4E1-6A3C-4E31-927B-F02E1A4CA502}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{20FBD3DB-9A14-4659-BDB1-4BA79138FE16}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20FBD3DB-9A14-4659-BDB1-4BA79138FE16}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20FBD3DB-9A14-4659-BDB1-4BA79138FE16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9829D4E1-6A3C-4E31-927B-F02E1A4CA502}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9829D4E1-6A3C-4E31-927B-F02E1A4CA502}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9829D4E1-6A3C-4E31-927B-F02E1A4CA502}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9829D4E1-6A3C-4E31-927B-F02E1A4CA502}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
