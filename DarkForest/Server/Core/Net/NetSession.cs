@@ -55,6 +55,7 @@ namespace Core.Net
 
 		public void _OnConnError( string error )
 		{
+			Logger.Log( error );
 			this.OnConnError( error );
 		}
 
@@ -73,6 +74,7 @@ namespace Core.Net
 
 		public void _OnError( string error )
 		{
+			Logger.Log( error );
 			this.OnError( error );
 			this.Close();
 		}

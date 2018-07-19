@@ -83,7 +83,7 @@ namespace Core.Misc
 				return string.Empty;
 
 			SB.Clear();
-			for ( int i = startFrame; i <= endFrame; i++ )
+			for ( int i = startFrame; i < endFrame; i++ )
 			{
 				StackFrame sf = st.GetFrame( i );
 				MethodBase method = sf.GetMethod();

@@ -24,6 +24,14 @@ namespace Core.Net
 			return true;
 		}
 
+		public static byte[] ToBigEndianBytes( this byte source )
+		{
+			byte[] bytes = BitConverter.GetBytes( source );
+			if ( BitConverter.IsLittleEndian )
+				Array.Reverse( bytes );
+			return bytes;
+		}
+
 		public static byte[] ToBigEndianBytes( this ushort source )
 		{
 			byte[] bytes = BitConverter.GetBytes( source );

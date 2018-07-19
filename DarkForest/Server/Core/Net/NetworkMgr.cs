@@ -15,7 +15,7 @@ namespace Core.Net
 		private readonly ThreadSafeObejctPool<NetEvent> _eventPool = new ThreadSafeObejctPool<NetEvent>();
 		private readonly Dictionary<uint, IListener> _idToListeners = new Dictionary<uint, IListener>();
 		private readonly Dictionary<uint, INetSession> _idToSession = new Dictionary<uint, INetSession>();
-		private readonly List<INetSession> _sessionsToRemove = new List<INetSession>();
+		private readonly HashSet<INetSession> _sessionsToRemove = new HashSet<INetSession>();
 		private readonly UpdateContext _updateContext = new UpdateContext();
 		private long _lastHeartBeatTime;
 
@@ -40,11 +40,7 @@ namespace Core.Net
 
 		public bool AddSession( INetSession session ) => this._idToSession.TryAdd( session.id, session );
 
-		public void RemoveSession( INetSession session )
-		{
-			if ( !this._sessionsToRemove.Contains( session ) )
-				this._sessionsToRemove.Add( session );
-		}
+		public void RemoveSession( INetSession session ) => this._sessionsToRemove.Add( session );
 
 		public bool ContainsSession( uint id ) => this._idToSession.ContainsKey( id );
 
@@ -85,15 +81,17 @@ namespace Core.Net
 				this._lastHeartBeatTime -= this.heartBeatInterval;
 			}
 			this.FireEvents();
+			this.RemoveSessions();
 			this.UpdateSessions( this._updateContext );
 			this.RemoveSessions();
 		}
 
 		private void RemoveSessions()
 		{
-			int count = this._sessionsToRemove.Count;
-			for ( int i = 0; i < count; i++ )
-				this._idToSession.Remove( this._sessionsToRemove[i].id );
+			if ( this._sessionsToRemove.Count == 0 )
+				return;
+			foreach ( INetSession session in this._sessionsToRemove )
+				this._idToSession.Remove( session.id );
 			this._sessionsToRemove.Clear();
 		}
 
@@ -115,23 +113,31 @@ namespace Core.Net
 			while ( !this._eventQueue.isEmpty )
 			{
 				NetEvent netEvent = this._eventQueue.Pop();
-				switch ( netEvent.type )
+				INetSession session = netEvent.session;
+
+				if ( netEvent.type == NetEvent.Type.Establish )
+					session._OnEstablish();
+				else
 				{
-					case NetEvent.Type.Establish:
-						netEvent.session._OnEstablish();
-						break;
-					case NetEvent.Type.ConnErr:
-						netEvent.session._OnConnError( netEvent.error );
-						break;
-					case NetEvent.Type.Error:
-						netEvent.session._OnError( netEvent.error );
-						break;
-					case NetEvent.Type.Recv:
-						netEvent.session._OnRecv( netEvent.data, 0, netEvent.data.Length );
-						break;
-					case NetEvent.Type.Send:
-						netEvent.session._OnSend();
-						break;
+					if ( !this._sessionsToRemove.Contains( session ) &&
+						 this._idToSession.ContainsKey( session.id ) ) //可能在处理时间前session已关闭
+					{
+						switch ( netEvent.type )
+						{
+							case NetEvent.Type.ConnErr:
+								session._OnConnError( netEvent.error );
+								break;
+							case NetEvent.Type.Error:
+								session._OnError( netEvent.error );
+								break;
+							case NetEvent.Type.Recv:
+								session._OnRecv( netEvent.data, 0, netEvent.data.Length );
+								break;
+							case NetEvent.Type.Send:
+								session._OnSend();
+								break;
+						}
+					}
 				}
 				this._eventPool.Push( netEvent );
 			}

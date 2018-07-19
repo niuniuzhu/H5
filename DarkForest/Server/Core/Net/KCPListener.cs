@@ -162,7 +162,7 @@ namespace Core.Net
 				ReceiveData receiveData = await this._receiveDatas.ReceiveAsync();
 				byte[] data = receiveData.buffer.GetBuffer();
 				int offset = 0;
-				int size = ( int )receiveData.buffer.length;
+				int size = receiveData.buffer.length;
 
 				//验证握手消息
 				if ( VerifyHandshake( data, ref offset, ref size ) )

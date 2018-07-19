@@ -25,9 +25,9 @@ namespace Core.Net
 		/// <summary>
 		/// 获取当前数据长度
 		/// </summary>
-		public long length
+		public int length
 		{
-			get => this._ms.Length;
+			get => ( int )this._ms.Length;
 			set => this._ms.SetLength( value );
 		}
 
@@ -69,16 +69,31 @@ namespace Core.Net
 			this._ms.SetLength( 0 );
 		}
 
-		public void Strip( int pos, int length )
+		/// <summary>
+		/// 从当前位置截断
+		/// </summary>
+		public void Strip()
 		{
-			byte[] bytes = this.ReadBytes( pos, length );
+			byte[] bytes = this.ReadBytes( this.position, this.length - this.position );
 			this.Clear();
 			this.Write( bytes );
+			this.position = 0;
+		}
+
+		/// <summary>
+		/// 从指定位置开始截断指定长度
+		/// </summary>
+		public void Strip( int pos, int count )
+		{
+			byte[] bytes = this.ReadBytes( pos, count );
+			this.Clear();
+			this.Write( bytes );
+			this.position = 0;
 		}
 
 		public void Write( StreamBuffer streamBuffer )
 		{
-			this._bw.Write( streamBuffer.GetBuffer() );
+			this._bw.Write( streamBuffer.ToArray() );
 		}
 
 		public void Write( int value )
@@ -428,11 +443,11 @@ namespace Core.Net
 			return str;
 		}
 
-		public byte[] ReadBytes( int pos, int length )
+		public byte[] ReadBytes( int pos, int count )
 		{
 			int p = this.position;
 			this._bw.Seek( pos, SeekOrigin.Begin );
-			byte[] value = this._br.ReadBytes( length );
+			byte[] value = this._br.ReadBytes( count );
 			this._bw.Seek( p, SeekOrigin.Begin );
 			return value;
 		}

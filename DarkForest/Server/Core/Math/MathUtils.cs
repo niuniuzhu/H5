@@ -159,7 +159,7 @@ namespace Core.Math
 		/// <param name="f"></param>
 		public static float Abs( float f )
 		{
-			return ( float )System.Math.Abs( f );
+			return System.Math.Abs( f );
 		}
 
 		/// <summary>

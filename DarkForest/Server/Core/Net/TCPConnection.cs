@@ -1,5 +1,8 @@
-﻿using System.Net;
+﻿using Core.Misc;
+using Core.Structure;
+using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace Core.Net
 {
@@ -24,6 +27,10 @@ namespace Core.Net
 		private readonly SocketAsyncEventArgs _sendEventArgs;
 		private readonly SocketAsyncEventArgs _recvEventArgs;
 		private readonly StreamBuffer _cache = new StreamBuffer();
+		protected readonly SwitchQueue<StreamBuffer> _sendQueue = new SwitchQueue<StreamBuffer>();
+		protected readonly ThreadSafeObejctPool<StreamBuffer> _bufferPool = new ThreadSafeObejctPool<StreamBuffer>();
+		protected bool _reading;
+		protected readonly object _lockObj = new object();
 
 		public TCPConnection( INetSession session )
 		{
@@ -44,18 +51,23 @@ namespace Core.Net
 
 		public virtual void Close()
 		{
-			if ( this.socket == null )
-				return;
-			if ( this.connected )
-				this.socket.Shutdown( SocketShutdown.Both );
-			this.socket.Close();
-			this.socket = null;
-			this.localEndPoint = null;
-			this.remoteEndPoint = null;
-			this._cache.Clear();
-			this.packetEncodeHandler = null;
-			this.packetDecodeHandler = null;
-			this.activeTime = 0;
+			lock ( this._lockObj )
+			{
+				if ( this.socket == null )
+					return;
+				if ( this.connected )
+					this.socket.Shutdown( SocketShutdown.Both );
+				this.socket.Close();
+				this.socket = null;
+				this.localEndPoint = null;
+				this.remoteEndPoint = null;
+				this.packetEncodeHandler = null;
+				this.packetDecodeHandler = null;
+				this._cache.Clear();
+				this._sendQueue.Clear();
+				this.activeTime = 0;
+				this._reading = false;
+			}
 		}
 
 		public bool StartReceive()
@@ -79,59 +91,31 @@ namespace Core.Net
 
 		public virtual bool Send( byte[] data, int offset, int size )
 		{
-			if ( !this.connected )
-				return false;
-
-			this._sendEventArgs.SetBuffer( data, offset, size );
-			bool asyncResult;
-			try
-			{
-				asyncResult = this.socket.SendAsync( this._sendEventArgs );
-			}
-			catch ( SocketException e )
-			{
-				this.OnError( $"socket send error, code:{e.SocketErrorCode}" );
-				return false;
-			}
-			if ( !asyncResult )
-				this.ProcessSend( this._sendEventArgs );
+			StreamBuffer buffer = this._bufferPool.Pop();
+			buffer.Write( data, offset, size );
+			this._sendQueue.Push( buffer );
 			return true;
 		}
 
-		/// <summary>
-		/// 同步发送数据
-		/// </summary>
-		public virtual int SendSync( byte[] data, int offset, int size )
+		public virtual void NotifyClose()
 		{
-			int sendLen;
-			try
-			{
-				sendLen = this.socket.Send( data, offset, size, SocketFlags.None );
-			}
-			catch ( SocketException e )
-			{
-				this.OnError( $"SendSync buffer error, code:{e.SocketErrorCode} " );
-				return -1;
-			}
-
-			NetEvent netEvent = NetworkMgr.instance.PopEvent();
-			netEvent.type = NetEvent.Type.Send;
-			netEvent.session = this.session;
-			NetworkMgr.instance.PushEvent( netEvent );
-			return sendLen;
 		}
 
 		private void OnIOComplete( object sender, SocketAsyncEventArgs asyncEventArgs )
 		{
-			switch ( asyncEventArgs.LastOperation )
+			//这是一个异步调用,过程中可能在其他线程关闭了连接,必须加锁
+			lock ( this._lockObj )
 			{
-				case SocketAsyncOperation.Receive:
-					this.ProcessReceive( asyncEventArgs );
-					break;
+				switch ( asyncEventArgs.LastOperation )
+				{
+					case SocketAsyncOperation.Receive:
+						this.ProcessReceive( asyncEventArgs );
+						break;
 
-				case SocketAsyncOperation.Send:
-					this.ProcessSend( asyncEventArgs );
-					break;
+					case SocketAsyncOperation.Send:
+						this.ProcessSend( asyncEventArgs );
+						break;
+				}
 			}
 		}
 
@@ -167,43 +151,49 @@ namespace Core.Net
 			}
 			//写入缓冲区
 			this._cache.Write( recvEventArgs.Buffer, recvEventArgs.Offset, recvEventArgs.BytesTransferred );
+			Logger.Debug( $"write:{recvEventArgs.BytesTransferred},t:{Thread.CurrentThread.ManagedThreadId}" );
 			//处理数据
-			this.ProcessData( this._cache );
+			if ( !this._reading )
+			{
+				this._reading = true;
+				this.ProcessData( this._cache );
+			}
 			//重新开始接收
 			this.StartReceive();
 		}
 
 		protected virtual void ProcessData( StreamBuffer cache )
 		{
-			if ( cache.length == 0 )
-				return;
-
-			byte[] data;
-			if ( this.packetDecodeHandler != null )
+			do
 			{
-				//解码数据,返回解码后的数据长度
-				//完成解码后数据的包头(整个数据的长度)已经被剥离
-				int len = this.packetDecodeHandler( cache.GetBuffer(), 0, cache.position, out data );
-				if ( data == null )
-					return;
-				//截断当前缓冲区
-				cache.Strip( len, ( int )cache.length - len );
-			}
-			else
-				data = cache.ToArray();
+				if ( cache.length == 0 )
+					break;
 
-			NetEvent netEvent = NetworkMgr.instance.PopEvent();
-			netEvent.type = NetEvent.Type.Recv;
-			netEvent.session = this.session;
-			netEvent.data = data;
-			NetworkMgr.instance.PushEvent( netEvent );
+				byte[] data;
+				if ( this.packetDecodeHandler != null )
+				{
+					//解码数据,返回解码后的数据长度
+					//完成解码后数据的包头(整个数据的长度)已经被剥离
+					int len = this.packetDecodeHandler( cache.GetBuffer(), 0, cache.position, out data );
+					if ( data == null )
+						break;
 
-			//缓冲区里可能还有未处理的数据,递归处理
-			this.ProcessData( cache );
-		}
+					//截断当前缓冲区
+					cache.Strip( len, cache.length - len );
+				}
+				else
+					data = cache.ToArray();
 
-		public void NotifyClose()
-		{
+				NetEvent netEvent = NetworkMgr.instance.PopEvent();
+				netEvent.type = NetEvent.Type.Recv;
+				netEvent.session = this.session;
+				netEvent.data = data;
+				NetworkMgr.instance.PushEvent( netEvent );
+
+				//缓冲区里可能还有未处理的数据,递归处理
+				this.ProcessData( cache );
+			} while ( false );
+			this._reading = false;
 		}
 
 		private void OnError( string error )
@@ -217,6 +207,30 @@ namespace Core.Net
 
 		public void Update( UpdateContext updateContext )
 		{
+			this._sendQueue.Switch();
+			while ( !this._sendQueue.isEmpty )
+			{
+				StreamBuffer buffer = this._sendQueue.Pop();
+				if ( !this.connected )
+					continue;
+
+				this._sendEventArgs.SetBuffer( buffer.GetBuffer(), 0, buffer.length );
+				bool asyncResult;
+				try
+				{
+					asyncResult = this.socket.SendAsync( this._sendEventArgs );
+				}
+				catch ( SocketException e )
+				{
+					this.OnError( $"socket send error, code:{e.SocketErrorCode}" );
+					continue;
+				}
+				if ( !asyncResult )
+					this.ProcessSend( this._sendEventArgs );
+
+				buffer.Clear();
+				this._bufferPool.Push( buffer );
+			}
 		}
 
 		public void OnHeartBeat( long dt )

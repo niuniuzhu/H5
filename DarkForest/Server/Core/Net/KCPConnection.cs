@@ -147,30 +147,6 @@ namespace Core.Net
 			return true;
 		}
 
-		private int SendDirectSync( byte[] data, int offset, int size )
-		{
-			int ret;
-			try
-			{
-				ret = this.socket.SendTo( data, offset, size, SocketFlags.None, this.remoteEndPoint );
-			}
-			catch ( ObjectDisposedException )
-			{
-				return -1;
-			}
-			catch ( SocketException e )
-			{
-				this.OnError( e.ToString() );
-				return -1;
-			}
-
-			NetEvent netEvent = NetworkMgr.instance.PopEvent();
-			netEvent.type = NetEvent.Type.Send;
-			netEvent.session = this.session;
-			NetworkMgr.instance.PushEvent( netEvent );
-			return ret;
-		}
-
 		public bool StartReceive()
 		{
 			if ( this.socket == null )
@@ -379,7 +355,7 @@ namespace Core.Net
 			buffer.Write( this.session.id );//connID
 			buffer.Write( ( byte )0 );//不通过kcp传输
 			buffer.Write( KCPConfig.TIMEOUT_SIGNATURE );
-			this.SendDirectSync( buffer.GetBuffer(), 0, ( int )buffer.length );
+			this.SendDirect( buffer.GetBuffer(), 0, buffer.length );
 			buffer.Clear();
 			this._bufferPool.Push( buffer );
 		}
@@ -482,11 +458,11 @@ namespace Core.Net
 				switch ( dataTransType )
 				{
 					case DataTransType.Direct:
-						this.SendDirect( buffer.GetBuffer(), 0, ( int )buffer.length );
+						this.SendDirect( buffer.GetBuffer(), 0, buffer.length );
 						break;
 
 					case DataTransType.KCP:
-						this._kcpProxy.Send( buffer.GetBuffer(), 0, ( int )buffer.length );
+						this._kcpProxy.Send( buffer.GetBuffer(), 0, buffer.length );
 						break;
 				}
 				buffer.Clear();
@@ -500,7 +476,7 @@ namespace Core.Net
 
 				byte[] data = buffer.GetBuffer();
 				int offset = 0;
-				int size = ( int )buffer.length;
+				int size = buffer.length;
 
 				uint transConnID = 0;
 				DecodeConnID( data, ref offset, ref size, ref transConnID );

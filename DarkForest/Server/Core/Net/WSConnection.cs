@@ -38,7 +38,6 @@ namespace Core.Net
 		internal HashSet<string> subProtocols;
 
 		private bool _handshakeComplete;
-		private readonly ThreadSafeObejctPool<StreamBuffer> _bufferPool = new ThreadSafeObejctPool<StreamBuffer>();
 
 		public WSConnection( INetSession session ) : base( session )
 		{
@@ -46,88 +45,104 @@ namespace Core.Net
 
 		public override void Close()
 		{
-			this._handshakeComplete = false;
-			base.Close();
+			lock ( this._lockObj )
+			{
+				this._handshakeComplete = false;
+				base.Close();
+			}
 		}
 
 		public override bool Send( byte[] data, int offset, int size )
 		{
 			StreamBuffer buffer = this._bufferPool.Pop();
 			Hybi13FrameData( buffer, data, offset, size, FrameType.Binary );
-			bool result = base.Send( buffer.GetBuffer(), 0, ( int )buffer.length );
-			buffer.Clear();
-			this._bufferPool.Push( buffer );
-			return result;
+			this._sendQueue.Push( buffer );
+			return true;
 		}
 
-		public override int SendSync( byte[] data, int offset, int size )
+		public override void NotifyClose()
 		{
-			StreamBuffer buffer = this._bufferPool.Pop();
-			Hybi13FrameData( buffer, data, offset, size, FrameType.Binary );
-			int result = base.SendSync( buffer.GetBuffer(), 0, ( int )buffer.length );
-			buffer.Clear();
-			this._bufferPool.Push( buffer );
-			return result;
+			StreamBuffer inBuffer = this._bufferPool.Pop();
+			const int fin = 1, rsv1 = 0, rsv2 = 0, rsv3 = 0;
+			const int op = ( int )FrameType.Close;
+			const int ctrlFrame = op | rsv3 << 4 | rsv2 << 5 | rsv1 << 6 | fin << 7;
+			inBuffer.Write( ( byte )ctrlFrame );
+			inBuffer.Write( ( byte )0 );
+			base.Send( inBuffer.GetBuffer(), 0, inBuffer.length );
+			inBuffer.Clear();
+			this._bufferPool.Push( inBuffer );
 		}
 
 		protected override void ProcessData( StreamBuffer cache )
 		{
-			if ( !this._handshakeComplete )
+			do
 			{
-				WSHttpRequest request = ProcessHandShakeData( cache.GetBuffer(), 0, ( int )cache.length, this.scheme );
-				if ( request == null )
-					return;
+				if ( cache.length == 0 )
+					break;
 
-				string subProtocol = Negotiate( this.subProtocols, request.subProtocols );
-
-				byte[] responseData = null;
-				string version = GetVersion( request );
-				switch ( version )
+				if ( !this._handshakeComplete )
 				{
-					case "76":
-						responseData = ProcessDraft76Handshake( request, subProtocol );
+					WSHttpRequest request = ProcessHandShakeData( cache.GetBuffer(), 0, cache.length, this.scheme );
+					if ( request == null )
 						break;
-					case "7":
-					case "8":
-					case "13":
-						responseData = ProcessHybi13Handshake( request, subProtocol );
+
+					string subProtocol = Negotiate( this.subProtocols, request.subProtocols );
+
+					byte[] responseData = null;
+					string version = GetVersion( request );
+					switch ( version )
+					{
+						case "76":
+							responseData = ProcessDraft76Handshake( request, subProtocol );
+							break;
+						case "7":
+						case "8":
+						case "13":
+							responseData = ProcessHybi13Handshake( request, subProtocol );
+							break;
+						case "policy-file-request":
+							responseData = ProcessFlashSocketPolicyRequest();
+							break;
+					}
+
+					if ( responseData == null )
 						break;
-					case "policy-file-request":
-						responseData = ProcessFlashSocketPolicyRequest();
-						break;
+
+					this._handshakeComplete = true;
+					this.Send( responseData, 0, responseData.Length );
+					cache.Clear();
+					break;
 				}
 
-				if ( responseData == null )
-					return;
+				byte[] data = AnalyzeClientData( cache.GetBuffer(), 0, cache.length );
+				if ( data == null )
+					break;
 
-				this._handshakeComplete = true;
-				this.Send( responseData, 0, responseData.Length );
-				cache.Clear();
-				return;
-			}
-			byte[] data = AnalyzeClientData( cache.GetBuffer(), 0, ( int )cache.length );
-			if ( data == null )
-				return;
-			//截断当前缓冲区
-			cache.Strip( data.Length, ( int )cache.length - data.Length );
+				//截断当前缓冲区
+				cache.Strip();
 
-			//todo
-			Logger.Log( Encoding.UTF8.GetString( data ) );
-			this.Send( data, 0, data.Length );
+				//todo
+				if ( data.Length > 0 )
+				{
+					Logger.Debug( Encoding.UTF8.GetString( data ) + ":" + data.Length );
+					this.Send( data, 0, data.Length );
+				}
 
-			NetEvent netEvent = NetworkMgr.instance.PopEvent();
-			netEvent.type = NetEvent.Type.Recv;
-			netEvent.session = this.session;
-			netEvent.data = data;
-			NetworkMgr.instance.PushEvent( netEvent );
+				//NetEvent netEvent = NetworkMgr.instance.PopEvent();
+				//netEvent.type = NetEvent.Type.Recv;
+				//netEvent.session = this.session;
+				//netEvent.data = data;
+				//NetworkMgr.instance.PushEvent( netEvent );
 
-			//缓冲区里可能还有未处理的数据,递归处理
-			this.ProcessData( cache );
+				//缓冲区里可能还有未处理的数据,递归处理
+				this.ProcessData( cache );
+			} while ( false );
+			this._reading = false;
 		}
 
-		private static WSHttpRequest ProcessHandShakeData( byte[] bytes, int offset, int size, string scheme )
+		private static WSHttpRequest ProcessHandShakeData( byte[] data, int offset, int size, string scheme )
 		{
-			string body = Encoding.UTF8.GetString( bytes, offset, size );
+			string body = Encoding.UTF8.GetString( data, offset, size );
 			Match match = REGEX.Match( body );
 
 			if ( !match.Success )
@@ -138,7 +153,7 @@ namespace Core.Net
 				method = match.Groups["method"].Value,
 				path = match.Groups["path"].Value,
 				body = match.Groups["body"].Value,
-				bytes = bytes,
+				bytes = data,
 				offset = offset,
 				size = size,
 				scheme = scheme
@@ -258,57 +273,70 @@ namespace Core.Net
 		/// 处理接收的数据
 		/// 参考 http://www.cnblogs.com/smark/archive/2012/11/26/2789812.html
 		/// </summary>
-		private static byte[] AnalyzeClientData( byte[] recBytes, int offset, int length )
+		private static byte[] AnalyzeClientData( byte[] data, int offset, int size )
 		{
 			// 如果有数据则至少包括3位
-			if ( length < 2 ) return null;
+			if ( size < 2 ) return null;
 			// 判断是否为结束针
-			bool IsEof = ( recBytes[offset] >> 7 ) > 0;
-			// 暂不处理超过一帧的数据
-			if ( !IsEof ) return null;
+			byte value = data[offset];
+			int IsEof = value >> 7;
+			Logger.Log( "eof:" + IsEof );
+			FrameType op = ( FrameType )( value & 0xf );
+			Logger.Log( "op:" + op );
 			offset++;
+
+			value = data[offset];
 			// 是否包含掩码
-			bool hasMask = ( recBytes[offset] >> 7 ) > 0;
-			// 不包含掩码的暂不处理
-			if ( !hasMask ) return null;
+			bool hasMask = value >> 7 > 0;
+			Logger.Log( "hasMask:" + hasMask );
 			// 获取数据长度
-			ulong mPackageLength = ( ulong )recBytes[offset] & 0x7F;
+			ulong packageLength = ( ulong )value & 0x7F;
 			offset++;
-			// 存储4位掩码值
-			byte[] Masking_key = new byte[4];
 			// 存储数据
-			if ( mPackageLength == 126 )
+			if ( packageLength == 126 )
 			{
 				// 等于126 随后的两个字节16位表示数据长度
-				mPackageLength = ( ulong )( recBytes[offset] << 8 | recBytes[offset + 1] );
+				packageLength = BitConverter.ToUInt16( data, offset );
 				offset += 2;
 			}
-			if ( mPackageLength == 127 )
+			if ( packageLength == 127 )
 			{
 				// 等于127 随后的八个字节64位表示数据长度
-				mPackageLength = ( ulong )( recBytes[offset] << ( 8 * 7 ) | recBytes[offset] << ( 8 * 6 ) | recBytes[offset] << ( 8 * 5 ) | recBytes[offset] << ( 8 * 4 ) | recBytes[offset] << ( 8 * 3 ) | recBytes[offset] << ( 8 * 2 ) | recBytes[offset] << 8 | recBytes[offset + 1] );
+				packageLength = BitConverter.ToUInt64( data, offset );
 				offset += 8;
 			}
-			byte[] mDataPackage = new byte[mPackageLength];
-			for ( ulong i = 0; i < mPackageLength; i++ )
+			// 存储4位掩码值
+			byte[] maskingKey = null;
+			if ( hasMask )
 			{
-				mDataPackage[i] = recBytes[i + ( ulong )offset + 4];
+				maskingKey = new byte[4];
+				Buffer.BlockCopy( data, offset, maskingKey, 0, 4 );
+				offset += 4;
 			}
-			Buffer.BlockCopy( recBytes, offset, Masking_key, 0, 4 );
-			for ( ulong i = 0; i < mPackageLength; i++ )
-				mDataPackage[i] = ( byte )( mDataPackage[i] ^ Masking_key[i % 4] );
-			return mDataPackage;
+
+			byte[] outData = new byte[packageLength];
+			if ( packageLength > int.MaxValue )
+				for ( ulong i = 0; i < packageLength; i++ )
+					outData[i] = data[i + ( ulong )offset];
+			else
+				Buffer.BlockCopy( data, offset, outData, 0, ( int )packageLength );
+
+			if ( maskingKey != null )
+			{
+				for ( ulong i = 0; i < packageLength; i++ )
+					outData[i] = ( byte )( outData[i] ^ maskingKey[i % 4] );
+			}
+			return outData;
 		}
 
 		private static void Hybi13FrameData( StreamBuffer inBuffer, byte[] data, int offset, int size, FrameType frameType )
 		{
-			const int fin = 0, rsv1 = 0, rsv2 = 0, rsv3 = 0;
-			int op = 2;
-			int combind = op | rsv3 << 4 | rsv2 << 3 | rsv1 << 2 | rsv1 << 1 | fin;
-			inBuffer.Write( ( byte )combind );
+			const int fin = 1, rsv1 = 0, rsv2 = 0, rsv3 = 0;
+			int op = ( int )frameType;
+			int ctrlFrame = op | rsv3 << 4 | rsv2 << 5 | rsv1 << 6 | fin << 7;
+			inBuffer.Write( ( byte )ctrlFrame );
 
-			//todo 需要加mask吗?
-
+			//服务端不需要mask
 			if ( size > ushort.MaxValue )
 			{
 				inBuffer.Write( ( byte )127 );
