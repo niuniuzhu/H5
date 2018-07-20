@@ -34,12 +34,12 @@ namespace LoginServer
 
 		public ErrorCode Start()
 		{
-			KCPListener bsListener = ( KCPListener )this.netSessionMgr.CreateListener( 0, 65535, ProtoType.KCP, this.netSessionMgr.CreateBlanceSession );
-			bsListener.Start( this.lsConfig.bs_listen_port );
+			WSListener bsListener = ( WSListener )this.netSessionMgr.CreateListener( 0, 65535, ProtoType.WebSocket, this.netSessionMgr.CreateBlanceSession );
+			bsListener.Start( "ws", this.lsConfig.bs_listen_port );
 			//this.netSessionMgr.CreateListener( 1, this.lsConfig.client_listen_port, 65535, Consts.PROTOCOL_TYPE,
 			//								   this.netSessionMgr.CreateClientSession );
-			bool connector = this.netSessionMgr.CreateConnector<TestSession>( SessionType.ClientB2L, "127.0.0.1",
-																 this.lsConfig.bs_listen_port, ProtoType.KCP, 65535, 0 );
+			//bool connector = this.netSessionMgr.CreateConnector<TestSession>( SessionType.ClientB2L, "127.0.0.1",
+			//													 this.lsConfig.bs_listen_port, ProtoType.KCP, 65535, 0 );
 			return ErrorCode.Success;
 		}
 

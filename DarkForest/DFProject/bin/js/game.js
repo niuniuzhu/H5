@@ -62,37 +62,9 @@ var SocketTest;
         Start() {
             this._dt = 0;
             Laya.timer.frameLoop(1, this, this.Update);
+            Shared.Net.NetworkMgr.instance.Connect("localhost", 49997);
         }
         Update() {
-            let dt = Laya.timer.delta;
-            this._dt += dt;
-            if (this._dt >= RC.Numerics.MathUtils.RandomFloor(1500, 3000)) {
-                this._dt = 0;
-                this.DoConnect();
-            }
-        }
-        DoConnect() {
-            for (let i = 0; i < 3; ++i) {
-                let socket = new Laya.Socket();
-                socket.endian = Laya.Byte.LITTLE_ENDIAN;
-                socket.connectByUrl("ws://localhost:49997");
-                socket.on(Laya.Event.OPEN, this, this.openHandler);
-                socket.on(Laya.Event.MESSAGE, this, this.receiveHandler);
-                socket.on(Laya.Event.CLOSE, this, this.closeHandler);
-                socket.on(Laya.Event.ERROR, this, this.errorHandler);
-            }
-        }
-        openHandler(event = null) {
-            console.log("正确建立连接");
-        }
-        receiveHandler(msg = null) {
-            console.log("接收到数据触发函数:" + msg);
-        }
-        closeHandler(e = null) {
-            console.log("关闭事件");
-        }
-        errorHandler(e = null) {
-            console.log("连接出错");
         }
     }
     SocketTest.Main = Main;
@@ -669,6 +641,44 @@ var Shared;
         }
         Model.UserData = UserData;
     })(Model = Shared.Model || (Shared.Model = {}));
+})(Shared || (Shared = {}));
+var Shared;
+(function (Shared) {
+    var Net;
+    (function (Net) {
+        class NetworkMgr {
+            static get instance() {
+                if (NetworkMgr._instance == null)
+                    NetworkMgr._instance = new NetworkMgr();
+                return NetworkMgr._instance;
+            }
+            get connected() { return this._socket.readyState == WebSocket.OPEN; }
+            ;
+            Connect(ip, port) {
+                this._socket = new WebSocket(`ws://${ip}:${port}`);
+                this._socket.onopen = this.OnConnected.bind(this);
+                this._socket.onclose = this.OnClosed.bind(this);
+                this._socket.onerror = this.OnError.bind(this);
+                this._socket.onmessage = this.OnReceived.bind(this);
+            }
+            OnConnected(ev) {
+                console.log("正确建立连接");
+            }
+            OnClosed(ev) {
+                console.log("关闭事件");
+            }
+            OnError(ev) {
+                console.log("连接出错");
+            }
+            OnReceived(ev) {
+                console.log("接收到数据触发函数:" + ev.data);
+            }
+            Send() {
+                this._socket.send("test");
+            }
+        }
+        Net.NetworkMgr = NetworkMgr;
+    })(Net = Shared.Net || (Shared.Net = {}));
 })(Shared || (Shared = {}));
 var View;
 (function (View) {

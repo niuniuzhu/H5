@@ -162,6 +162,8 @@ namespace Core.Net
 			byte value = data[offset];
 			int IsEof = value >> 7;
 			FrameType op = ( FrameType )( value & 0xf );
+			if ( op == FrameType.Close || op == FrameType.Ping || op == FrameType.Pong )
+				return null;
 			offset++;
 
 			value = data[offset];
