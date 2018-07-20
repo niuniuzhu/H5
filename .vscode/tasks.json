@@ -21,6 +21,19 @@
 			}
 		},
 		{
+			"label": "Build DFServer",
+			"type": "shell",
+			"command": "dotnet build",
+			"args": [
+				"./DarkForest/Server"
+			],
+			"group": "build",
+			"presentation": {
+				"panel": "dedicated",
+				"reveal": "silent"
+			}
+		},
+		{
 			"label": "Build DF",
 			"type": "shell",
 			"command": "tsc-plus",
@@ -78,23 +91,6 @@
 			"args": [
 				"-p",
 				"./KHRJ/Code"
-			],
-			"group": "build",
-			"presentation": {
-				"panel": "dedicated",
-				"reveal": "silent"
-			},
-			"problemMatcher": [
-				"$tsc"
-			]
-		},
-		{
-			"label": "Build GLTest",
-			"type": "shell",
-			"command": "tsc-plus",
-			"args": [
-				"-p",
-				"./GLTest/Code"
 			],
 			"group": "build",
 			"presentation": {

@@ -107,9 +107,8 @@ namespace Core.Net
 
 		private void OnKCPOutout( byte[] data, int size )
 		{
-			byte[] sdata = new byte[size + sizeof( byte ) + ProtoConfig.SIZE_OF_CONN_KEY + ProtoConfig.SIZE_OF_SESSION_ID];
-			int offset = ByteUtils.Encode32u( sdata, 0, ProtoConfig.CONN_KEY );//connKey
-			offset += ByteUtils.Encode32u( sdata, offset, this._connID );//connID
+			byte[] sdata = new byte[size + sizeof( byte ) + ProtoConfig.SIZE_OF_SESSION_ID];
+			int offset = ByteUtils.Encode32u( sdata, 0, this._connID );//connID
 			offset += ByteUtils.Encode8u( sdata, offset, 0x80 );//kcp传输 1<<7
 			Buffer.BlockCopy( data, 0, sdata, offset, size );
 			offset += size;
@@ -214,9 +213,7 @@ namespace Core.Net
 			{
 				byte[] data = recvEventArgs.Buffer;
 				int offset = recvEventArgs.Offset;
-				//验证ConnKey
-				if ( VerifyConnKey( data, ref offset, ref size ) )
-					this.SendDataToMainThread( data, offset, size );
+				this.SendDataToMainThread( data, offset, size );
 			}
 			this.StartReceive();
 		}
@@ -259,7 +256,7 @@ namespace Core.Net
 		private void ProcessKCPData( byte[] data )
 		{
 			bool isInternal = data[0] >> 7 > 0; //是否内部协议
-			const int offset = 1;
+			const int offset = sizeof( byte );
 			int size = data.Length - offset;
 			if ( isInternal )
 			{
@@ -292,7 +289,6 @@ namespace Core.Net
 		{
 			StreamBuffer buffer = this._bufferPool.Pop();
 			buffer.data = DataTransType.KCP;
-			buffer.Write( ( byte )0x80 );//kcp传输 1<<7
 			buffer.Write( ( byte )0x80 );//是内部协议 1<<7
 			buffer.Write( ProtoConfig.PING_SIGNATURE );
 			this._sendQueue.Push( buffer );
@@ -302,7 +298,6 @@ namespace Core.Net
 		{
 			StreamBuffer buffer = this._bufferPool.Pop();
 			buffer.data = DataTransType.KCP;
-			buffer.Write( ( byte )0x80 );//kcp传输 1<<7
 			buffer.Write( ( byte )0x80 );//是内部协议 1<<7
 			buffer.Write( ProtoConfig.PONG_SIGNATURE );
 			this._sendQueue.Push( buffer );
@@ -315,7 +310,6 @@ namespace Core.Net
 		{
 			StreamBuffer buffer = this._bufferPool.Pop();
 			buffer.data = DataTransType.Direct;
-			buffer.Write( ProtoConfig.CONN_KEY );//connKey
 			buffer.Write( ( uint )0 );//connID
 			buffer.Write( ( byte )0 );//非kcp传输
 			buffer.Write( ( byte )0x80 );//是内部协议 1<<7
@@ -330,7 +324,6 @@ namespace Core.Net
 		{
 			StreamBuffer buffer = this._bufferPool.Pop();
 			buffer.data = DataTransType.Direct;
-			buffer.Write( ProtoConfig.CONN_KEY );//connKey
 			buffer.Write( ( uint )0 );//connID
 			buffer.Write( ( byte )0 );//非kcp传输
 			buffer.Write( ( byte )0x80 );//是内部协议 1<<7
@@ -343,7 +336,6 @@ namespace Core.Net
 		{
 			StreamBuffer buffer = this._bufferPool.Pop();
 			buffer.data = DataTransType.Direct;
-			buffer.Write( ProtoConfig.CONN_KEY );//connKey
 			buffer.Write( ( uint )0 );//connID
 			buffer.Write( ( byte )0 );//非kcp传输
 			buffer.Write( ( byte )0x80 );//是内部协议 1<<7
@@ -351,21 +343,6 @@ namespace Core.Net
 			this.SendDirect( buffer.GetBuffer(), 0, buffer.length );
 			buffer.Clear();
 			this._bufferPool.Push( buffer );
-		}
-
-		public static bool VerifyConnKey( byte[] data, ref int offset, ref int size )
-		{
-			if ( size < ProtoConfig.SIZE_OF_CONN_KEY )
-				return false;
-
-			uint connKey = 0;
-			ByteUtils.Decode32u( data, offset, ref connKey );
-			if ( connKey != ProtoConfig.CONN_KEY )
-				return false;
-
-			offset += ProtoConfig.SIZE_OF_CONN_KEY;
-			size -= ProtoConfig.SIZE_OF_CONN_KEY;
-			return true;
 		}
 
 		private static bool VerifyHandshakeAck( byte[] data, ref int offset, ref int size, ref uint connID )

@@ -3,7 +3,6 @@
 namespace Core.Net
 {
 	/*kcp协议
-	 uint connKey
 	 uint connID
 	 byte 消息头控制码
 	 	bit1 是否kcp传输
@@ -31,7 +30,7 @@ namespace Core.Net
 		public const int SIZE_OF_SIGNATURE = sizeof( ushort );
 		public const int SIZE_OF_CONN_KEY = sizeof( uint );
 		public const int SIZE_OF_SESSION_ID = sizeof( uint );
-		public const int SIZE_OF_HEAD = sizeof( byte ) + SIZE_OF_CONN_KEY + SIZE_OF_SESSION_ID;
+		public const int SIZE_OF_HEAD = sizeof( byte ) + SIZE_OF_SESSION_ID;
 
 		public const uint CONN_KEY = 0x11223344;
 		public const byte INVALID_SESSION_ID = 0;

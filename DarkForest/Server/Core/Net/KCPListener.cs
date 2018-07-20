@@ -139,13 +139,8 @@ namespace Core.Net
 				if ( size < ProtoConfig.SIZE_OF_HEAD )
 					break;
 
-				byte[] data = recvEventArgs.Buffer;
-				int offset = recvEventArgs.Offset;
-				if ( !KCPConnection.VerifyConnKey( data, ref offset, ref size ) )
-					break;
-
 				ReceiveData receiveData = this._receiveDataPool.Pop();
-				receiveData.buffer.Write( data, offset, size );
+				receiveData.buffer.Write( recvEventArgs.Buffer, recvEventArgs.Offset, size );
 				receiveData.conn = this._socket;
 				receiveData.remoteEndPoint.Address = ( ( IPEndPoint )recvEventArgs.RemoteEndPoint ).Address;
 				receiveData.remoteEndPoint.Port = ( ( IPEndPoint )recvEventArgs.RemoteEndPoint ).Port;
@@ -160,7 +155,7 @@ namespace Core.Net
 			{
 				ReceiveData receiveData = await this._receiveDatas.ReceiveAsync();
 				byte[] data = receiveData.buffer.GetBuffer();
-				int offset = 0;
+				const int offset = 0;
 				int size = receiveData.buffer.length;
 
 				uint connID = ByteUtils.Decode32u( data, offset );
