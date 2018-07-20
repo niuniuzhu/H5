@@ -13,11 +13,11 @@ namespace Core.Net
 
 		internal KCPProxy( Action<byte[], int> output )
 		{
-			this._kcp = new KCP( KCPConfig.CONN_KEY, output );
-			this._kcp.NoDelay( KCPConfig.KCP_NO_DELAY, KCPConfig.KCP_INTERVAL, KCPConfig.KCP_RESEND,
-							   KCPConfig.KCP_NC );
-			this._kcp.WndSize( KCPConfig.KCP_SND_WIN, KCPConfig.KCP_REV_WIN );
-			this._kcp.SetMtu( KCPConfig.KCP_MTU );
+			this._kcp = new KCP( ProtoConfig.CONN_KEY, output );
+			this._kcp.NoDelay( ProtoConfig.KCP_NO_DELAY, ProtoConfig.KCP_INTERVAL, ProtoConfig.KCP_RESEND,
+							   ProtoConfig.KCP_NC );
+			this._kcp.WndSize( ProtoConfig.KCP_SND_WIN, ProtoConfig.KCP_REV_WIN );
+			this._kcp.SetMtu( ProtoConfig.KCP_MTU );
 		}
 
 		internal void Dispose()

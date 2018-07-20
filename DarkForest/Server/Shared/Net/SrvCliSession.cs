@@ -20,7 +20,7 @@ namespace Shared.Net
 
 		private void CheckActive()
 		{
-			if ( TimeUtils.utcTime > this.connection.activeTime + KCPConfig.PING_TIMEOUT )
+			if ( TimeUtils.utcTime > this.connection.activeTime + ProtoConfig.PING_TIMEOUT )
 			{
 				//this.connection.NotifyClose();
 				this.Close( "ping timeout" );//直接断开好了

@@ -136,7 +136,7 @@ namespace Core.Net
 					break;
 
 				int size = recvEventArgs.BytesTransferred;
-				if ( size < KCPConfig.SIZE_OF_HEAD )
+				if ( size < ProtoConfig.SIZE_OF_HEAD )
 					break;
 
 				byte[] data = recvEventArgs.Buffer;
@@ -213,7 +213,7 @@ namespace Core.Net
 
 			uint connID = 0;
 			mOffset += ByteUtils.Decode32u( data, mOffset, ref connID );
-			if ( connID != KCPConfig.INVALID_SESSION_ID )
+			if ( connID != ProtoConfig.INVALID_SESSION_ID )
 				return false;
 
 			byte isKCPTrans = 0;
@@ -223,7 +223,7 @@ namespace Core.Net
 
 			ushort signature = 0;
 			mOffset += ByteUtils.Decode16u( data, mOffset, ref signature );
-			if ( signature != KCPConfig.HANDSHAKE_SIGNATURE )
+			if ( signature != ProtoConfig.HANDSHAKE_SIGNATURE )
 				return false;
 
 			offset = mOffset;
