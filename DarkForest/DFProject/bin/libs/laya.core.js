@@ -425,7 +425,7 @@ var ___Laya=(function(){
 	Laya.timer=null;
 	Laya.scaleTimer=null;
 	Laya.loader=null;
-	Laya.version="1.7.18beta";
+	Laya.version="1.7.19.1beta";
 	Laya.render=null;
 	Laya._currentStage=null;
 	Laya._isinit=false;
@@ -570,6 +570,10 @@ var EventDispatcher=(function(){
 				var count=0;
 				for (var i=0,n=listeners.length;i < n;i++){
 					var item=listeners[i];
+					if (!item){
+						count++;
+						continue ;
+					}
 					if (item && (!caller || item.caller===caller)&& item.method===listener && (!onceOnly || item.once)){
 						count++;
 						listeners[i]=null;
@@ -1566,6 +1570,7 @@ var Graphics=(function(){
 			this._one[2]=y;
 			this._one[3]=width;
 			this._one[4]=height;
+			this._repaint();
 			}else {
 			this.clear();
 			tex && this.drawTexture(tex,x,y,width,height);
@@ -4917,7 +4922,7 @@ var SoundManager=(function(){
 	}
 
 	SoundManager._recoverWebAudio=function(){
-		if(WebAudioSound.ctx&&WebAudioSound.ctx.state!="running")
+		if(WebAudioSound.ctx&&WebAudioSound.ctx.state!="running"&&WebAudioSound.ctx.resume)
 			WebAudioSound.ctx.resume();
 	}
 
@@ -6166,7 +6171,7 @@ var RenderSprite=(function(){
 					if (tStyle.stroke){
 						context.fillBorderWords(words,x,y,tStyle.font,tStyle.color,tStyle.strokeColor,tStyle.stroke);
 						}else{
-						context.fillWords(words,x,y,tStyle.font,tStyle.color,tStyle.underLine);
+						context.fillWords(words,x,y,tStyle.font,tStyle.color,(tStyle.textDecoration!="none"&&tStyle.underLine)?1:0);
 					}
 				}
 			}
@@ -7107,6 +7112,7 @@ var Browser=(function(){
 		},false);
 		/*__JS__ */Browser.document.__createElement=Browser.document.createElement;
 		/*__JS__ */window.requestAnimationFrame=window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function (c){return window.setTimeout(c,1000 / 60);};;
+		/*__JS__ */var $BS=window.document.body.style;$BS['-webkit-user-select']='none';$BS['-webkit-tap-highlight-color']='rgba(200,200,200,0)';;
 		Browser.userAgent=/*[SAFE]*/ Browser.window.navigator.userAgent;
 		Browser.u=/*[SAFE]*/ Browser.userAgent;
 		Browser.onIOS=/*[SAFE]*/ !!Browser.u.match(/\(i[^;]+;(U;)? CPU.+Mac OS X/);
@@ -7114,7 +7120,7 @@ var Browser=(function(){
 		Browser.onIPhone=/*[SAFE]*/ Browser.u.indexOf("iPhone")>-1;
 		Browser.onMac=/*[SAFE]*/ Browser.u.indexOf("Mac OS X")>-1;
 		Browser.onIPad=/*[SAFE]*/ Browser.u.indexOf("iPad")>-1;
-		Browser.onAndriod=/*[SAFE]*/ Browser.u.indexOf('Android')>-1 || Browser.u.indexOf('Adr')>-1;
+		Browser.onAndroid=/*[SAFE]*/ Browser.u.indexOf('Android')>-1 || Browser.u.indexOf('Adr')>-1;
 		Browser.onWP=/*[SAFE]*/ Browser.u.indexOf("Windows Phone")>-1;
 		Browser.onQQBrowser=/*[SAFE]*/ Browser.u.indexOf("QQBrowser")>-1;
 		Browser.onMQQBrowser=/*[SAFE]*/ Browser.u.indexOf("MQQBrowser")>-1 || (Browser.u.indexOf("Mobile")>-1 && Browser.u.indexOf("QQ")>-1);
@@ -7190,7 +7196,6 @@ var Browser=(function(){
 	Browser.onMobile=false;
 	Browser.onIPhone=false;
 	Browser.onIPad=false;
-	Browser.onAndriod=false;
 	Browser.onAndroid=false;
 	Browser.onWP=false;
 	Browser.onQQBrowser=false;
@@ -12663,6 +12668,7 @@ var Loader=(function(_super){
 		var contentType;
 		switch (type){
 			case "atlas":
+			case "plf":
 				contentType="json";
 				break ;
 			case "font":
@@ -12790,6 +12796,10 @@ var Loader=(function(_super){
 	*/
 	__proto.onLoaded=function(data){
 		var type=this._type;
+		if (type=="plf"){
+			this.parsePLFData(data);
+			this.complete(data);
+		}else
 		if (type==="image"){
 			var tex=new Texture(data);
 			tex.url=this._url;
@@ -12876,6 +12886,27 @@ var Loader=(function(_super){
 			this.complete(tex1);
 			}else {
 			this.complete(data);
+		}
+	}
+
+	__proto.parsePLFData=function(plfData){
+		var type;
+		var filePath;
+		var fileDic;
+		for (type in plfData){
+			fileDic=plfData[type];
+			switch(type){
+				case "json":
+				case "text":
+					for (filePath in fileDic){
+						Loader.preLoadedMap[URL.formatURL(filePath)]=fileDic[filePath]
+					}
+					break ;
+				default :
+					for (filePath in fileDic){
+						Loader.preLoadedMap[URL.formatURL(filePath)]=fileDic[filePath]
+					}
+				}
 		}
 	}
 
@@ -13021,8 +13052,9 @@ var Loader=(function(_super){
 	Loader.ATLAS="atlas";
 	Loader.FONT="font";
 	Loader.TTF="ttf";
+	Loader.PLF="plf";
 	Loader.PKM="pkm";
-	Loader.typeMap={"png":"image","jpg":"image","jpeg":"image","txt":"text","json":"json","xml":"xml","als":"atlas","atlas":"atlas","mp3":"sound","ogg":"sound","wav":"sound","part":"json","fnt":"font","pkm":"pkm","ttf":"ttf"};
+	Loader.typeMap={"png":"image","jpg":"image","jpeg":"image","txt":"text","json":"json","xml":"xml","als":"atlas","atlas":"atlas","mp3":"sound","ogg":"sound","wav":"sound","part":"json","fnt":"font","pkm":"pkm","ttf":"ttf","plf":"plf"};
 	Loader.parserMap={};
 	Loader.groupMap={};
 	Loader.maxTimeOut=100;
@@ -14364,7 +14396,7 @@ var Texture=(function(_super){
 		/**@private */
 		this.scaleRate=1;
 		Texture.__super.call(this);
-		if (bitmap){
+		if (bitmap && bitmap._addReference!=null){
 			bitmap._addReference();
 		}
 		this.setTo(bitmap,uv);
@@ -16119,6 +16151,8 @@ var Sprite=(function(_super){
 			if (value=="bitmap")this.conchModel && this.conchModel.cacheAs(1);
 			this._set$P("cacheForFilters",false);
 			}else {
+			if (this._$P["_mask"]){
+			}else
 			if (this._$P["hasFilter"]){
 				this._set$P("cacheForFilters",true);
 				}else {
@@ -16554,9 +16588,9 @@ var Sprite=(function(_super){
 			this._set$P("_mask",value);
 			value._set$P("maskParent",this);
 			}else {
-			this.cacheAs="none";
 			this.mask && this.mask._set$P("maskParent",null);
 			this._set$P("_mask",value);
+			this.cacheAs="none";
 		}
 		this.conchModel && this.conchModel.mask(value ? value.conchModel :null);
 		this._renderType |=/*laya.renders.RenderSprite.MASK*/0x40;
@@ -16830,10 +16864,16 @@ var WebAudioSoundChannel=(function(_super){
 		bufferSource.onended=this._onPlayEnd;
 		if (this.startTime >=this.duration)this.startTime=0;
 		this._startTime=Browser.now();
+		if (this.gain.gain.setTargetAtTime){
+			this.gain.gain.setTargetAtTime(this._volume,this.context.currentTime,0.1);
+		}else
 		this.gain.gain.value=this._volume;
 		if (this.loops==0){
 			bufferSource.loop=true;
 		}
+		if (bufferSource.playbackRate.setTargetAtTime){
+			bufferSource.playbackRate.setTargetAtTime(SoundManager.playbackRate,this.context.currentTime,0.1)
+		}else
 		bufferSource.playbackRate.value=SoundManager.playbackRate;
 		bufferSource.start(0,this.startTime);
 		this._currentTime=0;
@@ -16946,6 +16986,9 @@ var WebAudioSoundChannel=(function(_super){
 			return;
 		}
 		this._volume=v;
+		if (this.gain.gain.setTargetAtTime){
+			this.gain.gain.setTargetAtTime(v,this.context.currentTime,0.1);
+		}else
 		this.gain.gain.value=v;
 	});
 
@@ -18208,7 +18251,7 @@ var Stage=(function(_super){
 		this.canvasDegree=0;
 		/**
 		*<p>设置是否渲染，设置为false，可以停止渲染，画面会停留到最后一次渲染上，减少cpu消耗，此设置不影响时钟。</p>
-		*<p>比如非激活状态，可以设置renderingEnabled=true以节省消耗。</p>
+		*<p>比如非激活状态，可以设置renderingEnabled=false以节省消耗。</p>
 		**/
 		this.renderingEnabled=true;
 		/**是否启用屏幕适配，可以适配后，在某个时候关闭屏幕适配，防止某些操作导致的屏幕以外改变*/

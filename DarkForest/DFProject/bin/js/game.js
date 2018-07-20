@@ -53,15 +53,34 @@ var SocketTest;
     class Main {
         constructor() {
             Laya.init(600, 400, Laya.WebGL);
-            this.byte = new Laya.Byte();
-            this.byte.endian = Laya.Byte.LITTLE_ENDIAN;
-            this.socket = new Laya.Socket();
-            this.socket.endian = Laya.Byte.LITTLE_ENDIAN;
-            this.socket.connectByUrl("ws://localhost:4649/Chat");
-            this.socket.on(Laya.Event.OPEN, this, this.openHandler);
-            this.socket.on(Laya.Event.MESSAGE, this, this.receiveHandler);
-            this.socket.on(Laya.Event.CLOSE, this, this.closeHandler);
-            this.socket.on(Laya.Event.ERROR, this, this.errorHandler);
+            Laya.stage.scaleMode = Laya.Stage.SCALE_FIXED_WIDTH;
+            Laya.stage.alignH = Laya.Stage.ALIGN_LEFT;
+            Laya.stage.alignV = Laya.Stage.ALIGN_TOP;
+            Laya.stage.screenMode = Laya.Stage.SCREEN_VERTICAL;
+            this.Start();
+        }
+        Start() {
+            this._dt = 0;
+            Laya.timer.frameLoop(1, this, this.Update);
+        }
+        Update() {
+            let dt = Laya.timer.delta;
+            this._dt += dt;
+            if (this._dt >= RC.Numerics.MathUtils.RandomFloor(1500, 3000)) {
+                this._dt = 0;
+                this.DoConnect();
+            }
+        }
+        DoConnect() {
+            for (let i = 0; i < 3; ++i) {
+                let socket = new Laya.Socket();
+                socket.endian = Laya.Byte.LITTLE_ENDIAN;
+                socket.connectByUrl("ws://localhost:49997");
+                socket.on(Laya.Event.OPEN, this, this.openHandler);
+                socket.on(Laya.Event.MESSAGE, this, this.receiveHandler);
+                socket.on(Laya.Event.CLOSE, this, this.closeHandler);
+                socket.on(Laya.Event.ERROR, this, this.errorHandler);
+            }
         }
         openHandler(event = null) {
             console.log("正确建立连接");

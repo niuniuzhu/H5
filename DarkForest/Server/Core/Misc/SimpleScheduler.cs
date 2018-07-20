@@ -9,15 +9,13 @@ namespace Core.Misc
 		private long _currTime;
 		private int _count;
 
-		public void Start( long interval, Action<int> handler, bool triggerAtStart = false )
+		public void Start( long interval, Action<int> handler, bool triggerWhenStart = false )
 		{
 			this._interval = interval;
 			this._handler = handler;
 			this._currTime = 0;
-			if ( triggerAtStart )
-			{
+			if ( triggerWhenStart )
 				this._handler?.Invoke( this._count++ );
-			}
 		}
 
 		public void Stop()

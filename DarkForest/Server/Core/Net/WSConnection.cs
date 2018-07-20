@@ -20,20 +20,6 @@ namespace Core.Net
 			Pong = 10,
 		}
 
-		private const string WebSocketResponseGuid = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
-		private const string PATTERN = @"^(?<method>[^\s]+)\s(?<path>[^\s]+)\sHTTP\/1\.1\r\n" + // request line
-							   @"((?<field_name>[^:\r\n]+):(?([^\r\n])\s)*(?<field_value>[^\r\n]*)\r\n)+" + //headers
-							   @"\r\n" + //newline
-							   @"(?<body>.+)?";
-		private static readonly Regex REGEX = new Regex( PATTERN, RegexOptions.IgnoreCase | RegexOptions.Compiled );
-		private const string PolicyResponse =
-			"<?xml version=\"1.0\"?>\n" +
-			"<cross-domain-policy>\n" +
-			"   <allow-access-from domain=\"*\" to-ports=\"*\"/>\n" +
-			"   <site-control permitted-cross-domain-policies=\"all\"/>\n" +
-			"</cross-domain-policy>\n" +
-			"\0";
-
 		internal string scheme;
 		internal HashSet<string> subProtocols;
 
@@ -58,19 +44,6 @@ namespace Core.Net
 			Hybi13FrameData( buffer, data, offset, size, FrameType.Binary );
 			this._sendQueue.Push( buffer );
 			return true;
-		}
-
-		public override void NotifyClose()
-		{
-			StreamBuffer inBuffer = this._bufferPool.Pop();
-			const int fin = 1, rsv1 = 0, rsv2 = 0, rsv3 = 0;
-			const int op = ( int )FrameType.Close;
-			const int ctrlFrame = op | rsv3 << 4 | rsv2 << 5 | rsv1 << 6 | fin << 7;
-			inBuffer.Write( ( byte )ctrlFrame );
-			inBuffer.Write( ( byte )0 );
-			base.Send( inBuffer.GetBuffer(), 0, inBuffer.length );
-			inBuffer.Clear();
-			this._bufferPool.Push( inBuffer );
 		}
 
 		protected override void ProcessData( StreamBuffer cache )
@@ -99,31 +72,25 @@ namespace Core.Net
 					netEvent.type = NetEvent.Type.Establish;
 					netEvent.session = this.session;
 					NetworkMgr.instance.PushEvent( netEvent );
-					break;
 				}
-
-				byte[] data = AnalyzeClientData( cache.GetBuffer(), 0, cache.length );
-				if ( data == null )
-					break;
-
-				//截断当前缓冲区
-				cache.Strip();
-
-				//todo
-				if ( data.Length > 0 )
+				else
 				{
-					Logger.Debug( Encoding.UTF8.GetString( data ) + ":" + data.Length );
-					this.Send( data, 0, data.Length );
+					byte[] data = ProcessClientData( cache.GetBuffer(), 0, cache.length );
+					if ( data == null )
+						break;
+
+					//截断当前缓冲区
+					cache.Strip();
+
+					NetEvent netEvent = NetworkMgr.instance.PopEvent();
+					netEvent.type = NetEvent.Type.Recv;
+					netEvent.session = this.session;
+					netEvent.data = data;
+					NetworkMgr.instance.PushEvent( netEvent );
+
+					//缓冲区里可能还有未处理的数据,递归处理
+					this.ProcessData( cache );
 				}
-
-				//NetEvent netEvent = NetworkMgr.instance.PopEvent();
-				//netEvent.type = NetEvent.Type.Recv;
-				//netEvent.session = this.session;
-				//netEvent.data = data;
-				//NetworkMgr.instance.PushEvent( netEvent );
-
-				//缓冲区里可能还有未处理的数据,递归处理
-				this.ProcessData( cache );
 			} while ( false );
 			this._reading = false;
 		}
@@ -131,7 +98,7 @@ namespace Core.Net
 		private static WSHttpRequest ProcessHandShakeData( byte[] data, int offset, int size, string scheme )
 		{
 			string body = Encoding.UTF8.GetString( data, offset, size );
-			Match match = REGEX.Match( body );
+			Match match = ProtoConfig.REQUEST_REGEX.Match( body );
 
 			if ( !match.Success )
 				return null;
@@ -165,32 +132,6 @@ namespace Core.Net
 			return matches.Length == 0 ? string.Empty : matches[0];
 		}
 
-		private static byte[] CalculateAnswerBytes( string key1, string key2, ArraySegment<byte> challenge )
-		{
-			byte[] result1Bytes = ParseKey( key1 );
-			byte[] result2Bytes = ParseKey( key2 );
-
-			byte[] rawAnswer = new byte[16];
-			Array.Copy( result1Bytes, 0, rawAnswer, 0, 4 );
-			Array.Copy( result2Bytes, 0, rawAnswer, 4, 4 );
-			Array.Copy( challenge.Array, challenge.Offset, rawAnswer, 8, 8 );
-
-			return MD5.Create().ComputeHash( rawAnswer );
-		}
-
-		private static byte[] ParseKey( string key )
-		{
-			int spaces = key.Count( x => x == ' ' );
-			string digits = new string( key.Where( char.IsDigit ).ToArray() );
-
-			int value = ( int )( long.Parse( digits ) / spaces );
-
-			byte[] result = BitConverter.GetBytes( value );
-			if ( BitConverter.IsLittleEndian )
-				Array.Reverse( result );
-			return result;
-		}
-
 		private static byte[] ProcessHybi13Handshake( WSHttpRequest request, string subProtocol )
 		{
 			StringBuilder builder = new StringBuilder();
@@ -199,7 +140,7 @@ namespace Core.Net
 			builder.AppendLine( "Connection: Upgrade" );
 			string responseKey =
 				Convert.ToBase64String(
-					SHA1.Create().ComputeHash( Encoding.UTF8.GetBytes( request["Sec-WebSocket-Key"] + WebSocketResponseGuid ) ) );
+					SHA1.Create().ComputeHash( Encoding.UTF8.GetBytes( request["Sec-WebSocket-Key"] + ProtoConfig.WSRespGuid ) ) );
 			builder.AppendLine( $"Sec-WebSocket-Accept: {responseKey}" );
 			if ( !string.IsNullOrEmpty( subProtocol ) )
 				builder.AppendLine( $"Sec-WebSocket-Protocol: {subProtocol}" );
@@ -212,22 +153,20 @@ namespace Core.Net
 		/// 处理接收的数据
 		/// 参考 http://www.cnblogs.com/smark/archive/2012/11/26/2789812.html
 		/// </summary>
-		private static byte[] AnalyzeClientData( byte[] data, int offset, int size )
+		private static byte[] ProcessClientData( byte[] data, int offset, int size )
 		{
 			// 如果有数据则至少包括3位
-			if ( size < 2 ) return null;
+			if ( size < 2 )
+				return null;
 			// 判断是否为结束针
 			byte value = data[offset];
 			int IsEof = value >> 7;
-			Logger.Log( "eof:" + IsEof );
 			FrameType op = ( FrameType )( value & 0xf );
-			Logger.Log( "op:" + op );
 			offset++;
 
 			value = data[offset];
 			// 是否包含掩码
 			bool hasMask = value >> 7 > 0;
-			Logger.Log( "hasMask:" + hasMask );
 			// 获取数据长度
 			ulong packageLength = ( ulong )value & 0x7F;
 			offset++;

@@ -12,11 +12,9 @@ namespace Core.Misc
 {
 	/// <summary>
 	/// 日志输出类
-	/// 此类不保证线程安全
 	/// </summary>
 	public static class Logger
 	{
-		private static readonly StringBuilder SB = new StringBuilder();
 		private static ILog _log;
 
 		public static void Init( string config, string domain )
@@ -82,16 +80,16 @@ namespace Core.Misc
 			if ( startFrame > endFrame )
 				return string.Empty;
 
-			SB.Clear();
+			StringBuilder sb = new StringBuilder();
 			for ( int i = startFrame; i < endFrame; i++ )
 			{
 				StackFrame sf = st.GetFrame( i );
 				MethodBase method = sf.GetMethod();
-				SB.Append( $"{method.DeclaringType.FullName}::{method.Name}:{sf.GetFileLineNumber()}" );
+				sb.Append( $"{method.DeclaringType.FullName}::{method.Name}:{sf.GetFileLineNumber()}" );
 				if ( i != endFrame )
-					SB.AppendLine("\t");
+					sb.AppendLine("\t");
 			}
-			return SB.ToString();
+			return sb.ToString();
 		}
 	}
 }

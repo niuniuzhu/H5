@@ -20,7 +20,7 @@ namespace LoginServer.Net
 			//8,BS通知客户端GS地址
 			//9,客户端连接GS
 			//10,GS把登陆信息转发到CS
-			this.msgCenter.Register( ( int )Protos.MsgID.GctoLsAskLogin, this.OnGctoLsAskLogin );
+			this._msgCenter.Register( ( int )Protos.MsgID.GctoLsAskLogin, this.OnGctoLsAskLogin );
 		}
 
 		private ErrorCode OnGctoLsAskLogin( byte[] data, int offset, int size, int msgid )

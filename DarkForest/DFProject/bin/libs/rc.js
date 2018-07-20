@@ -3,16 +3,300 @@ var RC;
 (function (RC) {
     class Test {
         constructor() {
-            let m1 = RC.Numerics.Mat4.FromTRS(new RC.Numerics.Vec3(1, -2, 3), RC.Numerics.Quat.Euler(new RC.Numerics.Vec3(90, 0, 0)), new RC.Numerics.Vec3(2, 3, 4));
-            console.log(m1);
-            let m4 = RC.Numerics.Mat3.FromOuterProduct(new RC.Numerics.Vec3(1, -2, 3), new RC.Numerics.Vec3(93, 44, 32));
-            let m5 = RC.Numerics.Mat3.FromCross(new RC.Numerics.Vec3(2.5, 3, 4));
-            let m6 = RC.Numerics.Mat3.Mul2(m4, m5);
-            m6.RotateAround(33, new RC.Numerics.Vec3(2, 3, 4));
-            console.log(m6);
+            this._i = 0;
+            let v = RC.Numerics.Vec2.right;
+            console.log(v.Rotate(RC.Numerics.MathUtils.DegToRad(90)));
+            let graph = RC.Algorithm.Graph.Graph2D.CreateFullDigraph(3, 3, this.F.bind(this));
+            let path = RC.Algorithm.Graph.GraphSearcher.MazeSearch(graph, 0, -1, RC.Numerics.MathUtils.Random);
+            console.log(path);
+        }
+        F(index) {
+            return this._i++;
         }
     }
     RC.Test = Test;
+})(RC || (RC = {}));
+var RC;
+(function (RC) {
+    var Algorithm;
+    (function (Algorithm) {
+        var Graph;
+        (function (Graph) {
+            class GraphBase {
+                constructor(size) {
+                    this._idToNodes = new RC.Collections.Dictionary();
+                    let ns = [];
+                    for (let i = 0; i < size; i++)
+                        ns[i] = new Graph.GraphNode(i);
+                    this.nodes = ns;
+                }
+                get size() { return this._nodes.length; }
+                set nodes(value) {
+                    this._nodes = value;
+                    this._idToNodes.clear();
+                    for (let node of this._nodes) {
+                        this._idToNodes.setValue(node.index, node);
+                    }
+                }
+                GetNodeAt(index) {
+                    return this._idToNodes.getValue(index);
+                }
+                Foreach(loopFunc) {
+                    for (let node of this._nodes)
+                        loopFunc(node);
+                }
+            }
+            Graph.GraphBase = GraphBase;
+        })(Graph = Algorithm.Graph || (Algorithm.Graph = {}));
+    })(Algorithm = RC.Algorithm || (RC.Algorithm = {}));
+})(RC || (RC = {}));
+var RC;
+(function (RC) {
+    var Algorithm;
+    (function (Algorithm) {
+        var Graph;
+        (function (Graph) {
+            class Graph2D extends Graph.GraphBase {
+                constructor(row, col) {
+                    super(row * col);
+                    this._row = row;
+                    this._col = col;
+                }
+                get row() { return this._row; }
+                get col() { return this._col; }
+                GetNode(row, col) {
+                    return this.GetNodeAt(row * this.col + col);
+                }
+                static CreateFullDigraph(row, col, rndFunc) {
+                    let graph = new Graph2D(row, col);
+                    let r = graph.row;
+                    let c = graph.col;
+                    for (let i = 0; i < r; i++) {
+                        for (let j = 0; j < c; j++) {
+                            let cur = i * c + j;
+                            let node = graph.GetNodeAt(cur);
+                            if (j < c - 1)
+                                node.AddEdge(cur, cur + 1, rndFunc == null ? 0 : rndFunc(cur + 1));
+                            if (j > 0)
+                                node.AddEdge(cur, cur - 1, rndFunc == null ? 0 : rndFunc(cur - 1));
+                            if (i < r - 1)
+                                node.AddEdge(cur, cur + c, rndFunc == null ? 0 : rndFunc(cur + c));
+                            if (i > 0)
+                                node.AddEdge(cur, cur - c, rndFunc == null ? 0 : rndFunc(cur - c));
+                            if (j < c - 1 && i < r - 1)
+                                node.AddEdge(cur, cur + c + 1, rndFunc == null ? 0 : rndFunc(cur + 1));
+                            if (j > 0 && i < r - 1)
+                                node.AddEdge(cur, cur + c - 1, rndFunc == null ? 0 : rndFunc(cur + 1));
+                            if (j < c - 1 && i > 0)
+                                node.AddEdge(cur, cur - c + 1, rndFunc == null ? 0 : rndFunc(cur + 1));
+                            if (j > 0 && i > 0)
+                                node.AddEdge(cur, cur - c - 1, rndFunc == null ? 0 : rndFunc(cur + 1));
+                        }
+                    }
+                    return graph;
+                }
+                static CreateHVDigraph(row, col, rndFunc) {
+                    let graph = new Graph2D(row, col);
+                    let r = graph.row;
+                    let c = graph.col;
+                    for (let i = 0; i < r; i++) {
+                        for (let j = 0; j < c; j++) {
+                            let cur = i * c + j;
+                            let node = graph.GetNodeAt(cur);
+                            if (j < c - 1)
+                                node.AddEdge(cur, cur + 1, rndFunc == null ? 0 : rndFunc(cur + 1));
+                            if (j > 0)
+                                node.AddEdge(cur, cur - 1, rndFunc == null ? 0 : rndFunc(cur - 1));
+                            if (i < r - 1)
+                                node.AddEdge(cur, cur + c, rndFunc == null ? 0 : rndFunc(cur + c));
+                            if (i > 0)
+                                node.AddEdge(cur, cur - c, rndFunc == null ? 0 : rndFunc(cur - c));
+                        }
+                    }
+                    return graph;
+                }
+                CoordToIndex(x, y) {
+                    return y * this.col + x;
+                }
+                IndexToCoord(index) {
+                    let coord = [];
+                    coord[0] = index % this.col;
+                    coord[1] = RC.Numerics.MathUtils.Floor(index / this.col);
+                    return coord;
+                }
+            }
+            Graph.Graph2D = Graph2D;
+        })(Graph = Algorithm.Graph || (Algorithm.Graph = {}));
+    })(Algorithm = RC.Algorithm || (RC.Algorithm = {}));
+})(RC || (RC = {}));
+var RC;
+(function (RC) {
+    var Algorithm;
+    (function (Algorithm) {
+        var Graph;
+        (function (Graph) {
+            class GraphEdge {
+                constructor(from, to, cost = 0) {
+                    this._from = from;
+                    this._to = to;
+                    this._cost = cost;
+                }
+                get from() { return this._from; }
+                get to() { return this._to; }
+                get cost() { return this._cost; }
+                static Compare(a, b) {
+                    if (a._cost > b._cost) {
+                        return -1;
+                    }
+                    if (a._cost < b._cost) {
+                        return 1;
+                    }
+                    return 0;
+                }
+            }
+            Graph.GraphEdge = GraphEdge;
+        })(Graph = Algorithm.Graph || (Algorithm.Graph = {}));
+    })(Algorithm = RC.Algorithm || (RC.Algorithm = {}));
+})(RC || (RC = {}));
+var RC;
+(function (RC) {
+    var Algorithm;
+    (function (Algorithm) {
+        var Graph;
+        (function (Graph) {
+            class GraphNode {
+                constructor(index) {
+                    this._index = index;
+                    this._edges = [];
+                }
+                get index() { return this._index; }
+                get edges() { return this._edges; }
+                AddEdge(from, to, cost) {
+                    let edge = new Graph.GraphEdge(from, to, cost);
+                    this.edges.push(edge);
+                    return edge;
+                }
+            }
+            Graph.GraphNode = GraphNode;
+        })(Graph = Algorithm.Graph || (Algorithm.Graph = {}));
+    })(Algorithm = RC.Algorithm || (RC.Algorithm = {}));
+})(RC || (RC = {}));
+var RC;
+(function (RC) {
+    var Algorithm;
+    (function (Algorithm) {
+        var Graph;
+        (function (Graph) {
+            class GraphSearcher {
+                static MazeSearch(graph, start, maxStep, rndFunc) {
+                    let visitedNodes = [];
+                    let edges = [];
+                    let curStep = 0;
+                    let node = graph.GetNodeAt(start);
+                    while (node != null) {
+                        if (maxStep >= 0 && curStep == maxStep)
+                            break;
+                        visitedNodes.push(node.index);
+                        edges.splice(0);
+                        let allVisited = true;
+                        for (let edge of node.edges) {
+                            if (visitedNodes.indexOf(edge.to) < 0) {
+                                allVisited = false;
+                                edges.push(edge);
+                            }
+                        }
+                        if (allVisited)
+                            break;
+                        let edge = edges[RC.Numerics.MathUtils.Floor(rndFunc(0, edges.length))];
+                        node = graph.GetNodeAt(edge.to);
+                        ++curStep;
+                    }
+                    return visitedNodes;
+                }
+                static PrimSearch(graph, start) {
+                    let shortestPathPredecessors = [];
+                    let visitedNodes = new Set();
+                    let nodeQueue = new RC.Collections.PriorityQueue(Graph.GraphEdge.Compare);
+                    let node = graph.GetNodeAt(start);
+                    while (node != null) {
+                        visitedNodes.add(node.index);
+                        for (let edge of node.edges)
+                            nodeQueue.enqueue(edge);
+                        let edage = nodeQueue.dequeue();
+                        while (edage != null && visitedNodes.has(edage.to)) {
+                            edage = nodeQueue.dequeue();
+                        }
+                        if (edage == null)
+                            break;
+                        shortestPathPredecessors.push(edage);
+                        node = graph.GetNodeAt(edage.to);
+                    }
+                    return shortestPathPredecessors;
+                }
+                static AStarSearch(graph, start, end) {
+                    let shortestPathPredecessors = new RC.Collections.Dictionary();
+                    let frontierPredecessors = new RC.Collections.Dictionary();
+                    let nodeQueue = new RC.Collections.PriorityQueue(NumberPair.NumberCompare);
+                    let costToNode = new RC.Collections.Dictionary();
+                    costToNode.setValue(start, 0);
+                    frontierPredecessors.setValue(start, null);
+                    nodeQueue.enqueue(new NumberPair(start, 0));
+                    while (nodeQueue.size() > 0) {
+                        let nextClosestNode = nodeQueue.dequeue();
+                        let predecessor = frontierPredecessors.getValue(nextClosestNode.first);
+                        shortestPathPredecessors.setValue(nextClosestNode.first, predecessor);
+                        if (end == nextClosestNode.first)
+                            break;
+                        let edages = graph.GetNodeAt(nextClosestNode.first).edges;
+                        for (let edge of edages) {
+                            let totalCost = costToNode.getValue(nextClosestNode.first) + edge.cost;
+                            let estimatedTotalCostViaNode = totalCost + 0;
+                            if (!frontierPredecessors.containsKey(edge.to)) {
+                                costToNode.setValue(edge.to, totalCost);
+                                frontierPredecessors.setValue(edge.to, edge);
+                                nodeQueue.enqueue(new NumberPair(edge.to, estimatedTotalCostViaNode));
+                            }
+                            else if (totalCost < costToNode.getValue(edge.to) &&
+                                !shortestPathPredecessors.containsKey(edge.to)) {
+                                costToNode.setValue(edge.to, totalCost);
+                                frontierPredecessors.setValue(edge.to, edge);
+                                nodeQueue.forEach((element) => {
+                                    if (element.first == edge.to) {
+                                        element.second = estimatedTotalCostViaNode;
+                                        return;
+                                    }
+                                });
+                                nodeQueue.update();
+                            }
+                        }
+                    }
+                    let pathList = [];
+                    for (let node = end; shortestPathPredecessors.getValue(node) != null; node = shortestPathPredecessors.getValue(node).from)
+                        pathList.push(node);
+                    pathList.push(start);
+                    pathList.reverse();
+                    return pathList;
+                }
+            }
+            Graph.GraphSearcher = GraphSearcher;
+            class NumberPair {
+                constructor(first, second) {
+                    this.first = first;
+                    this.second = second;
+                }
+                static NumberCompare(a, b) {
+                    if (a.second > b.second) {
+                        return -1;
+                    }
+                    if (a.second < b.second) {
+                        return 1;
+                    }
+                    return 0;
+                }
+            }
+            Graph.NumberPair = NumberPair;
+        })(Graph = Algorithm.Graph || (Algorithm.Graph = {}));
+    })(Algorithm = RC.Algorithm || (RC.Algorithm = {}));
 })(RC || (RC = {}));
 var RC;
 (function (RC) {
@@ -693,6 +977,10 @@ var RC;
             }
             forEach(callback) {
                 Collections.Arrays.forEach(this.data, callback);
+            }
+            update() {
+                if (this.data.length > 0)
+                    this.siftDown(0);
             }
         }
         Collections.Heap = Heap;
@@ -1564,6 +1852,9 @@ var RC;
             }
             forEach(callback) {
                 this.heap.forEach(callback);
+            }
+            update() {
+                this.heap.update();
             }
         }
         Collections.PriorityQueue = PriorityQueue;
@@ -3446,6 +3737,18 @@ var RC;
     var Numerics;
     (function (Numerics) {
         class MathUtils {
+            static Random(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+            static RandomFloor(min, max) {
+                return this.Floor(this.Random(min, max));
+            }
+            static RandomRound(min, max) {
+                return this.Round(this.Random(min, max));
+            }
+            static RandomCeil(min, max) {
+                return this.Ceil(this.Random(min, max));
+            }
             static Sin(f) {
                 return Math.sin(f);
             }
@@ -4105,6 +4408,141 @@ var RC;
 (function (RC) {
     var Numerics;
     (function (Numerics) {
+        class Rect {
+            constructor(x = 0, y = 0, width = 0, height = 0) {
+                this._xMin = x;
+                this._yMin = y;
+                this._width = width;
+                this._height = height;
+            }
+            static get zero() {
+                return new Rect();
+            }
+            get x() { return this._xMin; }
+            set x(value) { this._xMin = value; }
+            get y() { return this._yMin; }
+            set y(value) { this._yMin = value; }
+            get position() { return new Numerics.Vec2(this._xMin, this._yMin); }
+            set position(value) {
+                this._xMin = value.x;
+                this._yMin = value.y;
+            }
+            get center() { return new Numerics.Vec2(this.x + this._width / 2, this.y + this._height / 2); }
+            set center(value) {
+                this._xMin = value.x - this._width / 2;
+                this._yMin = value.y - this._height / 2;
+            }
+            get min() { return new Numerics.Vec2(this.xMin, this.yMin); }
+            set min(value) {
+                this.xMin = value.x;
+                this.yMin = value.y;
+            }
+            get max() { return new Numerics.Vec2(this.xMax, this.yMax); }
+            set max(value) {
+                this.xMax = value.x;
+                this.yMax = value.y;
+            }
+            get width() { return this._width; }
+            set width(value) { this._width = value; }
+            get height() { return this._height; }
+            set height(value) { this.height = value; }
+            get size() { return new Numerics.Vec2(this._width, this._height); }
+            set size(value) {
+                this._width = value.x;
+                this._height = value.y;
+            }
+            get xMin() { return this._xMin; }
+            set xMin(value) {
+                let xMax = this.xMax;
+                this._xMin = value;
+                this._width = xMax - this._xMin;
+            }
+            get yMin() { return this._yMin; }
+            set yMin(value) {
+                let yMax = this.yMax;
+                this._yMin = value;
+                this._height = yMax - this._yMin;
+            }
+            get xMax() { return this._width + this._xMin; }
+            set xMax(value) {
+                this._width = value - this._xMin;
+            }
+            get yMax() { return this._height + this._yMin; }
+            set yMax(value) {
+                this._height = value - this._yMin;
+            }
+            CopyFrom(source) {
+                this._xMin = source._xMin;
+                this._yMin = source._yMin;
+                this._width = source._width;
+                this._height = source._height;
+            }
+            Clone() {
+                let rect = new Rect();
+                rect._xMin = this._xMin;
+                rect._yMin = this._yMin;
+                rect._width = this._width;
+                rect._height = this._height;
+                return rect;
+            }
+            static MinMaxRect(xmin, ymin, xmax, ymax) {
+                return new Rect(xmin, ymin, xmax - xmin, ymax - ymin);
+            }
+            Set(x, y, width, height) {
+                this._xMin = x;
+                this._yMin = y;
+                this._width = width;
+                this._height = height;
+            }
+            Contains(point, allowInverse = false) {
+                let result;
+                if (!allowInverse) {
+                    result = point.x >= this.xMin && point.x < this.xMax && point.y >= this.yMin && point.y < this.yMax;
+                }
+                else {
+                    let flag = false;
+                    if ((this.width < 0 && point.x <= this.xMin && point.x > this.xMax) || (this.width >= 0 && point.x >= this.xMin && point.x < this.xMax)) {
+                        flag = true;
+                    }
+                    result = (flag && ((this.height < 0 && point.y <= this.yMin && point.y > this.yMax) || (this.height >= 0 && point.y >= this.yMin && point.y < this.yMax)));
+                }
+                return result;
+            }
+            static OrderMinMax(rect) {
+                if (rect.xMin > rect.xMax) {
+                    let xMin = rect.xMin;
+                    rect.xMin = rect.xMax;
+                    rect.xMax = xMin;
+                }
+                if (rect.yMin > rect.yMax) {
+                    let yMin = rect.yMin;
+                    rect.yMin = rect.yMax;
+                    rect.yMax = yMin;
+                }
+                return rect;
+            }
+            Overlaps(other, allowInverse = false) {
+                let rect = this.Clone();
+                if (allowInverse) {
+                    rect = Rect.OrderMinMax(rect);
+                    other = Rect.OrderMinMax(other);
+                }
+                return other.xMax > rect.xMin && other.xMin < rect.xMax && other.yMax > rect.yMin && other.yMin < rect.yMax;
+            }
+            static NormalizedToPoint(rectangle, normalizedRectCoordinates) {
+                return new Numerics.Vec2(Numerics.MathUtils.Lerp(rectangle.x, rectangle.xMax, normalizedRectCoordinates.x), Numerics.MathUtils.Lerp(rectangle.y, rectangle.yMax, normalizedRectCoordinates.y));
+            }
+            static PointToNormalized(rectangle, point) {
+                return new Numerics.Vec2(Numerics.MathUtils.InverseLerp(rectangle.x, rectangle.xMax, point.x), Numerics.MathUtils.InverseLerp(rectangle.y, rectangle.yMax, point.y));
+            }
+        }
+        Numerics.Rect = Rect;
+    })(Numerics = RC.Numerics || (RC.Numerics = {}));
+})(RC || (RC = {}));
+var RC;
+(function (RC) {
+    var Numerics;
+    (function (Numerics) {
         class Vec2 {
             constructor(x = 0, y = 0) {
                 this.x = x;
@@ -4269,6 +4707,11 @@ var RC;
                 val = val > 1 ? 1 : val;
                 val = val < -1 ? -1 : val;
                 return Numerics.MathUtils.Acos(val);
+            }
+            Rotate(angle) {
+                let x = this.x * Numerics.MathUtils.Cos(angle) - this.y * Numerics.MathUtils.Sin(angle);
+                let y = this.x * Numerics.MathUtils.Sin(angle) + this.y * Numerics.MathUtils.Cos(angle);
+                return new RC.Numerics.Vec2(x, y);
             }
             EqualsTo(v) {
                 return Vec2.Equals(this, v);
@@ -5487,16 +5930,52 @@ var RC;
             static GetBoolArray(map, key) {
                 return this.GetArray(map, key);
             }
+            static GetVec2Array(map, key) {
+                let arrs = this.GetArray(map, key);
+                if (arrs == null)
+                    return null;
+                let result = [];
+                for (let arr of arrs) {
+                    result.push(new RC.Numerics.Vec2(arr[0], arr[1]));
+                }
+                return result;
+            }
+            static GetVec3Array(map, key) {
+                let arrs = this.GetArray(map, key);
+                if (arrs == null)
+                    return null;
+                let result = [];
+                for (let arr of arrs) {
+                    result.push(new RC.Numerics.Vec3(arr[0], arr[1], arr[2]));
+                }
+                return result;
+            }
+            static GetVec4Array(map, key) {
+                let arrs = this.GetArray(map, key);
+                if (arrs == null)
+                    return null;
+                let result = [];
+                for (let arr of arrs) {
+                    result.push(new RC.Numerics.Vec4(arr[0], arr[1], arr[2], arr[3]));
+                }
+                return result;
+            }
             static GetVec2(map, key) {
                 let arr = this.GetArray(map, key);
+                if (arr == null)
+                    return null;
                 return new RC.Numerics.Vec2(arr[0], arr[1]);
             }
             static GetVec3(map, key) {
                 let arr = this.GetArray(map, key);
+                if (arr == null)
+                    return null;
                 return new RC.Numerics.Vec3(arr[0], arr[1], arr[2]);
             }
             static GetVec4(map, key) {
                 let arr = this.GetArray(map, key);
+                if (arr == null)
+                    return null;
                 return new RC.Numerics.Vec4(arr[0], arr[1], arr[2], arr[3]);
             }
         }

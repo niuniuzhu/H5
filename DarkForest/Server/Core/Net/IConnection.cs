@@ -25,11 +25,6 @@ namespace Core.Net
 		int recvBufSize { set; }
 
 		/// <summary>
-		/// 活动时间戳
-		/// </summary>
-		long activeTime { get; set; }
-
-		/// <summary>
 		/// 销毁此实例
 		/// </summary>
 		void Dispose();
@@ -43,18 +38,13 @@ namespace Core.Net
 		/// 开始接收数据
 		/// </summary>
 		/// <returns></returns>
-		bool StartReceive();
+		void StartReceive();
 
 		/// <summary>
 		/// 异步发送数据
 		/// </summary>
 		/// <returns></returns>
 		bool Send( byte[] data, int offset, int size );
-
-		/// <summary>
-		/// 发送ping超时消息
-		/// </summary>
-		void NotifyClose();
 
 		/// <summary>
 		/// 内部更新

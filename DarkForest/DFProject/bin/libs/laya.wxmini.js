@@ -24,6 +24,10 @@ var MiniAdpter=(function(){
 		MiniAdpter.isZiYu=isSon;
 		MiniAdpter.isPosMsgYu=isPosMsg;
 		MiniAdpter.EnvConfig={};
+		try{
+			/*__JS__ */laya.webgl.resource.WebGLCanvas.premulAlpha=true;
+			}catch(e){
+		}
 		if(!MiniAdpter.isZiYu){
 			MiniFileMgr.setNativeFileDir("/layaairGame");
 			MiniFileMgr.existDir(MiniFileMgr.fileNativeDir,Handler.create(MiniAdpter,MiniAdpter.onMkdirCallBack));
@@ -641,10 +645,10 @@ var MiniInput=(function(){
 			Browser.onIPhone=true;
 			Browser.onIOS=true;
 			Browser.onIPad=true;
-			Browser.onAndriod=false;
+			Browser.onAndroid=false;
 		}
 		if(system.indexOf("Android")!=-1 || system.indexOf("Adr")!=-1){
-			Browser.onAndriod=true;
+			Browser.onAndroid=true;
 			Browser.onIPhone=false;
 			Browser.onIOS=false;
 			Browser.onIPad=false;
@@ -966,10 +970,11 @@ var MiniLoader=(function(_super){
 				if (MiniFileMgr.isLocalNativeFile(url)){
 					MiniFileMgr.read(url,encoding,new Handler(MiniLoader,MiniLoader.onReadNativeCallBack,[encoding,url,type,cache,group,ignoreCache,thisLoader]));
 					return;
-				}
+				};
+				var tempUrl=url;
 				url=URL.formatURL(url);
 				if (url.indexOf("http://")!=-1 || url.indexOf("https://")!=-1){
-					MiniAdpter.EnvConfig.load.call(thisLoader,url,type,cache,group,ignoreCache);
+					MiniAdpter.EnvConfig.load.call(thisLoader,tempUrl,type,cache,group,ignoreCache);
 					}else {
 					MiniFileMgr.readFile(url,encoding,new Handler(MiniLoader,MiniLoader.onReadNativeCallBack,[encoding,url,type,cache,group,ignoreCache,thisLoader]),url);
 				}

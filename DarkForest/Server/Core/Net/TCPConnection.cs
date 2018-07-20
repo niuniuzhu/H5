@@ -2,7 +2,6 @@
 using Core.Structure;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 
 namespace Core.Net
 {
@@ -56,7 +55,16 @@ namespace Core.Net
 				if ( this.socket == null )
 					return;
 				if ( this.connected )
-					this.socket.Shutdown( SocketShutdown.Both );
+				{
+					try
+					{
+						this.socket.Shutdown( SocketShutdown.Both );
+					}
+					catch ( SocketException e )
+					{
+						Logger.Log( e.ToString() );
+					}
+				}
 				this.socket.Close();
 				this.socket = null;
 				this.localEndPoint = null;
@@ -70,10 +78,10 @@ namespace Core.Net
 			}
 		}
 
-		public bool StartReceive()
+		public void StartReceive()
 		{
 			if ( this.socket == null )
-				return false;
+				return;
 			bool asyncResult;
 			try
 			{
@@ -82,11 +90,10 @@ namespace Core.Net
 			catch ( SocketException e )
 			{
 				this.OnError( $"socket receive error, code:{e.SocketErrorCode} " );
-				return false;
+				return;
 			}
 			if ( !asyncResult )//有一个挂起的IO操作需要马上处理
 				this.ProcessReceive( this._recvEventArgs );
-			return true;
 		}
 
 		public virtual bool Send( byte[] data, int offset, int size )
@@ -95,10 +102,6 @@ namespace Core.Net
 			buffer.Write( data, offset, size );
 			this._sendQueue.Push( buffer );
 			return true;
-		}
-
-		public virtual void NotifyClose()
-		{
 		}
 
 		private void OnIOComplete( object sender, SocketAsyncEventArgs asyncEventArgs )
@@ -146,12 +149,11 @@ namespace Core.Net
 			if ( size == 0 )
 			{
 				//远端可能已经关闭连接
-				this.OnError( $"remote:{this.remoteEndPoint} connection shutdown, code:{SocketError.NoData}" );
+				this.OnError( $"remote:{this.remoteEndPoint} shutdown, code:{SocketError.NoData}" );
 				return;
 			}
 			//写入缓冲区
 			this._cache.Write( recvEventArgs.Buffer, recvEventArgs.Offset, recvEventArgs.BytesTransferred );
-			Logger.Debug( $"write:{recvEventArgs.BytesTransferred},t:{Thread.CurrentThread.ManagedThreadId}" );
 			//处理数据
 			if ( !this._reading )
 			{

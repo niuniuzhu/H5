@@ -1,17 +1,29 @@
-﻿namespace Core.Net
+﻿using System.Text.RegularExpressions;
+
+namespace Core.Net
 {
 	/*kcp协议
 	 uint connKey
 	 uint connID
-	 byte 是否通过kcp传输
-	 如果是通过kcp传输(不通过kcp传输的一定是内部协议)
-		byte 是否内部协议
+	 byte 消息头控制码
+	 	bit1 是否kcp传输
+		bit2-8保留
+	 byte 消息体控制码
+	 	bit1 是否内部协议
+		bit2-8保留
 	 ...	内容
 	 */
-	public static class KCPConfig
+	public static class ProtoConfig
 	{
+		public const string WSRespGuid = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
+		private const string PATTERN = @"^(?<method>[^\s]+)\s(?<path>[^\s]+)\sHTTP\/1\.1\r\n" +
+									   @"((?<field_name>[^:\r\n]+):(?([^\r\n])\s)*(?<field_value>[^\r\n]*)\r\n)+" +
+									   @"\r\n" +
+									   @"(?<body>.+)?";
+		public static readonly Regex REQUEST_REGEX = new Regex( PATTERN, RegexOptions.IgnoreCase | RegexOptions.Compiled );
+
 		public const ushort HANDSHAKE_SIGNATURE = 0;
-		public const ushort ACK_HANDSHAKE_SIGNATURE = 1;
+		public const ushort HANDSHAKE_ACK_SIGNATURE = 1;
 		public const ushort PING_SIGNATURE = 2;
 		public const ushort PONG_SIGNATURE = 3;
 		public const ushort TIMEOUT_SIGNATURE = 4;

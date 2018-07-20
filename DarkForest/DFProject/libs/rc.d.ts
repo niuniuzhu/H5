@@ -1,6 +1,68 @@
 declare namespace RC {
     class Test {
         constructor();
+        private _i;
+        private F(index);
+    }
+}
+declare namespace RC.Algorithm.Graph {
+    class GraphBase {
+        private _nodes;
+        private readonly _idToNodes;
+        readonly size: number;
+        nodes: GraphNode[];
+        constructor(size: number);
+        GetNodeAt(index: number): GraphNode;
+        Foreach(loopFunc: (node: GraphNode) => void): void;
+    }
+}
+declare namespace RC.Algorithm.Graph {
+    class Graph2D extends GraphBase {
+        private _row;
+        private _col;
+        readonly row: number;
+        readonly col: number;
+        constructor(row: number, col: number);
+        GetNode(row: number, col: number): GraphNode | undefined;
+        static CreateFullDigraph(row: number, col: number, rndFunc?: (index: number) => number): Graph2D;
+        static CreateHVDigraph(row: number, col: number, rndFunc?: (index: number) => number): Graph2D;
+        CoordToIndex(x: number, y: number): number;
+        IndexToCoord(index: number): number[];
+    }
+}
+declare namespace RC.Algorithm.Graph {
+    class GraphEdge {
+        private _from;
+        private _to;
+        private _cost;
+        readonly from: number;
+        readonly to: number;
+        readonly cost: number;
+        constructor(from: number, to: number, cost?: number);
+        static Compare(a: GraphEdge, b: GraphEdge): number;
+    }
+}
+declare namespace RC.Algorithm.Graph {
+    class GraphNode {
+        private _index;
+        private readonly _edges;
+        readonly index: number;
+        readonly edges: GraphEdge[];
+        constructor(index: number);
+        AddEdge(from: number, to: number, cost: number): GraphEdge;
+    }
+}
+declare namespace RC.Algorithm.Graph {
+    class GraphSearcher {
+        static MazeSearch(graph: GraphBase, start: number, maxStep: number, rndFunc: (min: number, max: number) => number): number[];
+        static PrimSearch(graph: GraphBase, start: number): GraphEdge[];
+        static AStarSearch(graph: GraphBase, start: number, end: number): number[];
+    }
+    class NumberPair {
+        first: number;
+        second: number;
+        constructor(first: number, second: number);
+        static NumberCompare(a: NumberPair, b: NumberPair): number;
     }
 }
 declare namespace RC.Collections {
@@ -127,6 +189,7 @@ declare namespace RC.Collections {
         isEmpty(): boolean;
         clear(): void;
         forEach(callback: ILoopFunction<T>): void;
+        update(): void;
     }
 }
 declare namespace RC.Collections {
@@ -270,6 +333,7 @@ declare namespace RC.Collections {
         size(): number;
         clear(): void;
         forEach(callback: ILoopFunction<T>): void;
+        update(): void;
     }
 }
 declare namespace RC.Collections {
@@ -573,6 +637,10 @@ declare namespace RC.Numerics {
         static readonly RAD_TO_DEG: number;
         static readonly INFINITY: number;
         static readonly NEGATIVE_INFINITY: number;
+        static Random(min: number, max: number): number;
+        static RandomFloor(min: number, max: number): number;
+        static RandomRound(min: number, max: number): number;
+        static RandomCeil(min: number, max: number): number;
         static Sin(f: number): number;
         static Cos(f: number): number;
         static Tan(f: number): number;
@@ -665,6 +733,38 @@ declare namespace RC.Numerics {
     }
 }
 declare namespace RC.Numerics {
+    class Rect {
+        private _xMin;
+        private _yMin;
+        private _width;
+        private _height;
+        static readonly zero: Rect;
+        x: number;
+        y: number;
+        position: Vec2;
+        center: Vec2;
+        min: Vec2;
+        max: Vec2;
+        width: number;
+        height: number;
+        size: Vec2;
+        xMin: number;
+        yMin: number;
+        xMax: number;
+        yMax: number;
+        constructor(x?: number, y?: number, width?: number, height?: number);
+        CopyFrom(source: Rect): void;
+        Clone(): Rect;
+        static MinMaxRect(xmin: number, ymin: number, xmax: number, ymax: number): Rect;
+        Set(x: number, y: number, width: number, height: number): void;
+        Contains(point: Vec2, allowInverse?: boolean): boolean;
+        private static OrderMinMax(rect);
+        Overlaps(other: Rect, allowInverse?: boolean): boolean;
+        static NormalizedToPoint(rectangle: Rect, normalizedRectCoordinates: Vec2): Vec2;
+        static PointToNormalized(rectangle: Rect, point: Vec2): Vec2;
+    }
+}
+declare namespace RC.Numerics {
     class Vec2 {
         x: number;
         y: number;
@@ -705,6 +805,7 @@ declare namespace RC.Numerics {
         AproxEqualsBox(vector: Vec2, tolerance: number): boolean;
         ApproxEquals(vector: Vec2, tolerance: number): boolean;
         Angle(vector: Vec2): number;
+        Rotate(angle: number): Vec2;
         EqualsTo(v: Vec2): boolean;
         ToString(): string;
         static Add(v1: Vec2, v2: Vec2): Vec2;
@@ -978,15 +1079,24 @@ declare namespace RC.Utils {
         static GetBoolArray(map: {
             [k: string]: any;
         }, key: string): boolean[];
+        static GetVec2Array(map: {
+            [k: string]: any;
+        }, key: string): RC.Numerics.Vec2[] | null;
+        static GetVec3Array(map: {
+            [k: string]: any;
+        }, key: string): RC.Numerics.Vec3[] | null;
+        static GetVec4Array(map: {
+            [k: string]: any;
+        }, key: string): RC.Numerics.Vec4[] | null;
         static GetVec2(map: {
             [k: string]: any;
-        }, key: string): RC.Numerics.Vec2;
+        }, key: string): RC.Numerics.Vec2 | null;
         static GetVec3(map: {
             [k: string]: any;
-        }, key: string): RC.Numerics.Vec3;
+        }, key: string): RC.Numerics.Vec3 | null;
         static GetVec4(map: {
             [k: string]: any;
-        }, key: string): RC.Numerics.Vec4;
+        }, key: string): RC.Numerics.Vec4 | null;
     }
 }
 declare namespace RC.Utils {

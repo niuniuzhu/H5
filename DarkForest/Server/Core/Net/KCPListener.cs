@@ -163,8 +163,11 @@ namespace Core.Net
 				int offset = 0;
 				int size = receiveData.buffer.length;
 
+				uint connID = ByteUtils.Decode32u( data, offset );
+				ushort signature = ByteUtils.Decode16u( data, offset + sizeof( uint ) + sizeof( byte ) + sizeof( byte ) );
+
 				//验证握手消息
-				if ( VerifyHandshake( data, ref offset, ref size ) )
+				if ( connID == ProtoConfig.INVALID_SESSION_ID && signature == ProtoConfig.HANDSHAKE_SIGNATURE )
 				{
 					//调用委托创建session
 					INetSession session = this.sessionCreater( ProtoType.KCP );
@@ -192,48 +195,15 @@ namespace Core.Net
 				}
 				else
 				{
-					uint connID = ByteUtils.Decode32u( data, offset );
 					INetSession session = NetworkMgr.instance.GetSession( connID );
 					if ( session == null )
-						Logger.Error( "get session failed" );
+						Logger.Error( $"get session failed with id:{connID}" );
 					else
-					{
-						KCPConnection kcpConnection = ( KCPConnection )session.connection;
-						kcpConnection.SendDataToMainThread( data, offset, size );
-					}
+						( ( KCPConnection )session.connection ).SendDataToMainThread( data, offset, size );
 				}
 				receiveData.Clear();
 				this._receiveDataPool.Push( receiveData );
 			}
-		}
-
-		private static bool VerifyHandshake( byte[] data, ref int offset, ref int size )
-		{
-			int mOffset = offset;
-
-			uint connID = 0;
-			mOffset += ByteUtils.Decode32u( data, mOffset, ref connID );
-			if ( connID != ProtoConfig.INVALID_SESSION_ID )
-				return false;
-
-			byte isKCPTrans = 0;
-			mOffset += ByteUtils.Decode8u( data, mOffset, ref isKCPTrans );
-			if ( isKCPTrans > 0 )
-				return false;
-
-			ushort signature = 0;
-			mOffset += ByteUtils.Decode16u( data, mOffset, ref signature );
-			if ( signature != ProtoConfig.HANDSHAKE_SIGNATURE )
-				return false;
-
-			offset = mOffset;
-			size -= mOffset;
-
-			return true;
-		}
-
-		public void Update( long dt )
-		{
 		}
 	}
 }

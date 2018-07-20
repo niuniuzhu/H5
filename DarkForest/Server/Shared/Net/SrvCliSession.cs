@@ -1,5 +1,4 @@
-﻿using Core.Misc;
-using Core.Net;
+﻿using Core.Net;
 
 namespace Shared.Net
 {
@@ -10,21 +9,6 @@ namespace Shared.Net
 	{
 		protected SrvCliSession( uint id, ProtoType type ) : base( id, type )
 		{
-		}
-
-		public override void Update( UpdateContext updateContext )
-		{
-			base.Update( updateContext );
-			this.CheckActive();
-		}
-
-		private void CheckActive()
-		{
-			if ( TimeUtils.utcTime > this.connection.activeTime + ProtoConfig.PING_TIMEOUT )
-			{
-				//this.connection.NotifyClose();
-				this.Close( "ping timeout" );//直接断开好了
-			}
 		}
 	}
 }
