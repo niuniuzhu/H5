@@ -87,30 +87,18 @@ namespace Core.Net
 						break;
 
 					string subProtocol = Negotiate( this.subProtocols, request.subProtocols );
-
-					byte[] responseData = null;
-					string version = GetVersion( request );
-					switch ( version )
-					{
-						case "76":
-							responseData = ProcessDraft76Handshake( request, subProtocol );
-							break;
-						case "7":
-						case "8":
-						case "13":
-							responseData = ProcessHybi13Handshake( request, subProtocol );
-							break;
-						case "policy-file-request":
-							responseData = ProcessFlashSocketPolicyRequest();
-							break;
-					}
-
+					byte[] responseData = ProcessHybi13Handshake( request, subProtocol );
 					if ( responseData == null )
 						break;
 
 					this._handshakeComplete = true;
 					this.Send( responseData, 0, responseData.Length );
 					cache.Clear();
+
+					NetEvent netEvent = NetworkMgr.instance.PopEvent();
+					netEvent.type = NetEvent.Type.Establish;
+					netEvent.session = this.session;
+					NetworkMgr.instance.PushEvent( netEvent );
 					break;
 				}
 
@@ -171,48 +159,10 @@ namespace Core.Net
 			return request;
 		}
 
-		private static string GetVersion( WSHttpRequest request )
-		{
-			if ( request.headers.TryGetValue( "Sec-WebSocket-Version", out string version ) )
-				return version;
-			if ( request.headers.TryGetValue( "Sec-WebSocket-Draft", out version ) )
-				return version;
-			if ( request.headers.ContainsKey( "Sec-WebSocket-Key1" ) )
-				return "76";
-			if ( request.body != null && request.body.ToLower().Contains( "policy-file-request" ) )
-				return "policy-file-request";
-			return "75";
-		}
-
-		private static string Negotiate( HashSet<string> server, string[] client )
+		private static string Negotiate( IEnumerable<string> server, IEnumerable<string> client )
 		{
 			string[] matches = server.Intersect( client ).ToArray();
 			return matches.Length == 0 ? string.Empty : matches[0];
-		}
-
-		private static byte[] ProcessDraft76Handshake( WSHttpRequest request, string subProtocol )
-		{
-			StringBuilder builder = new StringBuilder();
-			builder.Append( "HTTP/1.1 101 WebSocket Protocol Handshake\r\n" );
-			builder.Append( "Upgrade: WebSocket\r\n" );
-			builder.Append( "Connection: Upgrade\r\n" );
-			builder.AppendFormat( "Sec-WebSocket-Origin: {0}\r\n", request["Origin"] );
-			builder.AppendFormat( "Sec-WebSocket-Location: {0}://{1}{2}\r\n", request.scheme, request["Host"], request.path );
-			if ( !string.IsNullOrEmpty( subProtocol ) )
-				builder.AppendFormat( "Sec-WebSocket-Protocol: {0}\r\n", subProtocol );
-			builder.Append( "\r\n" );
-
-			string key1 = request["Sec-WebSocket-Key1"];
-			string key2 = request["Sec-WebSocket-Key2"];
-			ArraySegment<byte> challenge = new ArraySegment<byte>( request.bytes, request.size - 8 + request.offset, 8 );
-
-			byte[] answerBytes = CalculateAnswerBytes( key1, key2, challenge );
-			byte[] byteResponse = Encoding.ASCII.GetBytes( builder.ToString() );
-
-			int byteResponseLength = byteResponse.Length;
-			Array.Resize( ref byteResponse, byteResponseLength + answerBytes.Length );
-			Array.Copy( answerBytes, 0, byteResponse, byteResponseLength, answerBytes.Length );
-			return byteResponse;
 		}
 
 		private static byte[] CalculateAnswerBytes( string key1, string key2, ArraySegment<byte> challenge )
@@ -244,29 +194,18 @@ namespace Core.Net
 		private static byte[] ProcessHybi13Handshake( WSHttpRequest request, string subProtocol )
 		{
 			StringBuilder builder = new StringBuilder();
-			builder.Append( "HTTP/1.1 101 Switching Protocols\r\n" );
-			builder.Append( "Connection: Upgrade\r\n" );
-			builder.Append( "Upgrade: websocket\r\n" );
+			builder.AppendLine( "HTTP/1.1 101 Switching Protocols" );
+			builder.AppendLine( "Upgrade: websocket" );
+			builder.AppendLine( "Connection: Upgrade" );
+			string responseKey =
+				Convert.ToBase64String(
+					SHA1.Create().ComputeHash( Encoding.UTF8.GetBytes( request["Sec-WebSocket-Key"] + WebSocketResponseGuid ) ) );
+			builder.AppendLine( $"Sec-WebSocket-Accept: {responseKey}" );
 			if ( !string.IsNullOrEmpty( subProtocol ) )
-				builder.AppendFormat( "Sec-WebSocket-Protocol: {0}\r\n", subProtocol );
-
-			string responseKey = CreateResponseKey( request["Sec-WebSocket-Key"] );
-			builder.AppendFormat( "Sec-WebSocket-Accept: {0}\r\n", responseKey );
-			builder.Append( "\r\n" );
-
-			return Encoding.ASCII.GetBytes( builder.ToString() );
-		}
-
-		private static string CreateResponseKey( string requestKey )
-		{
-			string combined = requestKey + WebSocketResponseGuid;
-			byte[] bytes = SHA1.Create().ComputeHash( Encoding.ASCII.GetBytes( combined ) );
-			return Convert.ToBase64String( bytes );
-		}
-
-		private static byte[] ProcessFlashSocketPolicyRequest()
-		{
-			return Encoding.UTF8.GetBytes( PolicyResponse );
+				builder.AppendLine( $"Sec-WebSocket-Protocol: {subProtocol}" );
+			builder.AppendLine();
+			Logger.Info( builder.ToString() );
+			return Encoding.UTF8.GetBytes( builder.ToString() );
 		}
 
 		/// <summary>

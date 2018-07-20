@@ -40,14 +40,14 @@ namespace Core.Net
 
 		public virtual void Dispose() => this.connection.Dispose();
 
-		public void Close()
+		public void Close( string reason )
 		{
 			if ( this._closed )
 				return;
 			this.connection.Close();
 			if ( this.isPassive )
 				NetworkMgr.instance.RemoveSession( this );
-			this.OnClose();
+			this.OnClose( reason );
 			this._closed = true;
 			this._activeTime = 0;
 			this.isPassive = false;
@@ -55,7 +55,7 @@ namespace Core.Net
 
 		public void _OnConnError( string error )
 		{
-			Logger.Log( error );
+			Logger.Error( error );
 			this.OnConnError( error );
 		}
 
@@ -74,9 +74,8 @@ namespace Core.Net
 
 		public void _OnError( string error )
 		{
-			Logger.Log( error );
 			this.OnError( error );
-			this.Close();
+			this.Close( error );
 		}
 
 		public virtual void Update( UpdateContext updateContext ) => this.connection.Update( updateContext );
@@ -100,7 +99,7 @@ namespace Core.Net
 		/// <summary>
 		/// 关闭连接后调用
 		/// </summary>
-		protected virtual void OnClose()
+		protected virtual void OnClose( string reason )
 		{
 		}
 

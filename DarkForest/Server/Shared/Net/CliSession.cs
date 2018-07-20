@@ -61,9 +61,9 @@ namespace Shared.Net
 			return this.connector.Connect( ip, port );
 		}
 
-		protected override void OnClose()
+		protected override void OnClose( string reason )
 		{
-			base.OnClose();
+			base.OnClose( reason );
 			this._reconFlag = true;
 			this._reconnTime = TimeUtils.utcTime + Consts.RECONN_INTERVAL;
 		}

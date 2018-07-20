@@ -21,7 +21,7 @@ namespace Shared.Net
 				this.owner.AddSession( this );
 		}
 
-		protected override void OnClose()
+		protected override void OnClose( string reason )
 		{
 			if ( this.isPassive )
 				this.owner.RemoveSession( this );

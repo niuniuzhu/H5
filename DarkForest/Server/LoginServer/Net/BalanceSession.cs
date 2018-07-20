@@ -13,13 +13,13 @@ namespace LoginServer.Net
 		protected override void OnEstablish()
 		{
 			base.OnEstablish();
-			Logger.Info( $"BS({this.logicID}) Connected." );
+			Logger.Info( $"BS({this.logicID}) connected." );
 		}
 
-		protected override void OnClose()
+		protected override void OnClose( string reason )
 		{
-			base.OnClose();
-			Logger.Info( $"BS({this.logicID}) DisConnected." );
+			base.OnClose( reason );
+			Logger.Info( $"BS({this.logicID}) disconnected with msg:{reason}." );
 		}
 	}
 }

@@ -266,7 +266,5 @@ namespace Shared.Net
 					session.connection.Send( buffer, offset, size );
 			return true;
 		}
-
-		public void DisconnectOne( uint sessionId ) => NetworkMgr.instance.GetSession( sessionId )?.Close();
 	}
 }

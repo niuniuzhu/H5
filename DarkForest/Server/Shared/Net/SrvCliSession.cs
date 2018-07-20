@@ -22,8 +22,8 @@ namespace Shared.Net
 		{
 			if ( TimeUtils.utcTime > this.connection.activeTime + KCPConfig.PING_TIMEOUT )
 			{
-				this.connection.NotifyClose();
-				//this.Close();
+				//this.connection.NotifyClose();
+				this.Close( "ping timeout" );//直接断开好了
 			}
 		}
 	}

@@ -1,5 +1,7 @@
 ﻿using Core.Misc;
+using Core.Net;
 using Shared;
+using Shared.Net;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -55,6 +57,8 @@ namespace LoginServer
 		{
 			_disposed = true;
 			LS.instance.Dispose();
+			NetworkMgr.instance.Dispose();
+			NetSessionPool.instance.Dispose();
 		}
 
 		private static void MainLoop()

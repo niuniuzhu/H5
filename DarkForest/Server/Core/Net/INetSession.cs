@@ -25,7 +25,7 @@
 		/// <summary>
 		/// 关闭Session
 		/// </summary>
-		void Close();
+		void Close( string reason );
 
 		/// <summary>
 		/// 连接失败后调用

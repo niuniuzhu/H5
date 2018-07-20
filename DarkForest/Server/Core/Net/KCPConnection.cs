@@ -298,10 +298,10 @@ namespace Core.Net
 		public void StartPing()
 		{
 			this._pingScheduler = new SimpleScheduler();
-			this._pingScheduler.Start( KCPConfig.PING_INTERVAL, this.SendPing, true );
+			this._pingScheduler.Start( KCPConfig.PING_INTERVAL, ( count ) => this.SendPing(), true );
 		}
 
-		private void SendPing( int count )
+		private void SendPing()
 		{
 			StreamBuffer buffer = this._bufferPool.Pop();
 			buffer.data = DataTransType.KCP;

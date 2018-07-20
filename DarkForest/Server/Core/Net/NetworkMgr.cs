@@ -28,7 +28,7 @@ namespace Core.Net
 			foreach ( KeyValuePair<uint, IListener> kv in this._idToListeners )
 				kv.Value.Dispose();
 			foreach ( KeyValuePair<uint, INetSession> kv in this._idToSession )
-				kv.Value.Close();
+				kv.Value.Close( "System shutdown" );
 			this._idToListeners.Clear();
 			this._idToSession.Clear();
 			this._eventQueue.Clear();

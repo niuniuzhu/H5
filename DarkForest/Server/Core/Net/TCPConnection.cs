@@ -146,7 +146,7 @@ namespace Core.Net
 			if ( size == 0 )
 			{
 				//远端可能已经关闭连接
-				this.OnError( $"Receive zero bytes, remote endpoint: {this.remoteEndPoint}, code:{SocketError.NoData}" );
+				this.OnError( $"remote:{this.remoteEndPoint} connection shutdown, code:{SocketError.NoData}" );
 				return;
 			}
 			//写入缓冲区

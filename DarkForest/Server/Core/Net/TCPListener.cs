@@ -26,11 +26,11 @@ namespace Core.Net
 
 		public void Dispose() => this.Stop();
 
-		public void SetOpt( SocketOptionName optionName, object opt ) => this._socket.SetSocketOption( SocketOptionLevel.Socket, optionName, opt );
+		public void SetOpt( SocketOptionLevel optionLevel, SocketOptionName optionName, object opt ) => this._socket.SetSocketOption( optionLevel, optionName, opt );
 
-		public bool Start( int port, bool reuseAddr = true )
+		public bool Start( int port )
 		{
-			Logger.Log( $"Start Listen {port}, reuseAddr {reuseAddr}" );
+			Logger.Log( $"Start Listen {port}" );
 			try
 			{
 				this._socket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
@@ -40,8 +40,7 @@ namespace Core.Net
 				Logger.Error( $"create socket error, code:{e.SocketErrorCode}" );
 				return false;
 			}
-			this._socket.SetSocketOption( SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, reuseAddr );
-			this._socket.NoDelay = true;
+			this.noDelay = true;
 			try
 			{
 				this._socket.Bind( new IPEndPoint( IPAddress.Any, port ) );
@@ -140,11 +139,6 @@ namespace Core.Net
 				if ( session == null )
 					break;
 
-				NetEvent netEvent = NetworkMgr.instance.PopEvent();
-				netEvent.type = NetEvent.Type.Establish;
-				netEvent.session = session;
-				NetworkMgr.instance.PushEvent( netEvent );
-
 				//开始接收数据
 				session.connection.StartReceive();
 
@@ -171,6 +165,12 @@ namespace Core.Net
 			tcpConnection.packetEncodeHandler = this.packetEncodeHandler;
 			tcpConnection.packetDecodeHandler = this.packetDecodeHandler;
 			tcpConnection.recvBufSize = this.recvBufSize;
+
+			NetEvent netEvent = NetworkMgr.instance.PopEvent();
+			netEvent.type = NetEvent.Type.Establish;
+			netEvent.session = session;
+			NetworkMgr.instance.PushEvent( netEvent );
+
 			return session;
 		}
 	}

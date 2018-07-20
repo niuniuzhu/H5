@@ -1,11 +1,11 @@
 {
   "runtimeTarget": {
-    "name": ".NETCoreApp,Version=v2.0",
+    "name": ".NETCoreApp,Version=v2.1",
     "signature": "5cb5a1f289b54b4d1b43f98982f28ec307401df1"
   },
   "compilationOptions": {},
   "targets": {
-    ".NETCoreApp,Version=v2.0": {
+    ".NETCoreApp,Version=v2.1": {
       "Protocol/1.0.0": {
         "dependencies": {
           "Google.Protobuf": "3.5.1"
@@ -16,7 +16,10 @@
       },
       "Google.Protobuf/3.5.1": {
         "runtime": {
-          "lib/netstandard1.0/Google.Protobuf.dll": {}
+          "lib/netstandard1.0/Google.Protobuf.dll": {
+            "assemblyVersion": "3.5.1.0",
+            "fileVersion": "3.5.1.0"
+          }
         }
       }
     }

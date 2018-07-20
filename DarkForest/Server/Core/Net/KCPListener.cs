@@ -40,12 +40,12 @@ namespace Core.Net
 
 		public void SetOpt( SocketOptionName optionName, object opt ) => this._socket.SetSocketOption( SocketOptionLevel.Socket, optionName, opt );
 
-		public bool Start( int port, bool reuseAddr = true )
+		public bool Start( int port )
 		{
 			this._running = true;
 			Task.Run( action: this.ConsumeAsync );
 
-			Logger.Log( $"Start Listen {port}, reuseAddr {reuseAddr}" );
+			Logger.Log( $"Start Listen {port}" );
 			try
 			{
 				this._socket = new Socket( AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp );
@@ -55,7 +55,6 @@ namespace Core.Net
 				Logger.Error( $"create socket error, code:{e.SocketErrorCode}" );
 				return false;
 			}
-			this._socket.SetSocketOption( SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, reuseAddr );
 			try
 			{
 				this._socket.Bind( new IPEndPoint( IPAddress.Any, port ) );
@@ -129,7 +128,7 @@ namespace Core.Net
 				if ( recvEventArgs.SocketError != SocketError.Success )
 				{
 					//网络错误
-					Logger.Error( $"process receive fail,code{recvEventArgs.SocketError}" );
+					Logger.Error( $"receive error, remote endpoint:{recvEventArgs.RemoteEndPoint}, code:{recvEventArgs.SocketError}" );
 					break;
 				}
 

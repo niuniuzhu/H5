@@ -27,9 +27,8 @@
 		/// 开始监听
 		/// </summary>
 		/// <param name="port">本地端口</param>
-		/// <param name="reuseAddr">是否端口重用</param>
 		/// <returns>操作是否成功</returns>
-		bool Start( int port, bool reuseAddr = true );
+		bool Start( int port );
 
 		/// <summary>
 		/// 停止监听
