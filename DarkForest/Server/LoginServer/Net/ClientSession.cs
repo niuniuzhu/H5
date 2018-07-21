@@ -1,4 +1,5 @@
-﻿using Core.Net;
+﻿using Core.Misc;
+using Core.Net;
 using Google.Protobuf;
 using Shared;
 using Shared.Net;
@@ -28,6 +29,8 @@ namespace LoginServer.Net
 			//收到第1消息：请求登录，放入登录队列
 			Protos.GCToLS.AskLogin login = new Protos.GCToLS.AskLogin();
 			login.MergeFrom( data, offset, size );
+
+			Logger.Log( "ask login" );
 
 			return ErrorCode.Success;
 		}

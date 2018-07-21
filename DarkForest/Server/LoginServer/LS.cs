@@ -2,7 +2,6 @@
 using Core.Net;
 using LoginServer.Net;
 using Shared;
-using Shared.Net;
 
 namespace LoginServer
 {
@@ -34,10 +33,16 @@ namespace LoginServer
 
 		public ErrorCode Start()
 		{
-			WSListener bsListener = ( WSListener )this.netSessionMgr.CreateListener( 0, 65535, ProtoType.WebSocket, this.netSessionMgr.CreateBlanceSession );
+			WSListener bsListener =
+				( WSListener )this.netSessionMgr.CreateListener( 0, 65535, ProtoType.WebSocket,
+																  this.netSessionMgr.CreateBlanceSession );
 			bsListener.Start( "ws", this.lsConfig.bs_listen_port );
-			//this.netSessionMgr.CreateListener( 1, this.lsConfig.client_listen_port, 65535, Consts.PROTOCOL_TYPE,
-			//								   this.netSessionMgr.CreateClientSession );
+
+			WSListener cliListener =
+				( WSListener )this.netSessionMgr.CreateListener( 1, 65535, ProtoType.WebSocket,
+																  this.netSessionMgr.CreateClientSession );
+			cliListener.Start( "ws", this.lsConfig.client_listen_port );
+
 			//bool connector = this.netSessionMgr.CreateConnector<TestSession>( SessionType.ClientB2L, "127.0.0.1",
 			//													 this.lsConfig.bs_listen_port, ProtoType.KCP, 65535, 0 );
 			return ErrorCode.Success;
