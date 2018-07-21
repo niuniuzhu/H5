@@ -60,6 +60,6 @@
 		/// <summary>
 		/// 心跳
 		/// </summary>
-		void OnHeartBeat( long dt );
+		void HeartBeat( long dt );
 	}
 }

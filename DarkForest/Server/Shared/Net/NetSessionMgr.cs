@@ -9,7 +9,7 @@ namespace Shared.Net
 	public abstract class NetSessionMgr
 	{
 		private readonly Dictionary<SessionType, List<INetSession>> _typeToSession = new Dictionary<SessionType, List<INetSession>>();
-		private readonly List<SNetSession> _sessionsToRemove = new List<SNetSession>();
+		private readonly List<NetSessionBase> _sessionsToRemove = new List<NetSessionBase>();
 		private readonly ThreadSafeObejctPool<StreamBuffer> _bufferPool = new ThreadSafeObejctPool<StreamBuffer>();
 
 		/// <summary>
@@ -74,7 +74,7 @@ namespace Shared.Net
 			return session.Connect( ip, port );
 		}
 
-		public void AddSession( SNetSession session )
+		public void AddSession( NetSessionBase session )
 		{
 			if ( !this._typeToSession.TryGetValue( session.type, out List<INetSession> sessions ) )
 			{
@@ -84,7 +84,7 @@ namespace Shared.Net
 			sessions.Add( session );
 		}
 
-		public void RemoveSession( SNetSession session )
+		public void RemoveSession( NetSessionBase session )
 		{
 			if ( !this._sessionsToRemove.Contains( session ) )
 				this._sessionsToRemove.Add( session );
@@ -95,7 +95,7 @@ namespace Shared.Net
 			int count = this._sessionsToRemove.Count;
 			for ( int i = 0; i < count; i++ )
 			{
-				SNetSession session = this._sessionsToRemove[i];
+				NetSessionBase session = this._sessionsToRemove[i];
 				List<INetSession> sessions = this._typeToSession[session.type];
 				sessions.Remove( session );
 				NetSessionPool.instance.Push( session );

@@ -3,7 +3,7 @@ using Core.Net;
 
 namespace Shared.Net
 {
-	public abstract class SNetSession : NetSession
+	public class NetSessionBase : NetSession
 	{
 		public NetSessionMgr owner { get; set; }
 		public int logicID { get; set; }
@@ -11,9 +11,17 @@ namespace Shared.Net
 
 		protected readonly MsgCenter _msgCenter;
 
-		protected SNetSession( uint id, ProtoType type ) : base( id, type )
+		protected NetSessionBase( uint id, ProtoType type ) : base( id, type )
 		{
 			this._msgCenter = new MsgCenter();
+		}
+
+		protected override void OnHeartBeat( long dt )
+		{
+		}
+
+		protected override void OnConnError( string error )
+		{
 		}
 
 		protected override void OnEstablish()
@@ -53,6 +61,14 @@ namespace Shared.Net
 			}
 			else
 				Logger.Warn( $"invalid msg:{msgID}." );
+		}
+
+		protected override void OnSend()
+		{
+		}
+
+		protected override void OnError( string error )
+		{
 		}
 	}
 }

@@ -11,11 +11,6 @@ namespace Core.Net
 
 		protected bool _closed;
 
-		/// <summary>
-		/// 建立连接的时间戳
-		/// </summary>
-		private long _activeTime;
-
 		protected NetSession( uint id, ProtoType type )
 		{
 			this.id = id;
@@ -49,7 +44,6 @@ namespace Core.Net
 				NetworkMgr.instance.RemoveSession( this );
 			this.OnClose( reason );
 			this._closed = true;
-			this._activeTime = 0;
 			this.isPassive = false;
 		}
 
@@ -64,7 +58,6 @@ namespace Core.Net
 			if ( this.isPassive )
 				NetworkMgr.instance.AddSession( this );
 			this._closed = false;
-			this._activeTime = TimeUtils.utcTime;
 			this.OnEstablish();
 		}
 
@@ -80,48 +73,46 @@ namespace Core.Net
 
 		public virtual void Update( UpdateContext updateContext ) => this.connection.Update( updateContext );
 
-		public virtual void OnHeartBeat( long dt ) => this.connection.OnHeartBeat( dt );
+		public void HeartBeat( long dt )
+		{
+			this.connection.OnHeartBeat( dt );
+			this.OnHeartBeat( dt );
+		}
+
+		/// <summary>
+		/// 系统心跳调用
+		/// </summary>
+		/// <param name="dt"></param>
+		protected abstract void OnHeartBeat( long dt );
 
 		/// <summary>
 		/// 连接失败后调用
 		/// </summary>
-		protected virtual void OnConnError( string error )
-		{
-		}
+		protected abstract void OnConnError( string error );
 
 		/// <summary>
 		/// 建立连接后调用
 		/// </summary>
-		protected virtual void OnEstablish()
-		{
-		}
+		protected abstract void OnEstablish();
 
 		/// <summary>
 		/// 关闭连接后调用
 		/// </summary>
-		protected virtual void OnClose( string reason )
-		{
-		}
+		protected abstract void OnClose( string reason );
 
 		/// <summary>
 		/// 收到数据后调用
 		/// </summary>
-		protected virtual void OnRecv( byte[] data, int offset, int size )
-		{
-		}
+		protected abstract void OnRecv( byte[] data, int offset, int size );
 
 		/// <summary>
 		/// 发送数据后调用
 		/// </summary>
-		protected virtual void OnSend()
-		{
-		}
+		protected abstract void OnSend();
 
 		/// <summary>
 		/// 通信过程出现错误后调用
 		/// </summary>
-		protected virtual void OnError( string error )
-		{
-		}
+		protected abstract void OnError( string error );
 	}
 }

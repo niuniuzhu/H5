@@ -7,7 +7,7 @@ namespace Shared.Net
 	/// <summary>
 	/// 作为客户端的session,通常是主动发起连接后创建的session
 	/// </summary>
-	public abstract class CliSession : SNetSession
+	public abstract class CliSession : NetSessionBase
 	{
 		public IConnector connector { get; }
 		public bool reconnectTag { get; set; }
@@ -82,9 +82,8 @@ namespace Shared.Net
 			this._reconFlag = false;
 		}
 
-		public override void OnHeartBeat( long dt )
+		protected override void OnHeartBeat( long dt )
 		{
-			base.OnHeartBeat( dt );
 			this.Reconnect();
 		}
 	}

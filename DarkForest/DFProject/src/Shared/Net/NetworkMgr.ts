@@ -34,8 +34,8 @@ namespace Shared.Net {
 		private OnReceived(ev: MessageEvent): void {
 		}
 
-		public Send(): void {
-			this._socket.send("test");
+		public Send( data:ArrayBuffer ): void {
+			this._socket.send(data);
 		}
 	}
 }

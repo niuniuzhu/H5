@@ -104,7 +104,7 @@ namespace Core.Net
 		private void OnHeartBeat( long dt )
 		{
 			foreach ( KeyValuePair<uint, INetSession> kv in this._idToSession )
-				kv.Value.OnHeartBeat( dt );
+				kv.Value.HeartBeat( dt );
 		}
 
 		private void FireEvents()
