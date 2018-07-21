@@ -662,19 +662,18 @@ var Shared;
                 this._socket.onmessage = this.OnReceived.bind(this);
             }
             OnConnected(ev) {
-                console.log("正确建立连接");
+                console.log("socket connected");
             }
             OnClosed(ev) {
-                console.log("关闭事件");
+                console.log("socket closed");
             }
             OnError(ev) {
-                console.log("连接出错");
+                console.log("socket error");
             }
             OnReceived(ev) {
-                console.log("接收到数据触发函数:" + ev.data);
             }
-            Send() {
-                this._socket.send("test");
+            Send(data) {
+                this._socket.send(data);
             }
         }
         Net.NetworkMgr = NetworkMgr;
@@ -1997,17 +1996,7 @@ var View;
             OnResize(e) {
             }
             OnLoginBtnClick() {
-                let param = new Shared.Model.BattleParams();
-                param.framesPerKeyFrame = 4;
-                param.frameRate = 20;
-                param.uid = "user";
-                param.id = "m0";
-                param.rndSeed = RC.Utils.Timer.utcTime;
-                let building = new Shared.Model.Building();
-                building.uid = "user";
-                building.id = "b0";
-                param.buildings = [building];
-                View.UI.UIManager.EnterBattle(param);
+                Shared.Net.NetworkMgr.instance.Connect("localhost", 49996);
             }
             OnRegBtnClick() {
                 this._root.getChild("name").asTextField.text = this._root.getChild("reg_name").asTextField.text;

@@ -10,7 +10,7 @@ namespace Core.Net
 {
 	public class WSConnection : TCPConnection
 	{
-		private enum FrameType : byte
+		private enum OPCode : byte
 		{
 			Continuation,
 			Text,
@@ -41,7 +41,7 @@ namespace Core.Net
 		public override bool Send( byte[] data, int offset, int size )
 		{
 			StreamBuffer buffer = this._bufferPool.Pop();
-			Hybi13FrameData( buffer, data, offset, size, FrameType.Binary );
+			Hybi13FrameData( buffer, data, offset, size, OPCode.Binary );
 			this._sendQueue.Push( buffer );
 			return true;
 		}
@@ -75,9 +75,13 @@ namespace Core.Net
 				}
 				else
 				{
-					byte[] data = ProcessClientData( cache.GetBuffer(), 0, cache.length );
+					byte[] data = ProcessClientData( cache.GetBuffer(), 0, cache.length, out OPCode op );
 					if ( data == null )
+					{
+						if ( op == OPCode.Close )
+							this.OnError( $"client close with opcode:{OPCode.Close}" );
 						break;
+					}
 
 					//截断当前缓冲区
 					cache.Strip();
@@ -153,16 +157,17 @@ namespace Core.Net
 		/// 处理接收的数据
 		/// 参考 http://www.cnblogs.com/smark/archive/2012/11/26/2789812.html
 		/// </summary>
-		private static byte[] ProcessClientData( byte[] data, int offset, int size )
+		private static byte[] ProcessClientData( byte[] data, int offset, int size, out OPCode op )
 		{
+			op = OPCode.Binary;
 			// 如果有数据则至少包括3位
 			if ( size < 2 )
 				return null;
 			// 判断是否为结束针
 			byte value = data[offset];
-			int IsEof = value >> 7;
-			FrameType op = ( FrameType )( value & 0xf );
-			if ( op == FrameType.Close || op == FrameType.Ping || op == FrameType.Pong )
+			int isEof = value >> 7;
+			op = ( OPCode )( value & 0xf );
+			if ( op == OPCode.Close || op == OPCode.Ping || op == OPCode.Pong )
 				return null;
 			offset++;
 
@@ -209,10 +214,10 @@ namespace Core.Net
 			return outData;
 		}
 
-		private static void Hybi13FrameData( StreamBuffer inBuffer, byte[] data, int offset, int size, FrameType frameType )
+		private static void Hybi13FrameData( StreamBuffer inBuffer, byte[] data, int offset, int size, OPCode opCode )
 		{
 			const int fin = 1, rsv1 = 0, rsv2 = 0, rsv3 = 0;
-			int op = ( int )frameType;
+			int op = ( int )opCode;
 			int ctrlFrame = op | rsv3 << 4 | rsv2 << 5 | rsv1 << 6 | fin << 7;
 			inBuffer.Write( ( byte )ctrlFrame );
 

@@ -33,20 +33,22 @@ namespace View.UI {
 		}
 
 		private OnLoginBtnClick(): void {
-			let param = new Shared.Model.BattleParams();
-			param.framesPerKeyFrame = 4;
-			param.frameRate = 20;
-			param.uid = "user";
-			param.id = "m0";
-			param.rndSeed = RC.Utils.Timer.utcTime;
+			Shared.Net.NetworkMgr.instance.Connect("localhost", 49996);
 
-			let building = new Shared.Model.Building();
-			building.uid = "user";
-			building.id = "b0";
+			// let param = new Shared.Model.BattleParams();
+			// param.framesPerKeyFrame = 4;
+			// param.frameRate = 20;
+			// param.uid = "user";
+			// param.id = "m0";
+			// param.rndSeed = RC.Utils.Timer.utcTime;
 
-			param.buildings = [building];
+			// let building = new Shared.Model.Building();
+			// building.uid = "user";
+			// building.id = "b0";
 
-			View.UI.UIManager.EnterBattle(param);
+			// param.buildings = [building];
+
+			// View.UI.UIManager.EnterBattle(param);
 		}
 
 		private OnRegBtnClick(): void {

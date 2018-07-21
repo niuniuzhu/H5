@@ -24,6 +24,18 @@ namespace LoginServer.Net
 			this._msgCenter.Register( ( int )Protos.MsgID.GctoLsAskLogin, this.OnGctoLsAskLogin );
 		}
 
+		protected override void OnEstablish()
+		{
+			base.OnEstablish();
+			Logger.Info( $"client({this.id}) connected" );
+		}
+
+		protected override void OnClose( string reason )
+		{
+			base.OnClose( reason );
+			Logger.Info( $"client({this.id}) disconnected with msg:{reason}" );
+		}
+
 		private ErrorCode OnGctoLsAskLogin( byte[] data, int offset, int size, int msgid )
 		{
 			//收到第1消息：请求登录，放入登录队列

@@ -1,1 +1,0 @@
-var gameMain = new SocketTest.Main();

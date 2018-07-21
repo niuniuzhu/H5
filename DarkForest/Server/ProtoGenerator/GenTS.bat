@@ -1,0 +1,1 @@
+pbts -o ..\..\Client\libs\protos.ts ..\..\Client\bin\js\protos.js
