@@ -1,23 +1,22 @@
-/// <reference path="./Graphic" />
+import { Graphic } from "./Graphic";
+import { GraphicManager } from "./GraphicManager";
 
-namespace View {
-	export class MapGraphic extends Graphic {
-		private _sprite: fairygui.GComponent;
+export class MapGraphic extends Graphic {
+	private _sprite: fairygui.GComponent;
 
-		public get sprite(): fairygui.GComponent { return this._sprite; }
+	public get sprite(): fairygui.GComponent { return this._sprite; }
 
-		constructor(manager: GraphicManager) {
-			super(manager);
-		}
+	constructor(manager: GraphicManager) {
+		super(manager);
+	}
 
-		public Dispose(): void {
-			this._sprite.dispose();
-			super.Dispose();
-		}
+	public Dispose(): void {
+		this._sprite.dispose();
+		super.Dispose();
+	}
 
-		public Load(id: string): void {
-			this._sprite = fairygui.UIPackage.createObject("global", id).asCom;
-			this._root.addChild(this._sprite);
-		}
+	public Load(id: string): void {
+		this._sprite = fairygui.UIPackage.createObject("global", id).asCom;
+		this._root.addChild(this._sprite);
 	}
 }

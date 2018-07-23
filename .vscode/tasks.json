@@ -6,7 +6,7 @@
 		{
 			"label": "Build RC",
 			"type": "shell",
-			"command": "tsc-plus",
+			"command": "tsc",
 			"args": [
 				"-p",
 				"./RCFramework"
@@ -36,10 +36,10 @@
 		{
 			"label": "Build DF",
 			"type": "shell",
-			"command": "tsc-plus",
+			"command": "tsc",
 			"args": [
 				"-p",
-				"./DarkForest/DFProject"
+				"./DarkForest/Client"
 			],
 			"group": "build",
 			"presentation": {

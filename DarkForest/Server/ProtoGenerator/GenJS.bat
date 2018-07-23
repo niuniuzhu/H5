@@ -1,1 +1,1 @@
-pbjs -t static-module -w amd -o ..\..\Client\bin\js\protos.js .\ProtoFile\*.proto --es6
+pbjs -t static-module -w amd --dependency libs/protobufjs -o ..\..\Client\bin\libs\protos.js .\ProtoFile\*.proto

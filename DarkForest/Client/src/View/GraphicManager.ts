@@ -1,66 +1,67 @@
-namespace View {
-	export class GraphicManager {
-		private readonly _owner: Home;
-		private readonly _graphics: Graphic[];
+import { Graphic } from "./Graphic";
+import { Home } from "./Home";
 
-		private _root: fairygui.GComponent;
+export class GraphicManager {
+	private readonly _owner: Home;
+	private readonly _graphics: Graphic[];
 
-		public get battle(): Home { return this._owner; }
+	private _root: fairygui.GComponent;
 
-		public get root(): fairygui.GComponent { return this._root; }
-		public set root(value: fairygui.GComponent) { this._root = value; }
+	public get battle(): Home { return this._owner; }
 
-		constructor(owner: Home) {
-			this._owner = owner;
-			this._root = new fairygui.GComponent();
-			this._graphics = [];
-		}
+	public get root(): fairygui.GComponent { return this._root; }
+	public set root(value: fairygui.GComponent) { this._root = value; }
 
-		public Dispose(): void {
-			let count = this._graphics.length;
-			for (let i = 0; i < count; ++i) {
-				let graphic = this._graphics[i];
-				graphic.Dispose();
-			}
-			this._graphics.splice(0);
-		}
+	constructor(owner: Home) {
+		this._owner = owner;
+		this._root = new fairygui.GComponent();
+		this._graphics = [];
+	}
 
-		public OnCameraTRSChanged(): void {
-			let count = this._graphics.length;
-			for (let i = 0; i < count; ++i) {
-				let graphic = this._graphics[i];
-				graphic.UpdatePosition();
-			}
-		}
-
-		public CreateGraphic<T extends Graphic>(c: new (manager: GraphicManager) => T): T {
-			let graphic: Graphic = new c(this);
-			this._graphics.push(graphic);
-			this.SortGraphics(graphic);
-			return <T>graphic;
-		}
-
-		public DestroyGraphic(graphic: Graphic): boolean {
-			let pos = this._graphics.indexOf(graphic);
-			if (pos < 0)
-				return false;
+	public Dispose(): void {
+		let count = this._graphics.length;
+		for (let i = 0; i < count; ++i) {
+			let graphic = this._graphics[i];
 			graphic.Dispose();
-			this._graphics.splice(pos, 1);
-			return true;
 		}
+		this._graphics.splice(0);
+	}
 
-		public SortGraphics(graphic: Graphic): void {
-			this._graphics.sort(this.SortFunc.bind(this));
-			let count = this._graphics.length;
-			for (let i = 1; i < count; ++i) {
-				this._graphics[i].sortingOrder = i + 100;
-			}
+	public OnCameraTRSChanged(): void {
+		let count = this._graphics.length;
+		for (let i = 0; i < count; ++i) {
+			let graphic = this._graphics[i];
+			graphic.UpdatePosition();
 		}
+	}
 
-		private SortFunc(a: Graphic, b: Graphic): number {
-			if (a == this._graphics[0] || b == this._graphics[0])
-				return 0;
-			return a.position.z > b.position.z ? -1 : 1;
+	public CreateGraphic<T extends Graphic>(c: new (manager: GraphicManager) => T): T {
+		let graphic: Graphic = new c(this);
+		this._graphics.push(graphic);
+		this.SortGraphics(graphic);
+		return <T>graphic;
+	}
+
+	public DestroyGraphic(graphic: Graphic): boolean {
+		let pos = this._graphics.indexOf(graphic);
+		if (pos < 0)
+			return false;
+		graphic.Dispose();
+		this._graphics.splice(pos, 1);
+		return true;
+	}
+
+	public SortGraphics(graphic: Graphic): void {
+		this._graphics.sort(this.SortFunc.bind(this));
+		let count = this._graphics.length;
+		for (let i = 1; i < count; ++i) {
+			this._graphics[i].sortingOrder = i + 100;
 		}
+	}
+
+	private SortFunc(a: Graphic, b: Graphic): number {
+		if (a == this._graphics[0] || b == this._graphics[0])
+			return 0;
+		return a.position.z > b.position.z ? -1 : 1;
 	}
 }

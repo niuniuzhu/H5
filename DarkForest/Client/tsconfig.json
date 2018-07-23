@@ -2,13 +2,23 @@
 	"compilerOptions": {
 		"module": "amd",
 		"target": "es6",
+		"outDir": "./bin/js",
+		"outFile": "./bin/js/game.js",
+		"baseUrl": "./src",
+		"paths": {
+			"*": [
+				"*",
+				"libs/*"
+			]
+		},
 		"inlineSourceMap": false,
 		"inlineSources": false,
 		"sourceMap": true,
 		"removeComments": true,
-		// "alwaysStrict": true,
+		"alwaysStrict": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true
 		// "strict": true,
-		"outFile": "./bin/js/game.js",
 		// "noImplicitReturns": true
 	},
 	"exclude": [

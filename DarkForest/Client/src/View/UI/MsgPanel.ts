@@ -1,53 +1,59 @@
-namespace View.UI {
-	export class MsgPanel implements IMainPanel {
-		private _owner: UIMain;
-		private _root: fairygui.GComponent;
-		private _atk: fairygui.GTextField;
-		private _def: fairygui.GTextField;
+import { CUser } from "../CUser";
+import { IMainPanel } from "./IMainPanel";
+import { UIMain } from "./UIMain";
+import { BaseEvent } from "../../Shared/Event/BaseEvent";
+import { UIEvent } from "../../Shared/Event/UIEvent";
+import { EventCenter } from "../../Shared/Event/EventCenter";
+import { Defs } from "../../Shared/Defs";
 
-		constructor(owner: UIMain) {
-			this._owner = owner;
-			this._root = owner.root.getChild("c5").asCom;
-			this._atk = this._root.getChild("atk").asTextField;
-			this._def = this._root.getChild("def").asTextField;
+export class MsgPanel implements IMainPanel {
+	private _owner: UIMain;
+	private _root: fairygui.GComponent;
+	private _atk: fairygui.GTextField;
+	private _def: fairygui.GTextField;
 
-			let backBtn = this._root.getChild("back_btn");
-			backBtn.onClick(this, (e) => { this._owner.panelIndex = 0 });
+	constructor(owner: UIMain) {
+		this._owner = owner;
+		this._root = owner.root.getChild("c5").asCom;
+		this._atk = this._root.getChild("atk").asTextField;
+		this._def = this._root.getChild("def").asTextField;
 
-			Shared.Event.EventCenter.AddListener(Shared.Event.UIEvent.UPDATE_BUILDING, this.HandleUpdateBuilding.bind(this));
+		let backBtn = this._root.getChild("back_btn");
+		backBtn.onClick(this, (e) => { this._owner.panelIndex = 0 });
+
+		EventCenter.AddListener(UIEvent.UPDATE_BUILDING, this.HandleUpdateBuilding.bind(this));
+	}
+
+	public Dispose(): void {
+		EventCenter.RemoveListener(UIEvent.UPDATE_BUILDING, this.HandleUpdateBuilding.bind(this));
+	}
+
+	public Enter(): void {
+		let tasksDef = Defs.GetMessage();
+		let list = this._root.getChild("list").asList;
+		for (let taskDef of tasksDef) {
+			let com = list.addItemFromPool().asCom;
+			com.getChild("n6").asTextField.text = taskDef;
 		}
+	}
 
-		public Dispose(): void {
-			Shared.Event.EventCenter.RemoveListener(Shared.Event.UIEvent.UPDATE_BUILDING, this.HandleUpdateBuilding.bind(this));
-		}
+	public Exit(): void {
+		let list = this._root.getChild("list").asList;
+		list.removeChildrenToPool();
+	}
 
-		public Enter(): void {
-			let tasksDef = Shared.Defs.GetMessage();
-			let list = this._root.getChild("list").asList;
-			for ( let taskDef of tasksDef){
-				let com = list.addItemFromPool().asCom;
-				com.getChild("n6").asTextField.text = taskDef;
-			}
-		}
+	public Update(deltaTime: number): void {
+	}
 
-		public Exit(): void {
-			let list = this._root.getChild("list").asList;
-			list.removeChildrenToPool();
-		}
+	public OnResize(e: laya.events.Event): void {
+	}
 
-		public Update(deltaTime: number): void {
-		}
+	private HandleUpdateBuilding(e: BaseEvent): void {
+		this.UpdateResources();
+	}
 
-		public OnResize(e: laya.events.Event): void {
-		}
-
-		private HandleUpdateBuilding(e: Shared.Event.BaseEvent): void {
-			this.UpdateResources();
-		}
-
-		private UpdateResources(): void {
-			this._atk.text = CUser.atk.toString();
-			this._def.text = CUser.def.toString();
-		}
+	private UpdateResources(): void {
+		this._atk.text = CUser.atk.toString();
+		this._def.text = CUser.def.toString();
 	}
 }

@@ -1099,6 +1099,18 @@ declare namespace RC.Utils {
         }, key: string): RC.Numerics.Vec4 | null;
     }
 }
+declare namespace RC {
+    class Logger {
+        static Log(message: any): void;
+        static Warn(message: any): void;
+        static Error(message: any): void;
+        static Info(message: any): void;
+        static Debug(message: any): void;
+        static Trace(message: any): void;
+        static Assert(condition: boolean, message: string): void;
+        static Exception(message: string): void;
+    }
+}
 declare namespace RC.Utils {
     class Timer {
         static readonly utcTime: number;

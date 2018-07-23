@@ -1,1 +1,1 @@
-pbts -o ..\..\Client\libs\protos.ts ..\..\Client\bin\js\protos.js
+pbts --no-comments -o ..\..\Client\src\libs\protos.d.ts ..\..\Client\bin\libs\protos.js

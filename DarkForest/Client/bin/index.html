@@ -4,7 +4,8 @@
 <head>
 	<meta charset='utf-8' />
 	<title>黑暗森林</title>
-	<meta name='viewport' content='width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no'/>
+	<meta name='viewport' content='width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no'
+	/>
 	<meta name="renderer" content="webkit" />
 	<meta name='apple-mobile-web-app-capable' content='yes' />
 	<meta name='full-screen' content='true' />
@@ -14,23 +15,20 @@
 	<META HTTP-EQUIV="pragma" CONTENT="no-cache">
 	<META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
 	<META HTTP-EQUIV="expires" CONTENT="0">
-</head>
-
-<body>
 	<script type="text/javascript" src="libs/laya.core.js"></script>
 	<script type="text/javascript" src="libs/laya.wxmini.js"></script>
 	<script type="text/javascript" src="libs/laya.webgl.js"></script>
 	<script type="text/javascript" src="libs/laya.html.js"></script>
 	<!--jsfile-Custom-->
-	<script src="libs/protobuf.min.js"></script>
 	<script src="libs/rawinflate/rawinflate.min.js"></script>
 	<script src="libs/fairygui.js"></script>
 	<script src="libs/rc.js"></script>
-	<script src="js/game.js"></script>
+	<script src="libs/require.js"></script>
 	<!--jsfile-Custom-->
-	<!--jsfile-Main-->
-	<script src="entry.js"></script>
-	<!--jsfile-Main-->
+</head>
+
+<body>
+	<script src="js/entry.js"></script>
 </body>
 
 </html>

@@ -19,7 +19,7 @@
 			"name": "darkforest",
 			"type": "chrome",
 			"request": "launch",
-			"file": "${workspaceRoot}/DarkForest/DFProject/bin/index.html",
+			"file": "${workspaceRoot}/DarkForest/Client/bin/index.html",
 			"runtimeArgs": [
 				"--allow-file-access-from-files",
 				"--auto-open-devtools-for-tabs"
