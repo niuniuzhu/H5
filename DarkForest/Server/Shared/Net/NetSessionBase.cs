@@ -41,7 +41,8 @@ namespace Shared.Net
 			if (this._closed)
 				return;
 
-			if (size < sizeof(int))
+			int len = data.Length;
+			if (len - offset < sizeof(int))
 			{
 				Logger.Warn($"invalid msg.");
 				return;
@@ -56,13 +57,18 @@ namespace Shared.Net
 				msgHandler.Invoke(data, offset, size, msgID);
 			else if (this._msgCenter.TryGetHandler(msgID, out MsgCenter.TransHandler transHandler))
 			{
+				if (len - offset < sizeof(int) + sizeof(uint))
+				{
+					Logger.Warn($"invalid msg.");
+					return;
+				}
 				int transID = msgID;
 				uint gcNetID = 0;
 				//剥离第二层消息ID
 				offset += ByteUtils.Decode32i(data, offset, ref msgID);
 				//剥离客户端网络ID
 				offset += ByteUtils.Decode32u(data, offset, ref gcNetID);
-				size -= 2 * sizeof(int);
+				size -= sizeof(int) + sizeof(uint);
 				transHandler.Invoke(data, offset, size, transID, msgID, gcNetID);
 			}
 			else
