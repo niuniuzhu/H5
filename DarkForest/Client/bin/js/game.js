@@ -113,8 +113,11 @@ define("Net/NetworkMgr", ["require", "exports", "Net/ByteUtils", "Net/MsgCenter"
             else
                 RC.Logger.Warn(`"invalid msg:${msgID}.`);
         }
-        Send(data) {
-            this._socket.send(data);
+        Send(msgID, data) {
+            let newData = new Uint8Array(data.length + 4);
+            ByteUtils_1.ByteUtils.Encode32u(newData, 0, msgID);
+            newData.set(data, 4);
+            this._socket.send(newData);
         }
         Close() {
             this._socket.close();
@@ -160,9 +163,9 @@ define("View/UI/UILogin", ["require", "exports", "../../libs/protos", "Net/Netwo
             NetworkMgr_1.NetworkMgr.instance.Connect("localhost", 49996);
             NetworkMgr_1.NetworkMgr.instance.OnConnected = ((e) => {
                 let login = new protos_1.Protos.GCToLS.AskLogin();
-                login.uin = "test";
+                login.uin = "1";
                 let data = protos_1.Protos.GCToLS.AskLogin.encode(login).finish();
-                NetworkMgr_1.NetworkMgr.instance.Send(data);
+                NetworkMgr_1.NetworkMgr.instance.Send(protos_1.Protos.MsgID.GCToLS_AskLogin, data);
             }).bind(this);
             NetworkMgr_1.NetworkMgr.instance.OnError = ((e) => {
                 RC.Logger.Debug(e);
@@ -2112,21 +2115,6 @@ define("Game", ["require", "exports", "View/UI/UIManager", "Shared/Defs"], funct
         }
         OnResize(e) {
             UIManager_1.UIManager.OnResize(e);
-        }
-    }
-    exports.Main = Main;
-});
-define("Test", ["require", "exports", "./libs/protos"], function (require, exports, protos_2) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    class Main {
-        constructor() {
-            console.log("start");
-            let login = protos_2.Protos.GCToLS.AskLogin.create();
-            login.uin = "test";
-            let data = protos_2.Protos.GCToLS.AskLogin.encode(login).finish();
-            let login2 = protos_2.Protos.GCToLS.AskLogin.decode(data);
-            console.log(login2);
         }
     }
     exports.Main = Main;

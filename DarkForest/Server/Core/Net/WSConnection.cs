@@ -149,7 +149,7 @@ namespace Core.Net
 			if ( !string.IsNullOrEmpty( subProtocol ) )
 				builder.AppendLine( $"Sec-WebSocket-Protocol: {subProtocol}" );
 			builder.AppendLine();
-			Logger.Info( builder.ToString() );
+			// Logger.Info( builder.ToString() );
 			return Encoding.UTF8.GetBytes( builder.ToString() );
 		}
 

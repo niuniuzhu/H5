@@ -1,5 +1,6 @@
 import { ByteUtils } from "./ByteUtils";
 import { MsgCenter } from "./MsgCenter";
+import { Protos } from "../libs/protos";
 
 export class NetworkMgr {
 	private static _instance: NetworkMgr;
@@ -48,8 +49,11 @@ export class NetworkMgr {
 			RC.Logger.Warn(`"invalid msg:${msgID}.`);
 	}
 
-	public Send(data: Uint8Array): void {
-		this._socket.send(data);
+	public Send(msgID: Protos.MsgID, data: Uint8Array): void {
+		let newData = new Uint8Array(data.length + 4);
+		ByteUtils.Encode32u(newData, 0, <number>msgID);
+		newData.set(data, 4);
+		this._socket.send(newData);
 	}
 
 	public Close(): void {

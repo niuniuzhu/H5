@@ -1,6 +1,6 @@
 import { Protos } from "../../libs/protos";
-import { IUIModule } from "./IUIModule";
 import { NetworkMgr } from "../../Net/NetworkMgr";
+import { IUIModule } from "./IUIModule";
 
 export class UILogin implements IUIModule {
 	private _root: fairygui.GComponent;
@@ -39,9 +39,11 @@ export class UILogin implements IUIModule {
 		NetworkMgr.instance.Connect("localhost", 49996);
 		NetworkMgr.instance.OnConnected = ((e: Event) => {
 			let login = new Protos.GCToLS.AskLogin();
-			login.uin = "test";
+			// login.packet = new Protos.Packet();
+			// login.packet.pid = 1;
+			login.uin = "1";
 			let data = Protos.GCToLS.AskLogin.encode(login).finish();
-			NetworkMgr.instance.Send(data);
+			NetworkMgr.instance.Send(Protos.MsgID.GCToLS_AskLogin, data);
 		}).bind(this);
 
 		NetworkMgr.instance.OnError = ((e: Event) => {
