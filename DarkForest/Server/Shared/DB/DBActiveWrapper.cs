@@ -30,7 +30,7 @@ namespace Shared.DB
 		{
 			this._active = new DBActive( callback, beginCallback );
 			this._db = new MySqlConnection(
-				$"server={cfg.aszDBHostIP};user id={cfg.aszDBUserName};password={cfg.aszDBUserPwd};port={cfg.un32DBHostPort};database={cfg.aszDBName}" );
+				$"server={cfg.ip};user id={cfg.username};password={cfg.passwd};port={cfg.port};database={cfg.name}" );
 
 		}
 

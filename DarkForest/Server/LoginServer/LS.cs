@@ -2,6 +2,7 @@
 using Core.Net;
 using LoginServer.Net;
 using Shared;
+using Shared.Net;
 
 namespace LoginServer
 {
@@ -11,11 +12,11 @@ namespace LoginServer
 		public static LS instance => _instance ?? ( _instance = new LS() );
 
 		public LSNetSessionMgr netSessionMgr { get; }
-		public LSConfig lsConfig { get; }
+		public LSConfig config { get; }
 
 		private LS()
 		{
-			this.lsConfig = new LSConfig();
+			this.config = new LSConfig();
 			this.netSessionMgr = new LSNetSessionMgr();
 		}
 
@@ -25,7 +26,7 @@ namespace LoginServer
 
 		public ErrorCode Initialize()
 		{
-			ErrorCode errorCode = this.lsConfig.Load();
+			ErrorCode errorCode = this.config.Load();
 			if ( ErrorCode.Success == errorCode )
 				Logger.Info( "LS Initialize success" );
 			return errorCode;
@@ -36,15 +37,15 @@ namespace LoginServer
 			WSListener bsListener =
 				( WSListener )this.netSessionMgr.CreateListener( 0, 65535, ProtoType.WebSocket,
 																  this.netSessionMgr.CreateBlanceSession );
-			bsListener.Start( "ws", this.lsConfig.bs_listen_port );
+			bsListener.Start( "ws", this.config.bsListenPort );
 
 			WSListener cliListener =
 				( WSListener )this.netSessionMgr.CreateListener( 1, 65535, ProtoType.WebSocket,
 																  this.netSessionMgr.CreateClientSession );
-			cliListener.Start( "ws", this.lsConfig.client_listen_port );
+			cliListener.Start( "ws", this.config.clientListenPort );
 
-			//bool connector = this.netSessionMgr.CreateConnector<TestSession>( SessionType.ClientB2L, "127.0.0.1",
-			//													 this.lsConfig.bs_listen_port, ProtoType.KCP, 65535, 0 );
+			this.netSessionMgr.CreateConnector<TestSession>( SessionType.ServerLSOnlyCS, this.config.csIp,
+															 this.config.csPort, ProtoType.KCP, 65535, 0 );
 			return ErrorCode.Success;
 		}
 

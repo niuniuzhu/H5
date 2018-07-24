@@ -1,8 +1,6 @@
 {
-    "MainBS": {
-        "ListernPortForBS": "49997"
-    },
-    "MainGC": {
-        "ListernPortForClient": "49996"
-    }
+    "ListernPortForBS": "49997",
+    "ListernPortForClient": "49996",
+    "CSIp": "localhost",
+    "CSPort": "10001"
 }

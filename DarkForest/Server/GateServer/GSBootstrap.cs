@@ -1,45 +1,45 @@
-﻿using Core.Misc;
-using Core.Net;
-using Shared;
-using Shared.Net;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading;
+using Core.Misc;
+using Core.Net;
+using Shared;
+using Shared.Net;
 
-namespace LoginServer
+namespace GateServer
 {
-	static class LSBootstrap
+	static class GSBootstrap
 	{
 		private static bool _disposed;
 		private static InputHandler _inputHandler;
 
-		static int Main()
+		static int Main( string[] args )
 		{
-			Console.Title = "LS";
+			Console.Title = "GS";
 
 			AssemblyName[] assemblies = Assembly.GetEntryAssembly().GetReferencedAssemblies();
 			foreach ( AssemblyName assembly in assemblies )
 				Assembly.Load( assembly );
 
-			Logger.Init( File.ReadAllText( @".\Config\LSLogCfg.xml" ), "LS" );
+			Logger.Init( File.ReadAllText( @".\Config\GSLogCfg.xml" ), "GS" );
 
 			_inputHandler = new InputHandler { cmdHandler = HandleInput };
 			_inputHandler.Start();
 
-			ErrorCode eResult = LS.instance.Initialize();
+			ErrorCode eResult = GS.instance.Initialize();
 
 			if ( ErrorCode.Success != eResult )
 			{
-				Logger.Error( $"Initialize LS fail, error code is {eResult}" );
+				Logger.Error( $"Initialize GS fail, error code is {eResult}" );
 				return 0;
 			}
 
-			eResult = LS.instance.Start();
+			eResult = GS.instance.Start();
 			if ( ErrorCode.Success != eResult )
 			{
-				Logger.Error( $"Start LS fail, error code is {eResult}" );
+				Logger.Error( $"Start GS fail, error code is {eResult}" );
 				return 0;
 			}
 
@@ -52,7 +52,7 @@ namespace LoginServer
 		private static void Dispose()
 		{
 			_disposed = true;
-			LS.instance.Dispose();
+			GS.instance.Dispose();
 			NetworkMgr.instance.Dispose();
 			NetSessionPool.instance.Dispose();
 		}
@@ -65,7 +65,7 @@ namespace LoginServer
 			while ( !_disposed )
 			{
 				long elapsed = sw.ElapsedMilliseconds;
-				LS.instance.Update( elapsed, elapsed - lastElapsed );
+				GS.instance.Update( elapsed, elapsed - lastElapsed );
 				_inputHandler.ProcessInput();
 				lastElapsed = elapsed;
 				Thread.Sleep( Consts.HEART_BEAT_CD_TICK );
