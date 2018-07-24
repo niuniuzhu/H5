@@ -24,16 +24,14 @@ namespace Protos {
     static GlobalReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgxHbG9iYWwucHJvdG8SBlByb3RvcyI4CghSZXNwb25zZSIsCgZSZXNwSUQS",
-            "DAoIVW5kZWZpbmUQABIUCg9HQ1RvTFNfQXNrTG9naW4QyAEiOQoGUGFja2V0",
-            "EgsKA3BpZBgBIAEoDRIRCglpc1JlcXVlc3QYAiABKAgSDwoHcmVwc1BpZBgD",
-            "IAEoDSpXCgVNc2dJRBIMCghVbmRlZmluZRAAEhMKD0dDVG9MU19Bc2tMb2dp",
-            "bhBkEhcKEkxTVG9HQ19Mb2dpblJlc3VsdBDIARISCg1MU1RvR0NfQlNBZGRy",
-            "EMkBYgZwcm90bzM="));
+            "CgxHbG9iYWwucHJvdG8SBlByb3RvcyI5CgZQYWNrZXQSCwoDcGlkGAEgASgN",
+            "EhEKCWlzUmVxdWVzdBgCIAEoCBIPCgdyZXBzUGlkGAMgASgNKmoKBU1zZ0lE",
+            "EgwKCFVuZGVmaW5lEAASFgoSR0NUb0xTX0Fza1JlZ2lzdGVyEGQSEwoPR0NU",
+            "b0xTX0Fza0xvZ2luEGUSEgoNTFNUb0dDX1Jlc3VsdBDIARISCg1MU1RvR0Nf",
+            "QlNBZGRyEMkBYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Protos.MsgID), }, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.Response), global::Protos.Response.Parser, null, null, new[]{ typeof(global::Protos.Response.Types.RespID) }, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protos.Packet), global::Protos.Packet.Parser, new[]{ "Pid", "IsRequest", "RepsPid" }, null, null, null)
           }));
     }
@@ -43,127 +41,15 @@ namespace Protos {
   #region Enums
   public enum MsgID {
     [pbr::OriginalName("Undefine")] Undefine = 0,
-    [pbr::OriginalName("GCToLS_AskLogin")] GctoLsAskLogin = 100,
-    [pbr::OriginalName("LSToGC_LoginResult")] LstoGcLoginResult = 200,
+    [pbr::OriginalName("GCToLS_AskRegister")] GctoLsAskRegister = 100,
+    [pbr::OriginalName("GCToLS_AskLogin")] GctoLsAskLogin = 101,
+    [pbr::OriginalName("LSToGC_Result")] LstoGcResult = 200,
     [pbr::OriginalName("LSToGC_BSAddr")] LstoGcBsaddr = 201,
   }
 
   #endregion
 
   #region Messages
-  public sealed partial class Response : pb::IMessage<Response> {
-    private static readonly pb::MessageParser<Response> _parser = new pb::MessageParser<Response>(() => new Response());
-    private pb::UnknownFieldSet _unknownFields;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<Response> Parser { get { return _parser; } }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::Protos.GlobalReflection.Descriptor.MessageTypes[0]; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Response() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Response(Response other) : this() {
-      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Response Clone() {
-      return new Response(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override bool Equals(object other) {
-      return Equals(other as Response);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(Response other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      return Equals(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override int GetHashCode() {
-      int hash = 1;
-      if (_unknownFields != null) {
-        hash ^= _unknownFields.GetHashCode();
-      }
-      return hash;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void WriteTo(pb::CodedOutputStream output) {
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(output);
-      }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public int CalculateSize() {
-      int size = 0;
-      if (_unknownFields != null) {
-        size += _unknownFields.CalculateSize();
-      }
-      return size;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(Response other) {
-      if (other == null) {
-        return;
-      }
-      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(pb::CodedInputStream input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-            break;
-        }
-      }
-    }
-
-    #region Nested types
-    /// <summary>Container for nested types declared in the Response message type.</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static partial class Types {
-      public enum RespID {
-        [pbr::OriginalName("Undefine")] Undefine = 0,
-        [pbr::OriginalName("GCToLS_AskLogin")] GctoLsAskLogin = 200,
-      }
-
-    }
-    #endregion
-
-  }
-
   public sealed partial class Packet : pb::IMessage<Packet> {
     private static readonly pb::MessageParser<Packet> _parser = new pb::MessageParser<Packet>(() => new Packet());
     private pb::UnknownFieldSet _unknownFields;
@@ -172,7 +58,7 @@ namespace Protos {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Protos.GlobalReflection.Descriptor.MessageTypes[1]; }
+      get { return global::Protos.GlobalReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -20,11 +21,11 @@ namespace ProtoGenerator
 		private static readonly Regex REGEX_SEMICOLONS = new Regex( @";" );
 		private static readonly Regex REGEX_NAMESPACE = new Regex( @"package\s+([^;]+);" );
 		private static readonly Regex REGEX_MSG_ID = new Regex( @"enum\s+MsgID\s*\{([^\}]+)\}" );
-		private static readonly Regex REGEX_RESP_ID = new Regex( @"enum\s+RespID\s*\{([^\}]+)\}" );
-		private static readonly Regex REGEX_MESSAGE = new Regex( @"message\s+(\w+)\s*\{[^\}]+\}" );
+		private static readonly Regex REGEX_EXT = new Regex( @"<ext>(.*)<\/ext>", RegexOptions.Singleline );
+		//private static readonly Regex REGEX_MESSAGE = new Regex( @"message\s+(\w+)\s*\{[^\}]+\}" );
 
 		private readonly Semaphore _semaphore = new Semaphore( 5, 5 );
-		private readonly List<PMessage> _messages = new List<PMessage>();
+		//private readonly List<PMessage> _messages = new List<PMessage>();
 		private IWriter _writer;
 
 		public bool Parse( WriterType writerType, string path, string outputPath, ref string error )
@@ -85,21 +86,13 @@ namespace ProtoGenerator
 				}
 			}
 			{
-				match = REGEX_RESP_ID.Match( content );
-				string result = match.Groups[1].Value;
-				string[] lines = result.Split( Environment.NewLine );
-				int count = lines.Length;
-				for ( int i = 0; i < count; i++ )
+				match = REGEX_EXT.Match( content );
+				JObject json = JObject.Parse( match.Groups[1].Value );
+				JToken token = json["RespID"];
+				foreach ( JToken jToken in token )
 				{
-					string line = lines[i];
-					line = REGEX_WHITE_SPACE.Replace( line, string.Empty );
-					line = REGEX_SEMICOLONS.Replace( line, string.Empty );
-					if ( string.IsNullOrEmpty( line ) )
-						continue;
-					string[] valueKey = line.Split( '=' );
-					int key = Convert.ToInt32( valueKey[1] );
-					if ( key > 0 )
-						responseToMsgID[valueKey[0]] = key;
+					JProperty child = ( JProperty )jToken;
+					responseToMsgID[child.Name] = ( int )child.Value;
 				}
 			}
 

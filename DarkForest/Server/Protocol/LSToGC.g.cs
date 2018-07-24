@@ -24,30 +24,43 @@ namespace Protos.LSToGC {
     static LSToGCReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgxMU1RvR0MucHJvdG8SDVByb3Rvcy5MU1RvR0MaDEdsb2JhbC5wcm90byI9",
-            "CgtMb2dpblJlc3VsdBIeCgZwYWNrZXQYASABKAsyDi5Qcm90b3MuUGFja2V0",
-            "Eg4KBnJlc3VsdBgCIAEoBSLdAQoGQlNBZGRyEh4KBnBhY2tldBgBIAEoCzIO",
-            "LlByb3Rvcy5QYWNrZXQSNAoKc2VydmVyaW5mbxgCIAMoCzIgLlByb3Rvcy5M",
-            "U1RvR0MuQlNBZGRyLlNlcnZlckluZm8afQoKU2VydmVySW5mbxIeCgZwYWNr",
-            "ZXQYASABKAsyDi5Qcm90b3MuUGFja2V0EhIKCnNlcnZlck5hbWUYAiABKAkS",
-            "EgoKc2VydmVyQWRkchgDIAEoCRISCgpzZXJ2ZXJQb3J0GAQgASgFEhMKC3Nl",
-            "cnZlclN0YXRlGAUgASgFYgZwcm90bzM="));
+            "CgxMU1RvR0MucHJvdG8SDVByb3Rvcy5MU1RvR0MaDEdsb2JhbC5wcm90byJP",
+            "CgZSZXN1bHQSHgoGcGFja2V0GAEgASgLMg4uUHJvdG9zLlBhY2tldBIlCgZy",
+            "ZXN1bHQYAiABKAsyFS5Qcm90b3MuTFNUb0dDLlJlc3VsdCLdAQoGQlNBZGRy",
+            "Eh4KBnBhY2tldBgBIAEoCzIOLlByb3Rvcy5QYWNrZXQSNAoKc2VydmVyaW5m",
+            "bxgCIAMoCzIgLlByb3Rvcy5MU1RvR0MuQlNBZGRyLlNlcnZlckluZm8afQoK",
+            "U2VydmVySW5mbxIeCgZwYWNrZXQYASABKAsyDi5Qcm90b3MuUGFja2V0EhIK",
+            "CnNlcnZlck5hbWUYAiABKAkSEgoKc2VydmVyQWRkchgDIAEoCRISCgpzZXJ2",
+            "ZXJQb3J0GAQgASgFEhMKC3NlcnZlclN0YXRlGAUgASgFKloKB0VSZXN1bHQS",
+            "CwoHU3VjY2VzcxAAEgoKBkZhaWxlZBABEhIKDlVzZXJuYW1lRXhpc3RzEAIS",
+            "DwoLSWxsZWdhbE5hbWUQAxIRCg1JbGxlZ2FsUGFzc3dkEARiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Protos.GlobalReflection.Descriptor, },
-          new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.LSToGC.LoginResult), global::Protos.LSToGC.LoginResult.Parser, new[]{ "Packet", "Result" }, null, null, null),
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Protos.LSToGC.EResult), }, new pbr::GeneratedClrTypeInfo[] {
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.LSToGC.Result), global::Protos.LSToGC.Result.Parser, new[]{ "Packet", "Result_" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protos.LSToGC.BSAddr), global::Protos.LSToGC.BSAddr.Parser, new[]{ "Packet", "Serverinfo" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::Protos.LSToGC.BSAddr.Types.ServerInfo), global::Protos.LSToGC.BSAddr.Types.ServerInfo.Parser, new[]{ "Packet", "ServerName", "ServerAddr", "ServerPort", "ServerState" }, null, null, null)})
           }));
     }
     #endregion
 
   }
+  #region Enums
+  public enum EResult {
+    [pbr::OriginalName("Success")] Success = 0,
+    [pbr::OriginalName("Failed")] Failed = 1,
+    [pbr::OriginalName("UsernameExists")] UsernameExists = 2,
+    [pbr::OriginalName("IllegalName")] IllegalName = 3,
+    [pbr::OriginalName("IllegalPasswd")] IllegalPasswd = 4,
+  }
+
+  #endregion
+
   #region Messages
-  public sealed partial class LoginResult : pb::IMessage<LoginResult> {
-    private static readonly pb::MessageParser<LoginResult> _parser = new pb::MessageParser<LoginResult>(() => new LoginResult());
+  public sealed partial class Result : pb::IMessage<Result> {
+    private static readonly pb::MessageParser<Result> _parser = new pb::MessageParser<Result>(() => new Result());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<LoginResult> Parser { get { return _parser; } }
+    public static pb::MessageParser<Result> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
@@ -60,22 +73,22 @@ namespace Protos.LSToGC {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public LoginResult() {
+    public Result() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public LoginResult(LoginResult other) : this() {
+    public Result(Result other) : this() {
       packet_ = other.packet_ != null ? other.packet_.Clone() : null;
-      result_ = other.result_;
+      result_ = other.result_ != null ? other.result_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public LoginResult Clone() {
-      return new LoginResult(this);
+    public Result Clone() {
+      return new Result(this);
     }
 
     /// <summary>Field number for the "packet" field.</summary>
@@ -90,10 +103,10 @@ namespace Protos.LSToGC {
     }
 
     /// <summary>Field number for the "result" field.</summary>
-    public const int ResultFieldNumber = 2;
-    private int result_;
+    public const int Result_FieldNumber = 2;
+    private global::Protos.LSToGC.Result result_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public int Result {
+    public global::Protos.LSToGC.Result Result_ {
       get { return result_; }
       set {
         result_ = value;
@@ -102,11 +115,11 @@ namespace Protos.LSToGC {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
-      return Equals(other as LoginResult);
+      return Equals(other as Result);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(LoginResult other) {
+    public bool Equals(Result other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -114,7 +127,7 @@ namespace Protos.LSToGC {
         return true;
       }
       if (!object.Equals(Packet, other.Packet)) return false;
-      if (Result != other.Result) return false;
+      if (!object.Equals(Result_, other.Result_)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -122,7 +135,7 @@ namespace Protos.LSToGC {
     public override int GetHashCode() {
       int hash = 1;
       if (packet_ != null) hash ^= Packet.GetHashCode();
-      if (Result != 0) hash ^= Result.GetHashCode();
+      if (result_ != null) hash ^= Result_.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -140,9 +153,9 @@ namespace Protos.LSToGC {
         output.WriteRawTag(10);
         output.WriteMessage(Packet);
       }
-      if (Result != 0) {
-        output.WriteRawTag(16);
-        output.WriteInt32(Result);
+      if (result_ != null) {
+        output.WriteRawTag(18);
+        output.WriteMessage(Result_);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -155,8 +168,8 @@ namespace Protos.LSToGC {
       if (packet_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Packet);
       }
-      if (Result != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Result);
+      if (result_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Result_);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -165,7 +178,7 @@ namespace Protos.LSToGC {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(LoginResult other) {
+    public void MergeFrom(Result other) {
       if (other == null) {
         return;
       }
@@ -175,8 +188,11 @@ namespace Protos.LSToGC {
         }
         Packet.MergeFrom(other.Packet);
       }
-      if (other.Result != 0) {
-        Result = other.Result;
+      if (other.result_ != null) {
+        if (result_ == null) {
+          result_ = new global::Protos.LSToGC.Result();
+        }
+        Result_.MergeFrom(other.Result_);
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -196,8 +212,11 @@ namespace Protos.LSToGC {
             input.ReadMessage(packet_);
             break;
           }
-          case 16: {
-            Result = input.ReadInt32();
+          case 18: {
+            if (result_ == null) {
+              result_ = new global::Protos.LSToGC.Result();
+            }
+            input.ReadMessage(result_);
             break;
           }
         }

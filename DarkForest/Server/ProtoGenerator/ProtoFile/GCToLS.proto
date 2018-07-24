@@ -3,6 +3,14 @@ package Protos.GCToLS;
 
 import "Global.proto";
 
+message AskRegister{
+	Packet packet = 1;
+	uint32 platform = 2;
+	string sessionid = 3;
+	string name = 4;
+	string passwd = 5;
+}
+
 message AskLogin
 {
 	Packet packet = 1;

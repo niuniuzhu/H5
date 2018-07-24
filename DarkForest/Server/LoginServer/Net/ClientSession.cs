@@ -21,7 +21,8 @@ namespace LoginServer.Net
 			//8,BS通知客户端GS地址
 			//9,客户端连接GS
 			//10,GS把登陆信息转发到CS
-			this._msgCenter.Register( ( int )Protos.MsgID.GctoLsAskLogin, this.OnGctoLsAskLogin );
+			this._msgCenter.Register( ( int )Protos.MsgID.GctoLsAskRegister, this.OnGCtoLSAskRegister );
+			this._msgCenter.Register( ( int )Protos.MsgID.GctoLsAskLogin, this.OnGCtoLSAskLogin );
 		}
 
 		protected override void OnEstablish()
@@ -36,9 +37,18 @@ namespace LoginServer.Net
 			Logger.Info( $"client({this.id}) disconnected with msg:{reason}" );
 		}
 
-		private ErrorCode OnGctoLsAskLogin( byte[] data, int offset, int size, int msgid )
+		private ErrorCode OnGCtoLSAskRegister( byte[] data, int offset, int size, int msgid )
 		{
-			//收到第1消息：请求登录，放入登录队列
+			Protos.GCToLS.AskRegister login = new Protos.GCToLS.AskRegister();
+			login.MergeFrom( data, offset, size );
+
+			Logger.Log( "ask register" );
+
+			return ErrorCode.Success;
+		}
+
+		private ErrorCode OnGCtoLSAskLogin( byte[] data, int offset, int size, int msgid )
+		{
 			Protos.GCToLS.AskLogin login = new Protos.GCToLS.AskLogin();
 			login.MergeFrom( data, offset, size );
 

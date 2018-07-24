@@ -3,10 +3,17 @@ package Protos.LSToGC;
 
 import "Global.proto";
 
-message LoginResult
-{
+enum EResult{
+	Success = 0;
+	Failed = 1;
+	UsernameExists = 2;
+	IllegalName = 3;
+	IllegalPasswd = 4;
+}
+
+message Result{
 	Packet packet = 1;
-	int32 result = 2;
+	Result result = 2;
 }
 
 message BSAddr
