@@ -34,12 +34,8 @@ namespace CentralServer
 
 		public ErrorCode Start()
 		{
-			IListener bsListener = this.netSessionMgr.CreateListener( 0, 65535, ProtoType.TCP, this.netSessionMgr.CreateLSSession );
-			bsListener.Start( this.config.lsPort );
-
-			IListener cliListener = ( WSListener )this.netSessionMgr.CreateListener( 1, 65535, ProtoType.TCP, this.netSessionMgr.CreateGSSession );
-			cliListener.Start( this.config.gsPort );
-
+			this.netSessionMgr.CreateListener( 0, 65535, ProtoType.TCP, this.netSessionMgr.CreateLSSession ).Start( this.config.lsPort );
+			this.netSessionMgr.CreateListener( 1, 65535, ProtoType.TCP, this.netSessionMgr.CreateGSSession ).Start( this.config.gsPort );
 			return ErrorCode.Success;
 		}
 

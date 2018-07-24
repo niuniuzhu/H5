@@ -1,5 +1,4 @@
 ﻿using System;
-using Core.Misc;
 
 namespace Core.Net
 {
@@ -49,7 +48,6 @@ namespace Core.Net
 
 		public void _OnConnError( string error )
 		{
-			Logger.Error( error );
 			this.OnConnError( error );
 		}
 

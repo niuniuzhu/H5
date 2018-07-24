@@ -70,8 +70,8 @@ namespace Shared.Net
 
 		protected override void OnConnError( string error )
 		{
-			base.OnConnError( error );
 			Logger.Error( error );
+			base.OnConnError( error );
 			this._reconFlag = true;
 			this._reconnTime = TimeUtils.utcTime + Consts.RECONN_INTERVAL;
 		}

@@ -23,7 +23,7 @@ namespace Shared.Net
 		public IListener CreateListener( uint id, int recvsize, ProtoType protoType, SessionCreater sessionCreateHandler )
 		{
 			if ( NetworkMgr.instance.ContainsListener( id ) )
-				return null;
+				throw new System.Exception( "session id already exists" );
 
 			IListener listener;
 			switch ( protoType )
@@ -149,7 +149,7 @@ namespace Shared.Net
 		/// <param name="gcNet">目标端的网络id</param>
 		/// <param name="once">在查询消息类型时是否只对第一个结果生效</param>
 		public void TranMsgToSession( SessionType sessionType, IMessage msg, int msgID, int transID,
-		                              uint gcNet, bool once = true )
+									  uint gcNet, bool once = true )
 		{
 			byte[] data = msg.ToByteArray();
 			this.TranMsgToSession( sessionType, data, 0, data.Length, msgID, transID, gcNet, once );
