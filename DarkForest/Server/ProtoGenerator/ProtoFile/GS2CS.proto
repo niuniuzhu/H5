@@ -1,0 +1,24 @@
+﻿syntax = "proto3";
+package Protos.GS2CS;
+
+import "Global.proto";
+
+message GSInfo{
+	enum State{
+		Free = 0;
+		Busy = 1;
+		Full = 2;
+		Close = 3;
+	}
+	uint32 id = 1;
+	string name = 2;
+	string ip = 3;
+	int32 port = 4;
+	string password = 5;
+	State state = 6;
+}
+
+message ReportState{
+	Packet packet = 1;
+	GSInfo gsInfo = 2;
+}

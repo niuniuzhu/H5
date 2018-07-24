@@ -8,22 +8,16 @@ using System.IO;
 
 namespace GateServer
 {
-	public class GS
+	public partial class GS
 	{
+
 		private static GS _instance;
 		public static GS instance => _instance ?? ( _instance = new GS() );
 
-		public GSNetSessionMgr netSessionMgr { get; }
+		public GSNetSessionMgr netSessionMgr { get; } = new GSNetSessionMgr();
 		public GSConfig config { get; private set; }
 
-		private GS()
-		{
-			this.netSessionMgr = new GSNetSessionMgr();
-		}
-
-		public void Dispose()
-		{
-		}
+		public GSConfig.State state;
 
 		public ErrorCode Initialize()
 		{
@@ -36,9 +30,9 @@ namespace GateServer
 		public ErrorCode Start()
 		{
 			WSListener cliListener = ( WSListener )this.netSessionMgr.CreateListener( 0, 65535, ProtoType.WebSocket, this.netSessionMgr.CreateClientSession );
-			cliListener.Start( "ws", this.config.clientListenPort );
+			cliListener.Start( "ws", this.config.externalPort );
 
-			this.netSessionMgr.CreateConnector<G2CSSession>( SessionType.ServerL2CS, this.config.csIP, this.config.csPort, ProtoType.TCP, 65535, 0 );
+			this.netSessionMgr.CreateConnector<G2CSSession>( SessionType.ServerG2CS, this.config.csIP, this.config.csPort, ProtoType.TCP, 65535, 0 );
 			return ErrorCode.Success;
 		}
 

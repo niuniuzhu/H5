@@ -1,12 +1,38 @@
 ﻿namespace Shared
 {
-	public enum ServerNetState
+	public static class Consts
 	{
-		Closed = 0,
-		Connecting,
-		Free,
-		Busy,
-		Full
+		public const int HEART_BEAT_CD_TICK = 10;
+
+		/// <summary>
+		/// 心跳间隔
+		/// </summary>
+		public const long HEART_PACK = 100;
+
+		/// <summary>
+		/// 最大监听器数
+		/// </summary>
+		public const int MAX_COUNT_LISTENER = 3;
+
+		/// <summary>
+		/// Ping的时间间隔
+		/// </summary>
+		public const long DEFAULT_PING_CD_TICK = 1000 * 160;
+
+		/// <summary>
+		/// 重连检测的时间间隔
+		/// </summary>
+		public const long RECONN_INTERVAL = 2000;
+
+		public const int MAX_BATTLE_IN_SS = 200;
+
+		public const int DEFAULT_NAME_LEN = 30;
+		public const int DEFAULT_NICK_NAME_LEN = 32;
+		public const int DEFAULT_DEVICE_KEY_LEN = DEFAULT_NAME_LEN * 5;
+		public const int PROJECTILE_MAX_CHILD_PROJECTILE_TYPE = 3;
+		public const int DEFAULT_REMOVE_CONSOLE_KEY_LEN = 65;
+		public const int OBJ_TYPE_SPACE = 10000;
+		public const int PERSIST_TIME_ALWAYS = -1;
 	}
 
 	public enum ErrorCode
@@ -21,6 +47,23 @@
 		SqlExecError,
 		EncodeMsgToBufferFailed,
 		UserDataNotFound
+	}
+
+	public class GSInfo
+	{
+		public enum State
+		{
+			Free,
+			Busy,
+			Full,
+			Close
+		}
+		public uint id;
+		public string name;
+		public string ip;
+		public int port;
+		public string password;
+		public State state;
 	}
 
 	public enum UserPlatform
@@ -77,40 +120,5 @@
 		{
 			return this.gcNetID > 0 && this.gsID > 0;
 		}
-	}
-
-	public static class Consts
-	{
-		public const int HEART_BEAT_CD_TICK = 10;
-
-		/// <summary>
-		/// 心跳间隔
-		/// </summary>
-		public const long HEART_PACK = 100;
-
-		/// <summary>
-		/// 最大监听器数
-		/// </summary>
-		public const int MAX_COUNT_LISTENER = 3;
-
-		/// <summary>
-		/// Ping的时间间隔
-		/// </summary>
-		public const long DEFAULT_PING_CD_TICK = 1000 * 160;
-
-		/// <summary>
-		/// 重连检测的时间间隔
-		/// </summary>
-		public const long RECONN_INTERVAL = 2000;
-
-		public const int MAX_BATTLE_IN_SS = 200;
-
-		public const int DEFAULT_NAME_LEN = 30;
-		public const int DEFAULT_NICK_NAME_LEN = 32;
-		public const int DEFAULT_DEVICE_KEY_LEN = DEFAULT_NAME_LEN * 5;
-		public const int PROJECTILE_MAX_CHILD_PROJECTILE_TYPE = 3;
-		public const int DEFAULT_REMOVE_CONSOLE_KEY_LEN = 65;
-		public const int OBJ_TYPE_SPACE = 10000;
-		public const int PERSIST_TIME_ALWAYS = -1;
 	}
 }

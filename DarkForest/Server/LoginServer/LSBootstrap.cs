@@ -52,7 +52,6 @@ namespace LoginServer
 		private static void Dispose()
 		{
 			_disposed = true;
-			LS.instance.Dispose();
 			NetworkMgr.instance.Dispose();
 			NetSessionPool.instance.Dispose();
 		}

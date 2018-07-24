@@ -4,11 +4,16 @@ package Protos;
 enum MsgID {
 	Undefine = 0;
 
-	GCToLS_AskRegister = 100;
-	GCToLS_AskLogin = 101;
+	GC2LS_AskRegister = 100;
+	GC2LS_AskLogin = 101;
 	
-	LSToGC_Result = 200;
-	LSToGC_BSAddr = 201;
+	LS2GC_Result = 200;
+	LS2GC_GSInfo = 201;
+
+	GS2CS_ReportState = 300;
+
+	CS2LS_GSInfos = 400;
+	CS2LS_NewGSInfo = 401;
 }
 
 message Packet{
@@ -21,8 +26,8 @@ message Packet{
 <ext>
 {
 	"RespID": {
-		"GCToLS_AskRegister": 200,
-		"GCToLS_AskLogin": 200
+		"GC2LS_AskRegister": 200,
+		"GC2LS_AskLogin": 200
 	}
 }
 </ext>

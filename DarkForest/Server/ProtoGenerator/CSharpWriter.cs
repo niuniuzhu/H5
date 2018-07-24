@@ -37,17 +37,29 @@ namespace ProtoGenerator
 			sb.AppendLine();
 
 			//处理请求/回应包
-			sb.AppendLine( $"\t\tprivate static readonly Dictionary<System.Type, int> _TYPE2REPSID = new Dictionary<System.Type, int> {{" );
+			sb.AppendLine( "\t\tprivate static readonly Dictionary<System.Type, int> _TYPE2REPSID = new Dictionary<System.Type, int> {" );
 			foreach ( KeyValuePair<string, int> kv in responseToMsgID )
 				sb.AppendLine( $"\t\t\t{{typeof({ns}.{kv.Key.Replace( '_', '.' )}), {kv.Value}}}," );
 			sb.AppendLine( "\t\t};" );
 			sb.AppendLine();
 
-			//CreateMessageByID
-			sb.AppendLine( $"\t\tpublic static Google.Protobuf.IMessage CreateMessageByID({ns}.MsgID msgID) => CreateMessageByID((int)msgID);" );
+			sb.AppendLine( "\t\tpublic static Protos.MsgID GetMsgID( System.Type type ) => _TYPE2ID[type];" );
 			sb.AppendLine();
 
-			sb.AppendLine( "\t\tpublic static Google.Protobuf.IMessage CreateMessageByID(int msgID) {" );
+			sb.AppendLine( "\t\tpublic static Protos.MsgID GetMsgID<T>() where T : Google.Protobuf.IMessage => _TYPE2ID[typeof( T )];" );
+			sb.AppendLine();
+
+			sb.AppendLine( "\t\tpublic static Protos.MsgID GetMsgID( this Google.Protobuf.IMessage message ) => _TYPE2ID[message.GetType()];" );
+			sb.AppendLine();
+
+			sb.AppendLine( "\t\tpublic static Protos.MsgID GetMsgID<T>( this Google.Protobuf.IMessage<T> message ) where T : Google.Protobuf.IMessage<T> => _TYPE2ID[message.GetType()];" );
+			sb.AppendLine();
+
+			//CreateMessageByID
+			sb.AppendLine( $"\t\tpublic static Google.Protobuf.IMessage CreateMsgByID({ns}.MsgID msgID) => CreateMsgByID((int)msgID);" );
+			sb.AppendLine();
+
+			sb.AppendLine( "\t\tpublic static Google.Protobuf.IMessage CreateMsgByID(int msgID) {" );
 			foreach ( KeyValuePair<string, int> kv in clsToMsgID )
 			{
 				sb.AppendLine( $"\t\t\tif (msgID == {kv.Value})" );
@@ -59,10 +71,10 @@ namespace ProtoGenerator
 			//end CreateMessageByID
 
 			//CreateRespMessageByID
-			sb.AppendLine( $"\t\tpublic static Google.Protobuf.IMessage CreateRespMessageByID(int msgID) => CreateMessageByID(({ns}.MsgID)msgID);" );
+			sb.AppendLine( $"\t\tpublic static Google.Protobuf.IMessage CreateRespMsgByID(int msgID) => CreateMsgByID(({ns}.MsgID)msgID);" );
 			sb.AppendLine();
 
-			sb.AppendLine( $"\t\tpublic static Google.Protobuf.IMessage CreateRespMessageByID({ns}.MsgID msgID) {{" );
+			sb.AppendLine( $"\t\tpublic static Google.Protobuf.IMessage CreateRespMsgByID({ns}.MsgID msgID) {{" );
 			sb.AppendLine( "\t\t\tif (! _TYPE2REPSID.TryGetValue(_ID2TYPE[msgID], out int respID ))" );
 			sb.AppendLine( "\t\t\t\treturn null;" );
 			foreach ( KeyValuePair<string, int> kv in responseToMsgID )

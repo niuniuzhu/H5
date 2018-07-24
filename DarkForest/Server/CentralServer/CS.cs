@@ -1,4 +1,5 @@
-﻿using CentralServer.Net;
+﻿using System.Collections.Generic;
+using CentralServer.Net;
 using Core.Misc;
 using Core.Net;
 using Newtonsoft.Json;
@@ -7,22 +8,15 @@ using System.IO;
 
 namespace CentralServer
 {
-	public class CS
+	public partial class CS
 	{
 		private static CS _instance;
 		public static CS instance => _instance ?? ( _instance = new CS() );
 
-		public CSNetSessionMgr netSessionMgr { get; }
+		public CSNetSessionMgr netSessionMgr { get; } = new CSNetSessionMgr();
 		public CSConfig config { get; private set; }
 
-		private CS()
-		{
-			this.netSessionMgr = new CSNetSessionMgr();
-		}
-
-		public void Dispose()
-		{
-		}
+		private readonly Dictionary<uint, GSInfo> _gsInfos = new Dictionary<uint, GSInfo>();
 
 		public ErrorCode Initialize()
 		{

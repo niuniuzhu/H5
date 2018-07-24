@@ -17,20 +17,301 @@ define(["libs/protobufjs"], function($protobuf) {
          */
         var Protos = {};
     
-        Protos.GCToLS = (function() {
+        Protos.GC2LS = (function() {
     
             /**
-             * Namespace GCToLS.
+             * Namespace GC2LS.
              * @memberof Protos
              * @namespace
              */
-            var GCToLS = {};
+            var GC2LS = {};
     
-            GCToLS.AskLogin = (function() {
+            GC2LS.AskRegister = (function() {
+    
+                /**
+                 * Properties of an AskRegister.
+                 * @memberof Protos.GC2LS
+                 * @interface IAskRegister
+                 * @property {Protos.IPacket|null} [packet] AskRegister packet
+                 * @property {number|null} [platform] AskRegister platform
+                 * @property {string|null} [sessionid] AskRegister sessionid
+                 * @property {string|null} [name] AskRegister name
+                 * @property {string|null} [passwd] AskRegister passwd
+                 */
+    
+                /**
+                 * Constructs a new AskRegister.
+                 * @memberof Protos.GC2LS
+                 * @classdesc Represents an AskRegister.
+                 * @implements IAskRegister
+                 * @constructor
+                 * @param {Protos.GC2LS.IAskRegister=} [properties] Properties to set
+                 */
+                function AskRegister(properties) {
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+    
+                /**
+                 * AskRegister packet.
+                 * @member {Protos.IPacket|null|undefined} packet
+                 * @memberof Protos.GC2LS.AskRegister
+                 * @instance
+                 */
+                AskRegister.prototype.packet = null;
+    
+                /**
+                 * AskRegister platform.
+                 * @member {number} platform
+                 * @memberof Protos.GC2LS.AskRegister
+                 * @instance
+                 */
+                AskRegister.prototype.platform = 0;
+    
+                /**
+                 * AskRegister sessionid.
+                 * @member {string} sessionid
+                 * @memberof Protos.GC2LS.AskRegister
+                 * @instance
+                 */
+                AskRegister.prototype.sessionid = "";
+    
+                /**
+                 * AskRegister name.
+                 * @member {string} name
+                 * @memberof Protos.GC2LS.AskRegister
+                 * @instance
+                 */
+                AskRegister.prototype.name = "";
+    
+                /**
+                 * AskRegister passwd.
+                 * @member {string} passwd
+                 * @memberof Protos.GC2LS.AskRegister
+                 * @instance
+                 */
+                AskRegister.prototype.passwd = "";
+    
+                /**
+                 * Creates a new AskRegister instance using the specified properties.
+                 * @function create
+                 * @memberof Protos.GC2LS.AskRegister
+                 * @static
+                 * @param {Protos.GC2LS.IAskRegister=} [properties] Properties to set
+                 * @returns {Protos.GC2LS.AskRegister} AskRegister instance
+                 */
+                AskRegister.create = function create(properties) {
+                    return new AskRegister(properties);
+                };
+    
+                /**
+                 * Encodes the specified AskRegister message. Does not implicitly {@link Protos.GC2LS.AskRegister.verify|verify} messages.
+                 * @function encode
+                 * @memberof Protos.GC2LS.AskRegister
+                 * @static
+                 * @param {Protos.GC2LS.IAskRegister} message AskRegister message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                AskRegister.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.packet != null && message.hasOwnProperty("packet"))
+                        $root.Protos.Packet.encode(message.packet, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                    if (message.platform != null && message.hasOwnProperty("platform"))
+                        writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.platform);
+                    if (message.sessionid != null && message.hasOwnProperty("sessionid"))
+                        writer.uint32(/* id 3, wireType 2 =*/26).string(message.sessionid);
+                    if (message.name != null && message.hasOwnProperty("name"))
+                        writer.uint32(/* id 4, wireType 2 =*/34).string(message.name);
+                    if (message.passwd != null && message.hasOwnProperty("passwd"))
+                        writer.uint32(/* id 5, wireType 2 =*/42).string(message.passwd);
+                    return writer;
+                };
+    
+                /**
+                 * Encodes the specified AskRegister message, length delimited. Does not implicitly {@link Protos.GC2LS.AskRegister.verify|verify} messages.
+                 * @function encodeDelimited
+                 * @memberof Protos.GC2LS.AskRegister
+                 * @static
+                 * @param {Protos.GC2LS.IAskRegister} message AskRegister message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                AskRegister.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
+                };
+    
+                /**
+                 * Decodes an AskRegister message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof Protos.GC2LS.AskRegister
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {Protos.GC2LS.AskRegister} AskRegister
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                AskRegister.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.Protos.GC2LS.AskRegister();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                        case 1:
+                            message.packet = $root.Protos.Packet.decode(reader, reader.uint32());
+                            break;
+                        case 2:
+                            message.platform = reader.uint32();
+                            break;
+                        case 3:
+                            message.sessionid = reader.string();
+                            break;
+                        case 4:
+                            message.name = reader.string();
+                            break;
+                        case 5:
+                            message.passwd = reader.string();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                        }
+                    }
+                    return message;
+                };
+    
+                /**
+                 * Decodes an AskRegister message from the specified reader or buffer, length delimited.
+                 * @function decodeDelimited
+                 * @memberof Protos.GC2LS.AskRegister
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @returns {Protos.GC2LS.AskRegister} AskRegister
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                AskRegister.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
+                };
+    
+                /**
+                 * Verifies an AskRegister message.
+                 * @function verify
+                 * @memberof Protos.GC2LS.AskRegister
+                 * @static
+                 * @param {Object.<string,*>} message Plain object to verify
+                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                 */
+                AskRegister.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
+                        return "object expected";
+                    if (message.packet != null && message.hasOwnProperty("packet")) {
+                        var error = $root.Protos.Packet.verify(message.packet);
+                        if (error)
+                            return "packet." + error;
+                    }
+                    if (message.platform != null && message.hasOwnProperty("platform"))
+                        if (!$util.isInteger(message.platform))
+                            return "platform: integer expected";
+                    if (message.sessionid != null && message.hasOwnProperty("sessionid"))
+                        if (!$util.isString(message.sessionid))
+                            return "sessionid: string expected";
+                    if (message.name != null && message.hasOwnProperty("name"))
+                        if (!$util.isString(message.name))
+                            return "name: string expected";
+                    if (message.passwd != null && message.hasOwnProperty("passwd"))
+                        if (!$util.isString(message.passwd))
+                            return "passwd: string expected";
+                    return null;
+                };
+    
+                /**
+                 * Creates an AskRegister message from a plain object. Also converts values to their respective internal types.
+                 * @function fromObject
+                 * @memberof Protos.GC2LS.AskRegister
+                 * @static
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {Protos.GC2LS.AskRegister} AskRegister
+                 */
+                AskRegister.fromObject = function fromObject(object) {
+                    if (object instanceof $root.Protos.GC2LS.AskRegister)
+                        return object;
+                    var message = new $root.Protos.GC2LS.AskRegister();
+                    if (object.packet != null) {
+                        if (typeof object.packet !== "object")
+                            throw TypeError(".Protos.GC2LS.AskRegister.packet: object expected");
+                        message.packet = $root.Protos.Packet.fromObject(object.packet);
+                    }
+                    if (object.platform != null)
+                        message.platform = object.platform >>> 0;
+                    if (object.sessionid != null)
+                        message.sessionid = String(object.sessionid);
+                    if (object.name != null)
+                        message.name = String(object.name);
+                    if (object.passwd != null)
+                        message.passwd = String(object.passwd);
+                    return message;
+                };
+    
+                /**
+                 * Creates a plain object from an AskRegister message. Also converts values to other types if specified.
+                 * @function toObject
+                 * @memberof Protos.GC2LS.AskRegister
+                 * @static
+                 * @param {Protos.GC2LS.AskRegister} message AskRegister
+                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                AskRegister.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults) {
+                        object.packet = null;
+                        object.platform = 0;
+                        object.sessionid = "";
+                        object.name = "";
+                        object.passwd = "";
+                    }
+                    if (message.packet != null && message.hasOwnProperty("packet"))
+                        object.packet = $root.Protos.Packet.toObject(message.packet, options);
+                    if (message.platform != null && message.hasOwnProperty("platform"))
+                        object.platform = message.platform;
+                    if (message.sessionid != null && message.hasOwnProperty("sessionid"))
+                        object.sessionid = message.sessionid;
+                    if (message.name != null && message.hasOwnProperty("name"))
+                        object.name = message.name;
+                    if (message.passwd != null && message.hasOwnProperty("passwd"))
+                        object.passwd = message.passwd;
+                    return object;
+                };
+    
+                /**
+                 * Converts this AskRegister to JSON.
+                 * @function toJSON
+                 * @memberof Protos.GC2LS.AskRegister
+                 * @instance
+                 * @returns {Object.<string,*>} JSON object
+                 */
+                AskRegister.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                };
+    
+                return AskRegister;
+            })();
+    
+            GC2LS.AskLogin = (function() {
     
                 /**
                  * Properties of an AskLogin.
-                 * @memberof Protos.GCToLS
+                 * @memberof Protos.GC2LS
                  * @interface IAskLogin
                  * @property {Protos.IPacket|null} [packet] AskLogin packet
                  * @property {number|null} [platform] AskLogin platform
@@ -40,11 +321,11 @@ define(["libs/protobufjs"], function($protobuf) {
     
                 /**
                  * Constructs a new AskLogin.
-                 * @memberof Protos.GCToLS
+                 * @memberof Protos.GC2LS
                  * @classdesc Represents an AskLogin.
                  * @implements IAskLogin
                  * @constructor
-                 * @param {Protos.GCToLS.IAskLogin=} [properties] Properties to set
+                 * @param {Protos.GC2LS.IAskLogin=} [properties] Properties to set
                  */
                 function AskLogin(properties) {
                     if (properties)
@@ -56,7 +337,7 @@ define(["libs/protobufjs"], function($protobuf) {
                 /**
                  * AskLogin packet.
                  * @member {Protos.IPacket|null|undefined} packet
-                 * @memberof Protos.GCToLS.AskLogin
+                 * @memberof Protos.GC2LS.AskLogin
                  * @instance
                  */
                 AskLogin.prototype.packet = null;
@@ -64,7 +345,7 @@ define(["libs/protobufjs"], function($protobuf) {
                 /**
                  * AskLogin platform.
                  * @member {number} platform
-                 * @memberof Protos.GCToLS.AskLogin
+                 * @memberof Protos.GC2LS.AskLogin
                  * @instance
                  */
                 AskLogin.prototype.platform = 0;
@@ -72,7 +353,7 @@ define(["libs/protobufjs"], function($protobuf) {
                 /**
                  * AskLogin uin.
                  * @member {string} uin
-                 * @memberof Protos.GCToLS.AskLogin
+                 * @memberof Protos.GC2LS.AskLogin
                  * @instance
                  */
                 AskLogin.prototype.uin = "";
@@ -80,7 +361,7 @@ define(["libs/protobufjs"], function($protobuf) {
                 /**
                  * AskLogin sessionid.
                  * @member {string} sessionid
-                 * @memberof Protos.GCToLS.AskLogin
+                 * @memberof Protos.GC2LS.AskLogin
                  * @instance
                  */
                 AskLogin.prototype.sessionid = "";
@@ -88,21 +369,21 @@ define(["libs/protobufjs"], function($protobuf) {
                 /**
                  * Creates a new AskLogin instance using the specified properties.
                  * @function create
-                 * @memberof Protos.GCToLS.AskLogin
+                 * @memberof Protos.GC2LS.AskLogin
                  * @static
-                 * @param {Protos.GCToLS.IAskLogin=} [properties] Properties to set
-                 * @returns {Protos.GCToLS.AskLogin} AskLogin instance
+                 * @param {Protos.GC2LS.IAskLogin=} [properties] Properties to set
+                 * @returns {Protos.GC2LS.AskLogin} AskLogin instance
                  */
                 AskLogin.create = function create(properties) {
                     return new AskLogin(properties);
                 };
     
                 /**
-                 * Encodes the specified AskLogin message. Does not implicitly {@link Protos.GCToLS.AskLogin.verify|verify} messages.
+                 * Encodes the specified AskLogin message. Does not implicitly {@link Protos.GC2LS.AskLogin.verify|verify} messages.
                  * @function encode
-                 * @memberof Protos.GCToLS.AskLogin
+                 * @memberof Protos.GC2LS.AskLogin
                  * @static
-                 * @param {Protos.GCToLS.IAskLogin} message AskLogin message or plain object to encode
+                 * @param {Protos.GC2LS.IAskLogin} message AskLogin message or plain object to encode
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
@@ -121,11 +402,11 @@ define(["libs/protobufjs"], function($protobuf) {
                 };
     
                 /**
-                 * Encodes the specified AskLogin message, length delimited. Does not implicitly {@link Protos.GCToLS.AskLogin.verify|verify} messages.
+                 * Encodes the specified AskLogin message, length delimited. Does not implicitly {@link Protos.GC2LS.AskLogin.verify|verify} messages.
                  * @function encodeDelimited
-                 * @memberof Protos.GCToLS.AskLogin
+                 * @memberof Protos.GC2LS.AskLogin
                  * @static
-                 * @param {Protos.GCToLS.IAskLogin} message AskLogin message or plain object to encode
+                 * @param {Protos.GC2LS.IAskLogin} message AskLogin message or plain object to encode
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
@@ -136,18 +417,18 @@ define(["libs/protobufjs"], function($protobuf) {
                 /**
                  * Decodes an AskLogin message from the specified reader or buffer.
                  * @function decode
-                 * @memberof Protos.GCToLS.AskLogin
+                 * @memberof Protos.GC2LS.AskLogin
                  * @static
                  * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
                  * @param {number} [length] Message length if known beforehand
-                 * @returns {Protos.GCToLS.AskLogin} AskLogin
+                 * @returns {Protos.GC2LS.AskLogin} AskLogin
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
                 AskLogin.decode = function decode(reader, length) {
                     if (!(reader instanceof $Reader))
                         reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.Protos.GCToLS.AskLogin();
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.Protos.GC2LS.AskLogin();
                     while (reader.pos < end) {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
@@ -174,10 +455,10 @@ define(["libs/protobufjs"], function($protobuf) {
                 /**
                  * Decodes an AskLogin message from the specified reader or buffer, length delimited.
                  * @function decodeDelimited
-                 * @memberof Protos.GCToLS.AskLogin
+                 * @memberof Protos.GC2LS.AskLogin
                  * @static
                  * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @returns {Protos.GCToLS.AskLogin} AskLogin
+                 * @returns {Protos.GC2LS.AskLogin} AskLogin
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
@@ -190,7 +471,7 @@ define(["libs/protobufjs"], function($protobuf) {
                 /**
                  * Verifies an AskLogin message.
                  * @function verify
-                 * @memberof Protos.GCToLS.AskLogin
+                 * @memberof Protos.GC2LS.AskLogin
                  * @static
                  * @param {Object.<string,*>} message Plain object to verify
                  * @returns {string|null} `null` if valid, otherwise the reason why it is not
@@ -218,18 +499,18 @@ define(["libs/protobufjs"], function($protobuf) {
                 /**
                  * Creates an AskLogin message from a plain object. Also converts values to their respective internal types.
                  * @function fromObject
-                 * @memberof Protos.GCToLS.AskLogin
+                 * @memberof Protos.GC2LS.AskLogin
                  * @static
                  * @param {Object.<string,*>} object Plain object
-                 * @returns {Protos.GCToLS.AskLogin} AskLogin
+                 * @returns {Protos.GC2LS.AskLogin} AskLogin
                  */
                 AskLogin.fromObject = function fromObject(object) {
-                    if (object instanceof $root.Protos.GCToLS.AskLogin)
+                    if (object instanceof $root.Protos.GC2LS.AskLogin)
                         return object;
-                    var message = new $root.Protos.GCToLS.AskLogin();
+                    var message = new $root.Protos.GC2LS.AskLogin();
                     if (object.packet != null) {
                         if (typeof object.packet !== "object")
-                            throw TypeError(".Protos.GCToLS.AskLogin.packet: object expected");
+                            throw TypeError(".Protos.GC2LS.AskLogin.packet: object expected");
                         message.packet = $root.Protos.Packet.fromObject(object.packet);
                     }
                     if (object.platform != null)
@@ -244,9 +525,9 @@ define(["libs/protobufjs"], function($protobuf) {
                 /**
                  * Creates a plain object from an AskLogin message. Also converts values to other types if specified.
                  * @function toObject
-                 * @memberof Protos.GCToLS.AskLogin
+                 * @memberof Protos.GC2LS.AskLogin
                  * @static
-                 * @param {Protos.GCToLS.AskLogin} message AskLogin
+                 * @param {Protos.GC2LS.AskLogin} message AskLogin
                  * @param {$protobuf.IConversionOptions} [options] Conversion options
                  * @returns {Object.<string,*>} Plain object
                  */
@@ -274,7 +555,7 @@ define(["libs/protobufjs"], function($protobuf) {
                 /**
                  * Converts this AskLogin to JSON.
                  * @function toJSON
-                 * @memberof Protos.GCToLS.AskLogin
+                 * @memberof Protos.GC2LS.AskLogin
                  * @instance
                  * @returns {Object.<string,*>} JSON object
                  */
@@ -285,7 +566,7 @@ define(["libs/protobufjs"], function($protobuf) {
                 return AskLogin;
             })();
     
-            return GCToLS;
+            return GC2LS;
         })();
     
         /**
@@ -293,191 +574,21 @@ define(["libs/protobufjs"], function($protobuf) {
          * @name Protos.MsgID
          * @enum {string}
          * @property {number} Undefine=0 Undefine value
-         * @property {number} GCToLS_AskLogin=100 GCToLS_AskLogin value
-         * @property {number} LSToGC_LoginResult=200 LSToGC_LoginResult value
-         * @property {number} LSToGC_BSAddr=201 LSToGC_BSAddr value
+         * @property {number} GC2LS_AskRegister=100 GC2LS_AskRegister value
+         * @property {number} GC2LS_AskLogin=101 GC2LS_AskLogin value
+         * @property {number} LS2GC_Result=200 LS2GC_Result value
+         * @property {number} LS2GC_GSInfo=201 LS2GC_GSInfo value
+         * @property {number} GS2CS_ReportState=300 GS2CS_ReportState value
          */
         Protos.MsgID = (function() {
             var valuesById = {}, values = Object.create(valuesById);
             values[valuesById[0] = "Undefine"] = 0;
-            values[valuesById[100] = "GCToLS_AskLogin"] = 100;
-            values[valuesById[200] = "LSToGC_LoginResult"] = 200;
-            values[valuesById[201] = "LSToGC_BSAddr"] = 201;
+            values[valuesById[100] = "GC2LS_AskRegister"] = 100;
+            values[valuesById[101] = "GC2LS_AskLogin"] = 101;
+            values[valuesById[200] = "LS2GC_Result"] = 200;
+            values[valuesById[201] = "LS2GC_GSInfo"] = 201;
+            values[valuesById[300] = "GS2CS_ReportState"] = 300;
             return values;
-        })();
-    
-        Protos.Response = (function() {
-    
-            /**
-             * Properties of a Response.
-             * @memberof Protos
-             * @interface IResponse
-             */
-    
-            /**
-             * Constructs a new Response.
-             * @memberof Protos
-             * @classdesc Represents a Response.
-             * @implements IResponse
-             * @constructor
-             * @param {Protos.IResponse=} [properties] Properties to set
-             */
-            function Response(properties) {
-                if (properties)
-                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                        if (properties[keys[i]] != null)
-                            this[keys[i]] = properties[keys[i]];
-            }
-    
-            /**
-             * Creates a new Response instance using the specified properties.
-             * @function create
-             * @memberof Protos.Response
-             * @static
-             * @param {Protos.IResponse=} [properties] Properties to set
-             * @returns {Protos.Response} Response instance
-             */
-            Response.create = function create(properties) {
-                return new Response(properties);
-            };
-    
-            /**
-             * Encodes the specified Response message. Does not implicitly {@link Protos.Response.verify|verify} messages.
-             * @function encode
-             * @memberof Protos.Response
-             * @static
-             * @param {Protos.IResponse} message Response message or plain object to encode
-             * @param {$protobuf.Writer} [writer] Writer to encode to
-             * @returns {$protobuf.Writer} Writer
-             */
-            Response.encode = function encode(message, writer) {
-                if (!writer)
-                    writer = $Writer.create();
-                return writer;
-            };
-    
-            /**
-             * Encodes the specified Response message, length delimited. Does not implicitly {@link Protos.Response.verify|verify} messages.
-             * @function encodeDelimited
-             * @memberof Protos.Response
-             * @static
-             * @param {Protos.IResponse} message Response message or plain object to encode
-             * @param {$protobuf.Writer} [writer] Writer to encode to
-             * @returns {$protobuf.Writer} Writer
-             */
-            Response.encodeDelimited = function encodeDelimited(message, writer) {
-                return this.encode(message, writer).ldelim();
-            };
-    
-            /**
-             * Decodes a Response message from the specified reader or buffer.
-             * @function decode
-             * @memberof Protos.Response
-             * @static
-             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-             * @param {number} [length] Message length if known beforehand
-             * @returns {Protos.Response} Response
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            Response.decode = function decode(reader, length) {
-                if (!(reader instanceof $Reader))
-                    reader = $Reader.create(reader);
-                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.Protos.Response();
-                while (reader.pos < end) {
-                    var tag = reader.uint32();
-                    switch (tag >>> 3) {
-                    default:
-                        reader.skipType(tag & 7);
-                        break;
-                    }
-                }
-                return message;
-            };
-    
-            /**
-             * Decodes a Response message from the specified reader or buffer, length delimited.
-             * @function decodeDelimited
-             * @memberof Protos.Response
-             * @static
-             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-             * @returns {Protos.Response} Response
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            Response.decodeDelimited = function decodeDelimited(reader) {
-                if (!(reader instanceof $Reader))
-                    reader = new $Reader(reader);
-                return this.decode(reader, reader.uint32());
-            };
-    
-            /**
-             * Verifies a Response message.
-             * @function verify
-             * @memberof Protos.Response
-             * @static
-             * @param {Object.<string,*>} message Plain object to verify
-             * @returns {string|null} `null` if valid, otherwise the reason why it is not
-             */
-            Response.verify = function verify(message) {
-                if (typeof message !== "object" || message === null)
-                    return "object expected";
-                return null;
-            };
-    
-            /**
-             * Creates a Response message from a plain object. Also converts values to their respective internal types.
-             * @function fromObject
-             * @memberof Protos.Response
-             * @static
-             * @param {Object.<string,*>} object Plain object
-             * @returns {Protos.Response} Response
-             */
-            Response.fromObject = function fromObject(object) {
-                if (object instanceof $root.Protos.Response)
-                    return object;
-                return new $root.Protos.Response();
-            };
-    
-            /**
-             * Creates a plain object from a Response message. Also converts values to other types if specified.
-             * @function toObject
-             * @memberof Protos.Response
-             * @static
-             * @param {Protos.Response} message Response
-             * @param {$protobuf.IConversionOptions} [options] Conversion options
-             * @returns {Object.<string,*>} Plain object
-             */
-            Response.toObject = function toObject() {
-                return {};
-            };
-    
-            /**
-             * Converts this Response to JSON.
-             * @function toJSON
-             * @memberof Protos.Response
-             * @instance
-             * @returns {Object.<string,*>} JSON object
-             */
-            Response.prototype.toJSON = function toJSON() {
-                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-            };
-    
-            /**
-             * RespID enum.
-             * @name Protos.Response.RespID
-             * @enum {string}
-             * @property {number} Undefine=0 Undefine value
-             * @property {number} GCToLS_AskLogin=200 GCToLS_AskLogin value
-             */
-            Response.RespID = (function() {
-                var valuesById = {}, values = Object.create(valuesById);
-                values[valuesById[0] = "Undefine"] = 0;
-                values[valuesById[200] = "GCToLS_AskLogin"] = 200;
-                return values;
-            })();
-    
-            return Response;
         })();
     
         Protos.Packet = (function() {
@@ -712,34 +823,38 @@ define(["libs/protobufjs"], function($protobuf) {
             return Packet;
         })();
     
-        Protos.LSToGC = (function() {
+        Protos.GS2CS = (function() {
     
             /**
-             * Namespace LSToGC.
+             * Namespace GS2CS.
              * @memberof Protos
              * @namespace
              */
-            var LSToGC = {};
+            var GS2CS = {};
     
-            LSToGC.LoginResult = (function() {
+            GS2CS.ReportState = (function() {
     
                 /**
-                 * Properties of a LoginResult.
-                 * @memberof Protos.LSToGC
-                 * @interface ILoginResult
-                 * @property {Protos.IPacket|null} [packet] LoginResult packet
-                 * @property {number|null} [result] LoginResult result
+                 * Properties of a ReportState.
+                 * @memberof Protos.GS2CS
+                 * @interface IReportState
+                 * @property {Protos.IPacket|null} [packet] ReportState packet
+                 * @property {string|null} [name] ReportState name
+                 * @property {string|null} [ip] ReportState ip
+                 * @property {number|null} [port] ReportState port
+                 * @property {string|null} [password] ReportState password
+                 * @property {Protos.GS2CS.ReportState.State|null} [state] ReportState state
                  */
     
                 /**
-                 * Constructs a new LoginResult.
-                 * @memberof Protos.LSToGC
-                 * @classdesc Represents a LoginResult.
-                 * @implements ILoginResult
+                 * Constructs a new ReportState.
+                 * @memberof Protos.GS2CS
+                 * @classdesc Represents a ReportState.
+                 * @implements IReportState
                  * @constructor
-                 * @param {Protos.LSToGC.ILoginResult=} [properties] Properties to set
+                 * @param {Protos.GS2CS.IReportState=} [properties] Properties to set
                  */
-                function LoginResult(properties) {
+                function ReportState(properties) {
                     if (properties)
                         for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                             if (properties[keys[i]] != null)
@@ -747,80 +862,120 @@ define(["libs/protobufjs"], function($protobuf) {
                 }
     
                 /**
-                 * LoginResult packet.
+                 * ReportState packet.
                  * @member {Protos.IPacket|null|undefined} packet
-                 * @memberof Protos.LSToGC.LoginResult
+                 * @memberof Protos.GS2CS.ReportState
                  * @instance
                  */
-                LoginResult.prototype.packet = null;
+                ReportState.prototype.packet = null;
     
                 /**
-                 * LoginResult result.
-                 * @member {number} result
-                 * @memberof Protos.LSToGC.LoginResult
+                 * ReportState name.
+                 * @member {string} name
+                 * @memberof Protos.GS2CS.ReportState
                  * @instance
                  */
-                LoginResult.prototype.result = 0;
+                ReportState.prototype.name = "";
     
                 /**
-                 * Creates a new LoginResult instance using the specified properties.
+                 * ReportState ip.
+                 * @member {string} ip
+                 * @memberof Protos.GS2CS.ReportState
+                 * @instance
+                 */
+                ReportState.prototype.ip = "";
+    
+                /**
+                 * ReportState port.
+                 * @member {number} port
+                 * @memberof Protos.GS2CS.ReportState
+                 * @instance
+                 */
+                ReportState.prototype.port = 0;
+    
+                /**
+                 * ReportState password.
+                 * @member {string} password
+                 * @memberof Protos.GS2CS.ReportState
+                 * @instance
+                 */
+                ReportState.prototype.password = "";
+    
+                /**
+                 * ReportState state.
+                 * @member {Protos.GS2CS.ReportState.State} state
+                 * @memberof Protos.GS2CS.ReportState
+                 * @instance
+                 */
+                ReportState.prototype.state = 0;
+    
+                /**
+                 * Creates a new ReportState instance using the specified properties.
                  * @function create
-                 * @memberof Protos.LSToGC.LoginResult
+                 * @memberof Protos.GS2CS.ReportState
                  * @static
-                 * @param {Protos.LSToGC.ILoginResult=} [properties] Properties to set
-                 * @returns {Protos.LSToGC.LoginResult} LoginResult instance
+                 * @param {Protos.GS2CS.IReportState=} [properties] Properties to set
+                 * @returns {Protos.GS2CS.ReportState} ReportState instance
                  */
-                LoginResult.create = function create(properties) {
-                    return new LoginResult(properties);
+                ReportState.create = function create(properties) {
+                    return new ReportState(properties);
                 };
     
                 /**
-                 * Encodes the specified LoginResult message. Does not implicitly {@link Protos.LSToGC.LoginResult.verify|verify} messages.
+                 * Encodes the specified ReportState message. Does not implicitly {@link Protos.GS2CS.ReportState.verify|verify} messages.
                  * @function encode
-                 * @memberof Protos.LSToGC.LoginResult
+                 * @memberof Protos.GS2CS.ReportState
                  * @static
-                 * @param {Protos.LSToGC.ILoginResult} message LoginResult message or plain object to encode
+                 * @param {Protos.GS2CS.IReportState} message ReportState message or plain object to encode
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                LoginResult.encode = function encode(message, writer) {
+                ReportState.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
                     if (message.packet != null && message.hasOwnProperty("packet"))
                         $root.Protos.Packet.encode(message.packet, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.result != null && message.hasOwnProperty("result"))
-                        writer.uint32(/* id 2, wireType 0 =*/16).int32(message.result);
+                    if (message.name != null && message.hasOwnProperty("name"))
+                        writer.uint32(/* id 2, wireType 2 =*/18).string(message.name);
+                    if (message.ip != null && message.hasOwnProperty("ip"))
+                        writer.uint32(/* id 3, wireType 2 =*/26).string(message.ip);
+                    if (message.port != null && message.hasOwnProperty("port"))
+                        writer.uint32(/* id 4, wireType 0 =*/32).int32(message.port);
+                    if (message.password != null && message.hasOwnProperty("password"))
+                        writer.uint32(/* id 5, wireType 2 =*/42).string(message.password);
+                    if (message.state != null && message.hasOwnProperty("state"))
+                        writer.uint32(/* id 6, wireType 0 =*/48).int32(message.state);
                     return writer;
                 };
     
                 /**
-                 * Encodes the specified LoginResult message, length delimited. Does not implicitly {@link Protos.LSToGC.LoginResult.verify|verify} messages.
+                 * Encodes the specified ReportState message, length delimited. Does not implicitly {@link Protos.GS2CS.ReportState.verify|verify} messages.
                  * @function encodeDelimited
-                 * @memberof Protos.LSToGC.LoginResult
+                 * @memberof Protos.GS2CS.ReportState
                  * @static
-                 * @param {Protos.LSToGC.ILoginResult} message LoginResult message or plain object to encode
+                 * @param {Protos.GS2CS.IReportState} message ReportState message or plain object to encode
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                LoginResult.encodeDelimited = function encodeDelimited(message, writer) {
+                ReportState.encodeDelimited = function encodeDelimited(message, writer) {
                     return this.encode(message, writer).ldelim();
                 };
     
                 /**
-                 * Decodes a LoginResult message from the specified reader or buffer.
+                 * Decodes a ReportState message from the specified reader or buffer.
                  * @function decode
-                 * @memberof Protos.LSToGC.LoginResult
+                 * @memberof Protos.GS2CS.ReportState
                  * @static
                  * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
                  * @param {number} [length] Message length if known beforehand
-                 * @returns {Protos.LSToGC.LoginResult} LoginResult
+                 * @returns {Protos.GS2CS.ReportState} ReportState
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                LoginResult.decode = function decode(reader, length) {
+                ReportState.decode = function decode(reader, length) {
                     if (!(reader instanceof $Reader))
                         reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.Protos.LSToGC.LoginResult();
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.Protos.GS2CS.ReportState();
                     while (reader.pos < end) {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
@@ -828,7 +983,19 @@ define(["libs/protobufjs"], function($protobuf) {
                             message.packet = $root.Protos.Packet.decode(reader, reader.uint32());
                             break;
                         case 2:
-                            message.result = reader.int32();
+                            message.name = reader.string();
+                            break;
+                        case 3:
+                            message.ip = reader.string();
+                            break;
+                        case 4:
+                            message.port = reader.int32();
+                            break;
+                        case 5:
+                            message.password = reader.string();
+                            break;
+                        case 6:
+                            message.state = reader.int32();
                             break;
                         default:
                             reader.skipType(tag & 7);
@@ -839,30 +1006,30 @@ define(["libs/protobufjs"], function($protobuf) {
                 };
     
                 /**
-                 * Decodes a LoginResult message from the specified reader or buffer, length delimited.
+                 * Decodes a ReportState message from the specified reader or buffer, length delimited.
                  * @function decodeDelimited
-                 * @memberof Protos.LSToGC.LoginResult
+                 * @memberof Protos.GS2CS.ReportState
                  * @static
                  * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @returns {Protos.LSToGC.LoginResult} LoginResult
+                 * @returns {Protos.GS2CS.ReportState} ReportState
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                LoginResult.decodeDelimited = function decodeDelimited(reader) {
+                ReportState.decodeDelimited = function decodeDelimited(reader) {
                     if (!(reader instanceof $Reader))
                         reader = new $Reader(reader);
                     return this.decode(reader, reader.uint32());
                 };
     
                 /**
-                 * Verifies a LoginResult message.
+                 * Verifies a ReportState message.
                  * @function verify
-                 * @memberof Protos.LSToGC.LoginResult
+                 * @memberof Protos.GS2CS.ReportState
                  * @static
                  * @param {Object.<string,*>} message Plain object to verify
                  * @returns {string|null} `null` if valid, otherwise the reason why it is not
                  */
-                LoginResult.verify = function verify(message) {
+                ReportState.verify = function verify(message) {
                     if (typeof message !== "object" || message === null)
                         return "object expected";
                     if (message.packet != null && message.hasOwnProperty("packet")) {
@@ -870,91 +1037,416 @@ define(["libs/protobufjs"], function($protobuf) {
                         if (error)
                             return "packet." + error;
                     }
-                    if (message.result != null && message.hasOwnProperty("result"))
-                        if (!$util.isInteger(message.result))
-                            return "result: integer expected";
+                    if (message.name != null && message.hasOwnProperty("name"))
+                        if (!$util.isString(message.name))
+                            return "name: string expected";
+                    if (message.ip != null && message.hasOwnProperty("ip"))
+                        if (!$util.isString(message.ip))
+                            return "ip: string expected";
+                    if (message.port != null && message.hasOwnProperty("port"))
+                        if (!$util.isInteger(message.port))
+                            return "port: integer expected";
+                    if (message.password != null && message.hasOwnProperty("password"))
+                        if (!$util.isString(message.password))
+                            return "password: string expected";
+                    if (message.state != null && message.hasOwnProperty("state"))
+                        switch (message.state) {
+                        default:
+                            return "state: enum value expected";
+                        case 0:
+                        case 1:
+                        case 2:
+                        case 3:
+                            break;
+                        }
                     return null;
                 };
     
                 /**
-                 * Creates a LoginResult message from a plain object. Also converts values to their respective internal types.
+                 * Creates a ReportState message from a plain object. Also converts values to their respective internal types.
                  * @function fromObject
-                 * @memberof Protos.LSToGC.LoginResult
+                 * @memberof Protos.GS2CS.ReportState
                  * @static
                  * @param {Object.<string,*>} object Plain object
-                 * @returns {Protos.LSToGC.LoginResult} LoginResult
+                 * @returns {Protos.GS2CS.ReportState} ReportState
                  */
-                LoginResult.fromObject = function fromObject(object) {
-                    if (object instanceof $root.Protos.LSToGC.LoginResult)
+                ReportState.fromObject = function fromObject(object) {
+                    if (object instanceof $root.Protos.GS2CS.ReportState)
                         return object;
-                    var message = new $root.Protos.LSToGC.LoginResult();
+                    var message = new $root.Protos.GS2CS.ReportState();
                     if (object.packet != null) {
                         if (typeof object.packet !== "object")
-                            throw TypeError(".Protos.LSToGC.LoginResult.packet: object expected");
+                            throw TypeError(".Protos.GS2CS.ReportState.packet: object expected");
                         message.packet = $root.Protos.Packet.fromObject(object.packet);
                     }
-                    if (object.result != null)
-                        message.result = object.result | 0;
+                    if (object.name != null)
+                        message.name = String(object.name);
+                    if (object.ip != null)
+                        message.ip = String(object.ip);
+                    if (object.port != null)
+                        message.port = object.port | 0;
+                    if (object.password != null)
+                        message.password = String(object.password);
+                    switch (object.state) {
+                    case "Free":
+                    case 0:
+                        message.state = 0;
+                        break;
+                    case "Busy":
+                    case 1:
+                        message.state = 1;
+                        break;
+                    case "Full":
+                    case 2:
+                        message.state = 2;
+                        break;
+                    case "Close":
+                    case 3:
+                        message.state = 3;
+                        break;
+                    }
                     return message;
                 };
     
                 /**
-                 * Creates a plain object from a LoginResult message. Also converts values to other types if specified.
+                 * Creates a plain object from a ReportState message. Also converts values to other types if specified.
                  * @function toObject
-                 * @memberof Protos.LSToGC.LoginResult
+                 * @memberof Protos.GS2CS.ReportState
                  * @static
-                 * @param {Protos.LSToGC.LoginResult} message LoginResult
+                 * @param {Protos.GS2CS.ReportState} message ReportState
                  * @param {$protobuf.IConversionOptions} [options] Conversion options
                  * @returns {Object.<string,*>} Plain object
                  */
-                LoginResult.toObject = function toObject(message, options) {
+                ReportState.toObject = function toObject(message, options) {
                     if (!options)
                         options = {};
                     var object = {};
                     if (options.defaults) {
                         object.packet = null;
-                        object.result = 0;
+                        object.name = "";
+                        object.ip = "";
+                        object.port = 0;
+                        object.password = "";
+                        object.state = options.enums === String ? "Free" : 0;
                     }
                     if (message.packet != null && message.hasOwnProperty("packet"))
                         object.packet = $root.Protos.Packet.toObject(message.packet, options);
-                    if (message.result != null && message.hasOwnProperty("result"))
-                        object.result = message.result;
+                    if (message.name != null && message.hasOwnProperty("name"))
+                        object.name = message.name;
+                    if (message.ip != null && message.hasOwnProperty("ip"))
+                        object.ip = message.ip;
+                    if (message.port != null && message.hasOwnProperty("port"))
+                        object.port = message.port;
+                    if (message.password != null && message.hasOwnProperty("password"))
+                        object.password = message.password;
+                    if (message.state != null && message.hasOwnProperty("state"))
+                        object.state = options.enums === String ? $root.Protos.GS2CS.ReportState.State[message.state] : message.state;
                     return object;
                 };
     
                 /**
-                 * Converts this LoginResult to JSON.
+                 * Converts this ReportState to JSON.
                  * @function toJSON
-                 * @memberof Protos.LSToGC.LoginResult
+                 * @memberof Protos.GS2CS.ReportState
                  * @instance
                  * @returns {Object.<string,*>} JSON object
                  */
-                LoginResult.prototype.toJSON = function toJSON() {
+                ReportState.prototype.toJSON = function toJSON() {
                     return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                 };
     
-                return LoginResult;
+                /**
+                 * State enum.
+                 * @name Protos.GS2CS.ReportState.State
+                 * @enum {string}
+                 * @property {number} Free=0 Free value
+                 * @property {number} Busy=1 Busy value
+                 * @property {number} Full=2 Full value
+                 * @property {number} Close=3 Close value
+                 */
+                ReportState.State = (function() {
+                    var valuesById = {}, values = Object.create(valuesById);
+                    values[valuesById[0] = "Free"] = 0;
+                    values[valuesById[1] = "Busy"] = 1;
+                    values[valuesById[2] = "Full"] = 2;
+                    values[valuesById[3] = "Close"] = 3;
+                    return values;
+                })();
+    
+                return ReportState;
             })();
     
-            LSToGC.BSAddr = (function() {
+            return GS2CS;
+        })();
+    
+        Protos.LS2GC = (function() {
+    
+            /**
+             * Namespace LS2GC.
+             * @memberof Protos
+             * @namespace
+             */
+            var LS2GC = {};
+    
+            /**
+             * EResult enum.
+             * @name Protos.LS2GC.EResult
+             * @enum {string}
+             * @property {number} Success=0 Success value
+             * @property {number} Failed=1 Failed value
+             * @property {number} UsernameExists=2 UsernameExists value
+             * @property {number} IllegalName=3 IllegalName value
+             * @property {number} IllegalPasswd=4 IllegalPasswd value
+             */
+            LS2GC.EResult = (function() {
+                var valuesById = {}, values = Object.create(valuesById);
+                values[valuesById[0] = "Success"] = 0;
+                values[valuesById[1] = "Failed"] = 1;
+                values[valuesById[2] = "UsernameExists"] = 2;
+                values[valuesById[3] = "IllegalName"] = 3;
+                values[valuesById[4] = "IllegalPasswd"] = 4;
+                return values;
+            })();
+    
+            LS2GC.Result = (function() {
     
                 /**
-                 * Properties of a BSAddr.
-                 * @memberof Protos.LSToGC
-                 * @interface IBSAddr
-                 * @property {Protos.IPacket|null} [packet] BSAddr packet
-                 * @property {Array.<Protos.LSToGC.BSAddr.IServerInfo>|null} [serverinfo] BSAddr serverinfo
+                 * Properties of a Result.
+                 * @memberof Protos.LS2GC
+                 * @interface IResult
+                 * @property {Protos.IPacket|null} [packet] Result packet
+                 * @property {Protos.LS2GC.IResult|null} [result] Result result
                  */
     
                 /**
-                 * Constructs a new BSAddr.
-                 * @memberof Protos.LSToGC
-                 * @classdesc Represents a BSAddr.
-                 * @implements IBSAddr
+                 * Constructs a new Result.
+                 * @memberof Protos.LS2GC
+                 * @classdesc Represents a Result.
+                 * @implements IResult
                  * @constructor
-                 * @param {Protos.LSToGC.IBSAddr=} [properties] Properties to set
+                 * @param {Protos.LS2GC.IResult=} [properties] Properties to set
                  */
-                function BSAddr(properties) {
+                function Result(properties) {
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+    
+                /**
+                 * Result packet.
+                 * @member {Protos.IPacket|null|undefined} packet
+                 * @memberof Protos.LS2GC.Result
+                 * @instance
+                 */
+                Result.prototype.packet = null;
+    
+                /**
+                 * Result result.
+                 * @member {Protos.LS2GC.IResult|null|undefined} result
+                 * @memberof Protos.LS2GC.Result
+                 * @instance
+                 */
+                Result.prototype.result = null;
+    
+                /**
+                 * Creates a new Result instance using the specified properties.
+                 * @function create
+                 * @memberof Protos.LS2GC.Result
+                 * @static
+                 * @param {Protos.LS2GC.IResult=} [properties] Properties to set
+                 * @returns {Protos.LS2GC.Result} Result instance
+                 */
+                Result.create = function create(properties) {
+                    return new Result(properties);
+                };
+    
+                /**
+                 * Encodes the specified Result message. Does not implicitly {@link Protos.LS2GC.Result.verify|verify} messages.
+                 * @function encode
+                 * @memberof Protos.LS2GC.Result
+                 * @static
+                 * @param {Protos.LS2GC.IResult} message Result message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Result.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.packet != null && message.hasOwnProperty("packet"))
+                        $root.Protos.Packet.encode(message.packet, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                    if (message.result != null && message.hasOwnProperty("result"))
+                        $root.Protos.LS2GC.Result.encode(message.result, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                    return writer;
+                };
+    
+                /**
+                 * Encodes the specified Result message, length delimited. Does not implicitly {@link Protos.LS2GC.Result.verify|verify} messages.
+                 * @function encodeDelimited
+                 * @memberof Protos.LS2GC.Result
+                 * @static
+                 * @param {Protos.LS2GC.IResult} message Result message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Result.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
+                };
+    
+                /**
+                 * Decodes a Result message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof Protos.LS2GC.Result
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {Protos.LS2GC.Result} Result
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Result.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.Protos.LS2GC.Result();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                        case 1:
+                            message.packet = $root.Protos.Packet.decode(reader, reader.uint32());
+                            break;
+                        case 2:
+                            message.result = $root.Protos.LS2GC.Result.decode(reader, reader.uint32());
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                        }
+                    }
+                    return message;
+                };
+    
+                /**
+                 * Decodes a Result message from the specified reader or buffer, length delimited.
+                 * @function decodeDelimited
+                 * @memberof Protos.LS2GC.Result
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @returns {Protos.LS2GC.Result} Result
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Result.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
+                };
+    
+                /**
+                 * Verifies a Result message.
+                 * @function verify
+                 * @memberof Protos.LS2GC.Result
+                 * @static
+                 * @param {Object.<string,*>} message Plain object to verify
+                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                 */
+                Result.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
+                        return "object expected";
+                    if (message.packet != null && message.hasOwnProperty("packet")) {
+                        var error = $root.Protos.Packet.verify(message.packet);
+                        if (error)
+                            return "packet." + error;
+                    }
+                    if (message.result != null && message.hasOwnProperty("result")) {
+                        var error = $root.Protos.LS2GC.Result.verify(message.result);
+                        if (error)
+                            return "result." + error;
+                    }
+                    return null;
+                };
+    
+                /**
+                 * Creates a Result message from a plain object. Also converts values to their respective internal types.
+                 * @function fromObject
+                 * @memberof Protos.LS2GC.Result
+                 * @static
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {Protos.LS2GC.Result} Result
+                 */
+                Result.fromObject = function fromObject(object) {
+                    if (object instanceof $root.Protos.LS2GC.Result)
+                        return object;
+                    var message = new $root.Protos.LS2GC.Result();
+                    if (object.packet != null) {
+                        if (typeof object.packet !== "object")
+                            throw TypeError(".Protos.LS2GC.Result.packet: object expected");
+                        message.packet = $root.Protos.Packet.fromObject(object.packet);
+                    }
+                    if (object.result != null) {
+                        if (typeof object.result !== "object")
+                            throw TypeError(".Protos.LS2GC.Result.result: object expected");
+                        message.result = $root.Protos.LS2GC.Result.fromObject(object.result);
+                    }
+                    return message;
+                };
+    
+                /**
+                 * Creates a plain object from a Result message. Also converts values to other types if specified.
+                 * @function toObject
+                 * @memberof Protos.LS2GC.Result
+                 * @static
+                 * @param {Protos.LS2GC.Result} message Result
+                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                Result.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults) {
+                        object.packet = null;
+                        object.result = null;
+                    }
+                    if (message.packet != null && message.hasOwnProperty("packet"))
+                        object.packet = $root.Protos.Packet.toObject(message.packet, options);
+                    if (message.result != null && message.hasOwnProperty("result"))
+                        object.result = $root.Protos.LS2GC.Result.toObject(message.result, options);
+                    return object;
+                };
+    
+                /**
+                 * Converts this Result to JSON.
+                 * @function toJSON
+                 * @memberof Protos.LS2GC.Result
+                 * @instance
+                 * @returns {Object.<string,*>} JSON object
+                 */
+                Result.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                };
+    
+                return Result;
+            })();
+    
+            LS2GC.GSInfo = (function() {
+    
+                /**
+                 * Properties of a GSInfo.
+                 * @memberof Protos.LS2GC
+                 * @interface IGSInfo
+                 * @property {Protos.IPacket|null} [packet] GSInfo packet
+                 * @property {Array.<Protos.LS2GC.GSInfo.IServerInfo>|null} [serverinfo] GSInfo serverinfo
+                 */
+    
+                /**
+                 * Constructs a new GSInfo.
+                 * @memberof Protos.LS2GC
+                 * @classdesc Represents a GSInfo.
+                 * @implements IGSInfo
+                 * @constructor
+                 * @param {Protos.LS2GC.IGSInfo=} [properties] Properties to set
+                 */
+                function GSInfo(properties) {
                     this.serverinfo = [];
                     if (properties)
                         for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
@@ -963,81 +1455,81 @@ define(["libs/protobufjs"], function($protobuf) {
                 }
     
                 /**
-                 * BSAddr packet.
+                 * GSInfo packet.
                  * @member {Protos.IPacket|null|undefined} packet
-                 * @memberof Protos.LSToGC.BSAddr
+                 * @memberof Protos.LS2GC.GSInfo
                  * @instance
                  */
-                BSAddr.prototype.packet = null;
+                GSInfo.prototype.packet = null;
     
                 /**
-                 * BSAddr serverinfo.
-                 * @member {Array.<Protos.LSToGC.BSAddr.IServerInfo>} serverinfo
-                 * @memberof Protos.LSToGC.BSAddr
+                 * GSInfo serverinfo.
+                 * @member {Array.<Protos.LS2GC.GSInfo.IServerInfo>} serverinfo
+                 * @memberof Protos.LS2GC.GSInfo
                  * @instance
                  */
-                BSAddr.prototype.serverinfo = $util.emptyArray;
+                GSInfo.prototype.serverinfo = $util.emptyArray;
     
                 /**
-                 * Creates a new BSAddr instance using the specified properties.
+                 * Creates a new GSInfo instance using the specified properties.
                  * @function create
-                 * @memberof Protos.LSToGC.BSAddr
+                 * @memberof Protos.LS2GC.GSInfo
                  * @static
-                 * @param {Protos.LSToGC.IBSAddr=} [properties] Properties to set
-                 * @returns {Protos.LSToGC.BSAddr} BSAddr instance
+                 * @param {Protos.LS2GC.IGSInfo=} [properties] Properties to set
+                 * @returns {Protos.LS2GC.GSInfo} GSInfo instance
                  */
-                BSAddr.create = function create(properties) {
-                    return new BSAddr(properties);
+                GSInfo.create = function create(properties) {
+                    return new GSInfo(properties);
                 };
     
                 /**
-                 * Encodes the specified BSAddr message. Does not implicitly {@link Protos.LSToGC.BSAddr.verify|verify} messages.
+                 * Encodes the specified GSInfo message. Does not implicitly {@link Protos.LS2GC.GSInfo.verify|verify} messages.
                  * @function encode
-                 * @memberof Protos.LSToGC.BSAddr
+                 * @memberof Protos.LS2GC.GSInfo
                  * @static
-                 * @param {Protos.LSToGC.IBSAddr} message BSAddr message or plain object to encode
+                 * @param {Protos.LS2GC.IGSInfo} message GSInfo message or plain object to encode
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                BSAddr.encode = function encode(message, writer) {
+                GSInfo.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
                     if (message.packet != null && message.hasOwnProperty("packet"))
                         $root.Protos.Packet.encode(message.packet, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
                     if (message.serverinfo != null && message.serverinfo.length)
                         for (var i = 0; i < message.serverinfo.length; ++i)
-                            $root.Protos.LSToGC.BSAddr.ServerInfo.encode(message.serverinfo[i], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                            $root.Protos.LS2GC.GSInfo.ServerInfo.encode(message.serverinfo[i], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     return writer;
                 };
     
                 /**
-                 * Encodes the specified BSAddr message, length delimited. Does not implicitly {@link Protos.LSToGC.BSAddr.verify|verify} messages.
+                 * Encodes the specified GSInfo message, length delimited. Does not implicitly {@link Protos.LS2GC.GSInfo.verify|verify} messages.
                  * @function encodeDelimited
-                 * @memberof Protos.LSToGC.BSAddr
+                 * @memberof Protos.LS2GC.GSInfo
                  * @static
-                 * @param {Protos.LSToGC.IBSAddr} message BSAddr message or plain object to encode
+                 * @param {Protos.LS2GC.IGSInfo} message GSInfo message or plain object to encode
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                BSAddr.encodeDelimited = function encodeDelimited(message, writer) {
+                GSInfo.encodeDelimited = function encodeDelimited(message, writer) {
                     return this.encode(message, writer).ldelim();
                 };
     
                 /**
-                 * Decodes a BSAddr message from the specified reader or buffer.
+                 * Decodes a GSInfo message from the specified reader or buffer.
                  * @function decode
-                 * @memberof Protos.LSToGC.BSAddr
+                 * @memberof Protos.LS2GC.GSInfo
                  * @static
                  * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
                  * @param {number} [length] Message length if known beforehand
-                 * @returns {Protos.LSToGC.BSAddr} BSAddr
+                 * @returns {Protos.LS2GC.GSInfo} GSInfo
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                BSAddr.decode = function decode(reader, length) {
+                GSInfo.decode = function decode(reader, length) {
                     if (!(reader instanceof $Reader))
                         reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.Protos.LSToGC.BSAddr();
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.Protos.LS2GC.GSInfo();
                     while (reader.pos < end) {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
@@ -1047,7 +1539,7 @@ define(["libs/protobufjs"], function($protobuf) {
                         case 2:
                             if (!(message.serverinfo && message.serverinfo.length))
                                 message.serverinfo = [];
-                            message.serverinfo.push($root.Protos.LSToGC.BSAddr.ServerInfo.decode(reader, reader.uint32()));
+                            message.serverinfo.push($root.Protos.LS2GC.GSInfo.ServerInfo.decode(reader, reader.uint32()));
                             break;
                         default:
                             reader.skipType(tag & 7);
@@ -1058,30 +1550,30 @@ define(["libs/protobufjs"], function($protobuf) {
                 };
     
                 /**
-                 * Decodes a BSAddr message from the specified reader or buffer, length delimited.
+                 * Decodes a GSInfo message from the specified reader or buffer, length delimited.
                  * @function decodeDelimited
-                 * @memberof Protos.LSToGC.BSAddr
+                 * @memberof Protos.LS2GC.GSInfo
                  * @static
                  * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @returns {Protos.LSToGC.BSAddr} BSAddr
+                 * @returns {Protos.LS2GC.GSInfo} GSInfo
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                BSAddr.decodeDelimited = function decodeDelimited(reader) {
+                GSInfo.decodeDelimited = function decodeDelimited(reader) {
                     if (!(reader instanceof $Reader))
                         reader = new $Reader(reader);
                     return this.decode(reader, reader.uint32());
                 };
     
                 /**
-                 * Verifies a BSAddr message.
+                 * Verifies a GSInfo message.
                  * @function verify
-                 * @memberof Protos.LSToGC.BSAddr
+                 * @memberof Protos.LS2GC.GSInfo
                  * @static
                  * @param {Object.<string,*>} message Plain object to verify
                  * @returns {string|null} `null` if valid, otherwise the reason why it is not
                  */
-                BSAddr.verify = function verify(message) {
+                GSInfo.verify = function verify(message) {
                     if (typeof message !== "object" || message === null)
                         return "object expected";
                     if (message.packet != null && message.hasOwnProperty("packet")) {
@@ -1093,7 +1585,7 @@ define(["libs/protobufjs"], function($protobuf) {
                         if (!Array.isArray(message.serverinfo))
                             return "serverinfo: array expected";
                         for (var i = 0; i < message.serverinfo.length; ++i) {
-                            var error = $root.Protos.LSToGC.BSAddr.ServerInfo.verify(message.serverinfo[i]);
+                            var error = $root.Protos.LS2GC.GSInfo.ServerInfo.verify(message.serverinfo[i]);
                             if (error)
                                 return "serverinfo." + error;
                         }
@@ -1102,45 +1594,45 @@ define(["libs/protobufjs"], function($protobuf) {
                 };
     
                 /**
-                 * Creates a BSAddr message from a plain object. Also converts values to their respective internal types.
+                 * Creates a GSInfo message from a plain object. Also converts values to their respective internal types.
                  * @function fromObject
-                 * @memberof Protos.LSToGC.BSAddr
+                 * @memberof Protos.LS2GC.GSInfo
                  * @static
                  * @param {Object.<string,*>} object Plain object
-                 * @returns {Protos.LSToGC.BSAddr} BSAddr
+                 * @returns {Protos.LS2GC.GSInfo} GSInfo
                  */
-                BSAddr.fromObject = function fromObject(object) {
-                    if (object instanceof $root.Protos.LSToGC.BSAddr)
+                GSInfo.fromObject = function fromObject(object) {
+                    if (object instanceof $root.Protos.LS2GC.GSInfo)
                         return object;
-                    var message = new $root.Protos.LSToGC.BSAddr();
+                    var message = new $root.Protos.LS2GC.GSInfo();
                     if (object.packet != null) {
                         if (typeof object.packet !== "object")
-                            throw TypeError(".Protos.LSToGC.BSAddr.packet: object expected");
+                            throw TypeError(".Protos.LS2GC.GSInfo.packet: object expected");
                         message.packet = $root.Protos.Packet.fromObject(object.packet);
                     }
                     if (object.serverinfo) {
                         if (!Array.isArray(object.serverinfo))
-                            throw TypeError(".Protos.LSToGC.BSAddr.serverinfo: array expected");
+                            throw TypeError(".Protos.LS2GC.GSInfo.serverinfo: array expected");
                         message.serverinfo = [];
                         for (var i = 0; i < object.serverinfo.length; ++i) {
                             if (typeof object.serverinfo[i] !== "object")
-                                throw TypeError(".Protos.LSToGC.BSAddr.serverinfo: object expected");
-                            message.serverinfo[i] = $root.Protos.LSToGC.BSAddr.ServerInfo.fromObject(object.serverinfo[i]);
+                                throw TypeError(".Protos.LS2GC.GSInfo.serverinfo: object expected");
+                            message.serverinfo[i] = $root.Protos.LS2GC.GSInfo.ServerInfo.fromObject(object.serverinfo[i]);
                         }
                     }
                     return message;
                 };
     
                 /**
-                 * Creates a plain object from a BSAddr message. Also converts values to other types if specified.
+                 * Creates a plain object from a GSInfo message. Also converts values to other types if specified.
                  * @function toObject
-                 * @memberof Protos.LSToGC.BSAddr
+                 * @memberof Protos.LS2GC.GSInfo
                  * @static
-                 * @param {Protos.LSToGC.BSAddr} message BSAddr
+                 * @param {Protos.LS2GC.GSInfo} message GSInfo
                  * @param {$protobuf.IConversionOptions} [options] Conversion options
                  * @returns {Object.<string,*>} Plain object
                  */
-                BSAddr.toObject = function toObject(message, options) {
+                GSInfo.toObject = function toObject(message, options) {
                     if (!options)
                         options = {};
                     var object = {};
@@ -1153,42 +1645,42 @@ define(["libs/protobufjs"], function($protobuf) {
                     if (message.serverinfo && message.serverinfo.length) {
                         object.serverinfo = [];
                         for (var j = 0; j < message.serverinfo.length; ++j)
-                            object.serverinfo[j] = $root.Protos.LSToGC.BSAddr.ServerInfo.toObject(message.serverinfo[j], options);
+                            object.serverinfo[j] = $root.Protos.LS2GC.GSInfo.ServerInfo.toObject(message.serverinfo[j], options);
                     }
                     return object;
                 };
     
                 /**
-                 * Converts this BSAddr to JSON.
+                 * Converts this GSInfo to JSON.
                  * @function toJSON
-                 * @memberof Protos.LSToGC.BSAddr
+                 * @memberof Protos.LS2GC.GSInfo
                  * @instance
                  * @returns {Object.<string,*>} JSON object
                  */
-                BSAddr.prototype.toJSON = function toJSON() {
+                GSInfo.prototype.toJSON = function toJSON() {
                     return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                 };
     
-                BSAddr.ServerInfo = (function() {
+                GSInfo.ServerInfo = (function() {
     
                     /**
                      * Properties of a ServerInfo.
-                     * @memberof Protos.LSToGC.BSAddr
+                     * @memberof Protos.LS2GC.GSInfo
                      * @interface IServerInfo
                      * @property {Protos.IPacket|null} [packet] ServerInfo packet
-                     * @property {string|null} [serverName] ServerInfo serverName
-                     * @property {string|null} [serverAddr] ServerInfo serverAddr
-                     * @property {number|null} [serverPort] ServerInfo serverPort
-                     * @property {number|null} [serverState] ServerInfo serverState
+                     * @property {string|null} [name] ServerInfo name
+                     * @property {string|null} [ip] ServerInfo ip
+                     * @property {number|null} [port] ServerInfo port
+                     * @property {number|null} [state] ServerInfo state
                      */
     
                     /**
                      * Constructs a new ServerInfo.
-                     * @memberof Protos.LSToGC.BSAddr
+                     * @memberof Protos.LS2GC.GSInfo
                      * @classdesc Represents a ServerInfo.
                      * @implements IServerInfo
                      * @constructor
-                     * @param {Protos.LSToGC.BSAddr.IServerInfo=} [properties] Properties to set
+                     * @param {Protos.LS2GC.GSInfo.IServerInfo=} [properties] Properties to set
                      */
                     function ServerInfo(properties) {
                         if (properties)
@@ -1200,61 +1692,61 @@ define(["libs/protobufjs"], function($protobuf) {
                     /**
                      * ServerInfo packet.
                      * @member {Protos.IPacket|null|undefined} packet
-                     * @memberof Protos.LSToGC.BSAddr.ServerInfo
+                     * @memberof Protos.LS2GC.GSInfo.ServerInfo
                      * @instance
                      */
                     ServerInfo.prototype.packet = null;
     
                     /**
-                     * ServerInfo serverName.
-                     * @member {string} serverName
-                     * @memberof Protos.LSToGC.BSAddr.ServerInfo
+                     * ServerInfo name.
+                     * @member {string} name
+                     * @memberof Protos.LS2GC.GSInfo.ServerInfo
                      * @instance
                      */
-                    ServerInfo.prototype.serverName = "";
+                    ServerInfo.prototype.name = "";
     
                     /**
-                     * ServerInfo serverAddr.
-                     * @member {string} serverAddr
-                     * @memberof Protos.LSToGC.BSAddr.ServerInfo
+                     * ServerInfo ip.
+                     * @member {string} ip
+                     * @memberof Protos.LS2GC.GSInfo.ServerInfo
                      * @instance
                      */
-                    ServerInfo.prototype.serverAddr = "";
+                    ServerInfo.prototype.ip = "";
     
                     /**
-                     * ServerInfo serverPort.
-                     * @member {number} serverPort
-                     * @memberof Protos.LSToGC.BSAddr.ServerInfo
+                     * ServerInfo port.
+                     * @member {number} port
+                     * @memberof Protos.LS2GC.GSInfo.ServerInfo
                      * @instance
                      */
-                    ServerInfo.prototype.serverPort = 0;
+                    ServerInfo.prototype.port = 0;
     
                     /**
-                     * ServerInfo serverState.
-                     * @member {number} serverState
-                     * @memberof Protos.LSToGC.BSAddr.ServerInfo
+                     * ServerInfo state.
+                     * @member {number} state
+                     * @memberof Protos.LS2GC.GSInfo.ServerInfo
                      * @instance
                      */
-                    ServerInfo.prototype.serverState = 0;
+                    ServerInfo.prototype.state = 0;
     
                     /**
                      * Creates a new ServerInfo instance using the specified properties.
                      * @function create
-                     * @memberof Protos.LSToGC.BSAddr.ServerInfo
+                     * @memberof Protos.LS2GC.GSInfo.ServerInfo
                      * @static
-                     * @param {Protos.LSToGC.BSAddr.IServerInfo=} [properties] Properties to set
-                     * @returns {Protos.LSToGC.BSAddr.ServerInfo} ServerInfo instance
+                     * @param {Protos.LS2GC.GSInfo.IServerInfo=} [properties] Properties to set
+                     * @returns {Protos.LS2GC.GSInfo.ServerInfo} ServerInfo instance
                      */
                     ServerInfo.create = function create(properties) {
                         return new ServerInfo(properties);
                     };
     
                     /**
-                     * Encodes the specified ServerInfo message. Does not implicitly {@link Protos.LSToGC.BSAddr.ServerInfo.verify|verify} messages.
+                     * Encodes the specified ServerInfo message. Does not implicitly {@link Protos.LS2GC.GSInfo.ServerInfo.verify|verify} messages.
                      * @function encode
-                     * @memberof Protos.LSToGC.BSAddr.ServerInfo
+                     * @memberof Protos.LS2GC.GSInfo.ServerInfo
                      * @static
-                     * @param {Protos.LSToGC.BSAddr.IServerInfo} message ServerInfo message or plain object to encode
+                     * @param {Protos.LS2GC.GSInfo.IServerInfo} message ServerInfo message or plain object to encode
                      * @param {$protobuf.Writer} [writer] Writer to encode to
                      * @returns {$protobuf.Writer} Writer
                      */
@@ -1263,23 +1755,23 @@ define(["libs/protobufjs"], function($protobuf) {
                             writer = $Writer.create();
                         if (message.packet != null && message.hasOwnProperty("packet"))
                             $root.Protos.Packet.encode(message.packet, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                        if (message.serverName != null && message.hasOwnProperty("serverName"))
-                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.serverName);
-                        if (message.serverAddr != null && message.hasOwnProperty("serverAddr"))
-                            writer.uint32(/* id 3, wireType 2 =*/26).string(message.serverAddr);
-                        if (message.serverPort != null && message.hasOwnProperty("serverPort"))
-                            writer.uint32(/* id 4, wireType 0 =*/32).int32(message.serverPort);
-                        if (message.serverState != null && message.hasOwnProperty("serverState"))
-                            writer.uint32(/* id 5, wireType 0 =*/40).int32(message.serverState);
+                        if (message.name != null && message.hasOwnProperty("name"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.name);
+                        if (message.ip != null && message.hasOwnProperty("ip"))
+                            writer.uint32(/* id 3, wireType 2 =*/26).string(message.ip);
+                        if (message.port != null && message.hasOwnProperty("port"))
+                            writer.uint32(/* id 4, wireType 0 =*/32).int32(message.port);
+                        if (message.state != null && message.hasOwnProperty("state"))
+                            writer.uint32(/* id 5, wireType 0 =*/40).int32(message.state);
                         return writer;
                     };
     
                     /**
-                     * Encodes the specified ServerInfo message, length delimited. Does not implicitly {@link Protos.LSToGC.BSAddr.ServerInfo.verify|verify} messages.
+                     * Encodes the specified ServerInfo message, length delimited. Does not implicitly {@link Protos.LS2GC.GSInfo.ServerInfo.verify|verify} messages.
                      * @function encodeDelimited
-                     * @memberof Protos.LSToGC.BSAddr.ServerInfo
+                     * @memberof Protos.LS2GC.GSInfo.ServerInfo
                      * @static
-                     * @param {Protos.LSToGC.BSAddr.IServerInfo} message ServerInfo message or plain object to encode
+                     * @param {Protos.LS2GC.GSInfo.IServerInfo} message ServerInfo message or plain object to encode
                      * @param {$protobuf.Writer} [writer] Writer to encode to
                      * @returns {$protobuf.Writer} Writer
                      */
@@ -1290,18 +1782,18 @@ define(["libs/protobufjs"], function($protobuf) {
                     /**
                      * Decodes a ServerInfo message from the specified reader or buffer.
                      * @function decode
-                     * @memberof Protos.LSToGC.BSAddr.ServerInfo
+                     * @memberof Protos.LS2GC.GSInfo.ServerInfo
                      * @static
                      * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
                      * @param {number} [length] Message length if known beforehand
-                     * @returns {Protos.LSToGC.BSAddr.ServerInfo} ServerInfo
+                     * @returns {Protos.LS2GC.GSInfo.ServerInfo} ServerInfo
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
                     ServerInfo.decode = function decode(reader, length) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
-                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.Protos.LSToGC.BSAddr.ServerInfo();
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.Protos.LS2GC.GSInfo.ServerInfo();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
@@ -1309,16 +1801,16 @@ define(["libs/protobufjs"], function($protobuf) {
                                 message.packet = $root.Protos.Packet.decode(reader, reader.uint32());
                                 break;
                             case 2:
-                                message.serverName = reader.string();
+                                message.name = reader.string();
                                 break;
                             case 3:
-                                message.serverAddr = reader.string();
+                                message.ip = reader.string();
                                 break;
                             case 4:
-                                message.serverPort = reader.int32();
+                                message.port = reader.int32();
                                 break;
                             case 5:
-                                message.serverState = reader.int32();
+                                message.state = reader.int32();
                                 break;
                             default:
                                 reader.skipType(tag & 7);
@@ -1331,10 +1823,10 @@ define(["libs/protobufjs"], function($protobuf) {
                     /**
                      * Decodes a ServerInfo message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
-                     * @memberof Protos.LSToGC.BSAddr.ServerInfo
+                     * @memberof Protos.LS2GC.GSInfo.ServerInfo
                      * @static
                      * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                     * @returns {Protos.LSToGC.BSAddr.ServerInfo} ServerInfo
+                     * @returns {Protos.LS2GC.GSInfo.ServerInfo} ServerInfo
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
@@ -1347,7 +1839,7 @@ define(["libs/protobufjs"], function($protobuf) {
                     /**
                      * Verifies a ServerInfo message.
                      * @function verify
-                     * @memberof Protos.LSToGC.BSAddr.ServerInfo
+                     * @memberof Protos.LS2GC.GSInfo.ServerInfo
                      * @static
                      * @param {Object.<string,*>} message Plain object to verify
                      * @returns {string|null} `null` if valid, otherwise the reason why it is not
@@ -1360,55 +1852,55 @@ define(["libs/protobufjs"], function($protobuf) {
                             if (error)
                                 return "packet." + error;
                         }
-                        if (message.serverName != null && message.hasOwnProperty("serverName"))
-                            if (!$util.isString(message.serverName))
-                                return "serverName: string expected";
-                        if (message.serverAddr != null && message.hasOwnProperty("serverAddr"))
-                            if (!$util.isString(message.serverAddr))
-                                return "serverAddr: string expected";
-                        if (message.serverPort != null && message.hasOwnProperty("serverPort"))
-                            if (!$util.isInteger(message.serverPort))
-                                return "serverPort: integer expected";
-                        if (message.serverState != null && message.hasOwnProperty("serverState"))
-                            if (!$util.isInteger(message.serverState))
-                                return "serverState: integer expected";
+                        if (message.name != null && message.hasOwnProperty("name"))
+                            if (!$util.isString(message.name))
+                                return "name: string expected";
+                        if (message.ip != null && message.hasOwnProperty("ip"))
+                            if (!$util.isString(message.ip))
+                                return "ip: string expected";
+                        if (message.port != null && message.hasOwnProperty("port"))
+                            if (!$util.isInteger(message.port))
+                                return "port: integer expected";
+                        if (message.state != null && message.hasOwnProperty("state"))
+                            if (!$util.isInteger(message.state))
+                                return "state: integer expected";
                         return null;
                     };
     
                     /**
                      * Creates a ServerInfo message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
-                     * @memberof Protos.LSToGC.BSAddr.ServerInfo
+                     * @memberof Protos.LS2GC.GSInfo.ServerInfo
                      * @static
                      * @param {Object.<string,*>} object Plain object
-                     * @returns {Protos.LSToGC.BSAddr.ServerInfo} ServerInfo
+                     * @returns {Protos.LS2GC.GSInfo.ServerInfo} ServerInfo
                      */
                     ServerInfo.fromObject = function fromObject(object) {
-                        if (object instanceof $root.Protos.LSToGC.BSAddr.ServerInfo)
+                        if (object instanceof $root.Protos.LS2GC.GSInfo.ServerInfo)
                             return object;
-                        var message = new $root.Protos.LSToGC.BSAddr.ServerInfo();
+                        var message = new $root.Protos.LS2GC.GSInfo.ServerInfo();
                         if (object.packet != null) {
                             if (typeof object.packet !== "object")
-                                throw TypeError(".Protos.LSToGC.BSAddr.ServerInfo.packet: object expected");
+                                throw TypeError(".Protos.LS2GC.GSInfo.ServerInfo.packet: object expected");
                             message.packet = $root.Protos.Packet.fromObject(object.packet);
                         }
-                        if (object.serverName != null)
-                            message.serverName = String(object.serverName);
-                        if (object.serverAddr != null)
-                            message.serverAddr = String(object.serverAddr);
-                        if (object.serverPort != null)
-                            message.serverPort = object.serverPort | 0;
-                        if (object.serverState != null)
-                            message.serverState = object.serverState | 0;
+                        if (object.name != null)
+                            message.name = String(object.name);
+                        if (object.ip != null)
+                            message.ip = String(object.ip);
+                        if (object.port != null)
+                            message.port = object.port | 0;
+                        if (object.state != null)
+                            message.state = object.state | 0;
                         return message;
                     };
     
                     /**
                      * Creates a plain object from a ServerInfo message. Also converts values to other types if specified.
                      * @function toObject
-                     * @memberof Protos.LSToGC.BSAddr.ServerInfo
+                     * @memberof Protos.LS2GC.GSInfo.ServerInfo
                      * @static
-                     * @param {Protos.LSToGC.BSAddr.ServerInfo} message ServerInfo
+                     * @param {Protos.LS2GC.GSInfo.ServerInfo} message ServerInfo
                      * @param {$protobuf.IConversionOptions} [options] Conversion options
                      * @returns {Object.<string,*>} Plain object
                      */
@@ -1418,28 +1910,28 @@ define(["libs/protobufjs"], function($protobuf) {
                         var object = {};
                         if (options.defaults) {
                             object.packet = null;
-                            object.serverName = "";
-                            object.serverAddr = "";
-                            object.serverPort = 0;
-                            object.serverState = 0;
+                            object.name = "";
+                            object.ip = "";
+                            object.port = 0;
+                            object.state = 0;
                         }
                         if (message.packet != null && message.hasOwnProperty("packet"))
                             object.packet = $root.Protos.Packet.toObject(message.packet, options);
-                        if (message.serverName != null && message.hasOwnProperty("serverName"))
-                            object.serverName = message.serverName;
-                        if (message.serverAddr != null && message.hasOwnProperty("serverAddr"))
-                            object.serverAddr = message.serverAddr;
-                        if (message.serverPort != null && message.hasOwnProperty("serverPort"))
-                            object.serverPort = message.serverPort;
-                        if (message.serverState != null && message.hasOwnProperty("serverState"))
-                            object.serverState = message.serverState;
+                        if (message.name != null && message.hasOwnProperty("name"))
+                            object.name = message.name;
+                        if (message.ip != null && message.hasOwnProperty("ip"))
+                            object.ip = message.ip;
+                        if (message.port != null && message.hasOwnProperty("port"))
+                            object.port = message.port;
+                        if (message.state != null && message.hasOwnProperty("state"))
+                            object.state = message.state;
                         return object;
                     };
     
                     /**
                      * Converts this ServerInfo to JSON.
                      * @function toJSON
-                     * @memberof Protos.LSToGC.BSAddr.ServerInfo
+                     * @memberof Protos.LS2GC.GSInfo.ServerInfo
                      * @instance
                      * @returns {Object.<string,*>} JSON object
                      */
@@ -1450,10 +1942,10 @@ define(["libs/protobufjs"], function($protobuf) {
                     return ServerInfo;
                 })();
     
-                return BSAddr;
+                return GSInfo;
             })();
     
-            return LSToGC;
+            return LS2GC;
         })();
     
         return Protos;

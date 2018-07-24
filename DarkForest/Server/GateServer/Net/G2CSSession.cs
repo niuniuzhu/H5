@@ -14,6 +14,7 @@ namespace GateServer.Net
 		{
 			base.OnEstablish();
 			Logger.Info( $"CS({this.logicID}) connected." );
+			GS.instance.ReportStateToCS();
 		}
 
 		protected override void OnClose( string reason )

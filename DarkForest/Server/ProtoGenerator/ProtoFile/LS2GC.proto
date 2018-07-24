@@ -1,5 +1,5 @@
 ﻿syntax = "proto3";
-package Protos.LSToGC;
+package Protos.LS2GC;
 
 import "Global.proto";
 
@@ -16,7 +16,7 @@ message Result{
 	Result result = 2;
 }
 
-message BSAddr
+message GSInfo
 {
 	message ServerInfo
 	{

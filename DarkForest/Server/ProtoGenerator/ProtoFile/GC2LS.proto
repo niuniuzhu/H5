@@ -1,5 +1,5 @@
 ﻿syntax = "proto3";
-package Protos.GCToLS;
+package Protos.GC2LS;
 
 import "Global.proto";
 

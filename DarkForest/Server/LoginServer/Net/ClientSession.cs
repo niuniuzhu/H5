@@ -21,8 +21,8 @@ namespace LoginServer.Net
 			//8,BS通知客户端GS地址
 			//9,客户端连接GS
 			//10,GS把登陆信息转发到CS
-			this._msgCenter.Register( ( int )Protos.MsgID.GctoLsAskRegister, this.OnGCtoLSAskRegister );
-			this._msgCenter.Register( ( int )Protos.MsgID.GctoLsAskLogin, this.OnGCtoLSAskLogin );
+			this._msgCenter.Register( ( int )Protos.MsgID.Gc2LsAskRegister, this.OnGCtoLSAskRegister );
+			this._msgCenter.Register( ( int )Protos.MsgID.Gc2LsAskLogin, this.OnGCtoLSAskLogin );
 		}
 
 		protected override void OnEstablish()
@@ -39,7 +39,7 @@ namespace LoginServer.Net
 
 		private ErrorCode OnGCtoLSAskRegister( byte[] data, int offset, int size, int msgid )
 		{
-			Protos.GCToLS.AskRegister login = new Protos.GCToLS.AskRegister();
+			Protos.GC2LS.AskRegister login = new Protos.GC2LS.AskRegister();
 			login.MergeFrom( data, offset, size );
 
 			Logger.Log( "ask register" );
@@ -49,7 +49,7 @@ namespace LoginServer.Net
 
 		private ErrorCode OnGCtoLSAskLogin( byte[] data, int offset, int size, int msgid )
 		{
-			Protos.GCToLS.AskLogin login = new Protos.GCToLS.AskLogin();
+			Protos.GC2LS.AskLogin login = new Protos.GC2LS.AskLogin();
 			login.MergeFrom( data, offset, size );
 
 			Logger.Log( "ask login" );

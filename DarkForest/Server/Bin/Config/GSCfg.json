@@ -1,9 +1,10 @@
 {
-    "clientListenIP": "127.0.0.1",
-    "clientListenPort": 40001,
-    "clientConnPwd": "123456",
-    "maxClient": 10000,
+    "gsID": 30001,
+    "name": "local",
+    "externalIP": "127.0.0.1",
+    "externalPort": 40001,
+    "password": "123456",
+    "maxConnection": 10000,
     "csIP": "127.0.0.1",
-    "csPort": 10002,
-    "gsID": 30001
+    "csPort": 10002
 }

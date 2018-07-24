@@ -15,7 +15,7 @@ namespace GateServer
 		private static bool _disposed;
 		private static InputHandler _inputHandler;
 
-		static int Main( string[] args )
+		static int Main()
 		{
 			Console.Title = "GS";
 
@@ -52,7 +52,6 @@ namespace GateServer
 		private static void Dispose()
 		{
 			_disposed = true;
-			GS.instance.Dispose();
 			NetworkMgr.instance.Dispose();
 			NetSessionPool.instance.Dispose();
 		}

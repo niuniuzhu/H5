@@ -48,18 +48,19 @@ namespace Shared.Net
 				return;
 			}
 
+			ErrorCode errorCode = ErrorCode.Success;
 			//剥离第一层消息ID
 			int msgID = 0;
 			offset += ByteUtils.Decode32i( data, offset, ref msgID );
 			size -= offset;
 			//检查是否注册了处理函数,否则调用未处理数据的函数
 			if ( this._msgCenter.TryGetHandler( msgID, out MsgCenter.GeneralHandler msgHandler ) )
-				msgHandler.Invoke( data, offset, size, msgID );
+				errorCode = msgHandler.Invoke( data, offset, size, msgID );
 			else if ( this._msgCenter.TryGetHandler( msgID, out MsgCenter.TransHandler transHandler ) )
 			{
 				if ( len - offset < sizeof( int ) + sizeof( uint ) )
 				{
-					Logger.Warn( $"invalid msg." );
+					Logger.Warn( "invalid msg." );
 					return;
 				}
 				int transID = msgID;
@@ -69,10 +70,13 @@ namespace Shared.Net
 				//剥离客户端网络ID
 				offset += ByteUtils.Decode32u( data, offset, ref gcNetID );
 				size -= sizeof( int ) + sizeof( uint );
-				transHandler.Invoke( data, offset, size, transID, msgID, gcNetID );
+				errorCode = transHandler.Invoke( data, offset, size, transID, msgID, gcNetID );
 			}
 			else
 				Logger.Warn( $"invalid msg:{msgID}." );
+
+			if ( errorCode != ErrorCode.Success )
+				Logger.Warn( errorCode );
 		}
 
 		protected override void OnSend()

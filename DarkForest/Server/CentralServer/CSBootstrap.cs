@@ -15,7 +15,7 @@ namespace CentralServer
 		private static bool _disposed;
 		private static InputHandler _inputHandler;
 
-		static int Main( string[] args )
+		static int Main()
 		{
 			Console.Title = "CS";
 
@@ -52,7 +52,6 @@ namespace CentralServer
 		private static void Dispose()
 		{
 			_disposed = true;
-			CS.instance.Dispose();
 			NetworkMgr.instance.Dispose();
 			NetSessionPool.instance.Dispose();
 		}

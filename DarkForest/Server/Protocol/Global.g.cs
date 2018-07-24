@@ -25,10 +25,11 @@ namespace Protos {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "CgxHbG9iYWwucHJvdG8SBlByb3RvcyI5CgZQYWNrZXQSCwoDcGlkGAEgASgN",
-            "EhEKCWlzUmVxdWVzdBgCIAEoCBIPCgdyZXBzUGlkGAMgASgNKmoKBU1zZ0lE",
-            "EgwKCFVuZGVmaW5lEAASFgoSR0NUb0xTX0Fza1JlZ2lzdGVyEGQSEwoPR0NU",
-            "b0xTX0Fza0xvZ2luEGUSEgoNTFNUb0dDX1Jlc3VsdBDIARISCg1MU1RvR0Nf",
-            "QlNBZGRyEMkBYgZwcm90bzM="));
+            "EhEKCWlzUmVxdWVzdBgCIAEoCBIPCgdyZXBzUGlkGAMgASgNKqgBCgVNc2dJ",
+            "RBIMCghVbmRlZmluZRAAEhUKEUdDMkxTX0Fza1JlZ2lzdGVyEGQSEgoOR0My",
+            "TFNfQXNrTG9naW4QZRIRCgxMUzJHQ19SZXN1bHQQyAESEQoMTFMyR0NfR1NJ",
+            "bmZvEMkBEhYKEUdTMkNTX1JlcG9ydFN0YXRlEKwCEhIKDUNTMkxTX0dTSW5m",
+            "b3MQkAMSFAoPQ1MyTFNfTmV3R1NJbmZvEJEDYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Protos.MsgID), }, new pbr::GeneratedClrTypeInfo[] {
@@ -41,10 +42,13 @@ namespace Protos {
   #region Enums
   public enum MsgID {
     [pbr::OriginalName("Undefine")] Undefine = 0,
-    [pbr::OriginalName("GCToLS_AskRegister")] GctoLsAskRegister = 100,
-    [pbr::OriginalName("GCToLS_AskLogin")] GctoLsAskLogin = 101,
-    [pbr::OriginalName("LSToGC_Result")] LstoGcResult = 200,
-    [pbr::OriginalName("LSToGC_BSAddr")] LstoGcBsaddr = 201,
+    [pbr::OriginalName("GC2LS_AskRegister")] Gc2LsAskRegister = 100,
+    [pbr::OriginalName("GC2LS_AskLogin")] Gc2LsAskLogin = 101,
+    [pbr::OriginalName("LS2GC_Result")] Ls2GcResult = 200,
+    [pbr::OriginalName("LS2GC_GSInfo")] Ls2GcGsinfo = 201,
+    [pbr::OriginalName("GS2CS_ReportState")] Gs2CsReportState = 300,
+    [pbr::OriginalName("CS2LS_GSInfos")] Cs2LsGsinfos = 400,
+    [pbr::OriginalName("CS2LS_NewGSInfo")] Cs2LsNewGsinfo = 401,
   }
 
   #endregion

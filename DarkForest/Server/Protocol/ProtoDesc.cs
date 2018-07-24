@@ -7,47 +7,67 @@ using System.Collections.Generic;
 namespace Protos {
 	public static class ProtoDesc {
 		private static readonly Dictionary<System.Type, Protos.MsgID> _TYPE2ID = new Dictionary<System.Type, Protos.MsgID> {
-			{typeof(Protos.GCToLS.AskRegister), (Protos.MsgID)100},
-			{typeof(Protos.GCToLS.AskLogin), (Protos.MsgID)101},
-			{typeof(Protos.LSToGC.Result), (Protos.MsgID)200},
-			{typeof(Protos.LSToGC.BSAddr), (Protos.MsgID)201},
+			{typeof(Protos.GC2LS.AskRegister), (Protos.MsgID)100},
+			{typeof(Protos.GC2LS.AskLogin), (Protos.MsgID)101},
+			{typeof(Protos.LS2GC.Result), (Protos.MsgID)200},
+			{typeof(Protos.LS2GC.GSInfo), (Protos.MsgID)201},
+			{typeof(Protos.GS2CS.ReportState), (Protos.MsgID)300},
+			{typeof(Protos.CS2LS.GSInfos), (Protos.MsgID)400},
+			{typeof(Protos.CS2LS.NewGSInfo), (Protos.MsgID)401},
 		};
 
 		private static readonly Dictionary<Protos.MsgID, System.Type> _ID2TYPE = new Dictionary<Protos.MsgID, System.Type> {
-			{(Protos.MsgID)100, typeof(Protos.GCToLS.AskRegister)},
-			{(Protos.MsgID)101, typeof(Protos.GCToLS.AskLogin)},
-			{(Protos.MsgID)200, typeof(Protos.LSToGC.Result)},
-			{(Protos.MsgID)201, typeof(Protos.LSToGC.BSAddr)},
+			{(Protos.MsgID)100, typeof(Protos.GC2LS.AskRegister)},
+			{(Protos.MsgID)101, typeof(Protos.GC2LS.AskLogin)},
+			{(Protos.MsgID)200, typeof(Protos.LS2GC.Result)},
+			{(Protos.MsgID)201, typeof(Protos.LS2GC.GSInfo)},
+			{(Protos.MsgID)300, typeof(Protos.GS2CS.ReportState)},
+			{(Protos.MsgID)400, typeof(Protos.CS2LS.GSInfos)},
+			{(Protos.MsgID)401, typeof(Protos.CS2LS.NewGSInfo)},
 		};
 
 		private static readonly Dictionary<System.Type, int> _TYPE2REPSID = new Dictionary<System.Type, int> {
-			{typeof(Protos.GCToLS.AskRegister), 200},
-			{typeof(Protos.GCToLS.AskLogin), 200},
+			{typeof(Protos.GC2LS.AskRegister), 200},
+			{typeof(Protos.GC2LS.AskLogin), 200},
 		};
 
-		public static Google.Protobuf.IMessage CreateMessageByID(Protos.MsgID msgID) => CreateMessageByID((int)msgID);
+		public static Protos.MsgID GetMsgID( System.Type type ) => _TYPE2ID[type];
 
-		public static Google.Protobuf.IMessage CreateMessageByID(int msgID) {
+		public static Protos.MsgID GetMsgID<T>() where T : Google.Protobuf.IMessage => _TYPE2ID[typeof( T )];
+
+		public static Protos.MsgID GetMsgID( this Google.Protobuf.IMessage message ) => _TYPE2ID[message.GetType()];
+
+		public static Protos.MsgID GetMsgID<T>( this Google.Protobuf.IMessage<T> message ) where T : Google.Protobuf.IMessage<T> => _TYPE2ID[message.GetType()];
+
+		public static Google.Protobuf.IMessage CreateMsgByID(Protos.MsgID msgID) => CreateMsgByID((int)msgID);
+
+		public static Google.Protobuf.IMessage CreateMsgByID(int msgID) {
 			if (msgID == 100)
-				return new Protos.GCToLS.AskRegister();
+				return new Protos.GC2LS.AskRegister();
 			if (msgID == 101)
-				return new Protos.GCToLS.AskLogin();
+				return new Protos.GC2LS.AskLogin();
 			if (msgID == 200)
-				return new Protos.LSToGC.Result();
+				return new Protos.LS2GC.Result();
 			if (msgID == 201)
-				return new Protos.LSToGC.BSAddr();
+				return new Protos.LS2GC.GSInfo();
+			if (msgID == 300)
+				return new Protos.GS2CS.ReportState();
+			if (msgID == 400)
+				return new Protos.CS2LS.GSInfos();
+			if (msgID == 401)
+				return new Protos.CS2LS.NewGSInfo();
 			return null;
 		}
 
-		public static Google.Protobuf.IMessage CreateRespMessageByID(int msgID) => CreateMessageByID((Protos.MsgID)msgID);
+		public static Google.Protobuf.IMessage CreateRespMsgByID(int msgID) => CreateMsgByID((Protos.MsgID)msgID);
 
-		public static Google.Protobuf.IMessage CreateRespMessageByID(Protos.MsgID msgID) {
+		public static Google.Protobuf.IMessage CreateRespMsgByID(Protos.MsgID msgID) {
 			if (! _TYPE2REPSID.TryGetValue(_ID2TYPE[msgID], out int respID ))
 				return null;
 			if (respID == 200)
-				return new Protos.LSToGC.Result();
+				return new Protos.LS2GC.Result();
 			if (respID == 200)
-				return new Protos.LSToGC.Result();
+				return new Protos.LS2GC.Result();
 			return null;
 		}
 	} //end class

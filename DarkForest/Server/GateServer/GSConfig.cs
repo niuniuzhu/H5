@@ -2,12 +2,20 @@
 {
 	public class GSConfig
 	{
-		public string clientListenIP;
-		public int clientListenPort;
-		public string clientConnPwd;
-		public int maxClient;
+		public enum State
+		{
+			Free,
+			Busy,
+			Full,
+			Close
+		}
+		public uint gsID;
+		public string name;
+		public string externalIP;
+		public int externalPort;
+		public string password;
+		public int maxConnection;
 		public string csIP;
 		public int csPort;
-		public uint gsID;
 	}
 }

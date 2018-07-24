@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using Core.Misc;
 using Core.Net;
 using LoginServer.Net;
@@ -8,23 +9,15 @@ using Shared.Net;
 
 namespace LoginServer
 {
-	public class LS
+	public partial class LS
 	{
 		private static LS _instance;
 		public static LS instance => _instance ?? ( _instance = new LS() );
 
-		public LSNetSessionMgr netSessionMgr { get; }
+		public LSNetSessionMgr netSessionMgr { get; } = new LSNetSessionMgr();
 		public LSConfig config { get; private set; }
 
-		private LS()
-		{
-			this.config = new LSConfig();
-			this.netSessionMgr = new LSNetSessionMgr();
-		}
-
-		public void Dispose()
-		{
-		}
+		private readonly Dictionary<uint, GSInfo> _gsInfos = new Dictionary<uint, GSInfo>();
 
 		public ErrorCode Initialize()
 		{

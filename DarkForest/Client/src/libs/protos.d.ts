@@ -1,7 +1,33 @@
 import * as $protobuf from "protobufjs";
 export namespace Protos {
 
-    namespace GCToLS {
+    namespace GC2LS {
+
+        interface IAskRegister {
+            packet?: (Protos.IPacket|null);
+            platform?: (number|null);
+            sessionid?: (string|null);
+            name?: (string|null);
+            passwd?: (string|null);
+        }
+
+        class AskRegister implements IAskRegister {
+            constructor(properties?: Protos.GC2LS.IAskRegister);
+            public packet?: (Protos.IPacket|null);
+            public platform: number;
+            public sessionid: string;
+            public name: string;
+            public passwd: string;
+            public static create(properties?: Protos.GC2LS.IAskRegister): Protos.GC2LS.AskRegister;
+            public static encode(message: Protos.GC2LS.IAskRegister, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: Protos.GC2LS.IAskRegister, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Protos.GC2LS.AskRegister;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Protos.GC2LS.AskRegister;
+            public static verify(message: { [k: string]: any }): (string|null);
+            public static fromObject(object: { [k: string]: any }): Protos.GC2LS.AskRegister;
+            public static toObject(message: Protos.GC2LS.AskRegister, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public toJSON(): { [k: string]: any };
+        }
 
         interface IAskLogin {
             packet?: (Protos.IPacket|null);
@@ -11,52 +37,30 @@ export namespace Protos {
         }
 
         class AskLogin implements IAskLogin {
-            constructor(properties?: Protos.GCToLS.IAskLogin);
+            constructor(properties?: Protos.GC2LS.IAskLogin);
             public packet?: (Protos.IPacket|null);
             public platform: number;
             public uin: string;
             public sessionid: string;
-            public static create(properties?: Protos.GCToLS.IAskLogin): Protos.GCToLS.AskLogin;
-            public static encode(message: Protos.GCToLS.IAskLogin, writer?: $protobuf.Writer): $protobuf.Writer;
-            public static encodeDelimited(message: Protos.GCToLS.IAskLogin, writer?: $protobuf.Writer): $protobuf.Writer;
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Protos.GCToLS.AskLogin;
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Protos.GCToLS.AskLogin;
+            public static create(properties?: Protos.GC2LS.IAskLogin): Protos.GC2LS.AskLogin;
+            public static encode(message: Protos.GC2LS.IAskLogin, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: Protos.GC2LS.IAskLogin, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Protos.GC2LS.AskLogin;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Protos.GC2LS.AskLogin;
             public static verify(message: { [k: string]: any }): (string|null);
-            public static fromObject(object: { [k: string]: any }): Protos.GCToLS.AskLogin;
-            public static toObject(message: Protos.GCToLS.AskLogin, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static fromObject(object: { [k: string]: any }): Protos.GC2LS.AskLogin;
+            public static toObject(message: Protos.GC2LS.AskLogin, options?: $protobuf.IConversionOptions): { [k: string]: any };
             public toJSON(): { [k: string]: any };
         }
     }
 
     enum MsgID {
         Undefine = 0,
-        GCToLS_AskLogin = 100,
-        LSToGC_LoginResult = 200,
-        LSToGC_BSAddr = 201
-    }
-
-    interface IResponse {
-    }
-
-    class Response implements IResponse {
-        constructor(properties?: Protos.IResponse);
-        public static create(properties?: Protos.IResponse): Protos.Response;
-        public static encode(message: Protos.IResponse, writer?: $protobuf.Writer): $protobuf.Writer;
-        public static encodeDelimited(message: Protos.IResponse, writer?: $protobuf.Writer): $protobuf.Writer;
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Protos.Response;
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Protos.Response;
-        public static verify(message: { [k: string]: any }): (string|null);
-        public static fromObject(object: { [k: string]: any }): Protos.Response;
-        public static toObject(message: Protos.Response, options?: $protobuf.IConversionOptions): { [k: string]: any };
-        public toJSON(): { [k: string]: any };
-    }
-
-    namespace Response {
-
-        enum RespID {
-            Undefine = 0,
-            GCToLS_AskLogin = 200
-        }
+        GC2LS_AskRegister = 100,
+        GC2LS_AskLogin = 101,
+        LS2GC_Result = 200,
+        LS2GC_GSInfo = 201,
+        GS2CS_ReportState = 300
     }
 
     interface IPacket {
@@ -81,73 +85,122 @@ export namespace Protos {
         public toJSON(): { [k: string]: any };
     }
 
-    namespace LSToGC {
+    namespace GS2CS {
 
-        interface ILoginResult {
+        interface IReportState {
             packet?: (Protos.IPacket|null);
-            result?: (number|null);
+            name?: (string|null);
+            ip?: (string|null);
+            port?: (number|null);
+            password?: (string|null);
+            state?: (Protos.GS2CS.ReportState.State|null);
         }
 
-        class LoginResult implements ILoginResult {
-            constructor(properties?: Protos.LSToGC.ILoginResult);
+        class ReportState implements IReportState {
+            constructor(properties?: Protos.GS2CS.IReportState);
             public packet?: (Protos.IPacket|null);
-            public result: number;
-            public static create(properties?: Protos.LSToGC.ILoginResult): Protos.LSToGC.LoginResult;
-            public static encode(message: Protos.LSToGC.ILoginResult, writer?: $protobuf.Writer): $protobuf.Writer;
-            public static encodeDelimited(message: Protos.LSToGC.ILoginResult, writer?: $protobuf.Writer): $protobuf.Writer;
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Protos.LSToGC.LoginResult;
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Protos.LSToGC.LoginResult;
+            public name: string;
+            public ip: string;
+            public port: number;
+            public password: string;
+            public state: Protos.GS2CS.ReportState.State;
+            public static create(properties?: Protos.GS2CS.IReportState): Protos.GS2CS.ReportState;
+            public static encode(message: Protos.GS2CS.IReportState, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: Protos.GS2CS.IReportState, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Protos.GS2CS.ReportState;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Protos.GS2CS.ReportState;
             public static verify(message: { [k: string]: any }): (string|null);
-            public static fromObject(object: { [k: string]: any }): Protos.LSToGC.LoginResult;
-            public static toObject(message: Protos.LSToGC.LoginResult, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static fromObject(object: { [k: string]: any }): Protos.GS2CS.ReportState;
+            public static toObject(message: Protos.GS2CS.ReportState, options?: $protobuf.IConversionOptions): { [k: string]: any };
             public toJSON(): { [k: string]: any };
         }
 
-        interface IBSAddr {
-            packet?: (Protos.IPacket|null);
-            serverinfo?: (Protos.LSToGC.BSAddr.IServerInfo[]|null);
+        namespace ReportState {
+
+            enum State {
+                Free = 0,
+                Busy = 1,
+                Full = 2,
+                Close = 3
+            }
+        }
+    }
+
+    namespace LS2GC {
+
+        enum EResult {
+            Success = 0,
+            Failed = 1,
+            UsernameExists = 2,
+            IllegalName = 3,
+            IllegalPasswd = 4
         }
 
-        class BSAddr implements IBSAddr {
-            constructor(properties?: Protos.LSToGC.IBSAddr);
+        interface IResult {
+            packet?: (Protos.IPacket|null);
+            result?: (Protos.LS2GC.IResult|null);
+        }
+
+        class Result implements IResult {
+            constructor(properties?: Protos.LS2GC.IResult);
             public packet?: (Protos.IPacket|null);
-            public serverinfo: Protos.LSToGC.BSAddr.IServerInfo[];
-            public static create(properties?: Protos.LSToGC.IBSAddr): Protos.LSToGC.BSAddr;
-            public static encode(message: Protos.LSToGC.IBSAddr, writer?: $protobuf.Writer): $protobuf.Writer;
-            public static encodeDelimited(message: Protos.LSToGC.IBSAddr, writer?: $protobuf.Writer): $protobuf.Writer;
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Protos.LSToGC.BSAddr;
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Protos.LSToGC.BSAddr;
+            public result?: (Protos.LS2GC.IResult|null);
+            public static create(properties?: Protos.LS2GC.IResult): Protos.LS2GC.Result;
+            public static encode(message: Protos.LS2GC.IResult, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: Protos.LS2GC.IResult, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Protos.LS2GC.Result;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Protos.LS2GC.Result;
             public static verify(message: { [k: string]: any }): (string|null);
-            public static fromObject(object: { [k: string]: any }): Protos.LSToGC.BSAddr;
-            public static toObject(message: Protos.LSToGC.BSAddr, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static fromObject(object: { [k: string]: any }): Protos.LS2GC.Result;
+            public static toObject(message: Protos.LS2GC.Result, options?: $protobuf.IConversionOptions): { [k: string]: any };
             public toJSON(): { [k: string]: any };
         }
 
-        namespace BSAddr {
+        interface IGSInfo {
+            packet?: (Protos.IPacket|null);
+            serverinfo?: (Protos.LS2GC.GSInfo.IServerInfo[]|null);
+        }
+
+        class GSInfo implements IGSInfo {
+            constructor(properties?: Protos.LS2GC.IGSInfo);
+            public packet?: (Protos.IPacket|null);
+            public serverinfo: Protos.LS2GC.GSInfo.IServerInfo[];
+            public static create(properties?: Protos.LS2GC.IGSInfo): Protos.LS2GC.GSInfo;
+            public static encode(message: Protos.LS2GC.IGSInfo, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: Protos.LS2GC.IGSInfo, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Protos.LS2GC.GSInfo;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Protos.LS2GC.GSInfo;
+            public static verify(message: { [k: string]: any }): (string|null);
+            public static fromObject(object: { [k: string]: any }): Protos.LS2GC.GSInfo;
+            public static toObject(message: Protos.LS2GC.GSInfo, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public toJSON(): { [k: string]: any };
+        }
+
+        namespace GSInfo {
 
             interface IServerInfo {
                 packet?: (Protos.IPacket|null);
-                serverName?: (string|null);
-                serverAddr?: (string|null);
-                serverPort?: (number|null);
-                serverState?: (number|null);
+                name?: (string|null);
+                ip?: (string|null);
+                port?: (number|null);
+                state?: (number|null);
             }
 
             class ServerInfo implements IServerInfo {
-                constructor(properties?: Protos.LSToGC.BSAddr.IServerInfo);
+                constructor(properties?: Protos.LS2GC.GSInfo.IServerInfo);
                 public packet?: (Protos.IPacket|null);
-                public serverName: string;
-                public serverAddr: string;
-                public serverPort: number;
-                public serverState: number;
-                public static create(properties?: Protos.LSToGC.BSAddr.IServerInfo): Protos.LSToGC.BSAddr.ServerInfo;
-                public static encode(message: Protos.LSToGC.BSAddr.IServerInfo, writer?: $protobuf.Writer): $protobuf.Writer;
-                public static encodeDelimited(message: Protos.LSToGC.BSAddr.IServerInfo, writer?: $protobuf.Writer): $protobuf.Writer;
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Protos.LSToGC.BSAddr.ServerInfo;
-                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Protos.LSToGC.BSAddr.ServerInfo;
+                public name: string;
+                public ip: string;
+                public port: number;
+                public state: number;
+                public static create(properties?: Protos.LS2GC.GSInfo.IServerInfo): Protos.LS2GC.GSInfo.ServerInfo;
+                public static encode(message: Protos.LS2GC.GSInfo.IServerInfo, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encodeDelimited(message: Protos.LS2GC.GSInfo.IServerInfo, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Protos.LS2GC.GSInfo.ServerInfo;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Protos.LS2GC.GSInfo.ServerInfo;
                 public static verify(message: { [k: string]: any }): (string|null);
-                public static fromObject(object: { [k: string]: any }): Protos.LSToGC.BSAddr.ServerInfo;
-                public static toObject(message: Protos.LSToGC.BSAddr.ServerInfo, options?: $protobuf.IConversionOptions): { [k: string]: any };
+                public static fromObject(object: { [k: string]: any }): Protos.LS2GC.GSInfo.ServerInfo;
+                public static toObject(message: Protos.LS2GC.GSInfo.ServerInfo, options?: $protobuf.IConversionOptions): { [k: string]: any };
                 public toJSON(): { [k: string]: any };
             }
         }

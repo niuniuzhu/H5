@@ -14,6 +14,7 @@ namespace CentralServer.Net
 		{
 			base.OnEstablish();
 			Logger.Info( $"LS({this.id}) connected" );
+			CS.instance.NotifyGSInfosToLS( this.id );
 		}
 
 		protected override void OnClose( string reason )

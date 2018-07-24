@@ -1,0 +1,15 @@
+﻿syntax = "proto3";
+package Protos.CS2LS;
+
+import "Global.proto";
+import "GS2CS.proto";
+
+message GSInfos{
+	Packet packet = 1;
+	repeated Protos.GS2CS.GSInfo gsInfo = 2;
+}
+
+message NewGSInfo{
+	Packet packet = 1;
+	Protos.GS2CS.GSInfo gsInfo = 2;
+}

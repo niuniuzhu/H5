@@ -10,8 +10,7 @@ namespace CentralServer.Net
 	{
 		protected GateSession( uint id, ProtoType type ) : base( id, type )
 		{
-			this._msgCenter.Register( ( int )Protos.MsgID.GctoLsAskRegister, this.OnGCtoLSAskRegister );
-			this._msgCenter.Register( ( int )Protos.MsgID.GctoLsAskLogin, this.OnGCtoLSAskLogin );
+			this._msgCenter.Register( ( int )Protos.MsgID.Gs2CsReportState, this.OnGs2CsReportState );
 		}
 
 		protected override void OnEstablish()
@@ -26,24 +25,12 @@ namespace CentralServer.Net
 			Logger.Info( $"GS({this.id}) disconnected with msg:{reason}" );
 		}
 
-		private ErrorCode OnGCtoLSAskRegister( byte[] data, int offset, int size, int msgid )
+		private ErrorCode OnGs2CsReportState( byte[] data, int offset, int size, int msgid )
 		{
-			Protos.GCToLS.AskRegister login = new Protos.GCToLS.AskRegister();
-			login.MergeFrom( data, offset, size );
+			Protos.GS2CS.ReportState reportState = new Protos.GS2CS.ReportState();
+			reportState.MergeFrom( data, offset, size );
 
-			Logger.Log( "ask register" );
-
-			return ErrorCode.Success;
-		}
-
-		private ErrorCode OnGCtoLSAskLogin( byte[] data, int offset, int size, int msgid )
-		{
-			Protos.GCToLS.AskLogin login = new Protos.GCToLS.AskLogin();
-			login.MergeFrom( data, offset, size );
-
-			Logger.Log( "ask login" );
-
-			return ErrorCode.Success;
+			return CS.instance.GCStateReportHandler( this.id, reportState.GsInfo );
 		}
 	}
 }
