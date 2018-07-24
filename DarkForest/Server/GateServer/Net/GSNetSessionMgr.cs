@@ -1,9 +1,9 @@
 ﻿using Core.Net;
 using Shared.Net;
 
-namespace LoginServer.Net
+namespace GateServer.Net
 {
-	public class LSNetSessionMgr : NetSessionMgr
+	public class GSNetSessionMgr : NetSessionMgr
 	{
 		public INetSession CreateClientSession( ProtoType type )
 		{

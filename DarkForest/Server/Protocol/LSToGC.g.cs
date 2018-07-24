@@ -26,19 +26,19 @@ namespace Protos.LSToGC {
           string.Concat(
             "CgxMU1RvR0MucHJvdG8SDVByb3Rvcy5MU1RvR0MaDEdsb2JhbC5wcm90byJP",
             "CgZSZXN1bHQSHgoGcGFja2V0GAEgASgLMg4uUHJvdG9zLlBhY2tldBIlCgZy",
-            "ZXN1bHQYAiABKAsyFS5Qcm90b3MuTFNUb0dDLlJlc3VsdCLdAQoGQlNBZGRy",
+            "ZXN1bHQYAiABKAsyFS5Qcm90b3MuTFNUb0dDLlJlc3VsdCLDAQoGQlNBZGRy",
             "Eh4KBnBhY2tldBgBIAEoCzIOLlByb3Rvcy5QYWNrZXQSNAoKc2VydmVyaW5m",
-            "bxgCIAMoCzIgLlByb3Rvcy5MU1RvR0MuQlNBZGRyLlNlcnZlckluZm8afQoK",
-            "U2VydmVySW5mbxIeCgZwYWNrZXQYASABKAsyDi5Qcm90b3MuUGFja2V0EhIK",
-            "CnNlcnZlck5hbWUYAiABKAkSEgoKc2VydmVyQWRkchgDIAEoCRISCgpzZXJ2",
-            "ZXJQb3J0GAQgASgFEhMKC3NlcnZlclN0YXRlGAUgASgFKloKB0VSZXN1bHQS",
-            "CwoHU3VjY2VzcxAAEgoKBkZhaWxlZBABEhIKDlVzZXJuYW1lRXhpc3RzEAIS",
-            "DwoLSWxsZWdhbE5hbWUQAxIRCg1JbGxlZ2FsUGFzc3dkEARiBnByb3RvMw=="));
+            "bxgCIAMoCzIgLlByb3Rvcy5MU1RvR0MuQlNBZGRyLlNlcnZlckluZm8aYwoK",
+            "U2VydmVySW5mbxIeCgZwYWNrZXQYASABKAsyDi5Qcm90b3MuUGFja2V0EgwK",
+            "BG5hbWUYAiABKAkSCgoCaXAYAyABKAkSDAoEcG9ydBgEIAEoBRINCgVzdGF0",
+            "ZRgFIAEoBSpaCgdFUmVzdWx0EgsKB1N1Y2Nlc3MQABIKCgZGYWlsZWQQARIS",
+            "Cg5Vc2VybmFtZUV4aXN0cxACEg8KC0lsbGVnYWxOYW1lEAMSEQoNSWxsZWdh",
+            "bFBhc3N3ZBAEYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Protos.GlobalReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Protos.LSToGC.EResult), }, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Protos.LSToGC.Result), global::Protos.LSToGC.Result.Parser, new[]{ "Packet", "Result_" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.LSToGC.BSAddr), global::Protos.LSToGC.BSAddr.Parser, new[]{ "Packet", "Serverinfo" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::Protos.LSToGC.BSAddr.Types.ServerInfo), global::Protos.LSToGC.BSAddr.Types.ServerInfo.Parser, new[]{ "Packet", "ServerName", "ServerAddr", "ServerPort", "ServerState" }, null, null, null)})
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.LSToGC.BSAddr), global::Protos.LSToGC.BSAddr.Parser, new[]{ "Packet", "Serverinfo" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::Protos.LSToGC.BSAddr.Types.ServerInfo), global::Protos.LSToGC.BSAddr.Types.ServerInfo.Parser, new[]{ "Packet", "Name", "Ip", "Port", "State" }, null, null, null)})
           }));
     }
     #endregion
@@ -408,10 +408,10 @@ namespace Protos.LSToGC {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         public ServerInfo(ServerInfo other) : this() {
           packet_ = other.packet_ != null ? other.packet_.Clone() : null;
-          serverName_ = other.serverName_;
-          serverAddr_ = other.serverAddr_;
-          serverPort_ = other.serverPort_;
-          serverState_ = other.serverState_;
+          name_ = other.name_;
+          ip_ = other.ip_;
+          port_ = other.port_;
+          state_ = other.state_;
           _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
         }
 
@@ -431,47 +431,47 @@ namespace Protos.LSToGC {
           }
         }
 
-        /// <summary>Field number for the "serverName" field.</summary>
-        public const int ServerNameFieldNumber = 2;
-        private string serverName_ = "";
+        /// <summary>Field number for the "name" field.</summary>
+        public const int NameFieldNumber = 2;
+        private string name_ = "";
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public string ServerName {
-          get { return serverName_; }
+        public string Name {
+          get { return name_; }
           set {
-            serverName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+            name_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
           }
         }
 
-        /// <summary>Field number for the "serverAddr" field.</summary>
-        public const int ServerAddrFieldNumber = 3;
-        private string serverAddr_ = "";
+        /// <summary>Field number for the "ip" field.</summary>
+        public const int IpFieldNumber = 3;
+        private string ip_ = "";
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public string ServerAddr {
-          get { return serverAddr_; }
+        public string Ip {
+          get { return ip_; }
           set {
-            serverAddr_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+            ip_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
           }
         }
 
-        /// <summary>Field number for the "serverPort" field.</summary>
-        public const int ServerPortFieldNumber = 4;
-        private int serverPort_;
+        /// <summary>Field number for the "port" field.</summary>
+        public const int PortFieldNumber = 4;
+        private int port_;
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public int ServerPort {
-          get { return serverPort_; }
+        public int Port {
+          get { return port_; }
           set {
-            serverPort_ = value;
+            port_ = value;
           }
         }
 
-        /// <summary>Field number for the "serverState" field.</summary>
-        public const int ServerStateFieldNumber = 5;
-        private int serverState_;
+        /// <summary>Field number for the "state" field.</summary>
+        public const int StateFieldNumber = 5;
+        private int state_;
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public int ServerState {
-          get { return serverState_; }
+        public int State {
+          get { return state_; }
           set {
-            serverState_ = value;
+            state_ = value;
           }
         }
 
@@ -489,10 +489,10 @@ namespace Protos.LSToGC {
             return true;
           }
           if (!object.Equals(Packet, other.Packet)) return false;
-          if (ServerName != other.ServerName) return false;
-          if (ServerAddr != other.ServerAddr) return false;
-          if (ServerPort != other.ServerPort) return false;
-          if (ServerState != other.ServerState) return false;
+          if (Name != other.Name) return false;
+          if (Ip != other.Ip) return false;
+          if (Port != other.Port) return false;
+          if (State != other.State) return false;
           return Equals(_unknownFields, other._unknownFields);
         }
 
@@ -500,10 +500,10 @@ namespace Protos.LSToGC {
         public override int GetHashCode() {
           int hash = 1;
           if (packet_ != null) hash ^= Packet.GetHashCode();
-          if (ServerName.Length != 0) hash ^= ServerName.GetHashCode();
-          if (ServerAddr.Length != 0) hash ^= ServerAddr.GetHashCode();
-          if (ServerPort != 0) hash ^= ServerPort.GetHashCode();
-          if (ServerState != 0) hash ^= ServerState.GetHashCode();
+          if (Name.Length != 0) hash ^= Name.GetHashCode();
+          if (Ip.Length != 0) hash ^= Ip.GetHashCode();
+          if (Port != 0) hash ^= Port.GetHashCode();
+          if (State != 0) hash ^= State.GetHashCode();
           if (_unknownFields != null) {
             hash ^= _unknownFields.GetHashCode();
           }
@@ -521,21 +521,21 @@ namespace Protos.LSToGC {
             output.WriteRawTag(10);
             output.WriteMessage(Packet);
           }
-          if (ServerName.Length != 0) {
+          if (Name.Length != 0) {
             output.WriteRawTag(18);
-            output.WriteString(ServerName);
+            output.WriteString(Name);
           }
-          if (ServerAddr.Length != 0) {
+          if (Ip.Length != 0) {
             output.WriteRawTag(26);
-            output.WriteString(ServerAddr);
+            output.WriteString(Ip);
           }
-          if (ServerPort != 0) {
+          if (Port != 0) {
             output.WriteRawTag(32);
-            output.WriteInt32(ServerPort);
+            output.WriteInt32(Port);
           }
-          if (ServerState != 0) {
+          if (State != 0) {
             output.WriteRawTag(40);
-            output.WriteInt32(ServerState);
+            output.WriteInt32(State);
           }
           if (_unknownFields != null) {
             _unknownFields.WriteTo(output);
@@ -548,17 +548,17 @@ namespace Protos.LSToGC {
           if (packet_ != null) {
             size += 1 + pb::CodedOutputStream.ComputeMessageSize(Packet);
           }
-          if (ServerName.Length != 0) {
-            size += 1 + pb::CodedOutputStream.ComputeStringSize(ServerName);
+          if (Name.Length != 0) {
+            size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
           }
-          if (ServerAddr.Length != 0) {
-            size += 1 + pb::CodedOutputStream.ComputeStringSize(ServerAddr);
+          if (Ip.Length != 0) {
+            size += 1 + pb::CodedOutputStream.ComputeStringSize(Ip);
           }
-          if (ServerPort != 0) {
-            size += 1 + pb::CodedOutputStream.ComputeInt32Size(ServerPort);
+          if (Port != 0) {
+            size += 1 + pb::CodedOutputStream.ComputeInt32Size(Port);
           }
-          if (ServerState != 0) {
-            size += 1 + pb::CodedOutputStream.ComputeInt32Size(ServerState);
+          if (State != 0) {
+            size += 1 + pb::CodedOutputStream.ComputeInt32Size(State);
           }
           if (_unknownFields != null) {
             size += _unknownFields.CalculateSize();
@@ -577,17 +577,17 @@ namespace Protos.LSToGC {
             }
             Packet.MergeFrom(other.Packet);
           }
-          if (other.ServerName.Length != 0) {
-            ServerName = other.ServerName;
+          if (other.Name.Length != 0) {
+            Name = other.Name;
           }
-          if (other.ServerAddr.Length != 0) {
-            ServerAddr = other.ServerAddr;
+          if (other.Ip.Length != 0) {
+            Ip = other.Ip;
           }
-          if (other.ServerPort != 0) {
-            ServerPort = other.ServerPort;
+          if (other.Port != 0) {
+            Port = other.Port;
           }
-          if (other.ServerState != 0) {
-            ServerState = other.ServerState;
+          if (other.State != 0) {
+            State = other.State;
           }
           _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
         }
@@ -608,19 +608,19 @@ namespace Protos.LSToGC {
                 break;
               }
               case 18: {
-                ServerName = input.ReadString();
+                Name = input.ReadString();
                 break;
               }
               case 26: {
-                ServerAddr = input.ReadString();
+                Ip = input.ReadString();
                 break;
               }
               case 32: {
-                ServerPort = input.ReadInt32();
+                Port = input.ReadInt32();
                 break;
               }
               case 40: {
-                ServerState = input.ReadInt32();
+                State = input.ReadInt32();
                 break;
               }
             }

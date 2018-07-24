@@ -1,6 +1,8 @@
-﻿using Core.Misc;
+﻿using System.IO;
+using Core.Misc;
 using Core.Net;
 using LoginServer.Net;
+using Newtonsoft.Json;
 using Shared;
 using Shared.Net;
 
@@ -12,7 +14,7 @@ namespace LoginServer
 		public static LS instance => _instance ?? ( _instance = new LS() );
 
 		public LSNetSessionMgr netSessionMgr { get; }
-		public LSConfig config { get; }
+		public LSConfig config { get; private set; }
 
 		private LS()
 		{
@@ -26,26 +28,18 @@ namespace LoginServer
 
 		public ErrorCode Initialize()
 		{
-			ErrorCode errorCode = this.config.Load();
-			if ( ErrorCode.Success == errorCode )
+			this.config = JsonConvert.DeserializeObject<LSConfig>( File.ReadAllText( @".\Config\LSCfg.json" ) );
+			if ( this.config != null )
 				Logger.Info( "LS Initialize success" );
-			return errorCode;
+			return ErrorCode.Success;
 		}
 
 		public ErrorCode Start()
 		{
-			WSListener bsListener =
-				( WSListener )this.netSessionMgr.CreateListener( 0, 65535, ProtoType.WebSocket,
-																  this.netSessionMgr.CreateBlanceSession );
-			bsListener.Start( "ws", this.config.bsListenPort );
-
-			WSListener cliListener =
-				( WSListener )this.netSessionMgr.CreateListener( 1, 65535, ProtoType.WebSocket,
-																  this.netSessionMgr.CreateClientSession );
+			WSListener cliListener = ( WSListener )this.netSessionMgr.CreateListener( 0, 65535, ProtoType.WebSocket, this.netSessionMgr.CreateClientSession );
 			cliListener.Start( "ws", this.config.clientListenPort );
 
-			this.netSessionMgr.CreateConnector<TestSession>( SessionType.ServerLSOnlyCS, this.config.csIp,
-															 this.config.csPort, ProtoType.KCP, 65535, 0 );
+			this.netSessionMgr.CreateConnector<L2CSSession>( SessionType.ServerL2CS, this.config.csIP, this.config.csPort, ProtoType.TCP, 65535, 0 );
 			return ErrorCode.Success;
 		}
 

@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v2.1": {
-      "LoginServer/1.0.0": {
+      "CentralServer/1.0.0": {
         "dependencies": {
           "Core": "1.0.0",
           "Newtonsoft.Json": "11.0.2",
@@ -14,7 +14,7 @@
           "Shared": "1.0.0"
         },
         "runtime": {
-          "LoginServer.dll": {}
+          "CentralServer.dll": {}
         }
       },
       "Google.Protobuf/3.5.1": {
@@ -975,7 +975,7 @@
     }
   },
   "libraries": {
-    "LoginServer/1.0.0": {
+    "CentralServer/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

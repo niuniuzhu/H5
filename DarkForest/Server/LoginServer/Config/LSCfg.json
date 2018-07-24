@@ -1,6 +1,5 @@
 {
-    "ListernPortForBS": "49997",
-    "ListernPortForClient": "49996",
-    "CSIp": "localhost",
-    "CSPort": "10001"
+    "clientListenPort": 49996,
+    "csIP": "127.0.0.1",
+    "csPort": 10001
 }

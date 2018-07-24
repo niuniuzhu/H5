@@ -4,22 +4,22 @@ using Shared.Net;
 
 namespace LoginServer.Net
 {
-	public class BalanceSession : SrvCliSession
+	public class L2CSSession : CliSession
 	{
-		protected BalanceSession( uint id, ProtoType type ) : base( id, type )
+		private L2CSSession( uint id, ProtoType type ) : base( id, type )
 		{
 		}
 
 		protected override void OnEstablish()
 		{
 			base.OnEstablish();
-			Logger.Info( $"BS({this.logicID}) connected" );
+			Logger.Info( $"CS({this.logicID}) connected." );
 		}
 
 		protected override void OnClose( string reason )
 		{
 			base.OnClose( reason );
-			Logger.Info( $"BS({this.logicID}) disconnected with msg:{reason}" );
+			Logger.Info( $"CS({this.logicID}) disconnected with msg:{reason}." );
 		}
 	}
 }

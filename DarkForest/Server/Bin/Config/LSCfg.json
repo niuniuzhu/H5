@@ -1,8 +1,5 @@
 {
-    "MainBS": {
-        "ListernPortForBS": "49997"
-    },
-    "MainGC": {
-        "ListernPortForClient": "49996"
-    }
+    "clientListenPort": 49996,
+    "csIP": "127.0.0.1",
+    "csPort": 10001
 }

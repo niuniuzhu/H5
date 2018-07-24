@@ -2,28 +2,10 @@
 {
 	public enum SessionType
 	{
-		None,
-		ServerCSOnlySS,
-		ServerCSOnlyGS,
-		ServerLSOnlyCS,
-		ServerLSOnlyGC,
-		ServerCsOnlyRc,
-		ServerSs,
-		ServerGS,
-		ServerLog,
-		ClientB2L,
-		ClientG2C,
-		ClientG2S,
-		ClientG2B,
-		ClientS2C,//as client to link gs
-		ClientC2Lg,
-		ClientS2Lg,
-		ClientC2L,// link login server
-		ClientC2B,//link balance server
-		ClientC2G,//link gate server
-		ClientC2R,
-		ClientS2Log,
-		ClientC2Log,
-		ClientC2LogicRedis,
+		Undefine,
+		ServerL2CS,
+		ServerGC,
+		ServerLS,
+		ServerGS
 	};
 }

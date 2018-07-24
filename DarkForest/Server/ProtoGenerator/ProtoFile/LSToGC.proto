@@ -21,10 +21,10 @@ message BSAddr
 	message ServerInfo
 	{
 		Packet packet = 1;
-		string serverName = 2;
-		string serverAddr = 3;
-		int32 serverPort = 4;
-		int32 serverState = 5;
+		string name = 2;
+		string ip = 3;
+		int32 port = 4;
+		int32 state = 5;
 	}
 	Packet packet = 1;
 	repeated ServerInfo serverinfo = 2;
