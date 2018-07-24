@@ -19,9 +19,19 @@ namespace LoginServer
 
 		private readonly Dictionary<uint, GSInfo> _gsInfos = new Dictionary<uint, GSInfo>();
 
-		public ErrorCode Initialize()
+		public ErrorCode Initialize( Options opts )
 		{
-			this.config = JsonConvert.DeserializeObject<LSConfig>( File.ReadAllText( @".\Config\LSCfg.json" ) );
+			if ( string.IsNullOrEmpty( opts.cfg ) )
+			{
+				this.config = new LSConfig
+				{
+					cliPort = opts.cliPort,
+					csIP = opts.csIP,
+					csPort = opts.csPort
+				};
+			}
+			else
+				this.config = JsonConvert.DeserializeObject<LSConfig>( File.ReadAllText( opts.cfg ) );
 			if ( this.config != null )
 				Logger.Info( "LS Initialize success" );
 			return ErrorCode.Success;
@@ -30,7 +40,7 @@ namespace LoginServer
 		public ErrorCode Start()
 		{
 			WSListener cliListener = ( WSListener )this.netSessionMgr.CreateListener( 0, 65535, ProtoType.WebSocket, this.netSessionMgr.CreateClientSession );
-			cliListener.Start( "ws", this.config.clientListenPort );
+			cliListener.Start( "ws", this.config.cliPort );
 
 			this.netSessionMgr.CreateConnector<L2CSSession>( SessionType.ServerL2CS, this.config.csIP, this.config.csPort, ProtoType.TCP, 65535, 0 );
 			return ErrorCode.Success;

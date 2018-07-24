@@ -1,5 +1,5 @@
 {
-    "clientListenPort": 49996,
+    "cliPort": 49996,
     "csIP": "127.0.0.1",
     "csPort": 10001
 }

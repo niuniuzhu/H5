@@ -2,7 +2,7 @@
 {
 	public class LSConfig
 	{
-		public int clientListenPort;
+		public int cliPort;
 		public string csIP;
 		public int csPort;
 	}

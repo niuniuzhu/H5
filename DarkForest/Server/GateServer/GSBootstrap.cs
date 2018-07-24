@@ -1,12 +1,12 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
-using System.Threading;
-using Core.Misc;
+﻿using Core.Misc;
 using Core.Net;
 using Shared;
 using Shared.Net;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Threading;
+using CommandLine;
 
 namespace GateServer
 {
@@ -15,38 +15,37 @@ namespace GateServer
 		private static bool _disposed;
 		private static InputHandler _inputHandler;
 
-		static int Main()
+		static void Main( string[] args )
+		{
+			Parser.Default.ParseArguments<Options>( args ).WithParsed( Start ).WithNotParsed( errs => { } );
+		}
+
+		private static void Start( Options opts )
 		{
 			Console.Title = "GS";
 
-			AssemblyName[] assemblies = Assembly.GetEntryAssembly().GetReferencedAssemblies();
-			foreach ( AssemblyName assembly in assemblies )
-				Assembly.Load( assembly );
-
-			Logger.Init( File.ReadAllText( @".\Config\GSLogCfg.xml" ), "GS" );
+			Logger.Init( File.ReadAllText( opts.logCfg ), "GS" );
 
 			_inputHandler = new InputHandler { cmdHandler = HandleInput };
 			_inputHandler.Start();
 
-			ErrorCode eResult = GS.instance.Initialize();
+			ErrorCode eResult = GS.instance.Initialize( opts );
 
 			if ( ErrorCode.Success != eResult )
 			{
 				Logger.Error( $"Initialize GS fail, error code is {eResult}" );
-				return 0;
+				return;
 			}
 
 			eResult = GS.instance.Start();
 			if ( ErrorCode.Success != eResult )
 			{
 				Logger.Error( $"Start GS fail, error code is {eResult}" );
-				return 0;
+				return;
 			}
 
 			MainLoop();
 			_inputHandler.Stop();
-
-			return 0;
 		}
 
 		private static void Dispose()

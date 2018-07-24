@@ -10,7 +10,7 @@
 
 	public class CSConfig
 	{
-		public int csID;
+		public uint csID;
 		public int lsPort;
 		public int gsPort;
 		public int maxGSNum;

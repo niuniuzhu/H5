@@ -19,9 +19,24 @@ namespace GateServer
 
 		public GSConfig.State state;
 
-		public ErrorCode Initialize()
+		public ErrorCode Initialize( Options opts )
 		{
-			this.config = JsonConvert.DeserializeObject<GSConfig>( File.ReadAllText( @".\Config\GSCfg.json" ) );
+			if ( string.IsNullOrEmpty( opts.cfg ) )
+			{
+				this.config = new GSConfig
+				{
+					gsID = opts.gsID,
+					name = opts.name,
+					externalIP = opts.externalIP,
+					externalPort = opts.externalPort,
+					password = opts.password,
+					maxConnection = opts.maxConnection,
+					csIP = opts.csIP,
+					csPort = opts.csPort
+				};
+			}
+			else
+				this.config = JsonConvert.DeserializeObject<GSConfig>( File.ReadAllText( opts.cfg ) );
 			if ( this.config != null )
 				Logger.Info( "GS Initialize success" );
 			return ErrorCode.Success;

@@ -1,12 +1,12 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
-using System.Threading;
-using Core.Misc;
+﻿using Core.Misc;
 using Core.Net;
 using Shared;
 using Shared.Net;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Threading;
+using CommandLine;
 
 namespace CentralServer
 {
@@ -15,38 +15,37 @@ namespace CentralServer
 		private static bool _disposed;
 		private static InputHandler _inputHandler;
 
-		static int Main()
+		static void Main( string[] args )
+		{
+			Parser.Default.ParseArguments<Options>( args ).WithParsed( Start ).WithNotParsed( errs => { } );
+		}
+
+		private static void Start( Options opts )
 		{
 			Console.Title = "CS";
 
-			AssemblyName[] assemblies = Assembly.GetEntryAssembly().GetReferencedAssemblies();
-			foreach ( AssemblyName assembly in assemblies )
-				Assembly.Load( assembly );
-
-			Logger.Init( File.ReadAllText( @".\Config\CSLogCfg.xml" ), "CS" );
+			Logger.Init( File.ReadAllText( opts.logCfg ), "CS" );
 
 			_inputHandler = new InputHandler { cmdHandler = HandleInput };
 			_inputHandler.Start();
 
-			ErrorCode eResult = CS.instance.Initialize();
+			ErrorCode eResult = CS.instance.Initialize( opts );
 
 			if ( ErrorCode.Success != eResult )
 			{
 				Logger.Error( $"Initialize CS fail, error code is {eResult}" );
-				return 0;
+				return;
 			}
 
 			eResult = CS.instance.Start();
 			if ( ErrorCode.Success != eResult )
 			{
 				Logger.Error( $"Start CS fail, error code is {eResult}" );
-				return 0;
+				return;
 			}
 
 			MainLoop();
 			_inputHandler.Stop();
-
-			return 0;
 		}
 
 		private static void Dispose()

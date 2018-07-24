@@ -5,8 +5,8 @@ using Shared.Net;
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 using System.Threading;
+using CommandLine;
 
 namespace LoginServer
 {
@@ -15,38 +15,37 @@ namespace LoginServer
 		private static bool _disposed;
 		private static InputHandler _inputHandler;
 
-		static int Main()
+		static void Main( string[] args )
+		{
+			Parser.Default.ParseArguments<Options>( args ).WithParsed( Start ).WithNotParsed( errs => { } );
+		}
+
+		private static void Start( Options opts )
 		{
 			Console.Title = "LS";
 
-			AssemblyName[] assemblies = Assembly.GetEntryAssembly().GetReferencedAssemblies();
-			foreach ( AssemblyName assembly in assemblies )
-				Assembly.Load( assembly );
-
-			Logger.Init( File.ReadAllText( @".\Config\LSLogCfg.xml" ), "LS" );
+			Logger.Init( File.ReadAllText( opts.logCfg ), "LS" );
 
 			_inputHandler = new InputHandler { cmdHandler = HandleInput };
 			_inputHandler.Start();
 
-			ErrorCode eResult = LS.instance.Initialize();
+			ErrorCode eResult = LS.instance.Initialize( opts );
 
 			if ( ErrorCode.Success != eResult )
 			{
 				Logger.Error( $"Initialize LS fail, error code is {eResult}" );
-				return 0;
+				return;
 			}
 
 			eResult = LS.instance.Start();
 			if ( ErrorCode.Success != eResult )
 			{
 				Logger.Error( $"Start LS fail, error code is {eResult}" );
-				return 0;
+				return;
 			}
 
 			MainLoop();
 			_inputHandler.Stop();
-
-			return 0;
 		}
 
 		private static void Dispose()

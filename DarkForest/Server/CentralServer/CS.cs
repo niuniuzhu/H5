@@ -18,9 +18,23 @@ namespace CentralServer
 
 		private readonly Dictionary<uint, GSInfo> _gsInfos = new Dictionary<uint, GSInfo>();
 
-		public ErrorCode Initialize()
+		public ErrorCode Initialize( Options opts )
 		{
-			this.config = JsonConvert.DeserializeObject<CSConfig>( File.ReadAllText( @".\Config\CSCfg.json" ) );
+			if ( string.IsNullOrEmpty( opts.cfg ) )
+			{
+				this.config = new CSConfig
+				{
+					csID = opts.cdID,
+					lsPort = opts.lsPort,
+					gsPort = opts.gsPort,
+					maxGSNum = opts.maxGSNum,
+					redisIP = opts.redisIP,
+					redisPort = opts.redisPort,
+					redisPwd = opts.redisPwd
+				};
+			}
+			else
+				this.config = JsonConvert.DeserializeObject<CSConfig>( File.ReadAllText( opts.cfg ) );
 			if ( this.config != null )
 				Logger.Info( "CS Initialize success" );
 			return ErrorCode.Success;
