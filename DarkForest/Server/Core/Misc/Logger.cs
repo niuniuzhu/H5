@@ -1,6 +1,7 @@
 ﻿using Core.Math;
 using log4net;
 using log4net.Config;
+using log4net.Core;
 using log4net.Repository;
 using System;
 using System.Diagnostics;
@@ -20,47 +21,27 @@ namespace Core.Misc
 		public static void Init( string config, string domain )
 		{
 			ILoggerRepository repository = LogManager.CreateRepository( "NETCoreRepository" );
-			using ( var stream = GenerateStreamFromString( config ) )
+			if ( !string.IsNullOrEmpty( config ) )
 			{
-				XmlConfigurator.Configure( repository, stream );
+				using ( var stream = GenerateStreamFromString( config ) )
+					XmlConfigurator.Configure( repository, stream );
 			}
 			_log = LogManager.GetLogger( repository.Name, domain );
 		}
 
-		public static void Dispose()
-		{
-			LogManager.Shutdown();
-		}
+		public static void Dispose() => LogManager.Shutdown();
 
-		public static void Debug( object obj, int startFrame = 2, int count = 100 )
-		{
-			_log.Debug( $"{obj}{Environment.NewLine}{ GetStacks( startFrame, count )}" );
-		}
+		public static void Debug( object obj, int startFrame = 2, int count = 100 ) => _log.Debug( $"{obj}{Environment.NewLine}{ GetStacks( startFrame, count )}" );
 
-		public static void Log( object obj )
-		{
-			_log.Debug( obj );
-		}
+		public static void Log( object obj ) => _log.Log( obj );
 
-		public static void Warn( object obj, int startFrame = 2, int count = 1 )
-		{
-			_log.Warn( $"{ GetStacks( startFrame, count )}: {obj}" );
-		}
+		public static void Warn( object obj, int startFrame = 2, int count = 1 ) => _log.Warn( $"{ GetStacks( startFrame, count )}: {obj}" );
 
-		public static void Error( object obj, int startFrame = 2, int count = 1 )
-		{
-			_log.Error( $"{ GetStacks( startFrame, count )}: {obj}" );
-		}
+		public static void Error( object obj, int startFrame = 2, int count = 1 ) => _log.Error( $"{ GetStacks( startFrame, count )}: {obj}" );
 
-		public static void Info( object obj, int startFrame = 2, int count = 1 )
-		{
-			_log.Info( $"{ GetStacks( startFrame, count )}: {obj}" );
-		}
+		public static void Info( object obj, int startFrame = 2, int count = 1 ) => _log.Info( $"{ GetStacks( startFrame, count )}: {obj}" );
 
-		public static void Fatal( object obj, int startFrame = 2, int count = 100 )
-		{
-			_log.Fatal( $"{obj}{Environment.NewLine}{ GetStacks( startFrame, count )}" );
-		}
+		public static void Fatal( object obj, int startFrame = 2, int count = 100 ) => _log.Fatal( $"{obj}{Environment.NewLine}{ GetStacks( startFrame, count )}" );
 
 		private static Stream GenerateStreamFromString( string s )
 		{
@@ -87,9 +68,16 @@ namespace Core.Misc
 				MethodBase method = sf.GetMethod();
 				sb.Append( $"{method.DeclaringType.FullName}::{method.Name}:{sf.GetFileLineNumber()}" );
 				if ( i != endFrame )
-					sb.AppendLine("\t");
+					sb.AppendLine( "\t" );
 			}
 			return sb.ToString();
 		}
+	}
+
+	public static class SpecialLogging
+	{
+		private static readonly Level specialLevel = new Level( 350, "LOG" );
+
+		public static void Log( this ILog log, object message ) => log.Logger.Log( MethodBase.GetCurrentMethod().DeclaringType, specialLevel, message, null );
 	}
 }

@@ -1,1 +1,1 @@
-dotnet LoginServer.dll
+dotnet LoginServer.dll -c Config/LSCfg.json

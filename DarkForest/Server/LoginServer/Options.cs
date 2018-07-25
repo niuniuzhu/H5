@@ -10,12 +10,12 @@ namespace LoginServer
 		public string logCfg { get; set; }
 
 		[Option( 'c', "cfg",
-			Default = "Config/LSCfg.json",
+			Default = "",
 			SetName = "bycfg",
 			HelpText = "Specify configuration file." )]
 		public string cfg { get; set; }
 
-		[Option( "cli_port",
+		[Option( 'p', "cli_port",
 			Default = 49996,
 			SetName = "bysetting",
 			HelpText = "Exposed port for login server." )]

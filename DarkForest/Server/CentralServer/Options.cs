@@ -10,7 +10,7 @@ namespace CentralServer
 		public string logCfg { get; set; }
 
 		[Option( 'c', "cfg",
-			Default = "Config/CSCfg.json",
+			Default = "",
 			SetName = "bycfg",
 			HelpText = "Specify configuration file." )]
 		public string cfg { get; set; }

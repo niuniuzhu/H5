@@ -15,32 +15,37 @@ namespace GateServer
 		private static bool _disposed;
 		private static InputHandler _inputHandler;
 
-		static void Main( string[] args )
-		{
-			Parser.Default.ParseArguments<Options>( args ).WithParsed( Start ).WithNotParsed( errs => { } );
-		}
+		static void Main( string[] args ) => Parser.Default.ParseArguments<Options>( args ).WithParsed( Start ).WithNotParsed( errs => { } );
 
 		private static void Start( Options opts )
 		{
 			Console.Title = "GS";
-
-			Logger.Init( File.ReadAllText( opts.logCfg ), "GS" );
+			string logCfg;
+			try
+			{
+				logCfg = File.ReadAllText( opts.logCfg );
+			}
+			catch ( Exception e )
+			{
+				Logger.Error( $"Logger config file load failed,error:{e}" );
+				return;
+			}
+			Logger.Init( logCfg, "GS" );
 
 			_inputHandler = new InputHandler { cmdHandler = HandleInput };
 			_inputHandler.Start();
 
 			ErrorCode eResult = GS.instance.Initialize( opts );
-
 			if ( ErrorCode.Success != eResult )
 			{
-				Logger.Error( $"Initialize GS fail, error code is {eResult}" );
+				Logger.Error( $"Initialize GS fail,error code:{eResult}" );
 				return;
 			}
 
 			eResult = GS.instance.Start();
 			if ( ErrorCode.Success != eResult )
 			{
-				Logger.Error( $"Start GS fail, error code is {eResult}" );
+				Logger.Error( $"Start GS fail, error code:{eResult}" );
 				return;
 			}
 

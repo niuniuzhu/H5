@@ -10,7 +10,7 @@ namespace GateServer
 		public string logCfg { get; set; }
 
 		[Option( 'c', "cfg",
-			Default = "Config/GSCfg.json",
+			Default = "",
 			SetName = "bycfg",
 			HelpText = "Specify configuration file." )]
 		public string cfg { get; set; }
@@ -27,19 +27,19 @@ namespace GateServer
 			HelpText = "Name for gate server." )]
 		public string name { get; set; }
 
-		[Option( "external_ip",
+		[Option( 'i', "external_ip",
 			Default = "127.0.0.1",
 			SetName = "bysetting",
 			HelpText = "Exposed IPAddress for gate server." )]
 		public string externalIP { get; set; }
 
-		[Option( "external_port",
+		[Option( 'p', "external_port",
 			Default = 40001,
 			SetName = "bysetting",
 			HelpText = "Exposed gate server port." )]
 		public int externalPort { get; set; }
 
-		[Option( "password",
+		[Option( 'p', "password",
 			Default = "123456",
 			SetName = "bysetting",
 			HelpText = "Password for gate server." )]

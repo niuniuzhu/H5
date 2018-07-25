@@ -1,1 +1,1 @@
-dotnet CentralServer.dll
+dotnet CentralServer.dll -c Config/CSCfg.json
