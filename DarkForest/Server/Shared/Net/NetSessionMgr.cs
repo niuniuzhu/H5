@@ -1,7 +1,6 @@
 ﻿using Core.Misc;
 using Core.Net;
 using Google.Protobuf;
-using System;
 using System.Collections.Generic;
 
 namespace Shared.Net
@@ -25,7 +24,7 @@ namespace Shared.Net
 			if ( NetworkMgr.instance.ContainsListener( id ) )
 				throw new System.Exception( "session id already exists" );
 
-			IListener listener;
+			IListener listener = null;
 			switch ( protoType )
 			{
 				case ProtoType.TCP:
@@ -41,10 +40,9 @@ namespace Shared.Net
 				case ProtoType.WebSocket:
 					listener = new WSListener( id );
 					break;
-
-				default:
-					throw new NotSupportedException();
 			}
+			if ( listener == null )
+				return null;
 			listener.sessionCreater = sessionCreateHandler;
 			listener.recvBufSize = recvsize;
 			NetworkMgr.instance.AddListener( listener );

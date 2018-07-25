@@ -41,6 +41,7 @@ namespace GateServer
 				Logger.Error( $"Initialize GS fail,error code:{eResult}" );
 				return;
 			}
+			Logger.Info( "GS Initialize success" );
 
 			eResult = GS.instance.Start();
 			if ( ErrorCode.Success != eResult )

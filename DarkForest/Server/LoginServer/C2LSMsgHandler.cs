@@ -1,4 +1,5 @@
-﻿using Shared;
+﻿using Core.Misc;
+using Shared;
 
 namespace LoginServer
 {
@@ -17,6 +18,7 @@ namespace LoginServer
 			gsInfo.port = newGSInfo.Port;
 			gsInfo.password = newGSInfo.Password;
 			gsInfo.state = ( GSInfo.State )newGSInfo.State;
+			Logger.Log( gsInfo );
 			return ErrorCode.Success;
 		}
 	}

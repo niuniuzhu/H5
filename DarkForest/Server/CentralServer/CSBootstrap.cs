@@ -42,6 +42,7 @@ namespace CentralServer
 				Logger.Error( $"Initialize CS fail, error code:{eResult}" );
 				return;
 			}
+			Logger.Info( "CS Initialize success" );
 
 			eResult = CS.instance.Start();
 			if ( ErrorCode.Success != eResult )

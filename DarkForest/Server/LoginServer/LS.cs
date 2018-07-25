@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using Core.Misc;
+﻿using Core.Misc;
 using Core.Net;
 using LoginServer.Net;
 using Newtonsoft.Json;
 using Shared;
 using Shared.Net;
+using System.Collections.Generic;
+using System.IO;
 
 namespace LoginServer
 {
@@ -29,20 +29,27 @@ namespace LoginServer
 					csIP = opts.csIP,
 					csPort = opts.csPort
 				};
+				return ErrorCode.Success;
 			}
-			else
+			try
+			{
 				this.config = JsonConvert.DeserializeObject<LSConfig>( File.ReadAllText( opts.cfg ) );
-			if ( this.config != null )
-				Logger.Info( "LS Initialize success" );
+			}
+			catch ( System.Exception e )
+			{
+				Logger.Error( e );
+				return ErrorCode.CfgLoadFailed;
+			}
 			return ErrorCode.Success;
 		}
 
 		public ErrorCode Start()
 		{
-			WSListener cliListener = ( WSListener )this.netSessionMgr.CreateListener( 0, 65535, ProtoType.WebSocket, this.netSessionMgr.CreateClientSession );
-			cliListener.Start( "ws", this.config.cliPort );
+			( ( WSListener )this.netSessionMgr.CreateListener( 0, 65535, ProtoType.WebSocket, this.netSessionMgr.CreateClientSession ) )
+				.Start( "ws", this.config.cliPort );
 
-			this.netSessionMgr.CreateConnector<L2CSSession>( SessionType.ServerL2CS, this.config.csIP, this.config.csPort, ProtoType.TCP, 65535, 0 );
+			this.netSessionMgr.CreateConnector<L2CSSession>( SessionType.ServerL2CS, this.config.csIP, this.config.csPort,
+															 ProtoType.TCP, 65535, 0 );
 			return ErrorCode.Success;
 		}
 

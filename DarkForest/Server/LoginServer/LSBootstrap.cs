@@ -42,6 +42,7 @@ namespace LoginServer
 				Logger.Error( $"Initialize LS fail, error code:{eResult}" );
 				return;
 			}
+			Logger.Info( "LS Initialize success" );
 
 			eResult = LS.instance.Start();
 			if ( ErrorCode.Success != eResult )

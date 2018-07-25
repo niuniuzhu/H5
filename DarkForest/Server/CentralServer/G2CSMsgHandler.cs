@@ -34,7 +34,7 @@ namespace CentralServer
 			gsInfo.port = gsInfoRecv.Port;
 			gsInfo.password = gsInfoRecv.Password;
 			gsInfo.state = ( GSInfo.State )gsInfoRecv.State;
-			Core.Misc.Logger.Log( "Report from GS" );
+			Core.Misc.Logger.Log( $"report from GS,info:{gsInfo}" );
 			return ErrorCode.Success;
 		}
 	}

@@ -6,10 +6,10 @@ namespace Core.Net
 {
 	public class NetworkMgr
 	{
+		private const int HEART_BEAT_INTERVAL = 100;
+
 		private static NetworkMgr _instance;
 		public static NetworkMgr instance => _instance ?? ( _instance = new NetworkMgr() );
-
-		public int heartBeatInterval = 100;
 
 		private readonly SwitchQueue<NetEvent> _eventQueue = new SwitchQueue<NetEvent>();
 		private readonly ThreadSafeObejctPool<NetEvent> _eventPool = new ThreadSafeObejctPool<NetEvent>();
@@ -75,10 +75,10 @@ namespace Core.Net
 			this._updateContext.deltaTime = dt;
 
 			this._lastHeartBeatTime += dt;
-			while ( this._lastHeartBeatTime >= this.heartBeatInterval )
+			while ( this._lastHeartBeatTime >= HEART_BEAT_INTERVAL )
 			{
-				this.OnHeartBeat( this.heartBeatInterval );
-				this._lastHeartBeatTime -= this.heartBeatInterval;
+				this.OnHeartBeat( HEART_BEAT_INTERVAL );
+				this._lastHeartBeatTime -= HEART_BEAT_INTERVAL;
 			}
 			this.FireEvents();
 			this.RemoveSessions();

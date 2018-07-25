@@ -10,7 +10,6 @@ namespace GateServer
 {
 	public partial class GS
 	{
-
 		private static GS _instance;
 		public static GS instance => _instance ?? ( _instance = new GS() );
 
@@ -34,11 +33,17 @@ namespace GateServer
 					csIP = opts.csIP,
 					csPort = opts.csPort
 				};
+				return ErrorCode.Success;
 			}
-			else
+			try
+			{
 				this.config = JsonConvert.DeserializeObject<GSConfig>( File.ReadAllText( opts.cfg ) );
-			if ( this.config != null )
-				Logger.Info( "GS Initialize success" );
+			}
+			catch ( System.Exception e )
+			{
+				Logger.Error( e );
+				return ErrorCode.CfgLoadFailed;
+			}
 			return ErrorCode.Success;
 		}
 

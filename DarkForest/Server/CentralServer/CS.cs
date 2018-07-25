@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using CentralServer.Net;
+﻿using CentralServer.Net;
 using Core.Misc;
 using Core.Net;
 using Newtonsoft.Json;
 using Shared;
+using System.Collections.Generic;
 using System.IO;
 
 namespace CentralServer
@@ -32,11 +32,17 @@ namespace CentralServer
 					redisPort = opts.redisPort,
 					redisPwd = opts.redisPwd
 				};
+				return ErrorCode.Success;
 			}
-			else
+			try
+			{
 				this.config = JsonConvert.DeserializeObject<CSConfig>( File.ReadAllText( opts.cfg ) );
-			if ( this.config != null )
-				Logger.Info( "CS Initialize success" );
+			}
+			catch ( System.Exception e )
+			{
+				Logger.Error( e );
+				return ErrorCode.CfgLoadFailed;
+			}
 			return ErrorCode.Success;
 		}
 
