@@ -13,7 +13,8 @@ enum MsgID {
 	GS2CS_ReportState = 300;
 
 	CS2LS_GSInfos = 400;
-	CS2LS_NewGSInfo = 401;
+	CS2LS_GSInfo = 401;
+	CS2LS_GSLost = 402;
 }
 
 message Packet{

@@ -16,7 +16,7 @@ namespace CentralServer
 		public CSNetSessionMgr netSessionMgr { get; } = new CSNetSessionMgr();
 		public CSConfig config { get; private set; }
 
-		private readonly Dictionary<uint, GSInfo> _gsInfos = new Dictionary<uint, GSInfo>();
+		private readonly Dictionary<uint, GSInfo> _gsIDToInfos = new Dictionary<uint, GSInfo>();
 
 		public ErrorCode Initialize( Options opts )
 		{

@@ -57,9 +57,9 @@ namespace Shared.Net
 		/// <param name="port">远程端口</param>
 		/// <param name="protoType">协议类型</param>
 		/// <param name="recvsize">接受缓冲区大小</param>
-		/// <param name="logicId">逻辑id(目前仅用于连接场景服务器时记下连接器和逻辑id的映射)</param>
+		/// <param name="logicId">逻辑id</param>
 		/// <returns></returns>
-		public bool CreateConnector<T>( SessionType sessionType, string ip, int port, ProtoType protoType, int recvsize, int logicId ) where T : CliSession
+		public bool CreateConnector<T>( SessionType sessionType, string ip, int port, ProtoType protoType, int recvsize, uint logicId ) where T : CliSession
 		{
 			CliSession session = NetSessionPool.instance.Pop<T>( protoType );
 			session.owner = this;

@@ -9,7 +9,12 @@ message GSInfos{
 	repeated Protos.GS2CS.GSInfo gsInfo = 2;
 }
 
-message NewGSInfo{
+message GSInfo{
 	Packet packet = 1;
 	Protos.GS2CS.GSInfo gsInfo = 2;
+}
+
+message GSLost{
+	Packet packet = 1;
+	uint32 gsid = 2;
 }

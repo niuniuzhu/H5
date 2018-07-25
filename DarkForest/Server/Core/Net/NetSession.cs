@@ -4,11 +4,18 @@ namespace Core.Net
 {
 	public abstract class NetSession : INetSession
 	{
+		public enum State
+		{
+			Close,
+			Connecting,
+			Connected
+		}
+
 		public uint id { get; }
 		public IConnection connection { get; }
 		public bool isPassive { get; set; }
 
-		protected bool _closed;
+		protected State _state;
 
 		protected NetSession( uint id, ProtoType type )
 		{
@@ -36,26 +43,27 @@ namespace Core.Net
 
 		public void Close( string reason )
 		{
-			if ( this._closed )
+			if ( this._state == State.Close )
 				return;
 			this.connection.Close();
 			if ( this.isPassive )
 				NetworkMgr.instance.RemoveSession( this );
 			this.OnClose( reason );
-			this._closed = true;
 			this.isPassive = false;
+			this._state = State.Close;
 		}
 
 		public void _OnConnError( string error )
 		{
+			this._state = State.Close;
 			this.OnConnError( error );
 		}
 
 		public void _OnEstablish()
 		{
+			this._state = State.Connected;
 			if ( this.isPassive )
 				NetworkMgr.instance.AddSession( this );
-			this._closed = false;
 			this.OnEstablish();
 		}
 
@@ -69,11 +77,16 @@ namespace Core.Net
 			this.Close( error );
 		}
 
-		public virtual void Update( UpdateContext updateContext ) => this.connection.Update( updateContext );
+		public virtual void Update( UpdateContext updateContext )
+		{
+			if ( this._state == State.Connected )
+				this.connection.Update( updateContext );
+		}
 
 		public void HeartBeat( long dt )
 		{
-			this.connection.OnHeartBeat( dt );
+			if ( this._state == State.Connected )
+				this.connection.OnHeartBeat( dt );
 			this.OnHeartBeat( dt );
 		}
 

@@ -25,11 +25,12 @@ namespace Protos {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "CgxHbG9iYWwucHJvdG8SBlByb3RvcyI5CgZQYWNrZXQSCwoDcGlkGAEgASgN",
-            "EhEKCWlzUmVxdWVzdBgCIAEoCBIPCgdyZXBzUGlkGAMgASgNKqgBCgVNc2dJ",
+            "EhEKCWlzUmVxdWVzdBgCIAEoCBIPCgdyZXBzUGlkGAMgASgNKrgBCgVNc2dJ",
             "RBIMCghVbmRlZmluZRAAEhUKEUdDMkxTX0Fza1JlZ2lzdGVyEGQSEgoOR0My",
             "TFNfQXNrTG9naW4QZRIRCgxMUzJHQ19SZXN1bHQQyAESEQoMTFMyR0NfR1NJ",
             "bmZvEMkBEhYKEUdTMkNTX1JlcG9ydFN0YXRlEKwCEhIKDUNTMkxTX0dTSW5m",
-            "b3MQkAMSFAoPQ1MyTFNfTmV3R1NJbmZvEJEDYgZwcm90bzM="));
+            "b3MQkAMSEQoMQ1MyTFNfR1NJbmZvEJEDEhEKDENTMkxTX0dTTG9zdBCSA2IG",
+            "cHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Protos.MsgID), }, new pbr::GeneratedClrTypeInfo[] {
@@ -48,7 +49,8 @@ namespace Protos {
     [pbr::OriginalName("LS2GC_GSInfo")] Ls2GcGsinfo = 201,
     [pbr::OriginalName("GS2CS_ReportState")] Gs2CsReportState = 300,
     [pbr::OriginalName("CS2LS_GSInfos")] Cs2LsGsinfos = 400,
-    [pbr::OriginalName("CS2LS_NewGSInfo")] Cs2LsNewGsinfo = 401,
+    [pbr::OriginalName("CS2LS_GSInfo")] Cs2LsGsinfo = 401,
+    [pbr::OriginalName("CS2LS_GSLost")] Cs2LsGslost = 402,
   }
 
   #endregion

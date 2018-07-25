@@ -1,6 +1,5 @@
 ﻿using Core.Misc;
 using Core.Net;
-using System;
 
 namespace Shared.Net
 {
@@ -10,12 +9,8 @@ namespace Shared.Net
 	public abstract class CliSession : NetSessionBase
 	{
 		public IConnector connector { get; }
-		public bool reconnectTag { get; set; }
 
-		/// <summary>
-		/// 重连标记
-		/// </summary>
-		private bool _reconFlag;
+		protected bool _reconnectTag;
 
 		private long _reconnTime;
 
@@ -32,39 +27,32 @@ namespace Shared.Net
 					break;
 
 				default:
-					throw new NotSupportedException();
+					throw new System.NotSupportedException();
 			}
-			this.reconnectTag = true;
+			this._reconnectTag = true;
 		}
 
-		public bool Connect( string ip, int port )
+		public bool Connect( string ip, int port ) => this.Reconnect( ip, port );
+
+		private bool Reconnect()
 		{
-			return this.Reconnect( ip, port );
-		}
-
-		private void Reconnect()
-		{
-			if ( !this._reconFlag || !this.reconnectTag )
-				return;
-
-			if ( TimeUtils.utcTime < this._reconnTime )
-				return;
-
-			if ( !this.connector.ReConnect() )
-				return;
-
-			this._reconFlag = false;
+			if ( this._state != State.Close || !this._reconnectTag|| TimeUtils.utcTime < this._reconnTime )
+				return false;
+			bool result = this.connector.ReConnect();
+			this._state = result ? State.Connecting : State.Close;
+			return result;
 		}
 
 		private bool Reconnect( string ip, int port )
 		{
-			return this.connector.Connect( ip, port );
+			bool result = this.connector.Connect( ip, port );
+			this._state = result ? State.Connecting : State.Close;
+			return result;
 		}
 
 		protected override void OnClose( string reason )
 		{
 			base.OnClose( reason );
-			this._reconFlag = true;
 			this._reconnTime = TimeUtils.utcTime + Consts.RECONN_INTERVAL;
 		}
 
@@ -72,19 +60,9 @@ namespace Shared.Net
 		{
 			Logger.Log( error );
 			base.OnConnError( error );
-			this._reconFlag = true;
 			this._reconnTime = TimeUtils.utcTime + Consts.RECONN_INTERVAL;
 		}
 
-		protected override void OnEstablish()
-		{
-			base.OnEstablish();
-			this._reconFlag = false;
-		}
-
-		protected override void OnHeartBeat( long dt )
-		{
-			this.Reconnect();
-		}
+		protected override void OnHeartBeat( long dt ) => this.Reconnect();
 	}
 }

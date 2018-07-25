@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using Google.Protobuf.Collections;
-using Protos;
+﻿using Protos;
 using Shared;
-using Shared.Net;
+using System.Collections.Generic;
 
 namespace CentralServer
 {
@@ -11,7 +9,7 @@ namespace CentralServer
 		public void NotifyGSInfosToLS( uint sessionID )
 		{
 			Protos.CS2LS.GSInfos gsInfos = new Protos.CS2LS.GSInfos();
-			foreach ( KeyValuePair<uint, GSInfo> kv in this._gsInfos )
+			foreach ( KeyValuePair<uint, GSInfo> kv in this._gsIDToInfos )
 			{
 				GSInfo mGSInfo = kv.Value;
 				Protos.GS2CS.GSInfo gsInfo = new Protos.GS2CS.GSInfo

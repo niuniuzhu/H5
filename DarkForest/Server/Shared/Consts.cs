@@ -11,6 +11,11 @@
 		/// 重连检测的时间间隔
 		/// </summary>
 		public const long RECONN_INTERVAL = 2000;
+
+		/// <summary>
+		/// GS报告状态的时间间隔
+		/// </summary>
+		public const long GS_REPORT_INTERVAL = 10000;
 	}
 
 	public enum ErrorCode

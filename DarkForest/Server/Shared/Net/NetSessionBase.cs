@@ -6,7 +6,7 @@ namespace Shared.Net
 	public class NetSessionBase : NetSession
 	{
 		public NetSessionMgr owner { get; set; }
-		public int logicID { get; set; }
+		public uint logicID { get; set; }
 		public SessionType type { get; set; }
 
 		protected readonly MsgCenter _msgCenter;
@@ -38,9 +38,6 @@ namespace Shared.Net
 
 		protected override void OnRecv( byte[] data, int offset, int size )
 		{
-			if ( this._closed )
-				return;
-
 			int len = data.Length;
 			if ( len - offset < sizeof( int ) )
 			{

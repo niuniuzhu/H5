@@ -5,7 +5,7 @@ namespace LoginServer
 {
 	public partial class LS
 	{
-		public ErrorCode GCStateReportHandler( uint sessionID, Protos.GS2CS.GSInfo newGSInfo )
+		public ErrorCode GCStateReportHandler( Protos.GS2CS.GSInfo newGSInfo )
 		{
 			if ( !this._gsInfos.TryGetValue( newGSInfo.Id, out GSInfo gsInfo ) )
 			{
@@ -18,7 +18,14 @@ namespace LoginServer
 			gsInfo.port = newGSInfo.Port;
 			gsInfo.password = newGSInfo.Password;
 			gsInfo.state = ( GSInfo.State )newGSInfo.State;
-			Logger.Log( gsInfo );
+			Logger.Log( $"GS report:{gsInfo},count:{this._gsInfos.Count}" );
+			return ErrorCode.Success;
+		}
+
+		public ErrorCode GSLostHandler( uint gsID )
+		{
+			Logger.Log( $"GS lost:{gsID},count:{this._gsInfos.Count}" );
+			this._gsInfos.Remove( gsID );
 			return ErrorCode.Success;
 		}
 	}

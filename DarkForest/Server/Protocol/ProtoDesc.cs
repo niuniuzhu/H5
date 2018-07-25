@@ -13,7 +13,8 @@ namespace Protos {
 			{typeof(Protos.LS2GC.GSInfo), (Protos.MsgID)201},
 			{typeof(Protos.GS2CS.ReportState), (Protos.MsgID)300},
 			{typeof(Protos.CS2LS.GSInfos), (Protos.MsgID)400},
-			{typeof(Protos.CS2LS.NewGSInfo), (Protos.MsgID)401},
+			{typeof(Protos.CS2LS.GSInfo), (Protos.MsgID)401},
+			{typeof(Protos.CS2LS.GSLost), (Protos.MsgID)402},
 		};
 
 		private static readonly Dictionary<Protos.MsgID, System.Type> _ID2TYPE = new Dictionary<Protos.MsgID, System.Type> {
@@ -23,7 +24,8 @@ namespace Protos {
 			{(Protos.MsgID)201, typeof(Protos.LS2GC.GSInfo)},
 			{(Protos.MsgID)300, typeof(Protos.GS2CS.ReportState)},
 			{(Protos.MsgID)400, typeof(Protos.CS2LS.GSInfos)},
-			{(Protos.MsgID)401, typeof(Protos.CS2LS.NewGSInfo)},
+			{(Protos.MsgID)401, typeof(Protos.CS2LS.GSInfo)},
+			{(Protos.MsgID)402, typeof(Protos.CS2LS.GSLost)},
 		};
 
 		private static readonly Dictionary<System.Type, int> _TYPE2REPSID = new Dictionary<System.Type, int> {
@@ -55,7 +57,9 @@ namespace Protos {
 			if (msgID == 400)
 				return new Protos.CS2LS.GSInfos();
 			if (msgID == 401)
-				return new Protos.CS2LS.NewGSInfo();
+				return new Protos.CS2LS.GSInfo();
+			if (msgID == 402)
+				return new Protos.CS2LS.GSLost();
 			return null;
 		}
 

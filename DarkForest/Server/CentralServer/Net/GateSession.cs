@@ -21,6 +21,10 @@ namespace CentralServer.Net
 
 		protected override void OnClose( string reason )
 		{
+			CS.instance.GSDisconnectHandler( this.logicID );
+
+			this.logicID = 0;
+
 			base.OnClose( reason );
 			Logger.Info( $"GS({this.id}) disconnected with msg:{reason}" );
 		}
@@ -30,7 +34,9 @@ namespace CentralServer.Net
 			Protos.GS2CS.ReportState reportState = new Protos.GS2CS.ReportState();
 			reportState.MergeFrom( data, offset, size );
 
-			return CS.instance.GCStateReportHandler( this.id, reportState.GsInfo );
+			this.logicID = reportState.GsInfo.Id;
+
+			return CS.instance.GCStateReportHandler( reportState.GsInfo );
 		}
 	}
 }

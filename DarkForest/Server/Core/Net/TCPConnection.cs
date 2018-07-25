@@ -9,7 +9,6 @@ namespace Core.Net
 	{
 		public SocketWrapper socket { get; set; }
 		public EndPoint remoteEndPoint { get; set; }
-		public EndPoint localEndPoint { get; set; }
 		public INetSession session { get; }
 		public int recvBufSize { set => this._recvEventArgs.SetBuffer( new byte[value], 0, value ); }
 		/// <summary>
@@ -67,7 +66,6 @@ namespace Core.Net
 				}
 				this.socket.Close();
 				this.socket = null;
-				this.localEndPoint = null;
 				this.remoteEndPoint = null;
 				this.packetEncodeHandler = null;
 				this.packetDecodeHandler = null;
