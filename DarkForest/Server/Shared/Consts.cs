@@ -33,7 +33,8 @@
 		RedisReplyNil,
 		InvaildLogicID,
 		ConnectToRedisFailed,
-		DBCfgLoadFailed
+		DBCfgLoadFailed,
+		UsernameExists
 	}
 
 	public class GSInfo

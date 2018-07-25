@@ -1,0 +1,2 @@
+﻿syntax = "proto3";
+package Protos.LS2DB;

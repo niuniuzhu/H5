@@ -150,9 +150,11 @@ namespace Shared.DB
 		/// 执行查询指令
 		/// </summary>
 		/// <param name="command">sql指令</param>
+		/// <param name="rows">影响的行数</param>
 		/// <returns>错误信息</returns>
-		public ErrorCode SqlExecNonQuery( string command )
+		public ErrorCode SqlExecNonQuery( string command, out int rows )
 		{
+			rows = 0;
 			if ( null == this._db )
 			{
 				Logger.Warn( "invalid db" );
@@ -164,7 +166,7 @@ namespace Shared.DB
 			{
 				this._db.Open();
 				sqlCmd.CommandText = command;
-				sqlCmd.ExecuteNonQuery();
+				rows = sqlCmd.ExecuteNonQuery();
 			}
 			catch ( Exception e )
 			{

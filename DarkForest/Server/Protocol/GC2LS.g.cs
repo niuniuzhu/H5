@@ -24,16 +24,16 @@ namespace Protos.GC2LS {
     static GC2LSReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgtHQzJMUy5wcm90bxIMUHJvdG9zLkdDMkxTGgxHbG9iYWwucHJvdG8icAoL",
-            "QXNrUmVnaXN0ZXISHgoGcGFja2V0GAEgASgLMg4uUHJvdG9zLlBhY2tldBIQ",
-            "CghwbGF0Zm9ybRgCIAEoDRIRCglzZXNzaW9uaWQYAyABKAkSDAoEbmFtZRgE",
-            "IAEoCRIOCgZwYXNzd2QYBSABKAkiXAoIQXNrTG9naW4SHgoGcGFja2V0GAEg",
-            "ASgLMg4uUHJvdG9zLlBhY2tldBIQCghwbGF0Zm9ybRgCIAEoDRILCgN1aW4Y",
-            "AyABKAkSEQoJc2Vzc2lvbmlkGAQgASgJYgZwcm90bzM="));
+            "CgtHQzJMUy5wcm90bxIMUHJvdG9zLkdDMkxTGgxHbG9iYWwucHJvdG8idgoL",
+            "QXNrUmVnaXN0ZXISHgoGcGFja2V0GAEgASgLMg4uUHJvdG9zLlBhY2tldBIL",
+            "CgNzZGsYAiABKAUSDAoEbmFtZRgDIAEoCRIOCgZwYXNzd2QYBCABKAkSEAoI",
+            "cGxhdGZvcm0YBSABKA0SCgoCaXAYBiABKAkiXAoIQXNrTG9naW4SHgoGcGFj",
+            "a2V0GAEgASgLMg4uUHJvdG9zLlBhY2tldBIQCghwbGF0Zm9ybRgCIAEoDRIL",
+            "CgN1aW4YAyABKAkSEQoJc2Vzc2lvbmlkGAQgASgJYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Protos.GlobalReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.GC2LS.AskRegister), global::Protos.GC2LS.AskRegister.Parser, new[]{ "Packet", "Platform", "Sessionid", "Name", "Passwd" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.GC2LS.AskRegister), global::Protos.GC2LS.AskRegister.Parser, new[]{ "Packet", "Sdk", "Name", "Passwd", "Platform", "Ip" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protos.GC2LS.AskLogin), global::Protos.GC2LS.AskLogin.Parser, new[]{ "Packet", "Platform", "Uin", "Sessionid" }, null, null, null)
           }));
     }
@@ -67,10 +67,11 @@ namespace Protos.GC2LS {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public AskRegister(AskRegister other) : this() {
       packet_ = other.packet_ != null ? other.packet_.Clone() : null;
-      platform_ = other.platform_;
-      sessionid_ = other.sessionid_;
+      sdk_ = other.sdk_;
       name_ = other.name_;
       passwd_ = other.passwd_;
+      platform_ = other.platform_;
+      ip_ = other.ip_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -90,30 +91,19 @@ namespace Protos.GC2LS {
       }
     }
 
-    /// <summary>Field number for the "platform" field.</summary>
-    public const int PlatformFieldNumber = 2;
-    private uint platform_;
+    /// <summary>Field number for the "sdk" field.</summary>
+    public const int SdkFieldNumber = 2;
+    private int sdk_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public uint Platform {
-      get { return platform_; }
+    public int Sdk {
+      get { return sdk_; }
       set {
-        platform_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "sessionid" field.</summary>
-    public const int SessionidFieldNumber = 3;
-    private string sessionid_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string Sessionid {
-      get { return sessionid_; }
-      set {
-        sessionid_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        sdk_ = value;
       }
     }
 
     /// <summary>Field number for the "name" field.</summary>
-    public const int NameFieldNumber = 4;
+    public const int NameFieldNumber = 3;
     private string name_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string Name {
@@ -124,13 +114,35 @@ namespace Protos.GC2LS {
     }
 
     /// <summary>Field number for the "passwd" field.</summary>
-    public const int PasswdFieldNumber = 5;
+    public const int PasswdFieldNumber = 4;
     private string passwd_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string Passwd {
       get { return passwd_; }
       set {
         passwd_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "platform" field.</summary>
+    public const int PlatformFieldNumber = 5;
+    private uint platform_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint Platform {
+      get { return platform_; }
+      set {
+        platform_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "ip" field.</summary>
+    public const int IpFieldNumber = 6;
+    private string ip_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string Ip {
+      get { return ip_; }
+      set {
+        ip_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -148,10 +160,11 @@ namespace Protos.GC2LS {
         return true;
       }
       if (!object.Equals(Packet, other.Packet)) return false;
-      if (Platform != other.Platform) return false;
-      if (Sessionid != other.Sessionid) return false;
+      if (Sdk != other.Sdk) return false;
       if (Name != other.Name) return false;
       if (Passwd != other.Passwd) return false;
+      if (Platform != other.Platform) return false;
+      if (Ip != other.Ip) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -159,10 +172,11 @@ namespace Protos.GC2LS {
     public override int GetHashCode() {
       int hash = 1;
       if (packet_ != null) hash ^= Packet.GetHashCode();
-      if (Platform != 0) hash ^= Platform.GetHashCode();
-      if (Sessionid.Length != 0) hash ^= Sessionid.GetHashCode();
+      if (Sdk != 0) hash ^= Sdk.GetHashCode();
       if (Name.Length != 0) hash ^= Name.GetHashCode();
       if (Passwd.Length != 0) hash ^= Passwd.GetHashCode();
+      if (Platform != 0) hash ^= Platform.GetHashCode();
+      if (Ip.Length != 0) hash ^= Ip.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -180,21 +194,25 @@ namespace Protos.GC2LS {
         output.WriteRawTag(10);
         output.WriteMessage(Packet);
       }
-      if (Platform != 0) {
+      if (Sdk != 0) {
         output.WriteRawTag(16);
-        output.WriteUInt32(Platform);
-      }
-      if (Sessionid.Length != 0) {
-        output.WriteRawTag(26);
-        output.WriteString(Sessionid);
+        output.WriteInt32(Sdk);
       }
       if (Name.Length != 0) {
-        output.WriteRawTag(34);
+        output.WriteRawTag(26);
         output.WriteString(Name);
       }
       if (Passwd.Length != 0) {
-        output.WriteRawTag(42);
+        output.WriteRawTag(34);
         output.WriteString(Passwd);
+      }
+      if (Platform != 0) {
+        output.WriteRawTag(40);
+        output.WriteUInt32(Platform);
+      }
+      if (Ip.Length != 0) {
+        output.WriteRawTag(50);
+        output.WriteString(Ip);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -207,17 +225,20 @@ namespace Protos.GC2LS {
       if (packet_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Packet);
       }
-      if (Platform != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Platform);
-      }
-      if (Sessionid.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Sessionid);
+      if (Sdk != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Sdk);
       }
       if (Name.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
       }
       if (Passwd.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Passwd);
+      }
+      if (Platform != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Platform);
+      }
+      if (Ip.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Ip);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -236,17 +257,20 @@ namespace Protos.GC2LS {
         }
         Packet.MergeFrom(other.Packet);
       }
-      if (other.Platform != 0) {
-        Platform = other.Platform;
-      }
-      if (other.Sessionid.Length != 0) {
-        Sessionid = other.Sessionid;
+      if (other.Sdk != 0) {
+        Sdk = other.Sdk;
       }
       if (other.Name.Length != 0) {
         Name = other.Name;
       }
       if (other.Passwd.Length != 0) {
         Passwd = other.Passwd;
+      }
+      if (other.Platform != 0) {
+        Platform = other.Platform;
+      }
+      if (other.Ip.Length != 0) {
+        Ip = other.Ip;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -267,19 +291,23 @@ namespace Protos.GC2LS {
             break;
           }
           case 16: {
-            Platform = input.ReadUInt32();
+            Sdk = input.ReadInt32();
             break;
           }
           case 26: {
-            Sessionid = input.ReadString();
-            break;
-          }
-          case 34: {
             Name = input.ReadString();
             break;
           }
-          case 42: {
+          case 34: {
             Passwd = input.ReadString();
+            break;
+          }
+          case 40: {
+            Platform = input.ReadUInt32();
+            break;
+          }
+          case 50: {
+            Ip = input.ReadString();
             break;
           }
         }

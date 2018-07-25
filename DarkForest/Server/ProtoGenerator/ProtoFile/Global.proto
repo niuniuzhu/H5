@@ -15,6 +15,7 @@ enum MsgID {
 	CS2LS_GSInfos = 400;
 	CS2LS_GSInfo = 401;
 	CS2LS_GSLost = 402;
+
 }
 
 message Packet{
