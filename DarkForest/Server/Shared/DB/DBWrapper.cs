@@ -1,59 +1,77 @@
 ﻿using Core.Misc;
+using Core.Net;
 using Google.Protobuf;
 using MySql.Data.MySqlClient;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 
 namespace Shared.DB
 {
 	public delegate ErrorCode SqlExecQueryHandler( MySqlDataReader dataReader );
 
-	public class DBActiveWrapper
+	public class DBWrapper
 	{
-		public int actorID => this._active.actorID;
-
 		/// <summary>
 		/// Native MySQL connection
 		/// </summary>
-		private readonly MySqlConnection _db;
-		/// <summary>
-		/// 消息的生产和消费处理器
-		/// </summary>
-		private readonly DBActive _active;
+		private MySqlConnection _db;
+
+		private readonly ThreadSafeObejctPool<StreamBuffer> _pool = new ThreadSafeObejctPool<StreamBuffer>();
+		private readonly BufferBlock<StreamBuffer> _buffer = new BufferBlock<StreamBuffer>();
+		private bool _running;
+		private Action<StreamBuffer> _callback;
+		private Action _beginCallback;
 
 		/// <summary>
-		/// 构造函数
+		/// 连接数据库
 		/// </summary>
 		/// <param name="callback">消息消费后的回调函数(通常和生产者不在同一个线程上)</param>
-		/// <param name="cfg">数据库配置信息</param>
+		/// <param name="dbname"></param>
 		/// <param name="beginCallback">开始处理消息的回调函数</param>
-		public DBActiveWrapper( Action<GBuffer> callback, DBCfg cfg, Action beginCallback )
+		/// <param name="ip"></param>
+		/// <param name="port"></param>
+		/// <param name="pwd"></param>
+		/// <param name="uname"></param>
+		public void Start( Action<StreamBuffer> callback, Action beginCallback, string ip, int port, string pwd, string uname, string dbname )
 		{
-			this._active = new DBActive( callback, beginCallback );
-			this._db = new MySqlConnection(
-				$"server={cfg.ip};user id={cfg.username};password={cfg.passwd};port={cfg.port};database={cfg.name}" );
-
+			this._running = true;
+			this._callback = callback;
+			this._beginCallback = beginCallback;
+			this._db = new MySqlConnection( $"server={ip};user id={uname};password={pwd};port={port};database={dbname}" );
+			Task.Run( () =>
+			{
+				this._beginCallback?.Invoke();
+				this.ConsumeAsync();
+			} );
 		}
-
-		/// <summary>
-		/// 开始连接数据库
-		/// </summary>
-		public void Start() => this._active.Run();
 
 		/// <summary>
 		/// 断开数据库的连接
 		/// </summary>
 		public void Stop()
 		{
+			if ( this._buffer.TryReceiveAll( out IList<StreamBuffer> buffers ) )
+			{
+				foreach ( StreamBuffer buffer in buffers )
+				{
+					this._callback?.Invoke( buffer );
+					buffer.Clear();
+					this._pool.Push( buffer );
+				}
+			}
+			this._running = false;
 		}
 
 		/// <summary>
 		/// 把消息编码到缓冲区
 		/// </summary>
-		public static ErrorCode EncodeProtoMsgToBuffer( IMessage msg, int msgID, GBuffer buffer )
+		private static ErrorCode EncodeMsgToBuffer( IMessage msg, int msgID, StreamBuffer buffer )
 		{
+			buffer.Write( msgID );
 			buffer.Write( msg.ToByteArray() );
 			buffer.position = 0;
-			buffer.data = msgID;
 			return ErrorCode.Success;
 		}
 
@@ -62,16 +80,30 @@ namespace Shared.DB
 		/// </summary>
 		public ErrorCode EncodeAndSendToDBThread( IMessage msg, int msgID )
 		{
-			GBuffer buffer = this._active.GetBuffer();
-			ErrorCode errCode = EncodeProtoMsgToBuffer( msg, msgID, buffer );
+			StreamBuffer buffer = this._pool.Pop();
+			ErrorCode errCode = EncodeMsgToBuffer( msg, msgID, buffer );
 			if ( errCode != ErrorCode.Success )
 			{
-				this._active.ReleaseBuffer( buffer );
+				buffer.Clear();
+				this._pool.Push( buffer );
 				return ErrorCode.EncodeMsgToBufferFailed;
 			}
-			buffer.actorID = this._active.actorID;
-			this._active.Send( buffer );
+			this._buffer.Post( buffer );
 			return ErrorCode.Success;
+		}
+
+		/// <summary>
+		/// 消费线程
+		/// </summary>
+		private async void ConsumeAsync()
+		{
+			while ( this._running )
+			{
+				StreamBuffer buffer = await this._buffer.ReceiveAsync();
+				this._callback?.Invoke( buffer );
+				buffer.Clear();
+				this._pool.Push( buffer );
+			}
 		}
 
 		/// <summary>

@@ -17,5 +17,17 @@
 		public int maxConnection;
 		public string csIP;
 		public int csPort;
+
+		public void CopyFromCLIOptions( Options opts )
+		{
+			this.gsID = opts.gsID;
+			this.name = opts.name;
+			this.externalIP = opts.externalIP;
+			this.externalPort = opts.externalPort;
+			this.password = opts.password;
+			this.maxConnection = opts.maxConnection;
+			this.csIP = opts.csIP;
+			this.csPort = opts.csPort;
+		}
 	}
 }

@@ -18,21 +18,14 @@ namespace GateServer
 
 		public GSConfig.State state;
 
+		private readonly Scheduler _heartBeater = new Scheduler();
+
 		public ErrorCode Initialize( Options opts )
 		{
 			if ( string.IsNullOrEmpty( opts.cfg ) )
 			{
-				this.config = new GSConfig
-				{
-					gsID = opts.gsID,
-					name = opts.name,
-					externalIP = opts.externalIP,
-					externalPort = opts.externalPort,
-					password = opts.password,
-					maxConnection = opts.maxConnection,
-					csIP = opts.csIP,
-					csPort = opts.csPort
-				};
+				this.config = new GSConfig();
+				this.config.CopyFromCLIOptions( opts );
 				return ErrorCode.Success;
 			}
 			try
@@ -49,6 +42,8 @@ namespace GateServer
 
 		public ErrorCode Start()
 		{
+			this._heartBeater.Start( Consts.HEART_BEAT_INTERVAL, this.OnHeartBeat );
+
 			WSListener cliListener = ( WSListener )this.netSessionMgr.CreateListener( 0, 65535, ProtoType.WebSocket, this.netSessionMgr.CreateClientSession );
 			cliListener.Start( "ws", this.config.externalPort );
 
@@ -60,6 +55,9 @@ namespace GateServer
 		{
 			this.netSessionMgr.Update();
 			NetworkMgr.instance.Update( elapsed, dt );
+			this._heartBeater.Update( dt );
 		}
+
+		private void OnHeartBeat( int count ) => NetworkMgr.instance.OnHeartBeat( Consts.HEART_BEAT_INTERVAL );
 	}
 }

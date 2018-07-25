@@ -48,7 +48,7 @@ namespace Core.Net
 		private readonly KCPProxy _kcpProxy;
 		private readonly SocketAsyncEventArgs _sendEventArgs;
 		private readonly SocketAsyncEventArgs _recvEventArgs;
-		private SimpleScheduler _pingWorker;
+		private Scheduler _pingWorker;
 		private readonly SwitchQueue<StreamBuffer> _sendQueue = new SwitchQueue<StreamBuffer>();
 		private readonly SwitchQueue<StreamBuffer> _recvQueue = new SwitchQueue<StreamBuffer>();
 		private readonly ThreadSafeObejctPool<StreamBuffer> _bufferPool = new ThreadSafeObejctPool<StreamBuffer>();
@@ -281,7 +281,7 @@ namespace Core.Net
 		/// </summary>
 		public void StartPing()
 		{
-			this._pingWorker = new SimpleScheduler();
+			this._pingWorker = new Scheduler();
 			this._pingWorker.Start( ProtoConfig.PING_INTERVAL, ( count ) => this.SendPing(), true );
 		}
 

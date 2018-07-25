@@ -6,8 +6,6 @@ namespace Core.Net
 {
 	public class NetworkMgr
 	{
-		private const int HEART_BEAT_INTERVAL = 100;
-
 		private static NetworkMgr _instance;
 		public static NetworkMgr instance => _instance ?? ( _instance = new NetworkMgr() );
 
@@ -17,7 +15,6 @@ namespace Core.Net
 		private readonly Dictionary<uint, INetSession> _idToSession = new Dictionary<uint, INetSession>();
 		private readonly HashSet<INetSession> _sessionsToRemove = new HashSet<INetSession>();
 		private readonly UpdateContext _updateContext = new UpdateContext();
-		private long _lastHeartBeatTime;
 
 		private NetworkMgr()
 		{
@@ -74,12 +71,6 @@ namespace Core.Net
 			this._updateContext.time = elapsed;
 			this._updateContext.deltaTime = dt;
 
-			this._lastHeartBeatTime += dt;
-			while ( this._lastHeartBeatTime >= HEART_BEAT_INTERVAL )
-			{
-				this.OnHeartBeat( HEART_BEAT_INTERVAL );
-				this._lastHeartBeatTime -= HEART_BEAT_INTERVAL;
-			}
 			this.FireEvents();
 			this.RemoveSessions();
 			this.UpdateSessions( this._updateContext );
@@ -101,7 +92,7 @@ namespace Core.Net
 				kv.Value.Update( updateContext );
 		}
 
-		private void OnHeartBeat( long dt )
+		public void OnHeartBeat( long dt )
 		{
 			foreach ( KeyValuePair<uint, INetSession> kv in this._idToSession )
 				kv.Value.HeartBeat( dt );

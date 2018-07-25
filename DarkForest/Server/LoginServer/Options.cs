@@ -9,6 +9,11 @@ namespace LoginServer
 			HelpText = "Specify configuration file for log." )]
 		public string logCfg { get; set; }
 
+		[Option( 'd', "dbcfg",
+			Default = "",
+			HelpText = "Specify configuration file for database." )]
+		public string dbCfg { get; set; }
+
 		[Option( 'c', "cfg",
 			Default = "",
 			SetName = "bycfg",
@@ -32,5 +37,23 @@ namespace LoginServer
 			SetName = "bysetting",
 			HelpText = "Port of central server." )]
 		public int csPort { get; set; }
+
+		[Option( "redis_ip",
+			Default = "juntai.yytou.com",
+			SetName = "bysetting",
+			HelpText = "IPaddress of redis server." )]
+		public string redisIP { get; set; }
+
+		[Option( "redis_port",
+			Default = 23680,
+			SetName = "bysetting",
+			HelpText = "Redis server port." )]
+		public int redisPort { get; set; }
+
+		[Option( "redis_pwd",
+			Default = "",
+			SetName = "bysetting",
+			HelpText = "Password for redis server." )]
+		public string redisPwd { get; set; }
 	}
 }

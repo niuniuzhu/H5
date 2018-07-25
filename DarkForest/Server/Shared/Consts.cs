@@ -8,6 +8,11 @@
 		public const int HEART_BEAT_CD_TICK = 10;
 
 		/// <summary>
+		/// 心跳时间间隔
+		/// </summary>
+		public const int HEART_BEAT_INTERVAL = 100;
+
+		/// <summary>
 		/// 重连检测的时间间隔
 		/// </summary>
 		public const long RECONN_INTERVAL = 2000;
@@ -26,7 +31,9 @@
 		SqlExecError,
 		EncodeMsgToBufferFailed,
 		RedisReplyNil,
-		InvaildLogicID
+		InvaildLogicID,
+		ConnectToRedisFailed,
+		DBCfgLoadFailed
 	}
 
 	public class GSInfo
@@ -69,16 +76,6 @@
 		PlatformiOS_CMGEInfo = 304,
 
 		All = int.MaxValue
-	}
-
-	public class DBCfg
-	{
-		public int port;
-		public string ip;
-		public string username;
-		public string passwd;
-		public string name;
-		public string upgradeScriptDir;
 	}
 
 	public struct UserNetInfo

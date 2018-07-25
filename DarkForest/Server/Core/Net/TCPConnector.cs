@@ -42,10 +42,10 @@ namespace Core.Net
 		{
 			this._ip = ip;
 			this._port = port;
-			return this.ReConnect();
+			return this.Reconnect();
 		}
 
-		public bool ReConnect()
+		public bool Reconnect()
 		{
 			try
 			{
@@ -68,7 +68,7 @@ namespace Core.Net
 			}
 			catch ( SocketException e )
 			{
-				Logger.Debug( $"socket connect error, address:{this._ip}:{this._port}, code:{e.SocketErrorCode} " );
+				Logger.Debug( $"socket connect error, address:{this._ip}:{this._port}, code:{e.SocketErrorCode}" );
 				return false;
 			}
 			if ( !asyncResult )

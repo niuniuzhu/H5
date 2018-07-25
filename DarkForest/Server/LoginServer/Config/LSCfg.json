@@ -1,5 +1,8 @@
 {
     "cliPort": 49996,
     "csIP": "127.0.0.1",
-    "csPort": 10001
+    "csPort": 10001,
+    "redisIP": "juntai.yytou.com",
+    "redisPort": 23680,
+    "redisPwd": "159753"
 }

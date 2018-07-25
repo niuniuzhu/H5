@@ -2,7 +2,7 @@
   "profiles": {
     "GateServer": {
       "commandName": "Project",
-      "commandLineArgs": "--id=30002 -n local2 --external_port=40002"
+      "commandLineArgs": "-c Config/GSCfg.json"
     }
   }
 }

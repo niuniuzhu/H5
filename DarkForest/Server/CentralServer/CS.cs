@@ -16,22 +16,16 @@ namespace CentralServer
 		public CSNetSessionMgr netSessionMgr { get; } = new CSNetSessionMgr();
 		public CSConfig config { get; private set; }
 
+		private readonly Scheduler _heartBeater = new Scheduler();
+
 		private readonly Dictionary<uint, GSInfo> _gsIDToInfos = new Dictionary<uint, GSInfo>();
 
 		public ErrorCode Initialize( Options opts )
 		{
 			if ( string.IsNullOrEmpty( opts.cfg ) )
 			{
-				this.config = new CSConfig
-				{
-					csID = opts.cdID,
-					lsPort = opts.lsPort,
-					gsPort = opts.gsPort,
-					maxGSNum = opts.maxGSNum,
-					redisIP = opts.redisIP,
-					redisPort = opts.redisPort,
-					redisPwd = opts.redisPwd
-				};
+				this.config = new CSConfig();
+				this.config.CopyFromCLIOptions( opts );
 				return ErrorCode.Success;
 			}
 			try
@@ -48,8 +42,12 @@ namespace CentralServer
 
 		public ErrorCode Start()
 		{
+			this._heartBeater.Start( Consts.HEART_BEAT_INTERVAL, this.OnHeartBeat );
+
 			this.netSessionMgr.CreateListener( 0, 65535, ProtoType.TCP, this.netSessionMgr.CreateLSSession ).Start( this.config.lsPort );
+
 			this.netSessionMgr.CreateListener( 1, 65535, ProtoType.TCP, this.netSessionMgr.CreateGSSession ).Start( this.config.gsPort );
+
 			return ErrorCode.Success;
 		}
 
@@ -57,6 +55,9 @@ namespace CentralServer
 		{
 			this.netSessionMgr.Update();
 			NetworkMgr.instance.Update( elapsed, dt );
+			this._heartBeater.Update( dt );
 		}
+
+		private void OnHeartBeat( int count ) => NetworkMgr.instance.OnHeartBeat( Consts.HEART_BEAT_INTERVAL );
 	}
 }

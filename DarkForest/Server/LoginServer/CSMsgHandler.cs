@@ -24,8 +24,8 @@ namespace LoginServer
 
 		public ErrorCode GSLostHandler( uint gsID )
 		{
-			Logger.Log( $"GS lost:{gsID},count:{this._gsInfos.Count}" );
 			this._gsInfos.Remove( gsID );
+			Logger.Log( $"GS lost:{gsID},count:{this._gsInfos.Count}" );
 			return ErrorCode.Success;
 		}
 	}

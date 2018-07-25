@@ -2,7 +2,7 @@
 
 namespace Core.Misc
 {
-	public class SimpleScheduler
+	public class Scheduler
 	{
 		private long _interval;
 		private Action<int> _handler;

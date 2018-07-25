@@ -17,5 +17,16 @@
 		public string redisIP;
 		public int redisPort;
 		public string redisPwd;
+
+		public void CopyFromCLIOptions( Options opts )
+		{
+			this.csID = opts.cdID;
+			this.lsPort = opts.lsPort;
+			this.gsPort = opts.gsPort;
+			this.maxGSNum = opts.maxGSNum;
+			this.redisIP = opts.redisIP;
+			this.redisPort = opts.redisPort;
+			this.redisPwd = opts.redisPwd;
+		}
 	}
 }

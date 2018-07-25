@@ -36,9 +36,9 @@ namespace Shared.Net
 
 		private bool Reconnect()
 		{
-			if ( this._state != State.Close || !this._reconnectTag|| TimeUtils.utcTime < this._reconnTime )
+			if ( this._state != State.Close || !this._reconnectTag || TimeUtils.utcTime < this._reconnTime )
 				return false;
-			bool result = this.connector.ReConnect();
+			bool result = this.connector.Reconnect();
 			this._state = result ? State.Connecting : State.Close;
 			return result;
 		}
