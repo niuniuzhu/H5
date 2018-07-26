@@ -37,10 +37,10 @@ namespace ProtoGenerator
 
 			sb.AppendLine( "\t\t#region create message static functions" );
 			//CreateMessageByID
-			sb.AppendLine( "\t\tpublic static Google.Protobuf.IMessage CreateMsgByID(int msgID) {" );
+			sb.AppendLine( "\t\tpublic static Google.Protobuf.IMessage CreateMsgByID(Protos.MsgID msgID) {" );
 			foreach ( KeyValuePair<string, int> kv in clsToMsgID )
 			{
-				sb.AppendLine( $"\t\t\tif (msgID == {kv.Value})" );
+				sb.AppendLine( $"\t\t\tif ((int)msgID == {kv.Value})" );
 				sb.AppendLine( $"\t\t\t\treturn new {ns}.{kv.Key.Replace( '_', '.' )}();" );
 			}
 			sb.AppendLine( "\t\t\treturn null;" );

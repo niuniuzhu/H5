@@ -31,22 +31,22 @@ namespace Protos {
 		#endregion
 
 		#region create message static functions
-		public static Google.Protobuf.IMessage CreateMsgByID(int msgID) {
-			if (msgID == 100)
+		public static Google.Protobuf.IMessage CreateMsgByID(Protos.MsgID msgID) {
+			if ((int)msgID == 100)
 				return new Protos.GC2LS.AskRegister();
-			if (msgID == 101)
+			if ((int)msgID == 101)
 				return new Protos.GC2LS.AskLogin();
-			if (msgID == 200)
+			if ((int)msgID == 200)
 				return new Protos.LS2GC.Result();
-			if (msgID == 201)
+			if ((int)msgID == 201)
 				return new Protos.LS2GC.GSInfo();
-			if (msgID == 300)
+			if ((int)msgID == 300)
 				return new Protos.GS2CS.ReportState();
-			if (msgID == 400)
+			if ((int)msgID == 400)
 				return new Protos.CS2LS.GSInfos();
-			if (msgID == 401)
+			if ((int)msgID == 401)
 				return new Protos.CS2LS.GSInfo();
-			if (msgID == 402)
+			if ((int)msgID == 402)
 				return new Protos.CS2LS.GSLost();
 			return null;
 		}

@@ -38,19 +38,19 @@ export class UILogin implements IUIModule {
 	private OnLoginBtnClick(): void {
 		NetworkMgr.instance.Connect("localhost", 49996);
 		NetworkMgr.instance.OnConnected = ((e: Event) => {
-			let login = new Protos.GCToLS.AskLogin();
+			let login = new Protos.GC2LS.AskLogin();
 			// login.packet = new Protos.Packet();
 			// login.packet.pid = 1;
 			login.uin = "1";
-			let data = Protos.GCToLS.AskLogin.encode(login).finish();
-			NetworkMgr.instance.Send(Protos.MsgID.GCToLS_AskLogin, data);
+			let data = Protos.GC2LS.AskLogin.encode(login).finish();
+			NetworkMgr.instance.Send(Protos.MsgID.GC2LS_AskLogin, data);
 		}).bind(this);
 
 		NetworkMgr.instance.OnError = ((e: Event) => {
 			RC.Logger.Debug(e);
 		})
 
-		NetworkMgr.instance.RegisterMsg(Protos.MsgID.GCToLS_AskLogin, ((data, offset, size, msgID) => {
+		NetworkMgr.instance.RegisterMsg(Protos.MsgID.GC2LS_AskLogin, ((data, offset, size, msgID) => {
 			RC.Logger.Log("ok");
 		}).bind(this));
 
