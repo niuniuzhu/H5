@@ -13,7 +13,7 @@ enum EResult{
 
 message Result{
 	Packet packet = 1;
-	Result result = 2;
+	EResult result = 2;
 }
 
 message GSInfo

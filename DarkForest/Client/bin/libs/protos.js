@@ -2153,7 +2153,7 @@ define(["libs/protobufjs"], function($protobuf) {
                  * @memberof Protos.LS2GC
                  * @interface IResult
                  * @property {Protos.IPacket|null} [packet] Result packet
-                 * @property {Protos.LS2GC.IResult|null} [result] Result result
+                 * @property {Protos.LS2GC.EResult|null} [result] Result result
                  */
     
                 /**
@@ -2181,11 +2181,11 @@ define(["libs/protobufjs"], function($protobuf) {
     
                 /**
                  * Result result.
-                 * @member {Protos.LS2GC.IResult|null|undefined} result
+                 * @member {Protos.LS2GC.EResult} result
                  * @memberof Protos.LS2GC.Result
                  * @instance
                  */
-                Result.prototype.result = null;
+                Result.prototype.result = 0;
     
                 /**
                  * Creates a new Result instance using the specified properties.
@@ -2214,7 +2214,7 @@ define(["libs/protobufjs"], function($protobuf) {
                     if (message.packet != null && message.hasOwnProperty("packet"))
                         $root.Protos.Packet.encode(message.packet, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
                     if (message.result != null && message.hasOwnProperty("result"))
-                        $root.Protos.LS2GC.Result.encode(message.result, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                        writer.uint32(/* id 2, wireType 0 =*/16).int32(message.result);
                     return writer;
                 };
     
@@ -2253,7 +2253,7 @@ define(["libs/protobufjs"], function($protobuf) {
                             message.packet = $root.Protos.Packet.decode(reader, reader.uint32());
                             break;
                         case 2:
-                            message.result = $root.Protos.LS2GC.Result.decode(reader, reader.uint32());
+                            message.result = reader.int32();
                             break;
                         default:
                             reader.skipType(tag & 7);
@@ -2295,11 +2295,17 @@ define(["libs/protobufjs"], function($protobuf) {
                         if (error)
                             return "packet." + error;
                     }
-                    if (message.result != null && message.hasOwnProperty("result")) {
-                        var error = $root.Protos.LS2GC.Result.verify(message.result);
-                        if (error)
-                            return "result." + error;
-                    }
+                    if (message.result != null && message.hasOwnProperty("result"))
+                        switch (message.result) {
+                        default:
+                            return "result: enum value expected";
+                        case 0:
+                        case 1:
+                        case 2:
+                        case 3:
+                        case 4:
+                            break;
+                        }
                     return null;
                 };
     
@@ -2320,10 +2326,27 @@ define(["libs/protobufjs"], function($protobuf) {
                             throw TypeError(".Protos.LS2GC.Result.packet: object expected");
                         message.packet = $root.Protos.Packet.fromObject(object.packet);
                     }
-                    if (object.result != null) {
-                        if (typeof object.result !== "object")
-                            throw TypeError(".Protos.LS2GC.Result.result: object expected");
-                        message.result = $root.Protos.LS2GC.Result.fromObject(object.result);
+                    switch (object.result) {
+                    case "Success":
+                    case 0:
+                        message.result = 0;
+                        break;
+                    case "Failed":
+                    case 1:
+                        message.result = 1;
+                        break;
+                    case "UsernameExists":
+                    case 2:
+                        message.result = 2;
+                        break;
+                    case "IllegalName":
+                    case 3:
+                        message.result = 3;
+                        break;
+                    case "IllegalPasswd":
+                    case 4:
+                        message.result = 4;
+                        break;
                     }
                     return message;
                 };
@@ -2343,12 +2366,12 @@ define(["libs/protobufjs"], function($protobuf) {
                     var object = {};
                     if (options.defaults) {
                         object.packet = null;
-                        object.result = null;
+                        object.result = options.enums === String ? "Success" : 0;
                     }
                     if (message.packet != null && message.hasOwnProperty("packet"))
                         object.packet = $root.Protos.Packet.toObject(message.packet, options);
                     if (message.result != null && message.hasOwnProperty("result"))
-                        object.result = $root.Protos.LS2GC.Result.toObject(message.result, options);
+                        object.result = options.enums === String ? $root.Protos.LS2GC.EResult[message.result] : message.result;
                     return object;
                 };
     

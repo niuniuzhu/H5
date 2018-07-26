@@ -24,16 +24,16 @@ namespace Protos.LS2GC {
     static LS2GCReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgtMUzJHQy5wcm90bxIMUHJvdG9zLkxTMkdDGgxHbG9iYWwucHJvdG8iTgoG",
-            "UmVzdWx0Eh4KBnBhY2tldBgBIAEoCzIOLlByb3Rvcy5QYWNrZXQSJAoGcmVz",
-            "dWx0GAIgASgLMhQuUHJvdG9zLkxTMkdDLlJlc3VsdCLCAQoGR1NJbmZvEh4K",
-            "BnBhY2tldBgBIAEoCzIOLlByb3Rvcy5QYWNrZXQSMwoKc2VydmVyaW5mbxgC",
-            "IAMoCzIfLlByb3Rvcy5MUzJHQy5HU0luZm8uU2VydmVySW5mbxpjCgpTZXJ2",
-            "ZXJJbmZvEh4KBnBhY2tldBgBIAEoCzIOLlByb3Rvcy5QYWNrZXQSDAoEbmFt",
-            "ZRgCIAEoCRIKCgJpcBgDIAEoCRIMCgRwb3J0GAQgASgFEg0KBXN0YXRlGAUg",
-            "ASgFKloKB0VSZXN1bHQSCwoHU3VjY2VzcxAAEgoKBkZhaWxlZBABEhIKDlVz",
-            "ZXJuYW1lRXhpc3RzEAISDwoLSWxsZWdhbE5hbWUQAxIRCg1JbGxlZ2FsUGFz",
-            "c3dkEARiBnByb3RvMw=="));
+            "CgtMUzJHQy5wcm90bxIMUHJvdG9zLkxTMkdDGgxHbG9iYWwucHJvdG8iTwoG",
+            "UmVzdWx0Eh4KBnBhY2tldBgBIAEoCzIOLlByb3Rvcy5QYWNrZXQSJQoGcmVz",
+            "dWx0GAIgASgOMhUuUHJvdG9zLkxTMkdDLkVSZXN1bHQiwgEKBkdTSW5mbxIe",
+            "CgZwYWNrZXQYASABKAsyDi5Qcm90b3MuUGFja2V0EjMKCnNlcnZlcmluZm8Y",
+            "AiADKAsyHy5Qcm90b3MuTFMyR0MuR1NJbmZvLlNlcnZlckluZm8aYwoKU2Vy",
+            "dmVySW5mbxIeCgZwYWNrZXQYASABKAsyDi5Qcm90b3MuUGFja2V0EgwKBG5h",
+            "bWUYAiABKAkSCgoCaXAYAyABKAkSDAoEcG9ydBgEIAEoBRINCgVzdGF0ZRgF",
+            "IAEoBSpaCgdFUmVzdWx0EgsKB1N1Y2Nlc3MQABIKCgZGYWlsZWQQARISCg5V",
+            "c2VybmFtZUV4aXN0cxACEg8KC0lsbGVnYWxOYW1lEAMSEQoNSWxsZWdhbFBh",
+            "c3N3ZBAEYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Protos.GlobalReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Protos.LS2GC.EResult), }, new pbr::GeneratedClrTypeInfo[] {
@@ -82,7 +82,7 @@ namespace Protos.LS2GC {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public Result(Result other) : this() {
       packet_ = other.packet_ != null ? other.packet_.Clone() : null;
-      result_ = other.result_ != null ? other.result_.Clone() : null;
+      result_ = other.result_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -104,9 +104,9 @@ namespace Protos.LS2GC {
 
     /// <summary>Field number for the "result" field.</summary>
     public const int Result_FieldNumber = 2;
-    private global::Protos.LS2GC.Result result_;
+    private global::Protos.LS2GC.EResult result_ = 0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Protos.LS2GC.Result Result_ {
+    public global::Protos.LS2GC.EResult Result_ {
       get { return result_; }
       set {
         result_ = value;
@@ -127,7 +127,7 @@ namespace Protos.LS2GC {
         return true;
       }
       if (!object.Equals(Packet, other.Packet)) return false;
-      if (!object.Equals(Result_, other.Result_)) return false;
+      if (Result_ != other.Result_) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -135,7 +135,7 @@ namespace Protos.LS2GC {
     public override int GetHashCode() {
       int hash = 1;
       if (packet_ != null) hash ^= Packet.GetHashCode();
-      if (result_ != null) hash ^= Result_.GetHashCode();
+      if (Result_ != 0) hash ^= Result_.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -153,9 +153,9 @@ namespace Protos.LS2GC {
         output.WriteRawTag(10);
         output.WriteMessage(Packet);
       }
-      if (result_ != null) {
-        output.WriteRawTag(18);
-        output.WriteMessage(Result_);
+      if (Result_ != 0) {
+        output.WriteRawTag(16);
+        output.WriteEnum((int) Result_);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -168,8 +168,8 @@ namespace Protos.LS2GC {
       if (packet_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Packet);
       }
-      if (result_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Result_);
+      if (Result_ != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Result_);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -188,11 +188,8 @@ namespace Protos.LS2GC {
         }
         Packet.MergeFrom(other.Packet);
       }
-      if (other.result_ != null) {
-        if (result_ == null) {
-          result_ = new global::Protos.LS2GC.Result();
-        }
-        Result_.MergeFrom(other.Result_);
+      if (other.Result_ != 0) {
+        Result_ = other.Result_;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -212,11 +209,8 @@ namespace Protos.LS2GC {
             input.ReadMessage(packet_);
             break;
           }
-          case 18: {
-            if (result_ == null) {
-              result_ = new global::Protos.LS2GC.Result();
-            }
-            input.ReadMessage(result_);
+          case 16: {
+            result_ = (global::Protos.LS2GC.EResult) input.ReadEnum();
             break;
           }
         }

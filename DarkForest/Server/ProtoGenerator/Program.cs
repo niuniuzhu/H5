@@ -15,8 +15,8 @@ namespace ProtoGenerator
 				case "csharp":
 					writerType = Parser.WriterType.CSharp;
 					break;
-				case "js":
-					writerType = Parser.WriterType.JS;
+				case "ts":
+					writerType = Parser.WriterType.TS;
 					break;
 				default:
 					Console.WriteLine( "invalid output type" );

@@ -11,7 +11,7 @@ namespace LoginServer.User
 		{
 		}
 
-		public ErrorCode RegisterAccount( uint gcNID, Protos.GC2LS.AskRegister msg )
+		public ErrorCode RegisterAccount( Protos.GC2LS.AskRegister msg )
 		{
 			if ( this.allUserNameToGuidMap.ContainsKey( msg.Name ) ) //如果内存里找到相同名字
 				return ErrorCode.UsernameExists;
@@ -21,12 +21,12 @@ namespace LoginServer.User
 			RedisWrapper redisWrapper = LS.instance.redisWrapper;
 			if ( redisWrapper.IsConnected )
 			{
-				if ( redisWrapper.HashExists( "usernames", msg.Name ) ) //redis存在相同名字
+				if ( redisWrapper.HashExists( "unames", msg.Name ) ) //redis存在相同名字
 					return ErrorCode.UsernameExists;
 			}
 			else
 			{
-				errorCode = this._accountDBWrapper.SqlExecQuery( $"select user_name from account_user where user_name={msg.Name}",
+				errorCode = this._accountDBWrapper.SqlExecQuery( $"select id from account_user where uname={msg.Name}",
 																 dataReader =>
 																	 dataReader.HasRows
 																		 ? ErrorCode.UsernameExists
@@ -38,9 +38,9 @@ namespace LoginServer.User
 			ulong guid = GuidHash.GetUInt64();
 			string pwd = Core.Crypto.MD5Util.GetMd5HexDigest( msg.Passwd );
 			if ( redisWrapper.IsConnected )
-				redisWrapper.HashSet( "usernames", msg.Name, true );
+				redisWrapper.HashSet( "unames", msg.Name, true );
 			this._accountDBWrapper.SqlExecNonQuery(
-				$"insert account_user( id, sdk, username, password, ip ) values({guid},{msg.Sdk},\'{msg.Name}\',\'{pwd}\',\'{msg.Ip}\');", out int _ );
+				$"insert account_user( id,sdk,unames,pwd,ip ) values({guid}, {msg.Sdk}, \'{msg.Name}\', \'{pwd}\', \'{msg.Ip}\');", out int _ );
 			return ErrorCode.Success;
 		}
 	}

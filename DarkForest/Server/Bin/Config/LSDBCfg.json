@@ -6,7 +6,7 @@
             "port": "3306",
             "user": "root",
             "pwd": "ron159753",
-            "dbname": "FBAll_GameDB_1"
+            "dbname": "df_gamedb"
         },
         {
             "type": "2",
@@ -14,7 +14,7 @@
             "port": "3306",
             "user": "root",
             "pwd": "ron159753",
-            "dbname": "FBAll_AccountDB"
+            "dbname": "df_accountdb"
         }
     ]
 }

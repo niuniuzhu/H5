@@ -28,8 +28,8 @@ message Packet{
 <ext>
 {
 	"RespID": {
-		"GC2LS_AskRegister": 200,
-		"GC2LS_AskLogin": 200
+		"GC2LS_AskRegister": "LS2GC_Result",
+		"GC2LS_AskLogin": "LS2GC_Result"
 	}
 }
 </ext>

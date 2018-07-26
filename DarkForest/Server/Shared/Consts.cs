@@ -26,15 +26,19 @@
 	public enum ErrorCode
 	{
 		Success,
+		//config
 		CfgLoadFailed,
+		DBCfgLoadFailed,
+		//db
 		InvalidDatabase,
 		SqlExecError,
 		EncodeMsgToBufferFailed,
 		RedisReplyNil,
-		InvaildLogicID,
 		ConnectToRedisFailed,
-		DBCfgLoadFailed,
-		UsernameExists
+		//register
+		UsernameExists,
+		IllegalName,
+		IllegalPasswd
 	}
 
 	public class GSInfo

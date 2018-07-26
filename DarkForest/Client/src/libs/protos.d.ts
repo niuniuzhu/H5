@@ -226,13 +226,13 @@ export namespace Protos {
 
         interface IResult {
             packet?: (Protos.IPacket|null);
-            result?: (Protos.LS2GC.IResult|null);
+            result?: (Protos.LS2GC.EResult|null);
         }
 
         class Result implements IResult {
             constructor(properties?: Protos.LS2GC.IResult);
             public packet?: (Protos.IPacket|null);
-            public result?: (Protos.LS2GC.IResult|null);
+            public result: Protos.LS2GC.EResult;
             public static create(properties?: Protos.LS2GC.IResult): Protos.LS2GC.Result;
             public static encode(message: Protos.LS2GC.IResult, writer?: $protobuf.Writer): $protobuf.Writer;
             public static encodeDelimited(message: Protos.LS2GC.IResult, writer?: $protobuf.Writer): $protobuf.Writer;

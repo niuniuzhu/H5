@@ -1,6 +1,7 @@
 ﻿using Core.Misc;
 using Core.Net;
 using Google.Protobuf;
+using Protos;
 using Shared;
 using Shared.Net;
 
@@ -39,10 +40,27 @@ namespace LoginServer.Net
 
 		private ErrorCode OnGCtoLSAskRegister( byte[] data, int offset, int size, int msgid )
 		{
-			Protos.GC2LS.AskRegister login = new Protos.GC2LS.AskRegister();
-			login.MergeFrom( data, offset, size );
+			Protos.GC2LS.AskRegister register = new Protos.GC2LS.AskRegister();
+			register.MergeFrom( data, offset, size );
 
-			Logger.Log( "ask register" );
+			ErrorCode regError = LS.instance.userMgr.RegisterAccount( register );
+			Protos.LS2GC.Result response = ProtoDesc.R_GC2LS_AskRegister();
+			switch ( regError )
+			{
+				case ErrorCode.UsernameExists:
+					response.Result_ = Protos.LS2GC.EResult.UsernameExists;
+					break;
+				case ErrorCode.IllegalName:
+					response.Result_ = Protos.LS2GC.EResult.IllegalName;
+					break;
+				case ErrorCode.IllegalPasswd:
+					response.Result_ = Protos.LS2GC.EResult.IllegalPasswd;
+					break;
+				default:
+					response.Result_ = Protos.LS2GC.EResult.Failed;
+					break;
+			}
+			this.owner.SendMsgToSession( this.id, response, ( int )response.GetMsgID() );
 
 			return ErrorCode.Success;
 		}

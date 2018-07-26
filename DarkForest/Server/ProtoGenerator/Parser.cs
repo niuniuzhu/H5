@@ -14,7 +14,7 @@ namespace ProtoGenerator
 		public enum WriterType
 		{
 			CSharp,
-			JS
+			TS
 		}
 
 		private static readonly Regex REGEX_WHITE_SPACE = new Regex( @"\s" );
@@ -33,10 +33,11 @@ namespace ProtoGenerator
 			switch ( writerType )
 			{
 				case WriterType.CSharp:
-					this._writer = new CSharpWriter();
+					this._writer = new CSharpWritter();
 					break;
 
-				case WriterType.JS:
+				case WriterType.TS:
+					this._writer = new TSWritter();
 					break;
 			}
 
@@ -62,7 +63,7 @@ namespace ProtoGenerator
 				return false;
 			}
 			Dictionary<string, int> clsToMsgID = new Dictionary<string, int>();
-			Dictionary<string, int> responseToMsgID = new Dictionary<string, int>();
+			Dictionary<string, string> responseToMsgID = new Dictionary<string, string>();
 
 			Match match = REGEX_NAMESPACE.Match( content );
 			string ns = match.Groups[1].Value;
@@ -92,7 +93,7 @@ namespace ProtoGenerator
 				foreach ( JToken jToken in token )
 				{
 					JProperty child = ( JProperty )jToken;
-					responseToMsgID[child.Name] = ( int )child.Value;
+					responseToMsgID[child.Name] = ( string )child.Value;
 				}
 			}
 
