@@ -22,7 +22,7 @@ namespace CentralServer
 				};
 				gsInfos.GsInfo.Add( gsInfo );
 			}
-			this.netSessionMgr.SendMsgToSession( sessionID, gsInfos );
+			this.netSessionMgr.Send( sessionID, gsInfos );
 		}
 	}
 }

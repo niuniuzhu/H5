@@ -4,6 +4,9 @@ package Protos;
 enum MsgID {
 	Undefine = 0;
 
+	eG_AskPing = 10;
+	eG_AskPingRet = 11;
+
 	eGC2LS_AskRegister = 100;
 	eGC2LS_AskLogin = 101;
 	
@@ -12,17 +15,34 @@ enum MsgID {
 
 	eGS2CS_ReportState = 300;
 
-	eCS2LS_GSInfos = 400;
-	eCS2LS_GSInfo = 401;
-	eCS2LS_GSLost = 402;
+	eCS2LS_GSInfos = 500;
+	eCS2LS_GSInfo = 501;
+	eCS2LS_GSLost = 502;
 }
 
 message MsgOpts{
-	uint32 pid = 1;			//运行时消息pid
-	bool rpc = 2;			//是否rpc消息
+	enum Flag{
+		Unused = 0;
+		RPC = 1;
+		RESP = 2;
+		TRANS = 4;
+	}
+	//protobuf是变长编码的,数值在0-127就只会用花费一个byte
+	uint32 flag = 1;		//消息标记,每个位有不同用途.0-是否rpc消息,1-是否回应rpc的消息,2-是否转发消息
+	uint32 pid = 2;			//运行时消息pid
 	uint32 rpid = 3;		//回应对应请求的消息的pid
-	bool trans = 5;			//是否一条转发消息
-	uint32 nsid = 6;		//转发的网络id(暂时只会转发到客户端)
+	uint32 nsid = 4;		//转发的网络id(暂时只会转发到客户端)
+}
+
+message G_AskPing{
+	MsgOpts opts = 1;
+	int64 time = 2;
+}
+
+message G_AskPingRet{
+	MsgOpts opts = 1;
+	int64 stime = 2;
+	int64 time = 3;
 }
 
 /*
@@ -30,7 +50,8 @@ message MsgOpts{
 {
 	"RespID": {
 		"GC2LS_AskRegister": "LS2GC_Result",
-		"GC2LS_AskLogin": "LS2GC_Result"
+		"GC2LS_AskLogin": "LS2GC_Result",
+		"G_AskPing": "G_AskPingRet"
 	}
 }
 </ext>

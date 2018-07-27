@@ -33,7 +33,7 @@ namespace CentralServer
 				Password = gsInfo.password,
 				State = ( Protos.GSInfo.Types.State )gsInfo.state
 			};
-			this.netSessionMgr.SendMsgToSession( SessionType.ServerLS, nGSInfo );
+			this.netSessionMgr.Send( SessionType.ServerLS, nGSInfo );
 			return ErrorCode.Success;
 		}
 
@@ -47,7 +47,7 @@ namespace CentralServer
 				//通知LS有GS断开连接了
 				Protos.CS2LS_GSLost gsLost = ProtoCreator.Q_CS2LS_GSLost();
 				gsLost.Gsid = gsID;
-				this.netSessionMgr.SendMsgToSession( SessionType.ServerLS, gsLost );
+				this.netSessionMgr.Send( SessionType.ServerLS, gsLost );
 			}
 			return ErrorCode.Success;
 		}

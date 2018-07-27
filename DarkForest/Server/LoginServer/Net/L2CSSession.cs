@@ -7,6 +7,8 @@ namespace LoginServer.Net
 {
 	public class L2CSSession : CliSession
 	{
+		private long _pingTime;
+
 		private L2CSSession( uint id, ProtoType type ) : base( id, type )
 		{
 			this._msgCenter.Register( Protos.MsgID.ECs2LsGsinfos, this.OnCs2LsGsinfos );
@@ -18,12 +20,35 @@ namespace LoginServer.Net
 		{
 			base.OnEstablish();
 			Logger.Info( $"CS({this.logicID}) connected." );
+			this._pingTime = 0;
 		}
 
 		protected override void OnClose( string reason )
 		{
 			base.OnClose( reason );
 			Logger.Info( $"CS({this.logicID}) disconnected with msg:{reason}." );
+		}
+
+		protected override void OnHeartBeat( long dt )
+		{
+			base.OnHeartBeat( dt );
+			this._pingTime += dt;
+			if ( this._pingTime >= Consts.PING_INTERVAL )
+			{
+				this._pingTime = 0;
+				Protos.G_AskPing msg = ProtoCreator.Q_G_AskPing();
+				msg.Time = TimeUtils.utcTime;
+				this.Send( msg, this.OnCSAskPingRet );
+			}
+		}
+
+		private void OnCSAskPingRet( Google.Protobuf.IMessage message )
+		{
+			long currTime = TimeUtils.utcTime;
+			Protos.G_AskPingRet askPingRet = ( Protos.G_AskPingRet )message;
+			long lag = ( long )( ( currTime - askPingRet.Stime ) * 0.5 );
+			long timeDiff = askPingRet.Time + lag - currTime;
+			Logger.Log( $"cs ping ret, lag:{lag}, timediff:{timeDiff}" );
 		}
 
 		private ErrorCode OnCs2LsGsinfos( Google.Protobuf.IMessage message )

@@ -9,6 +9,7 @@ namespace CentralServer.Net
 	{
 		protected GateSession( uint id, ProtoType type ) : base( id, type )
 		{
+			this._msgCenter.Register( Protos.MsgID.EGAskPing, this.OnGSAskPing );
 			this._msgCenter.Register( Protos.MsgID.EGs2CsReportState, this.OnGs2CsReportState );
 		}
 
@@ -26,6 +27,16 @@ namespace CentralServer.Net
 
 			base.OnClose( reason );
 			Logger.Info( $"GS({this.id}) disconnected with msg:{reason}" );
+		}
+
+		private ErrorCode OnGSAskPing( Google.Protobuf.IMessage message )
+		{
+			Protos.G_AskPing askPing = ( Protos.G_AskPing )message;
+			Protos.G_AskPingRet askPingRet = ProtoCreator.R_G_AskPing( askPing.Opts.Pid );
+			askPingRet.Stime = askPing.Time;
+			askPingRet.Time = TimeUtils.utcTime;
+			this.Send( askPingRet );
+			return ErrorCode.Success;
 		}
 
 		private ErrorCode OnGs2CsReportState( Google.Protobuf.IMessage message )

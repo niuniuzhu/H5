@@ -6,42 +6,59 @@ using Google.Protobuf;
 static class ProtoDesc {
 	#region mappings
 	internal static readonly System.Collections.Generic.Dictionary<System.Type, Protos.MsgID> _TYPE2ID = new System.Collections.Generic.Dictionary<System.Type, Protos.MsgID> {
+		{typeof(Protos.G_AskPing), (Protos.MsgID)10},
+		{typeof(Protos.G_AskPingRet), (Protos.MsgID)11},
 		{typeof(Protos.GC2LS_AskRegister), (Protos.MsgID)100},
 		{typeof(Protos.GC2LS_AskLogin), (Protos.MsgID)101},
 		{typeof(Protos.LS2GC_Result), (Protos.MsgID)200},
 		{typeof(Protos.LS2GC_GSInfo), (Protos.MsgID)201},
 		{typeof(Protos.GS2CS_ReportState), (Protos.MsgID)300},
-		{typeof(Protos.CS2LS_GSInfos), (Protos.MsgID)400},
-		{typeof(Protos.CS2LS_GSInfo), (Protos.MsgID)401},
-		{typeof(Protos.CS2LS_GSLost), (Protos.MsgID)402},
+		{typeof(Protos.CS2LS_GSInfos), (Protos.MsgID)500},
+		{typeof(Protos.CS2LS_GSInfo), (Protos.MsgID)501},
+		{typeof(Protos.CS2LS_GSLost), (Protos.MsgID)502},
 	};
 
 	internal static readonly System.Collections.Generic.Dictionary<Protos.MsgID, System.Type> _ID2TYPE = new System.Collections.Generic.Dictionary<Protos.MsgID, System.Type> {
+		{(Protos.MsgID)10, typeof(Protos.G_AskPing)},
+		{(Protos.MsgID)11, typeof(Protos.G_AskPingRet)},
 		{(Protos.MsgID)100, typeof(Protos.GC2LS_AskRegister)},
 		{(Protos.MsgID)101, typeof(Protos.GC2LS_AskLogin)},
 		{(Protos.MsgID)200, typeof(Protos.LS2GC_Result)},
 		{(Protos.MsgID)201, typeof(Protos.LS2GC_GSInfo)},
 		{(Protos.MsgID)300, typeof(Protos.GS2CS_ReportState)},
-		{(Protos.MsgID)400, typeof(Protos.CS2LS_GSInfos)},
-		{(Protos.MsgID)401, typeof(Protos.CS2LS_GSInfo)},
-		{(Protos.MsgID)402, typeof(Protos.CS2LS_GSLost)},
+		{(Protos.MsgID)500, typeof(Protos.CS2LS_GSInfos)},
+		{(Protos.MsgID)501, typeof(Protos.CS2LS_GSInfo)},
+		{(Protos.MsgID)502, typeof(Protos.CS2LS_GSLost)},
 	};
 	#endregion
 } //end class
 
 public static class ProtoCreator {
 	#region proto generator class
+	public static Protos.G_AskPing Q_G_AskPing() {
+		var msg = new Protos.G_AskPing();
+		msg.Opts = new Protos.MsgOpts();
+		msg.Opts.Flag |= (uint)Protos.MsgOpts.Types.Flag.Rpc;
+		return msg;
+	}
+
+	public static Protos.G_AskPingRet Q_G_AskPingRet() {
+		var msg = new Protos.G_AskPingRet();
+		msg.Opts = new Protos.MsgOpts();
+		return msg;
+	}
+
 	public static Protos.GC2LS_AskRegister Q_GC2LS_AskRegister() {
 		var msg = new Protos.GC2LS_AskRegister();
 		msg.Opts = new Protos.MsgOpts();
-		msg.Opts.Rpc = true;
+		msg.Opts.Flag |= (uint)Protos.MsgOpts.Types.Flag.Rpc;
 		return msg;
 	}
 
 	public static Protos.GC2LS_AskLogin Q_GC2LS_AskLogin() {
 		var msg = new Protos.GC2LS_AskLogin();
 		msg.Opts = new Protos.MsgOpts();
-		msg.Opts.Rpc = true;
+		msg.Opts.Flag |= (uint)Protos.MsgOpts.Types.Flag.Rpc;
 		return msg;
 	}
 
@@ -87,16 +104,24 @@ public static class ProtoCreator {
 	public static Protos.LS2GC_Result R_GC2LS_AskRegister( uint pid ) {
 		var msg = new Protos.LS2GC_Result();
 		msg.Opts = new Protos.MsgOpts();
+		msg.Opts.Flag |= (uint)Protos.MsgOpts.Types.Flag.Resp;
 		msg.Opts.Rpid = pid;
-		msg.Opts.Rpc = true;
 		return msg;
 	}
 
 	public static Protos.LS2GC_Result R_GC2LS_AskLogin( uint pid ) {
 		var msg = new Protos.LS2GC_Result();
 		msg.Opts = new Protos.MsgOpts();
+		msg.Opts.Flag |= (uint)Protos.MsgOpts.Types.Flag.Resp;
 		msg.Opts.Rpid = pid;
-		msg.Opts.Rpc = true;
+		return msg;
+	}
+
+	public static Protos.G_AskPingRet R_G_AskPing( uint pid ) {
+		var msg = new Protos.G_AskPingRet();
+		msg.Opts = new Protos.MsgOpts();
+		msg.Opts.Flag |= (uint)Protos.MsgOpts.Types.Flag.Resp;
+		msg.Opts.Rpid = pid;
 		return msg;
 	}
 
@@ -105,6 +130,16 @@ public static class ProtoCreator {
 	#region decode message static functions
 	public static Google.Protobuf.IMessage DecodeMsg( Protos.MsgID msgID, byte[] data, int offset, int size ) {
 		switch ( msgID ) {
+			case (Protos.MsgID)10: {
+				var msg = new Protos.G_AskPing();
+				msg.MergeFrom( data, offset, size );
+				return msg;
+			}
+			case (Protos.MsgID)11: {
+				var msg = new Protos.G_AskPingRet();
+				msg.MergeFrom( data, offset, size );
+				return msg;
+			}
 			case (Protos.MsgID)100: {
 				var msg = new Protos.GC2LS_AskRegister();
 				msg.MergeFrom( data, offset, size );
@@ -130,23 +165,35 @@ public static class ProtoCreator {
 				msg.MergeFrom( data, offset, size );
 				return msg;
 			}
-			case (Protos.MsgID)400: {
+			case (Protos.MsgID)500: {
 				var msg = new Protos.CS2LS_GSInfos();
 				msg.MergeFrom( data, offset, size );
 				return msg;
 			}
-			case (Protos.MsgID)401: {
+			case (Protos.MsgID)501: {
 				var msg = new Protos.CS2LS_GSInfo();
 				msg.MergeFrom( data, offset, size );
 				return msg;
 			}
-			case (Protos.MsgID)402: {
+			case (Protos.MsgID)502: {
 				var msg = new Protos.CS2LS_GSLost();
 				msg.MergeFrom( data, offset, size );
 				return msg;
 			}
 		}
 		return null;
+	}
+
+	public static Protos.G_AskPing D_G_AskPing( byte[] data, int offset, int size ) {
+		var msg = new Protos.G_AskPing();
+		msg.MergeFrom( data, offset, size );
+		return msg;
+	}
+
+	public static Protos.G_AskPingRet D_G_AskPingRet( byte[] data, int offset, int size ) {
+		var msg = new Protos.G_AskPingRet();
+		msg.MergeFrom( data, offset, size );
+		return msg;
 	}
 
 	public static Protos.GC2LS_AskRegister D_GC2LS_AskRegister( byte[] data, int offset, int size ) {
@@ -202,6 +249,12 @@ public static class ProtoCreator {
 	#region create message static functions
 	public static Google.Protobuf.IMessage CreateMsgByID(Protos.MsgID msgID) {
 		switch ( msgID ) {
+			case (Protos.MsgID)10: {
+				return new Protos.G_AskPing();
+			}
+			case (Protos.MsgID)11: {
+				return new Protos.G_AskPingRet();
+			}
 			case (Protos.MsgID)100: {
 				return new Protos.GC2LS_AskRegister();
 			}
@@ -217,13 +270,13 @@ public static class ProtoCreator {
 			case (Protos.MsgID)300: {
 				return new Protos.GS2CS_ReportState();
 			}
-			case (Protos.MsgID)400: {
+			case (Protos.MsgID)500: {
 				return new Protos.CS2LS_GSInfos();
 			}
-			case (Protos.MsgID)401: {
+			case (Protos.MsgID)501: {
 				return new Protos.CS2LS_GSInfo();
 			}
-			case (Protos.MsgID)402: {
+			case (Protos.MsgID)502: {
 				return new Protos.CS2LS_GSLost();
 			}
 		}
@@ -235,6 +288,12 @@ public static class ProtoCreator {
 	public static Protos.MsgOpts GetMsgOpts( this Google.Protobuf.IMessage message ) {
 		var msgID = message.GetMsgID();
 		switch ( msgID ) {
+			case (Protos.MsgID)10: {
+				return ((Protos.G_AskPing)message).Opts;
+			}
+			case (Protos.MsgID)11: {
+				return ((Protos.G_AskPingRet)message).Opts;
+			}
 			case (Protos.MsgID)100: {
 				return ((Protos.GC2LS_AskRegister)message).Opts;
 			}
@@ -250,13 +309,13 @@ public static class ProtoCreator {
 			case (Protos.MsgID)300: {
 				return ((Protos.GS2CS_ReportState)message).Opts;
 			}
-			case (Protos.MsgID)400: {
+			case (Protos.MsgID)500: {
 				return ((Protos.CS2LS_GSInfos)message).Opts;
 			}
-			case (Protos.MsgID)401: {
+			case (Protos.MsgID)501: {
 				return ((Protos.CS2LS_GSInfo)message).Opts;
 			}
-			case (Protos.MsgID)402: {
+			case (Protos.MsgID)502: {
 				return ((Protos.CS2LS_GSLost)message).Opts;
 			}
 		}

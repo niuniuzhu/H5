@@ -5,7 +5,7 @@
 		/// <summary>
 		/// 线程睡眠时长
 		/// </summary>
-		public const int HEART_BEAT_CD_TICK = 10;
+		public const int HEART_BEAT_CD_TICK = 5;
 
 		/// <summary>
 		/// 心跳时间间隔
@@ -21,6 +21,11 @@
 		/// GS报告状态的时间间隔
 		/// </summary>
 		public const long GS_REPORT_INTERVAL = 10000;
+
+		/// <summary>
+		/// ping时间间隔
+		/// </summary>
+		public const long PING_INTERVAL = 10000;
 	}
 
 	public enum ErrorCode

@@ -57,8 +57,7 @@ namespace LoginServer.Net
 					response.Result = Protos.LS2GC_Result.Types.EResult.Failed;
 					break;
 			}
-			this.owner.SendMsgToSession( this.id, response );
-
+			this.owner.Send( this.id, response );
 			return ErrorCode.Success;
 		}
 
@@ -66,7 +65,6 @@ namespace LoginServer.Net
 		{
 			Protos.GC2LS_AskLogin login = ( Protos.GC2LS_AskLogin ) message;
 			Logger.Log( "ask login" );
-
 			return ErrorCode.Success;
 		}
 	}

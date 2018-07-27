@@ -16,7 +16,7 @@ namespace GateServer
 				Password = this.config.password,
 				State = ( Protos.GSInfo.Types.State )this.state
 			};
-			this.netSessionMgr.SendMsgToSession( SessionType.ServerG2CS, reportState );
+			this.netSessionMgr.Send( SessionType.ServerG2CS, reportState );
 		}
 	}
 }
