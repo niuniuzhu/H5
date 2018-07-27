@@ -1,12 +1,11 @@
-﻿using Protos;
-using Shared;
+﻿using Shared;
 using Shared.Net;
 
 namespace CentralServer
 {
 	public partial class CS
 	{
-		public ErrorCode GCStateReportHandler( Protos.GS2CS.GSInfo gsInfoRecv )
+		public ErrorCode GCStateReportHandler( Protos.GSInfo gsInfoRecv )
 		{
 			bool hasRecord = this._gsIDToInfos.TryGetValue( gsInfoRecv.Id, out GSInfo gsInfo );
 			if ( !hasRecord )
@@ -24,19 +23,17 @@ namespace CentralServer
 			Core.Misc.Logger.Log( $"report from GS:{gsInfo}" );
 
 			//转发到LS
-			Protos.CS2LS.GSInfo newGSInfo = new Protos.CS2LS.GSInfo
+			Protos.CS2LS_GSInfo nGSInfo = ProtoCreator.Q_CS2LS_GSInfo();
+			nGSInfo.GsInfo = new Protos.GSInfo()
 			{
-				GsInfo = new Protos.GS2CS.GSInfo
-				{
-					Id = gsInfo.id,
-					Name = gsInfo.name,
-					Ip = gsInfo.ip,
-					Port = gsInfo.port,
-					Password = gsInfo.password,
-					State = ( Protos.GS2CS.GSInfo.Types.State )gsInfo.state
-				}
+				Id = gsInfo.id,
+				Name = gsInfo.name,
+				Ip = gsInfo.ip,
+				Port = gsInfo.port,
+				Password = gsInfo.password,
+				State = ( Protos.GSInfo.Types.State )gsInfo.state
 			};
-			this.netSessionMgr.SendMsgToSession( SessionType.ServerLS, newGSInfo, ( int )newGSInfo.GetMsgID(), false );
+			this.netSessionMgr.SendMsgToSession( SessionType.ServerLS, nGSInfo );
 			return ErrorCode.Success;
 		}
 
@@ -48,8 +45,9 @@ namespace CentralServer
 			if ( result )
 			{
 				//通知LS有GS断开连接了
-				Protos.CS2LS.GSLost gsLost = new Protos.CS2LS.GSLost { Gsid = gsID };
-				this.netSessionMgr.SendMsgToSession( SessionType.ServerLS, gsLost, ( int )gsLost.GetMsgID(), false );
+				Protos.CS2LS_GSLost gsLost = ProtoCreator.Q_CS2LS_GSLost();
+				gsLost.Gsid = gsID;
+				this.netSessionMgr.SendMsgToSession( SessionType.ServerLS, gsLost );
 			}
 			return ErrorCode.Success;
 		}

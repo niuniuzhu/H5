@@ -1,5 +1,7 @@
 ﻿using Core.Misc;
 using Core.Net;
+using Google.Protobuf;
+using System.Collections.Generic;
 
 namespace Shared.Net
 {
@@ -11,9 +13,39 @@ namespace Shared.Net
 
 		protected readonly MsgCenter _msgCenter;
 
+		private uint _pid;
+		private readonly Dictionary<uint, System.Action<IMessage>> _rpcHandlers = new Dictionary<uint, System.Action<IMessage>>();//可能是异步写入,但必定是同步读取,所以不用加锁
+
 		protected NetSessionBase( uint id, ProtoType type ) : base( id, type )
 		{
 			this._msgCenter = new MsgCenter();
+		}
+
+		public void Send( IMessage message, System.Action<IMessage> rpcHandler = null, bool trans = false, uint nsid = 0 )
+		{
+			StreamBuffer buffer = new StreamBuffer();
+			buffer.Write( ( int )message.GetMsgID() );
+
+			//检查第一个字段是否Protos.Packet类型
+			Protos.MsgOpts opts = message.GetMsgOpts();
+			System.Diagnostics.Debug.Assert( opts != null, "invalid msg options" );
+			//为消息写入序号
+			opts.Pid = this._pid++;
+			if ( trans )
+			{
+				opts.Trans = true;
+				opts.Nsid = nsid;
+			}
+			if ( opts.Rpc && rpcHandler != null ) //如果是rpc消息,记下消息序号等待回调
+			{
+				if ( this._rpcHandlers.ContainsKey( opts.Pid ) )
+					Logger.Warn( "packet id collision!!" );
+				this._rpcHandlers[opts.Pid] = rpcHandler;
+			}
+
+			message.WriteTo( buffer.ms );
+			this.Send( buffer.GetBuffer(), 0, buffer.length );
+			buffer.Close();
 		}
 
 		protected override void OnHeartBeat( long dt )
@@ -32,6 +64,7 @@ namespace Shared.Net
 
 		protected override void OnClose( string reason )
 		{
+			this._pid = 0;
 			if ( this.isPassive )
 				this.owner.RemoveSession( this );
 		}
@@ -41,36 +74,40 @@ namespace Shared.Net
 			int len = data.Length;
 			if ( len - offset < sizeof( int ) )
 			{
-				Logger.Warn( $"invalid msg." );
+				Logger.Warn( "invalid msg." );
 				return;
 			}
 
 			ErrorCode errorCode = ErrorCode.Success;
-			//剥离第一层消息ID
-			int msgID = 0;
-			offset += ByteUtils.Decode32i( data, offset, ref msgID );
+			//剥离消息ID
+			Protos.MsgID msgID = ( Protos.MsgID )ByteUtils.Decode32i( data, offset );
+			offset += sizeof( int );
 			size -= offset;
-			//检查是否注册了处理函数,否则调用未处理数据的函数
-			if ( this._msgCenter.TryGetHandler( msgID, out MsgCenter.GeneralHandler msgHandler ) )
-				errorCode = msgHandler.Invoke( data, offset, size, msgID );
-			else if ( this._msgCenter.TryGetHandler( msgID, out MsgCenter.TransHandler transHandler ) )
+
+			//解码消息
+			IMessage message = ProtoCreator.DecodeMsg( msgID, data, offset, size );
+			//检查第一个字段是否Protos.Packet类型
+			Protos.MsgOpts opts = message.GetMsgOpts();
+			System.Diagnostics.Debug.Assert( opts != null, "invalid msg options" );
+
+			if ( opts.Rpc )//这是一条rpc消息
 			{
-				if ( len - offset < sizeof( int ) + sizeof( uint ) )
-				{
-					Logger.Warn( "invalid msg." );
-					return;
-				}
-				int transID = msgID;
-				uint gcNetID = 0;
-				//剥离第二层消息ID
-				offset += ByteUtils.Decode32i( data, offset, ref msgID );
-				//剥离客户端网络ID
-				offset += ByteUtils.Decode32u( data, offset, ref gcNetID );
-				size -= sizeof( int ) + sizeof( uint );
-				errorCode = transHandler.Invoke( data, offset, size, transID, msgID, gcNetID );
+				bool find = this._rpcHandlers.TryGetValue( opts.Rpid, out System.Action<IMessage> rcpHandler );
+				System.Diagnostics.Debug.Assert( find, "RPC handler not found" );
+				this._rpcHandlers.Remove( opts.Rpid );
+				rcpHandler( message );//调用回调函数
 			}
+			else if ( this._msgCenter.TryGetHandler( msgID, out MsgCenter.GeneralHandler msgHandler ) )
+				errorCode = msgHandler.Invoke( message );
 			else
-				Logger.Warn( $"invalid msg:{msgID}." );
+			{
+				if ( opts.Trans ) //这是一条转发消息
+				{
+					//todo
+				}
+				else
+					Logger.Warn( $"invalid msg:{msgID}." );
+			}
 
 			if ( errorCode != ErrorCode.Success )
 				Logger.Warn( errorCode );

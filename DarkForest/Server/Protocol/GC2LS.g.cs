@@ -9,7 +9,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace Protos.GC2LS {
+namespace Protos {
 
   /// <summary>Holder for reflection information generated from GC2LS.proto</summary>
   public static partial class GC2LSReflection {
@@ -24,32 +24,32 @@ namespace Protos.GC2LS {
     static GC2LSReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgtHQzJMUy5wcm90bxIMUHJvdG9zLkdDMkxTGgxHbG9iYWwucHJvdG8idgoL",
-            "QXNrUmVnaXN0ZXISHgoGcGFja2V0GAEgASgLMg4uUHJvdG9zLlBhY2tldBIL",
-            "CgNzZGsYAiABKAUSDAoEbmFtZRgDIAEoCRIOCgZwYXNzd2QYBCABKAkSEAoI",
-            "cGxhdGZvcm0YBSABKA0SCgoCaXAYBiABKAkiXAoIQXNrTG9naW4SHgoGcGFj",
-            "a2V0GAEgASgLMg4uUHJvdG9zLlBhY2tldBIQCghwbGF0Zm9ybRgCIAEoDRIL",
-            "CgN1aW4YAyABKAkSEQoJc2Vzc2lvbmlkGAQgASgJYgZwcm90bzM="));
+            "CgtHQzJMUy5wcm90bxIGUHJvdG9zGgxHbG9iYWwucHJvdG8iewoRR0MyTFNf",
+            "QXNrUmVnaXN0ZXISHQoEb3B0cxgBIAEoCzIPLlByb3Rvcy5Nc2dPcHRzEgsK",
+            "A3NkaxgCIAEoBRIMCgRuYW1lGAMgASgJEg4KBnBhc3N3ZBgEIAEoCRIQCghw",
+            "bGF0Zm9ybRgFIAEoDRIKCgJpcBgGIAEoCSJhCg5HQzJMU19Bc2tMb2dpbhId",
+            "CgRvcHRzGAEgASgLMg8uUHJvdG9zLk1zZ09wdHMSEAoIcGxhdGZvcm0YAiAB",
+            "KA0SCwoDdWluGAMgASgJEhEKCXNlc3Npb25pZBgEIAEoCWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Protos.GlobalReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.GC2LS.AskRegister), global::Protos.GC2LS.AskRegister.Parser, new[]{ "Packet", "Sdk", "Name", "Passwd", "Platform", "Ip" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.GC2LS.AskLogin), global::Protos.GC2LS.AskLogin.Parser, new[]{ "Packet", "Platform", "Uin", "Sessionid" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.GC2LS_AskRegister), global::Protos.GC2LS_AskRegister.Parser, new[]{ "Opts", "Sdk", "Name", "Passwd", "Platform", "Ip" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.GC2LS_AskLogin), global::Protos.GC2LS_AskLogin.Parser, new[]{ "Opts", "Platform", "Uin", "Sessionid" }, null, null, null)
           }));
     }
     #endregion
 
   }
   #region Messages
-  public sealed partial class AskRegister : pb::IMessage<AskRegister> {
-    private static readonly pb::MessageParser<AskRegister> _parser = new pb::MessageParser<AskRegister>(() => new AskRegister());
+  public sealed partial class GC2LS_AskRegister : pb::IMessage<GC2LS_AskRegister> {
+    private static readonly pb::MessageParser<GC2LS_AskRegister> _parser = new pb::MessageParser<GC2LS_AskRegister>(() => new GC2LS_AskRegister());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<AskRegister> Parser { get { return _parser; } }
+    public static pb::MessageParser<GC2LS_AskRegister> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Protos.GC2LS.GC2LSReflection.Descriptor.MessageTypes[0]; }
+      get { return global::Protos.GC2LSReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -58,15 +58,15 @@ namespace Protos.GC2LS {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public AskRegister() {
+    public GC2LS_AskRegister() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public AskRegister(AskRegister other) : this() {
-      packet_ = other.packet_ != null ? other.packet_.Clone() : null;
+    public GC2LS_AskRegister(GC2LS_AskRegister other) : this() {
+      opts_ = other.opts_ != null ? other.opts_.Clone() : null;
       sdk_ = other.sdk_;
       name_ = other.name_;
       passwd_ = other.passwd_;
@@ -76,18 +76,18 @@ namespace Protos.GC2LS {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public AskRegister Clone() {
-      return new AskRegister(this);
+    public GC2LS_AskRegister Clone() {
+      return new GC2LS_AskRegister(this);
     }
 
-    /// <summary>Field number for the "packet" field.</summary>
-    public const int PacketFieldNumber = 1;
-    private global::Protos.Packet packet_;
+    /// <summary>Field number for the "opts" field.</summary>
+    public const int OptsFieldNumber = 1;
+    private global::Protos.MsgOpts opts_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Protos.Packet Packet {
-      get { return packet_; }
+    public global::Protos.MsgOpts Opts {
+      get { return opts_; }
       set {
-        packet_ = value;
+        opts_ = value;
       }
     }
 
@@ -148,18 +148,18 @@ namespace Protos.GC2LS {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
-      return Equals(other as AskRegister);
+      return Equals(other as GC2LS_AskRegister);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(AskRegister other) {
+    public bool Equals(GC2LS_AskRegister other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (!object.Equals(Packet, other.Packet)) return false;
+      if (!object.Equals(Opts, other.Opts)) return false;
       if (Sdk != other.Sdk) return false;
       if (Name != other.Name) return false;
       if (Passwd != other.Passwd) return false;
@@ -171,7 +171,7 @@ namespace Protos.GC2LS {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
-      if (packet_ != null) hash ^= Packet.GetHashCode();
+      if (opts_ != null) hash ^= Opts.GetHashCode();
       if (Sdk != 0) hash ^= Sdk.GetHashCode();
       if (Name.Length != 0) hash ^= Name.GetHashCode();
       if (Passwd.Length != 0) hash ^= Passwd.GetHashCode();
@@ -190,9 +190,9 @@ namespace Protos.GC2LS {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-      if (packet_ != null) {
+      if (opts_ != null) {
         output.WriteRawTag(10);
-        output.WriteMessage(Packet);
+        output.WriteMessage(Opts);
       }
       if (Sdk != 0) {
         output.WriteRawTag(16);
@@ -222,8 +222,8 @@ namespace Protos.GC2LS {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
-      if (packet_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Packet);
+      if (opts_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Opts);
       }
       if (Sdk != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(Sdk);
@@ -247,15 +247,15 @@ namespace Protos.GC2LS {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(AskRegister other) {
+    public void MergeFrom(GC2LS_AskRegister other) {
       if (other == null) {
         return;
       }
-      if (other.packet_ != null) {
-        if (packet_ == null) {
-          packet_ = new global::Protos.Packet();
+      if (other.opts_ != null) {
+        if (opts_ == null) {
+          opts_ = new global::Protos.MsgOpts();
         }
-        Packet.MergeFrom(other.Packet);
+        Opts.MergeFrom(other.Opts);
       }
       if (other.Sdk != 0) {
         Sdk = other.Sdk;
@@ -284,10 +284,10 @@ namespace Protos.GC2LS {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            if (packet_ == null) {
-              packet_ = new global::Protos.Packet();
+            if (opts_ == null) {
+              opts_ = new global::Protos.MsgOpts();
             }
-            input.ReadMessage(packet_);
+            input.ReadMessage(opts_);
             break;
           }
           case 16: {
@@ -316,15 +316,15 @@ namespace Protos.GC2LS {
 
   }
 
-  public sealed partial class AskLogin : pb::IMessage<AskLogin> {
-    private static readonly pb::MessageParser<AskLogin> _parser = new pb::MessageParser<AskLogin>(() => new AskLogin());
+  public sealed partial class GC2LS_AskLogin : pb::IMessage<GC2LS_AskLogin> {
+    private static readonly pb::MessageParser<GC2LS_AskLogin> _parser = new pb::MessageParser<GC2LS_AskLogin>(() => new GC2LS_AskLogin());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<AskLogin> Parser { get { return _parser; } }
+    public static pb::MessageParser<GC2LS_AskLogin> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Protos.GC2LS.GC2LSReflection.Descriptor.MessageTypes[1]; }
+      get { return global::Protos.GC2LSReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -333,15 +333,15 @@ namespace Protos.GC2LS {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public AskLogin() {
+    public GC2LS_AskLogin() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public AskLogin(AskLogin other) : this() {
-      packet_ = other.packet_ != null ? other.packet_.Clone() : null;
+    public GC2LS_AskLogin(GC2LS_AskLogin other) : this() {
+      opts_ = other.opts_ != null ? other.opts_.Clone() : null;
       platform_ = other.platform_;
       uin_ = other.uin_;
       sessionid_ = other.sessionid_;
@@ -349,18 +349,18 @@ namespace Protos.GC2LS {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public AskLogin Clone() {
-      return new AskLogin(this);
+    public GC2LS_AskLogin Clone() {
+      return new GC2LS_AskLogin(this);
     }
 
-    /// <summary>Field number for the "packet" field.</summary>
-    public const int PacketFieldNumber = 1;
-    private global::Protos.Packet packet_;
+    /// <summary>Field number for the "opts" field.</summary>
+    public const int OptsFieldNumber = 1;
+    private global::Protos.MsgOpts opts_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Protos.Packet Packet {
-      get { return packet_; }
+    public global::Protos.MsgOpts Opts {
+      get { return opts_; }
       set {
-        packet_ = value;
+        opts_ = value;
       }
     }
 
@@ -399,18 +399,18 @@ namespace Protos.GC2LS {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
-      return Equals(other as AskLogin);
+      return Equals(other as GC2LS_AskLogin);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(AskLogin other) {
+    public bool Equals(GC2LS_AskLogin other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (!object.Equals(Packet, other.Packet)) return false;
+      if (!object.Equals(Opts, other.Opts)) return false;
       if (Platform != other.Platform) return false;
       if (Uin != other.Uin) return false;
       if (Sessionid != other.Sessionid) return false;
@@ -420,7 +420,7 @@ namespace Protos.GC2LS {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
-      if (packet_ != null) hash ^= Packet.GetHashCode();
+      if (opts_ != null) hash ^= Opts.GetHashCode();
       if (Platform != 0) hash ^= Platform.GetHashCode();
       if (Uin.Length != 0) hash ^= Uin.GetHashCode();
       if (Sessionid.Length != 0) hash ^= Sessionid.GetHashCode();
@@ -437,9 +437,9 @@ namespace Protos.GC2LS {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-      if (packet_ != null) {
+      if (opts_ != null) {
         output.WriteRawTag(10);
-        output.WriteMessage(Packet);
+        output.WriteMessage(Opts);
       }
       if (Platform != 0) {
         output.WriteRawTag(16);
@@ -461,8 +461,8 @@ namespace Protos.GC2LS {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
-      if (packet_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Packet);
+      if (opts_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Opts);
       }
       if (Platform != 0) {
         size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Platform);
@@ -480,15 +480,15 @@ namespace Protos.GC2LS {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(AskLogin other) {
+    public void MergeFrom(GC2LS_AskLogin other) {
       if (other == null) {
         return;
       }
-      if (other.packet_ != null) {
-        if (packet_ == null) {
-          packet_ = new global::Protos.Packet();
+      if (other.opts_ != null) {
+        if (opts_ == null) {
+          opts_ = new global::Protos.MsgOpts();
         }
-        Packet.MergeFrom(other.Packet);
+        Opts.MergeFrom(other.Opts);
       }
       if (other.Platform != 0) {
         Platform = other.Platform;
@@ -511,10 +511,10 @@ namespace Protos.GC2LS {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            if (packet_ == null) {
-              packet_ = new global::Protos.Packet();
+            if (opts_ == null) {
+              opts_ = new global::Protos.MsgOpts();
             }
-            input.ReadMessage(packet_);
+            input.ReadMessage(opts_);
             break;
           }
           case 16: {

@@ -38,8 +38,6 @@ namespace Core.Net
 			wsConnection.subProtocols = this._subProtocols;
 			wsConnection.socket = new SocketWrapper( acceptSocket );
 			wsConnection.remoteEndPoint = acceptSocket.RemoteEndPoint;
-			wsConnection.packetEncodeHandler = this.packetEncodeHandler;
-			wsConnection.packetDecodeHandler = this.packetDecodeHandler;
 			wsConnection.recvBufSize = this.recvBufSize;
 			return session;
 		}

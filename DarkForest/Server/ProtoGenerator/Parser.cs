@@ -83,7 +83,7 @@ namespace ProtoGenerator
 					string[] valueKey = line.Split( '=' );
 					int key = Convert.ToInt32( valueKey[1] );
 					if ( key > 0 )
-						clsToMsgID[valueKey[0]] = key;
+						clsToMsgID[valueKey[0].Substring( 1 )] = key;//去掉名字开头的e
 				}
 			}
 			{
@@ -98,7 +98,10 @@ namespace ProtoGenerator
 			}
 
 			if ( !this._writer.WriteDesc( ns, clsToMsgID, responseToMsgID, outputPath, ref error ) )
+			{
+				Console.WriteLine( error );
 				return false;
+			}
 
 			return true;
 		}

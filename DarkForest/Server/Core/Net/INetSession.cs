@@ -23,6 +23,11 @@
 		void Dispose();
 
 		/// <summary>
+		/// 发送数据
+		/// </summary>
+		void Send( byte[] data, int offset, int size );
+
+		/// <summary>
 		/// 关闭Session
 		/// </summary>
 		void Close( string reason );

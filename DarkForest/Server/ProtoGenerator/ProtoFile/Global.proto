@@ -4,24 +4,25 @@ package Protos;
 enum MsgID {
 	Undefine = 0;
 
-	GC2LS_AskRegister = 100;
-	GC2LS_AskLogin = 101;
+	eGC2LS_AskRegister = 100;
+	eGC2LS_AskLogin = 101;
 	
-	LS2GC_Result = 200;
-	LS2GC_GSInfo = 201;
+	eLS2GC_Result = 200;
+	eLS2GC_GSInfo = 201;
 
-	GS2CS_ReportState = 300;
+	eGS2CS_ReportState = 300;
 
-	CS2LS_GSInfos = 400;
-	CS2LS_GSInfo = 401;
-	CS2LS_GSLost = 402;
-
+	eCS2LS_GSInfos = 400;
+	eCS2LS_GSInfo = 401;
+	eCS2LS_GSLost = 402;
 }
 
-message Packet{
-	uint32 pid = 1;			//运行时包id
-	bool isRequest = 2;		//是否一个请求包
-	uint32 repsPid = 3;		//回应对应请求的包id
+message MsgOpts{
+	uint32 pid = 1;			//运行时消息pid
+	bool rpc = 2;			//是否rpc消息
+	uint32 rpid = 3;		//回应对应请求的消息的pid
+	bool trans = 5;			//是否一条转发消息
+	uint32 nsid = 6;		//转发的网络id(暂时只会转发到客户端)
 }
 
 /*

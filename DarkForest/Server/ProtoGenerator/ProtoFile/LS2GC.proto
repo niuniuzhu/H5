@@ -1,31 +1,23 @@
 ﻿syntax = "proto3";
-package Protos.LS2GC;
+package Protos;
 
 import "Global.proto";
+import "GS2CS.proto";
 
-enum EResult{
-	Success = 0;
-	Failed = 1;
-	UsernameExists = 2;
-	IllegalName = 3;
-	IllegalPasswd = 4;
-}
-
-message Result{
-	Packet packet = 1;
+message LS2GC_Result{
+	enum EResult{
+		Success = 0;
+		Failed = 1;
+		UsernameExists = 2;
+		IllegalName = 3;
+		IllegalPasswd = 4;
+	}
+	MsgOpts opts = 1;
 	EResult result = 2;
 }
 
-message GSInfo
+message LS2GC_GSInfo
 {
-	message ServerInfo
-	{
-		Packet packet = 1;
-		string name = 2;
-		string ip = 3;
-		int32 port = 4;
-		int32 state = 5;
-	}
-	Packet packet = 1;
-	repeated ServerInfo serverinfo = 2;
+	MsgOpts opts = 1;
+	repeated Protos.GSInfo gsInfo = 2;
 }

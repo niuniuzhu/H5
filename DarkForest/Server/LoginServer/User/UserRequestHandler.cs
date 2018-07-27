@@ -11,7 +11,7 @@ namespace LoginServer.User
 		{
 		}
 
-		public ErrorCode RegisterAccount( Protos.GC2LS.AskRegister msg )
+		public ErrorCode RegisterAccount( Protos.GC2LS_AskRegister msg )
 		{
 			if ( this.allUserNameToGuidMap.ContainsKey( msg.Name ) ) //如果内存里找到相同名字
 				return ErrorCode.UsernameExists;

@@ -9,7 +9,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace Protos.LS2DB {
+namespace Protos {
 
   /// <summary>Holder for reflection information generated from LS2DB.proto</summary>
   public static partial class LS2DBReflection {
@@ -24,7 +24,7 @@ namespace Protos.LS2DB {
     static LS2DBReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgtMUzJEQi5wcm90bxIMUHJvdG9zLkxTMkRCYgZwcm90bzM="));
+            "CgtMUzJEQi5wcm90bxIGUHJvdG9zYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null));

@@ -4,6 +4,7 @@
 		<TargetFramework>netcoreapp2.1</TargetFramework>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<OutputPath>..\Bin\</OutputPath>
+		<RootNamespace>Protos</RootNamespace>
 	</PropertyGroup>
 
 	<ItemGroup>

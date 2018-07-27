@@ -1,10 +1,10 @@
 ﻿syntax = "proto3";
-package Protos.GC2LS;
+package Protos;
 
 import "Global.proto";
 
-message AskRegister{
-	Packet packet = 1;
+message GC2LS_AskRegister{
+	MsgOpts opts = 1;
 	int32 sdk = 2;
 	string name = 3;
 	string passwd = 4;
@@ -12,9 +12,9 @@ message AskRegister{
 	string ip = 6; 
 }
 
-message AskLogin
+message GC2LS_AskLogin
 {
-	Packet packet = 1;
+	MsgOpts opts = 1;
 	uint32 platform = 2;
 	string uin = 3;
 	string sessionid = 4;

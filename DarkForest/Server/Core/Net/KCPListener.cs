@@ -1,5 +1,6 @@
 ﻿using Core.Misc;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
@@ -9,28 +10,21 @@ namespace Core.Net
 {
 	public class ReceiveData
 	{
-		public Socket conn;
 		public readonly IPEndPoint remoteEndPoint = new IPEndPoint( IPAddress.Any, 0 );
 		public readonly StreamBuffer buffer = new StreamBuffer();
 
-		public void Clear()
-		{
-			this.buffer.Clear();
-			this.conn = null;
-		}
+		public void Clear() => this.buffer.Clear();
 	}
 
 	public class KCPListener : IListener
 	{
 		public uint id { get; }
-		public PacketEncodeHandler packetEncodeHandler { get; set; }
-		public PacketDecodeHandler packetDecodeHandler { get; set; }
 		public SessionCreater sessionCreater { get; set; }
 
 		public int recvBufSize { get; set; } = 10240;
 
 		private Socket _socket;
-		private readonly BufferBlock<ReceiveData> _receiveDatas = new BufferBlock<ReceiveData>();
+		private readonly BufferBlock<ReceiveData> _recvDataBuffer = new BufferBlock<ReceiveData>();
 		private readonly ThreadSafeObejctPool<ReceiveData> _receiveDataPool = new ThreadSafeObejctPool<ReceiveData>();
 		private bool _running;
 
@@ -72,6 +66,15 @@ namespace Core.Net
 		{
 			if ( this._socket == null )
 				return false;
+			if ( this._recvDataBuffer.TryReceiveAll( out IList<ReceiveData> recvDatas ) )
+			{
+				foreach ( ReceiveData recvData in recvDatas )
+				{
+					this.HandleRecvDatas( recvData );
+					recvDatas.Clear();
+					this._receiveDataPool.Push( recvData );
+				}
+			}
 			this._running = false;
 			Socket socket = this._socket;
 			this._socket = null;
@@ -141,10 +144,9 @@ namespace Core.Net
 
 				ReceiveData receiveData = this._receiveDataPool.Pop();
 				receiveData.buffer.Write( recvEventArgs.Buffer, recvEventArgs.Offset, size );
-				receiveData.conn = this._socket;
 				receiveData.remoteEndPoint.Address = ( ( IPEndPoint )recvEventArgs.RemoteEndPoint ).Address;
 				receiveData.remoteEndPoint.Port = ( ( IPEndPoint )recvEventArgs.RemoteEndPoint ).Port;
-				this._receiveDatas.Post( receiveData );
+				this._recvDataBuffer.Post( receiveData );
 			} while ( false );
 			this.StartReceive( recvEventArgs );
 		}
@@ -152,53 +154,55 @@ namespace Core.Net
 		private async void ConsumeAsync()
 		{
 			while ( this._running )
+				this.HandleRecvDatas( await this._recvDataBuffer.ReceiveAsync() );
+		}
+
+		private void HandleRecvDatas( ReceiveData recvData )
+		{
+			byte[] data = recvData.buffer.GetBuffer();
+			const int offset = 0;
+			int size = recvData.buffer.length;
+
+			uint connID = ByteUtils.Decode32u( data, offset );
+			ushort signature = ByteUtils.Decode16u( data, offset + sizeof( uint ) + sizeof( byte ) + sizeof( byte ) );
+
+			//验证握手消息
+			if ( connID == ProtoConfig.INVALID_SESSION_ID && signature == ProtoConfig.HANDSHAKE_SIGNATURE )
 			{
-				ReceiveData receiveData = await this._receiveDatas.ReceiveAsync();
-				byte[] data = receiveData.buffer.GetBuffer();
-				const int offset = 0;
-				int size = receiveData.buffer.length;
-
-				uint connID = ByteUtils.Decode32u( data, offset );
-				ushort signature = ByteUtils.Decode16u( data, offset + sizeof( uint ) + sizeof( byte ) + sizeof( byte ) );
-
-				//验证握手消息
-				if ( connID == ProtoConfig.INVALID_SESSION_ID && signature == ProtoConfig.HANDSHAKE_SIGNATURE )
-				{
-					//调用委托创建session
-					INetSession session = this.sessionCreater( ProtoType.KCP );
-					if ( session == null )
-						Logger.Error( "create session failed" );
-					else
-					{
-						session.isPassive = true;
-						KCPConnection kcpConnection = ( KCPConnection )session.connection;
-						kcpConnection.socket = new SocketWrapper( this._socket );
-						kcpConnection.isRefSocket = true;
-						kcpConnection.remoteEndPoint = receiveData.remoteEndPoint;
-						kcpConnection.recvBufSize = this.recvBufSize;
-						kcpConnection.activeTime = TimeUtils.utcTime;
-						kcpConnection.state = KCPConnectionState.Connected;
-
-						NetEvent netEvent = NetworkMgr.instance.PopEvent();
-						netEvent.type = NetEvent.Type.Establish;
-						netEvent.session = session;
-						NetworkMgr.instance.PushEvent( netEvent );
-
-						kcpConnection.SendHandShakeAck();
-						kcpConnection.StartPing();
-					}
-				}
+				//调用委托创建session
+				INetSession session = this.sessionCreater( ProtoType.KCP );
+				if ( session == null )
+					Logger.Error( "create session failed" );
 				else
 				{
-					INetSession session = NetworkMgr.instance.GetSession( connID );
-					if ( session == null )
-						Logger.Error( $"get session failed with id:{connID}" );
-					else
-						( ( KCPConnection )session.connection ).SendDataToMainThread( data, offset, size );
+					session.isPassive = true;
+					KCPConnection kcpConnection = ( KCPConnection )session.connection;
+					kcpConnection.socket = new SocketWrapper( this._socket );
+					kcpConnection.isRefSocket = true;
+					kcpConnection.remoteEndPoint = recvData.remoteEndPoint;
+					kcpConnection.recvBufSize = this.recvBufSize;
+					kcpConnection.activeTime = TimeUtils.utcTime;
+					kcpConnection.state = KCPConnectionState.Connected;
+
+					NetEvent netEvent = NetworkMgr.instance.PopEvent();
+					netEvent.type = NetEvent.Type.Establish;
+					netEvent.session = session;
+					NetworkMgr.instance.PushEvent( netEvent );
+
+					kcpConnection.SendHandShakeAck();
+					kcpConnection.StartPing();
 				}
-				receiveData.Clear();
-				this._receiveDataPool.Push( receiveData );
 			}
+			else
+			{
+				INetSession session = NetworkMgr.instance.GetSession( connID );
+				if ( session == null )
+					Logger.Error( $"get session failed with id:{connID}" );
+				else
+					( ( KCPConnection )session.connection ).SendDataToMainThread( data, offset, size );
+			}
+			recvData.Clear();
+			this._receiveDataPool.Push( recvData );
 		}
 	}
 }

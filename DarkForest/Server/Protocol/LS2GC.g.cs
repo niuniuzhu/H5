@@ -9,7 +9,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace Protos.LS2GC {
+namespace Protos {
 
   /// <summary>Holder for reflection information generated from LS2GC.proto</summary>
   public static partial class LS2GCReflection {
@@ -24,47 +24,34 @@ namespace Protos.LS2GC {
     static LS2GCReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgtMUzJHQy5wcm90bxIMUHJvdG9zLkxTMkdDGgxHbG9iYWwucHJvdG8iTwoG",
-            "UmVzdWx0Eh4KBnBhY2tldBgBIAEoCzIOLlByb3Rvcy5QYWNrZXQSJQoGcmVz",
-            "dWx0GAIgASgOMhUuUHJvdG9zLkxTMkdDLkVSZXN1bHQiwgEKBkdTSW5mbxIe",
-            "CgZwYWNrZXQYASABKAsyDi5Qcm90b3MuUGFja2V0EjMKCnNlcnZlcmluZm8Y",
-            "AiADKAsyHy5Qcm90b3MuTFMyR0MuR1NJbmZvLlNlcnZlckluZm8aYwoKU2Vy",
-            "dmVySW5mbxIeCgZwYWNrZXQYASABKAsyDi5Qcm90b3MuUGFja2V0EgwKBG5h",
-            "bWUYAiABKAkSCgoCaXAYAyABKAkSDAoEcG9ydBgEIAEoBRINCgVzdGF0ZRgF",
-            "IAEoBSpaCgdFUmVzdWx0EgsKB1N1Y2Nlc3MQABIKCgZGYWlsZWQQARISCg5V",
-            "c2VybmFtZUV4aXN0cxACEg8KC0lsbGVnYWxOYW1lEAMSEQoNSWxsZWdhbFBh",
-            "c3N3ZBAEYgZwcm90bzM="));
+            "CgtMUzJHQy5wcm90bxIGUHJvdG9zGgxHbG9iYWwucHJvdG8aC0dTMkNTLnBy",
+            "b3RvIrcBCgxMUzJHQ19SZXN1bHQSHQoEb3B0cxgBIAEoCzIPLlByb3Rvcy5N",
+            "c2dPcHRzEiwKBnJlc3VsdBgCIAEoDjIcLlByb3Rvcy5MUzJHQ19SZXN1bHQu",
+            "RVJlc3VsdCJaCgdFUmVzdWx0EgsKB1N1Y2Nlc3MQABIKCgZGYWlsZWQQARIS",
+            "Cg5Vc2VybmFtZUV4aXN0cxACEg8KC0lsbGVnYWxOYW1lEAMSEQoNSWxsZWdh",
+            "bFBhc3N3ZBAEIk0KDExTMkdDX0dTSW5mbxIdCgRvcHRzGAEgASgLMg8uUHJv",
+            "dG9zLk1zZ09wdHMSHgoGZ3NJbmZvGAIgAygLMg4uUHJvdG9zLkdTSW5mb2IG",
+            "cHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { global::Protos.GlobalReflection.Descriptor, },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Protos.LS2GC.EResult), }, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.LS2GC.Result), global::Protos.LS2GC.Result.Parser, new[]{ "Packet", "Result_" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.LS2GC.GSInfo), global::Protos.LS2GC.GSInfo.Parser, new[]{ "Packet", "Serverinfo" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::Protos.LS2GC.GSInfo.Types.ServerInfo), global::Protos.LS2GC.GSInfo.Types.ServerInfo.Parser, new[]{ "Packet", "Name", "Ip", "Port", "State" }, null, null, null)})
+          new pbr::FileDescriptor[] { global::Protos.GlobalReflection.Descriptor, global::Protos.GS2CSReflection.Descriptor, },
+          new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.LS2GC_Result), global::Protos.LS2GC_Result.Parser, new[]{ "Opts", "Result" }, null, new[]{ typeof(global::Protos.LS2GC_Result.Types.EResult) }, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.LS2GC_GSInfo), global::Protos.LS2GC_GSInfo.Parser, new[]{ "Opts", "GsInfo" }, null, null, null)
           }));
     }
     #endregion
 
   }
-  #region Enums
-  public enum EResult {
-    [pbr::OriginalName("Success")] Success = 0,
-    [pbr::OriginalName("Failed")] Failed = 1,
-    [pbr::OriginalName("UsernameExists")] UsernameExists = 2,
-    [pbr::OriginalName("IllegalName")] IllegalName = 3,
-    [pbr::OriginalName("IllegalPasswd")] IllegalPasswd = 4,
-  }
-
-  #endregion
-
   #region Messages
-  public sealed partial class Result : pb::IMessage<Result> {
-    private static readonly pb::MessageParser<Result> _parser = new pb::MessageParser<Result>(() => new Result());
+  public sealed partial class LS2GC_Result : pb::IMessage<LS2GC_Result> {
+    private static readonly pb::MessageParser<LS2GC_Result> _parser = new pb::MessageParser<LS2GC_Result>(() => new LS2GC_Result());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<Result> Parser { get { return _parser; } }
+    public static pb::MessageParser<LS2GC_Result> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Protos.LS2GC.LS2GCReflection.Descriptor.MessageTypes[0]; }
+      get { return global::Protos.LS2GCReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -73,40 +60,40 @@ namespace Protos.LS2GC {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Result() {
+    public LS2GC_Result() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Result(Result other) : this() {
-      packet_ = other.packet_ != null ? other.packet_.Clone() : null;
+    public LS2GC_Result(LS2GC_Result other) : this() {
+      opts_ = other.opts_ != null ? other.opts_.Clone() : null;
       result_ = other.result_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Result Clone() {
-      return new Result(this);
+    public LS2GC_Result Clone() {
+      return new LS2GC_Result(this);
     }
 
-    /// <summary>Field number for the "packet" field.</summary>
-    public const int PacketFieldNumber = 1;
-    private global::Protos.Packet packet_;
+    /// <summary>Field number for the "opts" field.</summary>
+    public const int OptsFieldNumber = 1;
+    private global::Protos.MsgOpts opts_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Protos.Packet Packet {
-      get { return packet_; }
+    public global::Protos.MsgOpts Opts {
+      get { return opts_; }
       set {
-        packet_ = value;
+        opts_ = value;
       }
     }
 
     /// <summary>Field number for the "result" field.</summary>
-    public const int Result_FieldNumber = 2;
-    private global::Protos.LS2GC.EResult result_ = 0;
+    public const int ResultFieldNumber = 2;
+    private global::Protos.LS2GC_Result.Types.EResult result_ = 0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Protos.LS2GC.EResult Result_ {
+    public global::Protos.LS2GC_Result.Types.EResult Result {
       get { return result_; }
       set {
         result_ = value;
@@ -115,27 +102,27 @@ namespace Protos.LS2GC {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
-      return Equals(other as Result);
+      return Equals(other as LS2GC_Result);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(Result other) {
+    public bool Equals(LS2GC_Result other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (!object.Equals(Packet, other.Packet)) return false;
-      if (Result_ != other.Result_) return false;
+      if (!object.Equals(Opts, other.Opts)) return false;
+      if (Result != other.Result) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
-      if (packet_ != null) hash ^= Packet.GetHashCode();
-      if (Result_ != 0) hash ^= Result_.GetHashCode();
+      if (opts_ != null) hash ^= Opts.GetHashCode();
+      if (Result != 0) hash ^= Result.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -149,13 +136,13 @@ namespace Protos.LS2GC {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-      if (packet_ != null) {
+      if (opts_ != null) {
         output.WriteRawTag(10);
-        output.WriteMessage(Packet);
+        output.WriteMessage(Opts);
       }
-      if (Result_ != 0) {
+      if (Result != 0) {
         output.WriteRawTag(16);
-        output.WriteEnum((int) Result_);
+        output.WriteEnum((int) Result);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -165,11 +152,11 @@ namespace Protos.LS2GC {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
-      if (packet_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Packet);
+      if (opts_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Opts);
       }
-      if (Result_ != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Result_);
+      if (Result != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Result);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -178,18 +165,18 @@ namespace Protos.LS2GC {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(Result other) {
+    public void MergeFrom(LS2GC_Result other) {
       if (other == null) {
         return;
       }
-      if (other.packet_ != null) {
-        if (packet_ == null) {
-          packet_ = new global::Protos.Packet();
+      if (other.opts_ != null) {
+        if (opts_ == null) {
+          opts_ = new global::Protos.MsgOpts();
         }
-        Packet.MergeFrom(other.Packet);
+        Opts.MergeFrom(other.Opts);
       }
-      if (other.Result_ != 0) {
-        Result_ = other.Result_;
+      if (other.Result != 0) {
+        Result = other.Result;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -203,31 +190,46 @@ namespace Protos.LS2GC {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            if (packet_ == null) {
-              packet_ = new global::Protos.Packet();
+            if (opts_ == null) {
+              opts_ = new global::Protos.MsgOpts();
             }
-            input.ReadMessage(packet_);
+            input.ReadMessage(opts_);
             break;
           }
           case 16: {
-            result_ = (global::Protos.LS2GC.EResult) input.ReadEnum();
+            result_ = (global::Protos.LS2GC_Result.Types.EResult) input.ReadEnum();
             break;
           }
         }
       }
     }
 
+    #region Nested types
+    /// <summary>Container for nested types declared in the LS2GC_Result message type.</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static partial class Types {
+      public enum EResult {
+        [pbr::OriginalName("Success")] Success = 0,
+        [pbr::OriginalName("Failed")] Failed = 1,
+        [pbr::OriginalName("UsernameExists")] UsernameExists = 2,
+        [pbr::OriginalName("IllegalName")] IllegalName = 3,
+        [pbr::OriginalName("IllegalPasswd")] IllegalPasswd = 4,
+      }
+
+    }
+    #endregion
+
   }
 
-  public sealed partial class GSInfo : pb::IMessage<GSInfo> {
-    private static readonly pb::MessageParser<GSInfo> _parser = new pb::MessageParser<GSInfo>(() => new GSInfo());
+  public sealed partial class LS2GC_GSInfo : pb::IMessage<LS2GC_GSInfo> {
+    private static readonly pb::MessageParser<LS2GC_GSInfo> _parser = new pb::MessageParser<LS2GC_GSInfo>(() => new LS2GC_GSInfo());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<GSInfo> Parser { get { return _parser; } }
+    public static pb::MessageParser<LS2GC_GSInfo> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Protos.LS2GC.LS2GCReflection.Descriptor.MessageTypes[1]; }
+      get { return global::Protos.LS2GCReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -236,68 +238,68 @@ namespace Protos.LS2GC {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public GSInfo() {
+    public LS2GC_GSInfo() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public GSInfo(GSInfo other) : this() {
-      packet_ = other.packet_ != null ? other.packet_.Clone() : null;
-      serverinfo_ = other.serverinfo_.Clone();
+    public LS2GC_GSInfo(LS2GC_GSInfo other) : this() {
+      opts_ = other.opts_ != null ? other.opts_.Clone() : null;
+      gsInfo_ = other.gsInfo_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public GSInfo Clone() {
-      return new GSInfo(this);
+    public LS2GC_GSInfo Clone() {
+      return new LS2GC_GSInfo(this);
     }
 
-    /// <summary>Field number for the "packet" field.</summary>
-    public const int PacketFieldNumber = 1;
-    private global::Protos.Packet packet_;
+    /// <summary>Field number for the "opts" field.</summary>
+    public const int OptsFieldNumber = 1;
+    private global::Protos.MsgOpts opts_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Protos.Packet Packet {
-      get { return packet_; }
+    public global::Protos.MsgOpts Opts {
+      get { return opts_; }
       set {
-        packet_ = value;
+        opts_ = value;
       }
     }
 
-    /// <summary>Field number for the "serverinfo" field.</summary>
-    public const int ServerinfoFieldNumber = 2;
-    private static readonly pb::FieldCodec<global::Protos.LS2GC.GSInfo.Types.ServerInfo> _repeated_serverinfo_codec
-        = pb::FieldCodec.ForMessage(18, global::Protos.LS2GC.GSInfo.Types.ServerInfo.Parser);
-    private readonly pbc::RepeatedField<global::Protos.LS2GC.GSInfo.Types.ServerInfo> serverinfo_ = new pbc::RepeatedField<global::Protos.LS2GC.GSInfo.Types.ServerInfo>();
+    /// <summary>Field number for the "gsInfo" field.</summary>
+    public const int GsInfoFieldNumber = 2;
+    private static readonly pb::FieldCodec<global::Protos.GSInfo> _repeated_gsInfo_codec
+        = pb::FieldCodec.ForMessage(18, global::Protos.GSInfo.Parser);
+    private readonly pbc::RepeatedField<global::Protos.GSInfo> gsInfo_ = new pbc::RepeatedField<global::Protos.GSInfo>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::Protos.LS2GC.GSInfo.Types.ServerInfo> Serverinfo {
-      get { return serverinfo_; }
+    public pbc::RepeatedField<global::Protos.GSInfo> GsInfo {
+      get { return gsInfo_; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
-      return Equals(other as GSInfo);
+      return Equals(other as LS2GC_GSInfo);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(GSInfo other) {
+    public bool Equals(LS2GC_GSInfo other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (!object.Equals(Packet, other.Packet)) return false;
-      if(!serverinfo_.Equals(other.serverinfo_)) return false;
+      if (!object.Equals(Opts, other.Opts)) return false;
+      if(!gsInfo_.Equals(other.gsInfo_)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
-      if (packet_ != null) hash ^= Packet.GetHashCode();
-      hash ^= serverinfo_.GetHashCode();
+      if (opts_ != null) hash ^= Opts.GetHashCode();
+      hash ^= gsInfo_.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -311,11 +313,11 @@ namespace Protos.LS2GC {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-      if (packet_ != null) {
+      if (opts_ != null) {
         output.WriteRawTag(10);
-        output.WriteMessage(Packet);
+        output.WriteMessage(Opts);
       }
-      serverinfo_.WriteTo(output, _repeated_serverinfo_codec);
+      gsInfo_.WriteTo(output, _repeated_gsInfo_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -324,10 +326,10 @@ namespace Protos.LS2GC {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
-      if (packet_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Packet);
+      if (opts_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Opts);
       }
-      size += serverinfo_.CalculateSize(_repeated_serverinfo_codec);
+      size += gsInfo_.CalculateSize(_repeated_gsInfo_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -335,17 +337,17 @@ namespace Protos.LS2GC {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(GSInfo other) {
+    public void MergeFrom(LS2GC_GSInfo other) {
       if (other == null) {
         return;
       }
-      if (other.packet_ != null) {
-        if (packet_ == null) {
-          packet_ = new global::Protos.Packet();
+      if (other.opts_ != null) {
+        if (opts_ == null) {
+          opts_ = new global::Protos.MsgOpts();
         }
-        Packet.MergeFrom(other.Packet);
+        Opts.MergeFrom(other.Opts);
       }
-      serverinfo_.Add(other.serverinfo_);
+      gsInfo_.Add(other.gsInfo_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -358,273 +360,19 @@ namespace Protos.LS2GC {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            if (packet_ == null) {
-              packet_ = new global::Protos.Packet();
+            if (opts_ == null) {
+              opts_ = new global::Protos.MsgOpts();
             }
-            input.ReadMessage(packet_);
+            input.ReadMessage(opts_);
             break;
           }
           case 18: {
-            serverinfo_.AddEntriesFrom(input, _repeated_serverinfo_codec);
+            gsInfo_.AddEntriesFrom(input, _repeated_gsInfo_codec);
             break;
           }
         }
       }
     }
-
-    #region Nested types
-    /// <summary>Container for nested types declared in the GSInfo message type.</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static partial class Types {
-      public sealed partial class ServerInfo : pb::IMessage<ServerInfo> {
-        private static readonly pb::MessageParser<ServerInfo> _parser = new pb::MessageParser<ServerInfo>(() => new ServerInfo());
-        private pb::UnknownFieldSet _unknownFields;
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public static pb::MessageParser<ServerInfo> Parser { get { return _parser; } }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public static pbr::MessageDescriptor Descriptor {
-          get { return global::Protos.LS2GC.GSInfo.Descriptor.NestedTypes[0]; }
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        pbr::MessageDescriptor pb::IMessage.Descriptor {
-          get { return Descriptor; }
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public ServerInfo() {
-          OnConstruction();
-        }
-
-        partial void OnConstruction();
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public ServerInfo(ServerInfo other) : this() {
-          packet_ = other.packet_ != null ? other.packet_.Clone() : null;
-          name_ = other.name_;
-          ip_ = other.ip_;
-          port_ = other.port_;
-          state_ = other.state_;
-          _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public ServerInfo Clone() {
-          return new ServerInfo(this);
-        }
-
-        /// <summary>Field number for the "packet" field.</summary>
-        public const int PacketFieldNumber = 1;
-        private global::Protos.Packet packet_;
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public global::Protos.Packet Packet {
-          get { return packet_; }
-          set {
-            packet_ = value;
-          }
-        }
-
-        /// <summary>Field number for the "name" field.</summary>
-        public const int NameFieldNumber = 2;
-        private string name_ = "";
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public string Name {
-          get { return name_; }
-          set {
-            name_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-          }
-        }
-
-        /// <summary>Field number for the "ip" field.</summary>
-        public const int IpFieldNumber = 3;
-        private string ip_ = "";
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public string Ip {
-          get { return ip_; }
-          set {
-            ip_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-          }
-        }
-
-        /// <summary>Field number for the "port" field.</summary>
-        public const int PortFieldNumber = 4;
-        private int port_;
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public int Port {
-          get { return port_; }
-          set {
-            port_ = value;
-          }
-        }
-
-        /// <summary>Field number for the "state" field.</summary>
-        public const int StateFieldNumber = 5;
-        private int state_;
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public int State {
-          get { return state_; }
-          set {
-            state_ = value;
-          }
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public override bool Equals(object other) {
-          return Equals(other as ServerInfo);
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public bool Equals(ServerInfo other) {
-          if (ReferenceEquals(other, null)) {
-            return false;
-          }
-          if (ReferenceEquals(other, this)) {
-            return true;
-          }
-          if (!object.Equals(Packet, other.Packet)) return false;
-          if (Name != other.Name) return false;
-          if (Ip != other.Ip) return false;
-          if (Port != other.Port) return false;
-          if (State != other.State) return false;
-          return Equals(_unknownFields, other._unknownFields);
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public override int GetHashCode() {
-          int hash = 1;
-          if (packet_ != null) hash ^= Packet.GetHashCode();
-          if (Name.Length != 0) hash ^= Name.GetHashCode();
-          if (Ip.Length != 0) hash ^= Ip.GetHashCode();
-          if (Port != 0) hash ^= Port.GetHashCode();
-          if (State != 0) hash ^= State.GetHashCode();
-          if (_unknownFields != null) {
-            hash ^= _unknownFields.GetHashCode();
-          }
-          return hash;
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public override string ToString() {
-          return pb::JsonFormatter.ToDiagnosticString(this);
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public void WriteTo(pb::CodedOutputStream output) {
-          if (packet_ != null) {
-            output.WriteRawTag(10);
-            output.WriteMessage(Packet);
-          }
-          if (Name.Length != 0) {
-            output.WriteRawTag(18);
-            output.WriteString(Name);
-          }
-          if (Ip.Length != 0) {
-            output.WriteRawTag(26);
-            output.WriteString(Ip);
-          }
-          if (Port != 0) {
-            output.WriteRawTag(32);
-            output.WriteInt32(Port);
-          }
-          if (State != 0) {
-            output.WriteRawTag(40);
-            output.WriteInt32(State);
-          }
-          if (_unknownFields != null) {
-            _unknownFields.WriteTo(output);
-          }
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public int CalculateSize() {
-          int size = 0;
-          if (packet_ != null) {
-            size += 1 + pb::CodedOutputStream.ComputeMessageSize(Packet);
-          }
-          if (Name.Length != 0) {
-            size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
-          }
-          if (Ip.Length != 0) {
-            size += 1 + pb::CodedOutputStream.ComputeStringSize(Ip);
-          }
-          if (Port != 0) {
-            size += 1 + pb::CodedOutputStream.ComputeInt32Size(Port);
-          }
-          if (State != 0) {
-            size += 1 + pb::CodedOutputStream.ComputeInt32Size(State);
-          }
-          if (_unknownFields != null) {
-            size += _unknownFields.CalculateSize();
-          }
-          return size;
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public void MergeFrom(ServerInfo other) {
-          if (other == null) {
-            return;
-          }
-          if (other.packet_ != null) {
-            if (packet_ == null) {
-              packet_ = new global::Protos.Packet();
-            }
-            Packet.MergeFrom(other.Packet);
-          }
-          if (other.Name.Length != 0) {
-            Name = other.Name;
-          }
-          if (other.Ip.Length != 0) {
-            Ip = other.Ip;
-          }
-          if (other.Port != 0) {
-            Port = other.Port;
-          }
-          if (other.State != 0) {
-            State = other.State;
-          }
-          _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public void MergeFrom(pb::CodedInputStream input) {
-          uint tag;
-          while ((tag = input.ReadTag()) != 0) {
-            switch(tag) {
-              default:
-                _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-                break;
-              case 10: {
-                if (packet_ == null) {
-                  packet_ = new global::Protos.Packet();
-                }
-                input.ReadMessage(packet_);
-                break;
-              }
-              case 18: {
-                Name = input.ReadString();
-                break;
-              }
-              case 26: {
-                Ip = input.ReadString();
-                break;
-              }
-              case 32: {
-                Port = input.ReadInt32();
-                break;
-              }
-              case 40: {
-                State = input.ReadInt32();
-                break;
-              }
-            }
-          }
-        }
-
-      }
-
-    }
-    #endregion
 
   }
 

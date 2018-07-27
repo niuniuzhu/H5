@@ -5,7 +5,7 @@ namespace LoginServer
 {
 	public partial class LS
 	{
-		public ErrorCode GCStateReportHandler( Protos.GS2CS.GSInfo newGSInfo )
+		public ErrorCode GCStateReportHandler( Protos.GSInfo newGSInfo )
 		{
 			if ( !this._gsInfos.TryGetValue( newGSInfo.Id, out GSInfo gsInfo ) )
 			{

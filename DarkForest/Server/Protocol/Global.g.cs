@@ -24,17 +24,17 @@ namespace Protos {
     static GlobalReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgxHbG9iYWwucHJvdG8SBlByb3RvcyI5CgZQYWNrZXQSCwoDcGlkGAEgASgN",
-            "EhEKCWlzUmVxdWVzdBgCIAEoCBIPCgdyZXBzUGlkGAMgASgNKrgBCgVNc2dJ",
-            "RBIMCghVbmRlZmluZRAAEhUKEUdDMkxTX0Fza1JlZ2lzdGVyEGQSEgoOR0My",
-            "TFNfQXNrTG9naW4QZRIRCgxMUzJHQ19SZXN1bHQQyAESEQoMTFMyR0NfR1NJ",
-            "bmZvEMkBEhYKEUdTMkNTX1JlcG9ydFN0YXRlEKwCEhIKDUNTMkxTX0dTSW5m",
-            "b3MQkAMSEQoMQ1MyTFNfR1NJbmZvEJEDEhEKDENTMkxTX0dTTG9zdBCSA2IG",
-            "cHJvdG8z"));
+            "CgxHbG9iYWwucHJvdG8SBlByb3RvcyJOCgdNc2dPcHRzEgsKA3BpZBgBIAEo",
+            "DRILCgNycGMYAiABKAgSDAoEcnBpZBgDIAEoDRINCgV0cmFucxgFIAEoCBIM",
+            "CgRuc2lkGAYgASgNKsABCgVNc2dJRBIMCghVbmRlZmluZRAAEhYKEmVHQzJM",
+            "U19Bc2tSZWdpc3RlchBkEhMKD2VHQzJMU19Bc2tMb2dpbhBlEhIKDWVMUzJH",
+            "Q19SZXN1bHQQyAESEgoNZUxTMkdDX0dTSW5mbxDJARIXChJlR1MyQ1NfUmVw",
+            "b3J0U3RhdGUQrAISEwoOZUNTMkxTX0dTSW5mb3MQkAMSEgoNZUNTMkxTX0dT",
+            "SW5mbxCRAxISCg1lQ1MyTFNfR1NMb3N0EJIDYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Protos.MsgID), }, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.Packet), global::Protos.Packet.Parser, new[]{ "Pid", "IsRequest", "RepsPid" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.MsgOpts), global::Protos.MsgOpts.Parser, new[]{ "Pid", "Rpc", "Rpid", "Trans", "Nsid" }, null, null, null)
           }));
     }
     #endregion
@@ -43,24 +43,24 @@ namespace Protos {
   #region Enums
   public enum MsgID {
     [pbr::OriginalName("Undefine")] Undefine = 0,
-    [pbr::OriginalName("GC2LS_AskRegister")] Gc2LsAskRegister = 100,
-    [pbr::OriginalName("GC2LS_AskLogin")] Gc2LsAskLogin = 101,
-    [pbr::OriginalName("LS2GC_Result")] Ls2GcResult = 200,
-    [pbr::OriginalName("LS2GC_GSInfo")] Ls2GcGsinfo = 201,
-    [pbr::OriginalName("GS2CS_ReportState")] Gs2CsReportState = 300,
-    [pbr::OriginalName("CS2LS_GSInfos")] Cs2LsGsinfos = 400,
-    [pbr::OriginalName("CS2LS_GSInfo")] Cs2LsGsinfo = 401,
-    [pbr::OriginalName("CS2LS_GSLost")] Cs2LsGslost = 402,
+    [pbr::OriginalName("eGC2LS_AskRegister")] EGc2LsAskRegister = 100,
+    [pbr::OriginalName("eGC2LS_AskLogin")] EGc2LsAskLogin = 101,
+    [pbr::OriginalName("eLS2GC_Result")] ELs2GcResult = 200,
+    [pbr::OriginalName("eLS2GC_GSInfo")] ELs2GcGsinfo = 201,
+    [pbr::OriginalName("eGS2CS_ReportState")] EGs2CsReportState = 300,
+    [pbr::OriginalName("eCS2LS_GSInfos")] ECs2LsGsinfos = 400,
+    [pbr::OriginalName("eCS2LS_GSInfo")] ECs2LsGsinfo = 401,
+    [pbr::OriginalName("eCS2LS_GSLost")] ECs2LsGslost = 402,
   }
 
   #endregion
 
   #region Messages
-  public sealed partial class Packet : pb::IMessage<Packet> {
-    private static readonly pb::MessageParser<Packet> _parser = new pb::MessageParser<Packet>(() => new Packet());
+  public sealed partial class MsgOpts : pb::IMessage<MsgOpts> {
+    private static readonly pb::MessageParser<MsgOpts> _parser = new pb::MessageParser<MsgOpts>(() => new MsgOpts());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<Packet> Parser { get { return _parser; } }
+    public static pb::MessageParser<MsgOpts> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
@@ -73,30 +73,32 @@ namespace Protos {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Packet() {
+    public MsgOpts() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Packet(Packet other) : this() {
+    public MsgOpts(MsgOpts other) : this() {
       pid_ = other.pid_;
-      isRequest_ = other.isRequest_;
-      repsPid_ = other.repsPid_;
+      rpc_ = other.rpc_;
+      rpid_ = other.rpid_;
+      trans_ = other.trans_;
+      nsid_ = other.nsid_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Packet Clone() {
-      return new Packet(this);
+    public MsgOpts Clone() {
+      return new MsgOpts(this);
     }
 
     /// <summary>Field number for the "pid" field.</summary>
     public const int PidFieldNumber = 1;
     private uint pid_;
     /// <summary>
-    ///运行时包id
+    ///运行时消息pid
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public uint Pid {
@@ -106,41 +108,69 @@ namespace Protos {
       }
     }
 
-    /// <summary>Field number for the "isRequest" field.</summary>
-    public const int IsRequestFieldNumber = 2;
-    private bool isRequest_;
+    /// <summary>Field number for the "rpc" field.</summary>
+    public const int RpcFieldNumber = 2;
+    private bool rpc_;
     /// <summary>
-    ///是否一个请求包
+    ///是否rpc消息
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool IsRequest {
-      get { return isRequest_; }
+    public bool Rpc {
+      get { return rpc_; }
       set {
-        isRequest_ = value;
+        rpc_ = value;
       }
     }
 
-    /// <summary>Field number for the "repsPid" field.</summary>
-    public const int RepsPidFieldNumber = 3;
-    private uint repsPid_;
+    /// <summary>Field number for the "rpid" field.</summary>
+    public const int RpidFieldNumber = 3;
+    private uint rpid_;
     /// <summary>
-    ///回应对应请求的包id
+    ///回应对应请求的消息的pid
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public uint RepsPid {
-      get { return repsPid_; }
+    public uint Rpid {
+      get { return rpid_; }
       set {
-        repsPid_ = value;
+        rpid_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "trans" field.</summary>
+    public const int TransFieldNumber = 5;
+    private bool trans_;
+    /// <summary>
+    ///是否一条转发消息
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Trans {
+      get { return trans_; }
+      set {
+        trans_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "nsid" field.</summary>
+    public const int NsidFieldNumber = 6;
+    private uint nsid_;
+    /// <summary>
+    ///转发的网络id(暂时只会转发到客户端)
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint Nsid {
+      get { return nsid_; }
+      set {
+        nsid_ = value;
       }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
-      return Equals(other as Packet);
+      return Equals(other as MsgOpts);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(Packet other) {
+    public bool Equals(MsgOpts other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -148,8 +178,10 @@ namespace Protos {
         return true;
       }
       if (Pid != other.Pid) return false;
-      if (IsRequest != other.IsRequest) return false;
-      if (RepsPid != other.RepsPid) return false;
+      if (Rpc != other.Rpc) return false;
+      if (Rpid != other.Rpid) return false;
+      if (Trans != other.Trans) return false;
+      if (Nsid != other.Nsid) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -157,8 +189,10 @@ namespace Protos {
     public override int GetHashCode() {
       int hash = 1;
       if (Pid != 0) hash ^= Pid.GetHashCode();
-      if (IsRequest != false) hash ^= IsRequest.GetHashCode();
-      if (RepsPid != 0) hash ^= RepsPid.GetHashCode();
+      if (Rpc != false) hash ^= Rpc.GetHashCode();
+      if (Rpid != 0) hash ^= Rpid.GetHashCode();
+      if (Trans != false) hash ^= Trans.GetHashCode();
+      if (Nsid != 0) hash ^= Nsid.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -176,13 +210,21 @@ namespace Protos {
         output.WriteRawTag(8);
         output.WriteUInt32(Pid);
       }
-      if (IsRequest != false) {
+      if (Rpc != false) {
         output.WriteRawTag(16);
-        output.WriteBool(IsRequest);
+        output.WriteBool(Rpc);
       }
-      if (RepsPid != 0) {
+      if (Rpid != 0) {
         output.WriteRawTag(24);
-        output.WriteUInt32(RepsPid);
+        output.WriteUInt32(Rpid);
+      }
+      if (Trans != false) {
+        output.WriteRawTag(40);
+        output.WriteBool(Trans);
+      }
+      if (Nsid != 0) {
+        output.WriteRawTag(48);
+        output.WriteUInt32(Nsid);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -195,11 +237,17 @@ namespace Protos {
       if (Pid != 0) {
         size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Pid);
       }
-      if (IsRequest != false) {
+      if (Rpc != false) {
         size += 1 + 1;
       }
-      if (RepsPid != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(RepsPid);
+      if (Rpid != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Rpid);
+      }
+      if (Trans != false) {
+        size += 1 + 1;
+      }
+      if (Nsid != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Nsid);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -208,18 +256,24 @@ namespace Protos {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(Packet other) {
+    public void MergeFrom(MsgOpts other) {
       if (other == null) {
         return;
       }
       if (other.Pid != 0) {
         Pid = other.Pid;
       }
-      if (other.IsRequest != false) {
-        IsRequest = other.IsRequest;
+      if (other.Rpc != false) {
+        Rpc = other.Rpc;
       }
-      if (other.RepsPid != 0) {
-        RepsPid = other.RepsPid;
+      if (other.Rpid != 0) {
+        Rpid = other.Rpid;
+      }
+      if (other.Trans != false) {
+        Trans = other.Trans;
+      }
+      if (other.Nsid != 0) {
+        Nsid = other.Nsid;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -237,11 +291,19 @@ namespace Protos {
             break;
           }
           case 16: {
-            IsRequest = input.ReadBool();
+            Rpc = input.ReadBool();
             break;
           }
           case 24: {
-            RepsPid = input.ReadUInt32();
+            Rpid = input.ReadUInt32();
+            break;
+          }
+          case 40: {
+            Trans = input.ReadBool();
+            break;
+          }
+          case 48: {
+            Nsid = input.ReadUInt32();
             break;
           }
         }

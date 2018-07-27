@@ -1,5 +1,4 @@
-﻿using Core.Misc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -41,7 +40,7 @@ namespace Core.Net
 		public override bool Send( byte[] data, int offset, int size )
 		{
 			StreamBuffer buffer = this._bufferPool.Pop();
-			Hybi13FrameData( buffer, data, offset, size, OPCode.Binary );
+			MakeHeader( buffer, data, offset, size, OPCode.Binary );
 			this._sendQueue.Push( buffer );
 			return true;
 		}
@@ -214,7 +213,7 @@ namespace Core.Net
 			return outData;
 		}
 
-		private static void Hybi13FrameData( StreamBuffer inBuffer, byte[] data, int offset, int size, OPCode opCode )
+		private static void MakeHeader( StreamBuffer inBuffer, byte[] data, int offset, int size, OPCode opCode )
 		{
 			const int fin = 1, rsv1 = 0, rsv2 = 0, rsv3 = 0;
 			int op = ( int )opCode;

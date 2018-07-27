@@ -1,5 +1,5 @@
 ﻿syntax = "proto3";
-package Protos.GS2CS;
+package Protos;
 
 import "Global.proto";
 
@@ -18,7 +18,7 @@ message GSInfo{
 	State state = 6;
 }
 
-message ReportState{
-	Packet packet = 1;
+message GS2CS_ReportState{
+	MsgOpts opts = 1;
 	GSInfo gsInfo = 2;
 }

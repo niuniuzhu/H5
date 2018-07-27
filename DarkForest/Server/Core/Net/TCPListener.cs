@@ -8,8 +8,6 @@ namespace Core.Net
 	public class TCPListener : IListener
 	{
 		public uint id { get; }
-		public PacketEncodeHandler packetEncodeHandler { get; set; }
-		public PacketDecodeHandler packetDecodeHandler { get; set; }
 		public SessionCreater sessionCreater { get; set; }
 
 		public int recvBufSize { get; set; } = 10240;
@@ -162,8 +160,6 @@ namespace Core.Net
 			tcpConnection.activeTime = TimeUtils.utcTime;
 			tcpConnection.socket = new SocketWrapper( acceptSocket );
 			tcpConnection.remoteEndPoint = acceptSocket.RemoteEndPoint;
-			tcpConnection.packetEncodeHandler = this.packetEncodeHandler;
-			tcpConnection.packetDecodeHandler = this.packetDecodeHandler;
 			tcpConnection.recvBufSize = this.recvBufSize;
 
 			NetEvent netEvent = NetworkMgr.instance.PopEvent();

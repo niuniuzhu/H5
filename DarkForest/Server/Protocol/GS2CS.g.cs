@@ -9,7 +9,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace Protos.GS2CS {
+namespace Protos {
 
   /// <summary>Holder for reflection information generated from GS2CS.proto</summary>
   public static partial class GS2CSReflection {
@@ -24,18 +24,18 @@ namespace Protos.GS2CS {
     static GS2CSReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgtHUzJDUy5wcm90bxIMUHJvdG9zLkdTMkNTGgxHbG9iYWwucHJvdG8iqwEK",
-            "BkdTSW5mbxIKCgJpZBgBIAEoDRIMCgRuYW1lGAIgASgJEgoKAmlwGAMgASgJ",
-            "EgwKBHBvcnQYBCABKAUSEAoIcGFzc3dvcmQYBSABKAkSKQoFc3RhdGUYBiAB",
-            "KA4yGi5Qcm90b3MuR1MyQ1MuR1NJbmZvLlN0YXRlIjAKBVN0YXRlEggKBEZy",
-            "ZWUQABIICgRCdXN5EAESCAoERnVsbBACEgkKBUNsb3NlEAMiUwoLUmVwb3J0",
-            "U3RhdGUSHgoGcGFja2V0GAEgASgLMg4uUHJvdG9zLlBhY2tldBIkCgZnc0lu",
-            "Zm8YAiABKAsyFC5Qcm90b3MuR1MyQ1MuR1NJbmZvYgZwcm90bzM="));
+            "CgtHUzJDUy5wcm90bxIGUHJvdG9zGgxHbG9iYWwucHJvdG8ipQEKBkdTSW5m",
+            "bxIKCgJpZBgBIAEoDRIMCgRuYW1lGAIgASgJEgoKAmlwGAMgASgJEgwKBHBv",
+            "cnQYBCABKAUSEAoIcGFzc3dvcmQYBSABKAkSIwoFc3RhdGUYBiABKA4yFC5Q",
+            "cm90b3MuR1NJbmZvLlN0YXRlIjAKBVN0YXRlEggKBEZyZWUQABIICgRCdXN5",
+            "EAESCAoERnVsbBACEgkKBUNsb3NlEAMiUgoRR1MyQ1NfUmVwb3J0U3RhdGUS",
+            "HQoEb3B0cxgBIAEoCzIPLlByb3Rvcy5Nc2dPcHRzEh4KBmdzSW5mbxgCIAEo",
+            "CzIOLlByb3Rvcy5HU0luZm9iBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Protos.GlobalReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.GS2CS.GSInfo), global::Protos.GS2CS.GSInfo.Parser, new[]{ "Id", "Name", "Ip", "Port", "Password", "State" }, null, new[]{ typeof(global::Protos.GS2CS.GSInfo.Types.State) }, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.GS2CS.ReportState), global::Protos.GS2CS.ReportState.Parser, new[]{ "Packet", "GsInfo" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.GSInfo), global::Protos.GSInfo.Parser, new[]{ "Id", "Name", "Ip", "Port", "Password", "State" }, null, new[]{ typeof(global::Protos.GSInfo.Types.State) }, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.GS2CS_ReportState), global::Protos.GS2CS_ReportState.Parser, new[]{ "Opts", "GsInfo" }, null, null, null)
           }));
     }
     #endregion
@@ -50,7 +50,7 @@ namespace Protos.GS2CS {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Protos.GS2CS.GS2CSReflection.Descriptor.MessageTypes[0]; }
+      get { return global::Protos.GS2CSReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -138,9 +138,9 @@ namespace Protos.GS2CS {
 
     /// <summary>Field number for the "state" field.</summary>
     public const int StateFieldNumber = 6;
-    private global::Protos.GS2CS.GSInfo.Types.State state_ = 0;
+    private global::Protos.GSInfo.Types.State state_ = 0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Protos.GS2CS.GSInfo.Types.State State {
+    public global::Protos.GSInfo.Types.State State {
       get { return state_; }
       set {
         state_ = value;
@@ -302,7 +302,7 @@ namespace Protos.GS2CS {
             break;
           }
           case 48: {
-            state_ = (global::Protos.GS2CS.GSInfo.Types.State) input.ReadEnum();
+            state_ = (global::Protos.GSInfo.Types.State) input.ReadEnum();
             break;
           }
         }
@@ -325,15 +325,15 @@ namespace Protos.GS2CS {
 
   }
 
-  public sealed partial class ReportState : pb::IMessage<ReportState> {
-    private static readonly pb::MessageParser<ReportState> _parser = new pb::MessageParser<ReportState>(() => new ReportState());
+  public sealed partial class GS2CS_ReportState : pb::IMessage<GS2CS_ReportState> {
+    private static readonly pb::MessageParser<GS2CS_ReportState> _parser = new pb::MessageParser<GS2CS_ReportState>(() => new GS2CS_ReportState());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<ReportState> Parser { get { return _parser; } }
+    public static pb::MessageParser<GS2CS_ReportState> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Protos.GS2CS.GS2CSReflection.Descriptor.MessageTypes[1]; }
+      get { return global::Protos.GS2CSReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -342,40 +342,40 @@ namespace Protos.GS2CS {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public ReportState() {
+    public GS2CS_ReportState() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public ReportState(ReportState other) : this() {
-      packet_ = other.packet_ != null ? other.packet_.Clone() : null;
+    public GS2CS_ReportState(GS2CS_ReportState other) : this() {
+      opts_ = other.opts_ != null ? other.opts_.Clone() : null;
       gsInfo_ = other.gsInfo_ != null ? other.gsInfo_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public ReportState Clone() {
-      return new ReportState(this);
+    public GS2CS_ReportState Clone() {
+      return new GS2CS_ReportState(this);
     }
 
-    /// <summary>Field number for the "packet" field.</summary>
-    public const int PacketFieldNumber = 1;
-    private global::Protos.Packet packet_;
+    /// <summary>Field number for the "opts" field.</summary>
+    public const int OptsFieldNumber = 1;
+    private global::Protos.MsgOpts opts_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Protos.Packet Packet {
-      get { return packet_; }
+    public global::Protos.MsgOpts Opts {
+      get { return opts_; }
       set {
-        packet_ = value;
+        opts_ = value;
       }
     }
 
     /// <summary>Field number for the "gsInfo" field.</summary>
     public const int GsInfoFieldNumber = 2;
-    private global::Protos.GS2CS.GSInfo gsInfo_;
+    private global::Protos.GSInfo gsInfo_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Protos.GS2CS.GSInfo GsInfo {
+    public global::Protos.GSInfo GsInfo {
       get { return gsInfo_; }
       set {
         gsInfo_ = value;
@@ -384,18 +384,18 @@ namespace Protos.GS2CS {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
-      return Equals(other as ReportState);
+      return Equals(other as GS2CS_ReportState);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(ReportState other) {
+    public bool Equals(GS2CS_ReportState other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (!object.Equals(Packet, other.Packet)) return false;
+      if (!object.Equals(Opts, other.Opts)) return false;
       if (!object.Equals(GsInfo, other.GsInfo)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -403,7 +403,7 @@ namespace Protos.GS2CS {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
-      if (packet_ != null) hash ^= Packet.GetHashCode();
+      if (opts_ != null) hash ^= Opts.GetHashCode();
       if (gsInfo_ != null) hash ^= GsInfo.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -418,9 +418,9 @@ namespace Protos.GS2CS {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-      if (packet_ != null) {
+      if (opts_ != null) {
         output.WriteRawTag(10);
-        output.WriteMessage(Packet);
+        output.WriteMessage(Opts);
       }
       if (gsInfo_ != null) {
         output.WriteRawTag(18);
@@ -434,8 +434,8 @@ namespace Protos.GS2CS {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
-      if (packet_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Packet);
+      if (opts_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Opts);
       }
       if (gsInfo_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(GsInfo);
@@ -447,19 +447,19 @@ namespace Protos.GS2CS {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(ReportState other) {
+    public void MergeFrom(GS2CS_ReportState other) {
       if (other == null) {
         return;
       }
-      if (other.packet_ != null) {
-        if (packet_ == null) {
-          packet_ = new global::Protos.Packet();
+      if (other.opts_ != null) {
+        if (opts_ == null) {
+          opts_ = new global::Protos.MsgOpts();
         }
-        Packet.MergeFrom(other.Packet);
+        Opts.MergeFrom(other.Opts);
       }
       if (other.gsInfo_ != null) {
         if (gsInfo_ == null) {
-          gsInfo_ = new global::Protos.GS2CS.GSInfo();
+          gsInfo_ = new global::Protos.GSInfo();
         }
         GsInfo.MergeFrom(other.GsInfo);
       }
@@ -475,15 +475,15 @@ namespace Protos.GS2CS {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            if (packet_ == null) {
-              packet_ = new global::Protos.Packet();
+            if (opts_ == null) {
+              opts_ = new global::Protos.MsgOpts();
             }
-            input.ReadMessage(packet_);
+            input.ReadMessage(opts_);
             break;
           }
           case 18: {
             if (gsInfo_ == null) {
-              gsInfo_ = new global::Protos.GS2CS.GSInfo();
+              gsInfo_ = new global::Protos.GSInfo();
             }
             input.ReadMessage(gsInfo_);
             break;

@@ -10,7 +10,7 @@ namespace Shared.DB
 {
 	public class RedisWrapper
 	{
-		public enum State
+		private enum State
 		{
 			Close,
 			Connecting,

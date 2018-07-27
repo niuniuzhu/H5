@@ -11,14 +11,6 @@ namespace Core.Net
 		public EndPoint remoteEndPoint { get; set; }
 		public INetSession session { get; }
 		public int recvBufSize { set => this._recvEventArgs.SetBuffer( new byte[value], 0, value ); }
-		/// <summary>
-		/// 包编码器
-		/// </summary>
-		public PacketEncodeHandler packetEncodeHandler { get; set; }
-		/// <summary>
-		/// 包解码器
-		/// </summary>
-		public PacketDecodeHandler packetDecodeHandler { get; set; }
 		public bool connected => this.socket != null && this.socket.Connected;
 		public long activeTime { get; set; }
 
@@ -67,8 +59,6 @@ namespace Core.Net
 				this.socket.Close();
 				this.socket = null;
 				this.remoteEndPoint = null;
-				this.packetEncodeHandler = null;
-				this.packetDecodeHandler = null;
 				this._cache.Clear();
 				this._sendQueue.Clear();
 				this.activeTime = 0;
@@ -97,6 +87,8 @@ namespace Core.Net
 		public virtual bool Send( byte[] data, int offset, int size )
 		{
 			StreamBuffer buffer = this._bufferPool.Pop();
+			//写入数据长度
+			buffer.Write( ( ushort )( size + TCPMsgEncoder.LENGTH_SIZE ) );
 			buffer.Write( data, offset, size );
 			this._sendQueue.Push( buffer );
 			return true;
@@ -169,20 +161,14 @@ namespace Core.Net
 				if ( cache.length == 0 )
 					break;
 
-				byte[] data;
-				if ( this.packetDecodeHandler != null )
-				{
-					//解码数据,返回解码后的数据长度
-					//完成解码后数据的包头(整个数据的长度)已经被剥离
-					int len = this.packetDecodeHandler( cache.GetBuffer(), 0, cache.position, out data );
-					if ( data == null )
-						break;
+				//解码数据,返回解码后的数据长度
+				//完成解码后数据的包头(整个数据的长度)已经被剥离
+				int len = TCPMsgEncoder.Decode( cache.GetBuffer(), 0, cache.position, out byte[] data );
+				if ( data == null )
+					break;
 
-					//截断当前缓冲区
-					cache.Strip( len, cache.length - len );
-				}
-				else
-					data = cache.ToArray();
+				//截断当前缓冲区
+				cache.Strip( len, cache.length - len );
 
 				NetEvent netEvent = NetworkMgr.instance.PopEvent();
 				netEvent.type = NetEvent.Type.Recv;

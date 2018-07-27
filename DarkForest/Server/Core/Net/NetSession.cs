@@ -4,7 +4,7 @@ namespace Core.Net
 {
 	public abstract class NetSession : INetSession
 	{
-		public enum State
+		protected enum State
 		{
 			Close,
 			Connecting,
@@ -40,6 +40,8 @@ namespace Core.Net
 		}
 
 		public virtual void Dispose() => this.connection.Dispose();
+
+		public void Send( byte[] data, int offset, int size ) => this.connection.Send( data, offset, size );
 
 		public void Close( string reason )
 		{

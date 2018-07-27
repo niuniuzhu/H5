@@ -18,6 +18,9 @@
 	  <ProjectReference Include="..\Core\Core.csproj">
 	    <Private>false</Private>
 	  </ProjectReference>
+	  <ProjectReference Include="..\Protocol\Protocol.csproj">
+	    <Private>false</Private>
+	  </ProjectReference>
 	</ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
-﻿using Core.Misc;
+﻿using CommandLine;
+using Core.Misc;
 using Core.Net;
 using Shared;
 using Shared.Net;
@@ -6,7 +7,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using CommandLine;
 
 namespace LoginServer
 {

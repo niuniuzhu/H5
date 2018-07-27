@@ -7,34 +7,20 @@ namespace Shared.Net
 	/// </summary>
 	public class MsgCenter
 	{
-		public delegate ErrorCode GeneralHandler( byte[] data, int offset, int size, int msgID );
-		public delegate ErrorCode TransHandler( byte[] data, int offset, int size, int transID, int msgID, uint gcNetID );
+		public delegate ErrorCode GeneralHandler( Google.Protobuf.IMessage message );
 
-		private readonly Dictionary<int, GeneralHandler> _generalHandlers = new Dictionary<int, GeneralHandler>();
-		private readonly Dictionary<int, TransHandler> _transHandlers = new Dictionary<int, TransHandler>();
+		private readonly Dictionary<Protos.MsgID, GeneralHandler> _generalHandlers = new Dictionary<Protos.MsgID, GeneralHandler>();
 
-		public void Register( int msgID, GeneralHandler handler )
+		public void Register( Protos.MsgID msgID, GeneralHandler handler )
 		{
 			if ( this._generalHandlers.ContainsKey( msgID ) )
 				return;
 			this._generalHandlers[msgID] = handler;
 		}
 
-		public void Register( int msgID, TransHandler handler )
-		{
-			if ( this._transHandlers.ContainsKey( msgID ) )
-				return;
-			this._transHandlers[msgID] = handler;
-		}
-
-		public bool TryGetHandler( int msgID, out GeneralHandler handler )
+		public bool TryGetHandler( Protos.MsgID msgID, out GeneralHandler handler )
 		{
 			return this._generalHandlers.TryGetValue( msgID, out handler );
-		}
-
-		public bool TryGetHandler( int msgID, out TransHandler handler )
-		{
-			return this._transHandlers.TryGetValue( msgID, out handler );
 		}
 	}
 }

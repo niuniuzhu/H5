@@ -57,7 +57,7 @@ namespace ProtoGenerator
 			sb.AppendLine( "} //end class" );
 			try
 			{
-				File.WriteAllText( Path.Combine( outputPath, "ProtoDesc.ts" ), sb.ToString(), Encoding.UTF8 );
+				File.WriteAllText( outputPath, sb.ToString(), Encoding.UTF8 );
 			}
 			catch ( Exception e )
 			{

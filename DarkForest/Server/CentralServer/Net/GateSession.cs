@@ -1,6 +1,5 @@
 ﻿using Core.Misc;
 using Core.Net;
-using Google.Protobuf;
 using Shared;
 using Shared.Net;
 
@@ -10,7 +9,7 @@ namespace CentralServer.Net
 	{
 		protected GateSession( uint id, ProtoType type ) : base( id, type )
 		{
-			this._msgCenter.Register( ( int )Protos.MsgID.Gs2CsReportState, this.OnGs2CsReportState );
+			this._msgCenter.Register( Protos.MsgID.EGs2CsReportState, this.OnGs2CsReportState );
 		}
 
 		protected override void OnEstablish()
@@ -29,13 +28,10 @@ namespace CentralServer.Net
 			Logger.Info( $"GS({this.id}) disconnected with msg:{reason}" );
 		}
 
-		private ErrorCode OnGs2CsReportState( byte[] data, int offset, int size, int msgid )
+		private ErrorCode OnGs2CsReportState( Google.Protobuf.IMessage message )
 		{
-			Protos.GS2CS.ReportState reportState = new Protos.GS2CS.ReportState();
-			reportState.MergeFrom( data, offset, size );
-
+			Protos.GS2CS_ReportState reportState = ( Protos.GS2CS_ReportState )message;
 			this.logicID = reportState.GsInfo.Id;
-
 			return CS.instance.GCStateReportHandler( reportState.GsInfo );
 		}
 	}

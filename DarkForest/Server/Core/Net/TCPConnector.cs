@@ -1,6 +1,6 @@
-﻿using System.Net;
+﻿using Core.Misc;
+using System.Net;
 using System.Net.Sockets;
-using Core.Misc;
 
 namespace Core.Net
 {
@@ -99,8 +99,6 @@ namespace Core.Net
 			tcpConnection.socket = new SocketWrapper( this.socket );
 			tcpConnection.remoteEndPoint = this.socket.RemoteEndPoint;
 			tcpConnection.recvBufSize = this.recvBufSize;
-			tcpConnection.packetEncodeHandler = this.packetEncodeHandler;
-			tcpConnection.packetDecodeHandler = this.packetDecodeHandler;
 			tcpConnection.StartReceive();
 			this.socket = null;
 
