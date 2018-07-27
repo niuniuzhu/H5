@@ -3,7 +3,7 @@
 //</auto-generated>
 using Google.Protobuf;
 
-static class ProtoDesc {
+public static class ProtoCreator {
 	#region mappings
 	internal static readonly System.Collections.Generic.Dictionary<System.Type, Protos.MsgID> _TYPE2ID = new System.Collections.Generic.Dictionary<System.Type, Protos.MsgID> {
 		{typeof(Protos.G_AskPing), (Protos.MsgID)10},
@@ -31,9 +31,7 @@ static class ProtoDesc {
 		{(Protos.MsgID)502, typeof(Protos.CS2LS_GSLost)},
 	};
 	#endregion
-} //end class
 
-public static class ProtoCreator {
 	#region proto generator class
 	public static Protos.G_AskPing Q_G_AskPing() {
 		var msg = new Protos.G_AskPing();
@@ -247,7 +245,7 @@ public static class ProtoCreator {
 	#endregion
 
 	#region create message static functions
-	public static Google.Protobuf.IMessage CreateMsgByID(Protos.MsgID msgID) {
+	public static Google.Protobuf.IMessage CreateMsgByID( Protos.MsgID msgID ) {
 		switch ( msgID ) {
 			case (Protos.MsgID)10: {
 				return new Protos.G_AskPing();
@@ -322,16 +320,14 @@ public static class ProtoCreator {
 		return null;
 	}
 	#endregion
-} //end class
 
-public static class ProtoExt {
 	#region get message static functions
-	public static Protos.MsgID GetMsgID( System.Type type ) => ProtoDesc._TYPE2ID[type];
+	public static Protos.MsgID GetMsgID( System.Type type ) => _TYPE2ID[type];
 
-	public static Protos.MsgID GetMsgID<T>() where T : Google.Protobuf.IMessage => ProtoDesc._TYPE2ID[typeof( T )];
+	public static Protos.MsgID GetMsgID<T>() where T : Google.Protobuf.IMessage => _TYPE2ID[typeof( T )];
 
-	public static Protos.MsgID GetMsgID( this Google.Protobuf.IMessage message ) => ProtoDesc._TYPE2ID[message.GetType()];
+	public static Protos.MsgID GetMsgID( this Google.Protobuf.IMessage message ) => _TYPE2ID[message.GetType()];
 
-	public static Protos.MsgID GetMsgID<T>( this Google.Protobuf.IMessage<T> message ) where T : Google.Protobuf.IMessage<T> => ProtoDesc._TYPE2ID[message.GetType()];
+	public static Protos.MsgID GetMsgID<T>( this Google.Protobuf.IMessage<T> message ) where T : Google.Protobuf.IMessage<T> => _TYPE2ID[message.GetType()];
 	#endregion
-}
+} //end class

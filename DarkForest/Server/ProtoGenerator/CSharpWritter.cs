@@ -15,7 +15,7 @@ namespace ProtoGenerator
 			sb.AppendLine( "using Google.Protobuf;" );
 			sb.AppendLine();
 
-			sb.AppendLine( "static class ProtoDesc {" );
+			sb.AppendLine( "public static class ProtoCreator {" );
 
 			sb.AppendLine( "\t#region mappings" );
 			//type to id
@@ -32,10 +32,8 @@ namespace ProtoGenerator
 			sb.AppendLine( "\t};" );
 
 			sb.AppendLine( "\t#endregion" );
-			sb.AppendLine( "} //end class" );
 			sb.AppendLine();
 
-			sb.AppendLine( "public static class ProtoCreator {" );
 			#region 生成请求消息
 			sb.AppendLine( "\t#region proto generator class" );
 			foreach ( KeyValuePair<string, int> kv in clsToMsgID )
@@ -72,7 +70,6 @@ namespace ProtoGenerator
 
 			#region 生成解码消息
 			sb.AppendLine( "\t#region decode message static functions" );
-			//decode message by msgID
 			sb.AppendLine( $"\tpublic static Google.Protobuf.IMessage DecodeMsg( {ns}.MsgID msgID, byte[] data, int offset, int size ) {{" );
 			sb.AppendLine( "\t\tswitch ( msgID ) {" );
 			foreach ( KeyValuePair<string, int> kv in clsToMsgID )
@@ -103,7 +100,7 @@ namespace ProtoGenerator
 
 			sb.AppendLine( "\t#region create message static functions" );
 			//CreateMessageByID
-			sb.AppendLine( "\tpublic static Google.Protobuf.IMessage CreateMsgByID(Protos.MsgID msgID) {" );
+			sb.AppendLine( "\tpublic static Google.Protobuf.IMessage CreateMsgByID( Protos.MsgID msgID ) {" );
 			sb.AppendLine( "\t\tswitch ( msgID ) {" );
 			foreach ( KeyValuePair<string, int> kv in clsToMsgID )
 			{
@@ -114,9 +111,9 @@ namespace ProtoGenerator
 			sb.AppendLine( "\t\t}" );
 			sb.AppendLine( "\t\treturn null;" );
 			sb.AppendLine( "\t}" );
+			//end CreateMessageByID
 			sb.AppendLine( "\t#endregion" );
 			sb.AppendLine();
-			//end CreateMessageByID
 
 			sb.AppendLine( "\t#region get message options static functions" );
 			//Get options
@@ -132,27 +129,25 @@ namespace ProtoGenerator
 			sb.AppendLine( "\t\t}" );
 			sb.AppendLine( "\t\treturn null;" );
 			sb.AppendLine( "\t}" );
-			sb.AppendLine( "\t#endregion" );
 			//end Get options
-			sb.AppendLine( "} //end class" );
+			sb.AppendLine( "\t#endregion" );
 			sb.AppendLine();
 
-			sb.AppendLine( "public static class ProtoExt {" );
 			#region 扩展方法
 			sb.AppendLine( "\t#region get message static functions" );
-			sb.AppendLine( "\tpublic static Protos.MsgID GetMsgID( System.Type type ) => ProtoDesc._TYPE2ID[type];" );
+			sb.AppendLine( "\tpublic static Protos.MsgID GetMsgID( System.Type type ) => _TYPE2ID[type];" );
 			sb.AppendLine();
 
-			sb.AppendLine( "\tpublic static Protos.MsgID GetMsgID<T>() where T : Google.Protobuf.IMessage => ProtoDesc._TYPE2ID[typeof( T )];" );
+			sb.AppendLine( "\tpublic static Protos.MsgID GetMsgID<T>() where T : Google.Protobuf.IMessage => _TYPE2ID[typeof( T )];" );
 			sb.AppendLine();
 
-			sb.AppendLine( "\tpublic static Protos.MsgID GetMsgID( this Google.Protobuf.IMessage message ) => ProtoDesc._TYPE2ID[message.GetType()];" );
+			sb.AppendLine( "\tpublic static Protos.MsgID GetMsgID( this Google.Protobuf.IMessage message ) => _TYPE2ID[message.GetType()];" );
 			sb.AppendLine();
 
-			sb.AppendLine( "\tpublic static Protos.MsgID GetMsgID<T>( this Google.Protobuf.IMessage<T> message ) where T : Google.Protobuf.IMessage<T> => ProtoDesc._TYPE2ID[message.GetType()];" );
+			sb.AppendLine( "\tpublic static Protos.MsgID GetMsgID<T>( this Google.Protobuf.IMessage<T> message ) where T : Google.Protobuf.IMessage<T> => _TYPE2ID[message.GetType()];" );
 			sb.AppendLine( "\t#endregion" );
 			#endregion
-			sb.AppendLine( "}" );
+			sb.AppendLine( "} //end class" );
 			try
 			{
 				File.WriteAllText( outputPath, sb.ToString(), Encoding.UTF8 );

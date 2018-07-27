@@ -3,41 +3,356 @@
 //</auto-generated>
 //ReSharper disable CheckNamespace
 import { Protos } from "../libs/protos";
+import protobuf = require( "protobufjs" );
 
-export class ProtoDesc {
+export class ProtoCreator {
 	private static readonly _TYPE2ID = new Map<new () => any, Protos.MsgID>([
-		[Protos.GC2LS.AskRegister, <Protos.MsgID>100],
-		[Protos.GC2LS.AskLogin, <Protos.MsgID>101],
-		[Protos.LS2GC.Result, <Protos.MsgID>200],
-		[Protos.LS2GC.GSInfo, <Protos.MsgID>201],
-		[Protos.GS2CS.ReportState, <Protos.MsgID>300],
-		[Protos.CS2LS.GSInfos, <Protos.MsgID>400],
-		[Protos.CS2LS.GSInfo, <Protos.MsgID>401],
-		[Protos.CS2LS.GSLost, <Protos.MsgID>402],
+		[Protos.G_AskPing, <Protos.MsgID>10],
+		[Protos.G_AskPingRet, <Protos.MsgID>11],
+		[Protos.GC2LS_AskRegister, <Protos.MsgID>100],
+		[Protos.GC2LS_AskLogin, <Protos.MsgID>101],
+		[Protos.LS2GC_Result, <Protos.MsgID>200],
+		[Protos.LS2GC_GSInfo, <Protos.MsgID>201],
+		[Protos.GS2CS_ReportState, <Protos.MsgID>300],
+		[Protos.CS2LS_GSInfos, <Protos.MsgID>500],
+		[Protos.CS2LS_GSInfo, <Protos.MsgID>501],
+		[Protos.CS2LS_GSLost, <Protos.MsgID>502],
 	]);
 
 	private static readonly _ID2TYPE = new Map<Protos.MsgID, new () => any>([
-		[<Protos.MsgID>100, Protos.GC2LS.AskRegister],
-		[<Protos.MsgID>101, Protos.GC2LS.AskLogin],
-		[<Protos.MsgID>200, Protos.LS2GC.Result],
-		[<Protos.MsgID>201, Protos.LS2GC.GSInfo],
-		[<Protos.MsgID>300, Protos.GS2CS.ReportState],
-		[<Protos.MsgID>400, Protos.CS2LS.GSInfos],
-		[<Protos.MsgID>401, Protos.CS2LS.GSInfo],
-		[<Protos.MsgID>402, Protos.CS2LS.GSLost],
+		[<Protos.MsgID>10, Protos.G_AskPing],
+		[<Protos.MsgID>11, Protos.G_AskPingRet],
+		[<Protos.MsgID>100, Protos.GC2LS_AskRegister],
+		[<Protos.MsgID>101, Protos.GC2LS_AskLogin],
+		[<Protos.MsgID>200, Protos.LS2GC_Result],
+		[<Protos.MsgID>201, Protos.LS2GC_GSInfo],
+		[<Protos.MsgID>300, Protos.GS2CS_ReportState],
+		[<Protos.MsgID>500, Protos.CS2LS_GSInfos],
+		[<Protos.MsgID>501, Protos.CS2LS_GSInfo],
+		[<Protos.MsgID>502, Protos.CS2LS_GSLost],
 	]);
 
-	public static CreateMsgByID(msgID: Protos.MsgID): any {
-		let c = ProtoDesc._ID2TYPE.get(msgID);
-		return c == null ? null : new c();
+	public static Q_G_AskPing():Protos.G_AskPing {
+		let msg = new Protos.G_AskPing();
+		msg.opts = new Protos.MsgOpts();
+		msg.opts.flag |= Protos.MsgOpts.Flag.RPC;
+		return msg;
 	}
 
-	public static GetMsgIDByType(type: new () => any): Protos.MsgID { return ProtoDesc._TYPE2ID.get(type); }
+	public static Q_G_AskPingRet():Protos.G_AskPingRet {
+		let msg = new Protos.G_AskPingRet();
+		msg.opts = new Protos.MsgOpts();
+		return msg;
+	}
 
-	public static GetMsgID(message: any): Protos.MsgID { return ProtoDesc._TYPE2ID.get(message.constructor); }
+	public static Q_GC2LS_AskRegister():Protos.GC2LS_AskRegister {
+		let msg = new Protos.GC2LS_AskRegister();
+		msg.opts = new Protos.MsgOpts();
+		msg.opts.flag |= Protos.MsgOpts.Flag.RPC;
+		return msg;
+	}
 
-	public static R_GC2LS_AskRegister(): Protos.LS2GC.Result { return new Protos.LS2GC.Result(); }
+	public static Q_GC2LS_AskLogin():Protos.GC2LS_AskLogin {
+		let msg = new Protos.GC2LS_AskLogin();
+		msg.opts = new Protos.MsgOpts();
+		msg.opts.flag |= Protos.MsgOpts.Flag.RPC;
+		return msg;
+	}
 
-	public static R_GC2LS_AskLogin(): Protos.LS2GC.Result { return new Protos.LS2GC.Result(); }
+	public static Q_LS2GC_Result():Protos.LS2GC_Result {
+		let msg = new Protos.LS2GC_Result();
+		msg.opts = new Protos.MsgOpts();
+		return msg;
+	}
+
+	public static Q_LS2GC_GSInfo():Protos.LS2GC_GSInfo {
+		let msg = new Protos.LS2GC_GSInfo();
+		msg.opts = new Protos.MsgOpts();
+		return msg;
+	}
+
+	public static Q_GS2CS_ReportState():Protos.GS2CS_ReportState {
+		let msg = new Protos.GS2CS_ReportState();
+		msg.opts = new Protos.MsgOpts();
+		return msg;
+	}
+
+	public static Q_CS2LS_GSInfos():Protos.CS2LS_GSInfos {
+		let msg = new Protos.CS2LS_GSInfos();
+		msg.opts = new Protos.MsgOpts();
+		return msg;
+	}
+
+	public static Q_CS2LS_GSInfo():Protos.CS2LS_GSInfo {
+		let msg = new Protos.CS2LS_GSInfo();
+		msg.opts = new Protos.MsgOpts();
+		return msg;
+	}
+
+	public static Q_CS2LS_GSLost():Protos.CS2LS_GSLost {
+		let msg = new Protos.CS2LS_GSLost();
+		msg.opts = new Protos.MsgOpts();
+		return msg;
+	}
+
+
+	public static R_GC2LS_AskRegister( pid:number ):Protos.LS2GC_Result {
+		let msg = new Protos.LS2GC_Result();
+		msg.opts = new Protos.MsgOpts();
+		msg.opts.flag |= Protos.MsgOpts.Flag.RESP;
+		msg.opts.rpid = pid;
+		return msg;
+	}
+
+	public static R_GC2LS_AskLogin( pid:number ):Protos.LS2GC_Result {
+		let msg = new Protos.LS2GC_Result();
+		msg.opts = new Protos.MsgOpts();
+		msg.opts.flag |= Protos.MsgOpts.Flag.RESP;
+		msg.opts.rpid = pid;
+		return msg;
+	}
+
+	public static R_G_AskPing( pid:number ):Protos.G_AskPingRet {
+		let msg = new Protos.G_AskPingRet();
+		msg.opts = new Protos.MsgOpts();
+		msg.opts.flag |= Protos.MsgOpts.Flag.RESP;
+		msg.opts.rpid = pid;
+		return msg;
+	}
+
+
+	public static DecodeMsg( msgID:Protos.MsgID, data:Uint8Array, offset:number, size:number ):any {
+		switch ( msgID ) {
+			case 10: {
+				let reader = new protobuf.Reader( data );
+				reader.pos = offset;
+				reader.len = size; 
+				let msg = Protos.G_AskPing.decode( reader );
+				return msg;
+			}
+			case 11: {
+				let reader = new protobuf.Reader( data );
+				reader.pos = offset;
+				reader.len = size; 
+				let msg = Protos.G_AskPingRet.decode( reader );
+				return msg;
+			}
+			case 100: {
+				let reader = new protobuf.Reader( data );
+				reader.pos = offset;
+				reader.len = size; 
+				let msg = Protos.GC2LS_AskRegister.decode( reader );
+				return msg;
+			}
+			case 101: {
+				let reader = new protobuf.Reader( data );
+				reader.pos = offset;
+				reader.len = size; 
+				let msg = Protos.GC2LS_AskLogin.decode( reader );
+				return msg;
+			}
+			case 200: {
+				let reader = new protobuf.Reader( data );
+				reader.pos = offset;
+				reader.len = size; 
+				let msg = Protos.LS2GC_Result.decode( reader );
+				return msg;
+			}
+			case 201: {
+				let reader = new protobuf.Reader( data );
+				reader.pos = offset;
+				reader.len = size; 
+				let msg = Protos.LS2GC_GSInfo.decode( reader );
+				return msg;
+			}
+			case 300: {
+				let reader = new protobuf.Reader( data );
+				reader.pos = offset;
+				reader.len = size; 
+				let msg = Protos.GS2CS_ReportState.decode( reader );
+				return msg;
+			}
+			case 500: {
+				let reader = new protobuf.Reader( data );
+				reader.pos = offset;
+				reader.len = size; 
+				let msg = Protos.CS2LS_GSInfos.decode( reader );
+				return msg;
+			}
+			case 501: {
+				let reader = new protobuf.Reader( data );
+				reader.pos = offset;
+				reader.len = size; 
+				let msg = Protos.CS2LS_GSInfo.decode( reader );
+				return msg;
+			}
+			case 502: {
+				let reader = new protobuf.Reader( data );
+				reader.pos = offset;
+				reader.len = size; 
+				let msg = Protos.CS2LS_GSLost.decode( reader );
+				return msg;
+			}
+		}
+		return null;
+	}
+
+	public static D_G_AskPing( data:Uint8Array, offset:number, size:number ):Protos.G_AskPing {
+		let reader = new protobuf.Reader( data );
+		reader.pos = offset;
+		reader.len = size; 
+		let msg = Protos.G_AskPing.decode( reader );
+		return msg;
+	}
+
+	public static D_G_AskPingRet( data:Uint8Array, offset:number, size:number ):Protos.G_AskPingRet {
+		let reader = new protobuf.Reader( data );
+		reader.pos = offset;
+		reader.len = size; 
+		let msg = Protos.G_AskPingRet.decode( reader );
+		return msg;
+	}
+
+	public static D_GC2LS_AskRegister( data:Uint8Array, offset:number, size:number ):Protos.GC2LS_AskRegister {
+		let reader = new protobuf.Reader( data );
+		reader.pos = offset;
+		reader.len = size; 
+		let msg = Protos.GC2LS_AskRegister.decode( reader );
+		return msg;
+	}
+
+	public static D_GC2LS_AskLogin( data:Uint8Array, offset:number, size:number ):Protos.GC2LS_AskLogin {
+		let reader = new protobuf.Reader( data );
+		reader.pos = offset;
+		reader.len = size; 
+		let msg = Protos.GC2LS_AskLogin.decode( reader );
+		return msg;
+	}
+
+	public static D_LS2GC_Result( data:Uint8Array, offset:number, size:number ):Protos.LS2GC_Result {
+		let reader = new protobuf.Reader( data );
+		reader.pos = offset;
+		reader.len = size; 
+		let msg = Protos.LS2GC_Result.decode( reader );
+		return msg;
+	}
+
+	public static D_LS2GC_GSInfo( data:Uint8Array, offset:number, size:number ):Protos.LS2GC_GSInfo {
+		let reader = new protobuf.Reader( data );
+		reader.pos = offset;
+		reader.len = size; 
+		let msg = Protos.LS2GC_GSInfo.decode( reader );
+		return msg;
+	}
+
+	public static D_GS2CS_ReportState( data:Uint8Array, offset:number, size:number ):Protos.GS2CS_ReportState {
+		let reader = new protobuf.Reader( data );
+		reader.pos = offset;
+		reader.len = size; 
+		let msg = Protos.GS2CS_ReportState.decode( reader );
+		return msg;
+	}
+
+	public static D_CS2LS_GSInfos( data:Uint8Array, offset:number, size:number ):Protos.CS2LS_GSInfos {
+		let reader = new protobuf.Reader( data );
+		reader.pos = offset;
+		reader.len = size; 
+		let msg = Protos.CS2LS_GSInfos.decode( reader );
+		return msg;
+	}
+
+	public static D_CS2LS_GSInfo( data:Uint8Array, offset:number, size:number ):Protos.CS2LS_GSInfo {
+		let reader = new protobuf.Reader( data );
+		reader.pos = offset;
+		reader.len = size; 
+		let msg = Protos.CS2LS_GSInfo.decode( reader );
+		return msg;
+	}
+
+	public static D_CS2LS_GSLost( data:Uint8Array, offset:number, size:number ):Protos.CS2LS_GSLost {
+		let reader = new protobuf.Reader( data );
+		reader.pos = offset;
+		reader.len = size; 
+		let msg = Protos.CS2LS_GSLost.decode( reader );
+		return msg;
+	}
+
+
+	public static CreateMsgByID( msgID:Protos.MsgID ):any {
+		switch ( msgID ) {
+			case 10: {
+				return new Protos.G_AskPing();
+			}
+			case 11: {
+				return new Protos.G_AskPingRet();
+			}
+			case 100: {
+				return new Protos.GC2LS_AskRegister();
+			}
+			case 101: {
+				return new Protos.GC2LS_AskLogin();
+			}
+			case 200: {
+				return new Protos.LS2GC_Result();
+			}
+			case 201: {
+				return new Protos.LS2GC_GSInfo();
+			}
+			case 300: {
+				return new Protos.GS2CS_ReportState();
+			}
+			case 500: {
+				return new Protos.CS2LS_GSInfos();
+			}
+			case 501: {
+				return new Protos.CS2LS_GSInfo();
+			}
+			case 502: {
+				return new Protos.CS2LS_GSLost();
+			}
+		}
+		return null;
+	}
+
+	public static GetMsgOpts( message:any ):Protos.IMsgOpts {
+		let msgID = message.GetMsgID();
+		switch ( msgID ) {
+			case 10: {
+				return (<Protos.G_AskPing>message).opts;
+			}
+			case 11: {
+				return (<Protos.G_AskPingRet>message).opts;
+			}
+			case 100: {
+				return (<Protos.GC2LS_AskRegister>message).opts;
+			}
+			case 101: {
+				return (<Protos.GC2LS_AskLogin>message).opts;
+			}
+			case 200: {
+				return (<Protos.LS2GC_Result>message).opts;
+			}
+			case 201: {
+				return (<Protos.LS2GC_GSInfo>message).opts;
+			}
+			case 300: {
+				return (<Protos.GS2CS_ReportState>message).opts;
+			}
+			case 500: {
+				return (<Protos.CS2LS_GSInfos>message).opts;
+			}
+			case 501: {
+				return (<Protos.CS2LS_GSInfo>message).opts;
+			}
+			case 502: {
+				return (<Protos.CS2LS_GSLost>message).opts;
+			}
+		}
+		return null;
+	}
+
+	public static GetMsgIDByType(type: new () => any): Protos.MsgID { return ProtoCreator._TYPE2ID.get(type); }
+
+	public static GetMsgID(message: any): Protos.MsgID { return ProtoCreator._TYPE2ID.get(message.constructor); }
 
 } //end class
