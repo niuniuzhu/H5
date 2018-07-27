@@ -26,9 +26,8 @@ namespace Shared.Net
 			StreamBuffer buffer = new StreamBuffer();
 			buffer.Write( ( int )message.GetMsgID() );
 
-			//检查第一个字段是否Protos.Packet类型
 			Protos.MsgOpts opts = message.GetMsgOpts();
-			System.Diagnostics.Debug.Assert( opts != null, "invalid msg options" );
+			System.Diagnostics.Debug.Assert( opts != null, "invalid message options" );
 			//为消息写入序号
 			opts.Pid = this._pid++;
 			if ( trans )

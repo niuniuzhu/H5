@@ -111,13 +111,13 @@ export namespace Protos {
 
     interface IG_AskPing {
         opts?: (Protos.IMsgOpts|null);
-        time?: (number|Long|null);
+        time?: (number|null);
     }
 
     class G_AskPing implements IG_AskPing {
         constructor(properties?: Protos.IG_AskPing);
         public opts?: (Protos.IMsgOpts|null);
-        public time: (number|Long);
+        public time: number;
         public static create(properties?: Protos.IG_AskPing): Protos.G_AskPing;
         public static encode(message: Protos.IG_AskPing, writer?: $protobuf.Writer): $protobuf.Writer;
         public static encodeDelimited(message: Protos.IG_AskPing, writer?: $protobuf.Writer): $protobuf.Writer;
@@ -131,15 +131,15 @@ export namespace Protos {
 
     interface IG_AskPingRet {
         opts?: (Protos.IMsgOpts|null);
-        stime?: (number|Long|null);
-        time?: (number|Long|null);
+        stime?: (number|null);
+        time?: (number|null);
     }
 
     class G_AskPingRet implements IG_AskPingRet {
         constructor(properties?: Protos.IG_AskPingRet);
         public opts?: (Protos.IMsgOpts|null);
-        public stime: (number|Long);
-        public time: (number|Long);
+        public stime: number;
+        public time: number;
         public static create(properties?: Protos.IG_AskPingRet): Protos.G_AskPingRet;
         public static encode(message: Protos.IG_AskPingRet, writer?: $protobuf.Writer): $protobuf.Writer;
         public static encodeDelimited(message: Protos.IG_AskPingRet, writer?: $protobuf.Writer): $protobuf.Writer;

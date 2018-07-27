@@ -1,6 +1,7 @@
 import { Protos } from "../../libs/protos";
-import { NetworkMgr } from "../../Net/NetworkMgr";
+import { WSConnector } from "../../Net/WSConnector";
 import { IUIModule } from "./IUIModule";
+import { ProtoCreator } from "../../Protos/ProtoHelper";
 
 export class UILogin implements IUIModule {
 	private _root: fairygui.GComponent;
@@ -36,21 +37,20 @@ export class UILogin implements IUIModule {
 	}
 
 	private OnLoginBtnClick(): void {
-		NetworkMgr.instance.Connect("localhost", 49996);
-		NetworkMgr.instance.OnConnected = ((e: Event) => {
-			let login = new Protos.GC2LS.AskLogin();
+		let connector = new WSConnector("localhost", 49996);
+		connector.OnConnected = ((e: Event) => {
+			let login = ProtoCreator.Q_GC2LS_AskLogin();
 			// login.packet = new Protos.Packet();
 			// login.packet.pid = 1;
 			login.uin = "1";
-			let data = Protos.GC2LS.AskLogin.encode(login).finish();
-			NetworkMgr.instance.Send(Protos.MsgID.GC2LS_AskLogin, data);
+			connector.Send(Protos.GC2LS_AskLogin, login, this.OnLogin);
 		}).bind(this);
 
-		NetworkMgr.instance.OnError = ((e: Event) => {
+		connector.OnError = ((e: Event) => {
 			RC.Logger.Debug(e);
 		})
 
-		NetworkMgr.instance.RegisterMsg(Protos.MsgID.GC2LS_AskLogin, ((data, offset, size, msgID) => {
+		connector.AddListener(Protos.MsgID.eGC2LS_AskLogin, ((message:any) => {
 			RC.Logger.Log("ok");
 		}).bind(this));
 
@@ -79,5 +79,10 @@ export class UILogin implements IUIModule {
 	private OnRegBtnClick(): void {
 		this._root.getChild("name").asTextField.text = this._root.getChild("reg_name").asTextField.text;
 		this._root.getChild("password").asTextField.text = this._root.getChild("reg_password").asTextField.text;
+	}
+
+	private OnLogin(message: any): void {
+		let loginResult: Protos.LS2GC_Result = <Protos.LS2GC_Result>message;
+		RC.Logger.Log(loginResult.result);
 	}
 }

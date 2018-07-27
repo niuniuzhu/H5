@@ -4,13 +4,6 @@
 		"target": "es6",
 		"outDir": "./bin/js",
 		"outFile": "./bin/js/game.js",
-		"baseUrl": "./src",
-		"paths": {
-			"*": [
-				"*",
-				"libs/*"
-			]
-		},
 		"inlineSourceMap": false,
 		"inlineSources": false,
 		"sourceMap": true,

@@ -76,14 +76,280 @@ define("Net/MsgCenter", ["require", "exports"], function (require, exports) {
     }
     exports.MsgCenter = MsgCenter;
 });
-define("Net/NetworkMgr", ["require", "exports", "Net/ByteUtils", "Net/MsgCenter"], function (require, exports, ByteUtils_1, MsgCenter_1) {
+define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function (require, exports, protos_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    class NetworkMgr {
-        static get instance() {
-            if (NetworkMgr._instance == null)
-                NetworkMgr._instance = new NetworkMgr();
-            return NetworkMgr._instance;
+    class ProtoCreator {
+        static Q_G_AskPing() {
+            let msg = new protos_1.Protos.G_AskPing();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RPC;
+            return msg;
+        }
+        static Q_G_AskPingRet() {
+            let msg = new protos_1.Protos.G_AskPingRet();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            return msg;
+        }
+        static Q_GC2LS_AskRegister() {
+            let msg = new protos_1.Protos.GC2LS_AskRegister();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RPC;
+            return msg;
+        }
+        static Q_GC2LS_AskLogin() {
+            let msg = new protos_1.Protos.GC2LS_AskLogin();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RPC;
+            return msg;
+        }
+        static Q_LS2GC_Result() {
+            let msg = new protos_1.Protos.LS2GC_Result();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            return msg;
+        }
+        static Q_LS2GC_GSInfo() {
+            let msg = new protos_1.Protos.LS2GC_GSInfo();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            return msg;
+        }
+        static Q_GS2CS_ReportState() {
+            let msg = new protos_1.Protos.GS2CS_ReportState();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            return msg;
+        }
+        static Q_CS2LS_GSInfos() {
+            let msg = new protos_1.Protos.CS2LS_GSInfos();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            return msg;
+        }
+        static Q_CS2LS_GSInfo() {
+            let msg = new protos_1.Protos.CS2LS_GSInfo();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            return msg;
+        }
+        static Q_CS2LS_GSLost() {
+            let msg = new protos_1.Protos.CS2LS_GSLost();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            return msg;
+        }
+        static R_GC2LS_AskRegister(pid) {
+            let msg = new protos_1.Protos.LS2GC_Result();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RESP;
+            msg.opts.rpid = pid;
+            return msg;
+        }
+        static R_GC2LS_AskLogin(pid) {
+            let msg = new protos_1.Protos.LS2GC_Result();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RESP;
+            msg.opts.rpid = pid;
+            return msg;
+        }
+        static R_G_AskPing(pid) {
+            let msg = new protos_1.Protos.G_AskPingRet();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RESP;
+            msg.opts.rpid = pid;
+            return msg;
+        }
+        static DecodeMsg(msgID, data, size) {
+            switch (msgID) {
+                case 10: {
+                    let msg = protos_1.Protos.G_AskPing.decode(data, size);
+                    return msg;
+                }
+                case 11: {
+                    let msg = protos_1.Protos.G_AskPingRet.decode(data, size);
+                    return msg;
+                }
+                case 100: {
+                    let msg = protos_1.Protos.GC2LS_AskRegister.decode(data, size);
+                    return msg;
+                }
+                case 101: {
+                    let msg = protos_1.Protos.GC2LS_AskLogin.decode(data, size);
+                    return msg;
+                }
+                case 200: {
+                    let msg = protos_1.Protos.LS2GC_Result.decode(data, size);
+                    return msg;
+                }
+                case 201: {
+                    let msg = protos_1.Protos.LS2GC_GSInfo.decode(data, size);
+                    return msg;
+                }
+                case 300: {
+                    let msg = protos_1.Protos.GS2CS_ReportState.decode(data, size);
+                    return msg;
+                }
+                case 500: {
+                    let msg = protos_1.Protos.CS2LS_GSInfos.decode(data, size);
+                    return msg;
+                }
+                case 501: {
+                    let msg = protos_1.Protos.CS2LS_GSInfo.decode(data, size);
+                    return msg;
+                }
+                case 502: {
+                    let msg = protos_1.Protos.CS2LS_GSLost.decode(data, size);
+                    return msg;
+                }
+            }
+            return null;
+        }
+        static D_G_AskPing(data, size) {
+            let msg = protos_1.Protos.G_AskPing.decode(data, size);
+            return msg;
+        }
+        static D_G_AskPingRet(data, size) {
+            let msg = protos_1.Protos.G_AskPingRet.decode(data, size);
+            return msg;
+        }
+        static D_GC2LS_AskRegister(data, size) {
+            let msg = protos_1.Protos.GC2LS_AskRegister.decode(data, size);
+            return msg;
+        }
+        static D_GC2LS_AskLogin(data, size) {
+            let msg = protos_1.Protos.GC2LS_AskLogin.decode(data, size);
+            return msg;
+        }
+        static D_LS2GC_Result(data, size) {
+            let msg = protos_1.Protos.LS2GC_Result.decode(data, size);
+            return msg;
+        }
+        static D_LS2GC_GSInfo(data, size) {
+            let msg = protos_1.Protos.LS2GC_GSInfo.decode(data, size);
+            return msg;
+        }
+        static D_GS2CS_ReportState(data, size) {
+            let msg = protos_1.Protos.GS2CS_ReportState.decode(data, size);
+            return msg;
+        }
+        static D_CS2LS_GSInfos(data, size) {
+            let msg = protos_1.Protos.CS2LS_GSInfos.decode(data, size);
+            return msg;
+        }
+        static D_CS2LS_GSInfo(data, size) {
+            let msg = protos_1.Protos.CS2LS_GSInfo.decode(data, size);
+            return msg;
+        }
+        static D_CS2LS_GSLost(data, size) {
+            let msg = protos_1.Protos.CS2LS_GSLost.decode(data, size);
+            return msg;
+        }
+        static CreateMsgByID(msgID) {
+            switch (msgID) {
+                case 10: {
+                    return new protos_1.Protos.G_AskPing();
+                }
+                case 11: {
+                    return new protos_1.Protos.G_AskPingRet();
+                }
+                case 100: {
+                    return new protos_1.Protos.GC2LS_AskRegister();
+                }
+                case 101: {
+                    return new protos_1.Protos.GC2LS_AskLogin();
+                }
+                case 200: {
+                    return new protos_1.Protos.LS2GC_Result();
+                }
+                case 201: {
+                    return new protos_1.Protos.LS2GC_GSInfo();
+                }
+                case 300: {
+                    return new protos_1.Protos.GS2CS_ReportState();
+                }
+                case 500: {
+                    return new protos_1.Protos.CS2LS_GSInfos();
+                }
+                case 501: {
+                    return new protos_1.Protos.CS2LS_GSInfo();
+                }
+                case 502: {
+                    return new protos_1.Protos.CS2LS_GSLost();
+                }
+            }
+            return null;
+        }
+        static GetMsgOpts(message) {
+            let msgID = ProtoCreator.GetMsgID(message);
+            switch (msgID) {
+                case 10: {
+                    return message.opts;
+                }
+                case 11: {
+                    return message.opts;
+                }
+                case 100: {
+                    return message.opts;
+                }
+                case 101: {
+                    return message.opts;
+                }
+                case 200: {
+                    return message.opts;
+                }
+                case 201: {
+                    return message.opts;
+                }
+                case 300: {
+                    return message.opts;
+                }
+                case 500: {
+                    return message.opts;
+                }
+                case 501: {
+                    return message.opts;
+                }
+                case 502: {
+                    return message.opts;
+                }
+            }
+            return null;
+        }
+        static GetMsgIDByType(type) { return ProtoCreator._TYPE2ID.get(type); }
+        static GetMsgID(message) { return ProtoCreator._TYPE2ID.get(message.constructor); }
+    }
+    ProtoCreator._TYPE2ID = new Map([
+        [protos_1.Protos.G_AskPing, 10],
+        [protos_1.Protos.G_AskPingRet, 11],
+        [protos_1.Protos.GC2LS_AskRegister, 100],
+        [protos_1.Protos.GC2LS_AskLogin, 101],
+        [protos_1.Protos.LS2GC_Result, 200],
+        [protos_1.Protos.LS2GC_GSInfo, 201],
+        [protos_1.Protos.GS2CS_ReportState, 300],
+        [protos_1.Protos.CS2LS_GSInfos, 500],
+        [protos_1.Protos.CS2LS_GSInfo, 501],
+        [protos_1.Protos.CS2LS_GSLost, 502],
+    ]);
+    ProtoCreator._ID2TYPE = new Map([
+        [10, protos_1.Protos.G_AskPing],
+        [11, protos_1.Protos.G_AskPingRet],
+        [100, protos_1.Protos.GC2LS_AskRegister],
+        [101, protos_1.Protos.GC2LS_AskLogin],
+        [200, protos_1.Protos.LS2GC_Result],
+        [201, protos_1.Protos.LS2GC_GSInfo],
+        [300, protos_1.Protos.GS2CS_ReportState],
+        [500, protos_1.Protos.CS2LS_GSInfos],
+        [501, protos_1.Protos.CS2LS_GSInfo],
+        [502, protos_1.Protos.CS2LS_GSLost],
+    ]);
+    exports.ProtoCreator = ProtoCreator;
+});
+define("Net/WSConnector", ["require", "exports", "Net/ByteUtils", "Net/MsgCenter", "../libs/protos", "Protos/ProtoHelper"], function (require, exports, ByteUtils_1, MsgCenter_1, protos_2, ProtoHelper_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class WSConnector {
+        constructor(ip, port) {
+            this._pid = 0;
+            this._msgCenter = new MsgCenter_1.MsgCenter();
+            this._rpcHandlers = new Map();
+            this._socket = new WebSocket(`ws://${ip}:${port}`);
+            this._socket.binaryType = "arraybuffer";
+            this._socket.onmessage = this.OnReceived.bind(this);
         }
         get connected() { return this._socket.readyState == WebSocket.OPEN; }
         ;
@@ -93,45 +359,56 @@ define("Net/NetworkMgr", ["require", "exports", "Net/ByteUtils", "Net/MsgCenter"
         set OnClosed(handler) { this._socket.onclose = handler; }
         get OnError() { return this._socket.onerror; }
         set OnError(handler) { this._socket.onerror = handler; }
-        constructor() {
-            this._msgCenter = new MsgCenter_1.MsgCenter();
-        }
-        Connect(ip, port) {
-            this._socket = new WebSocket(`ws://${ip}:${port}`);
-            this._socket.onmessage = this.OnReceived.bind(this);
-        }
-        OnReceived(ev) {
-            let data = ev.data;
-            let offset = 0;
-            let size = data.length;
-            let msgID = ByteUtils_1.ByteUtils.Decode32u(data, offset);
-            offset += 4;
-            size -= 4;
-            let handler = this._msgCenter.GetHandler(msgID);
-            if (handler != null)
-                handler(data, offset, size, msgID);
-            else
-                RC.Logger.Warn(`"invalid msg:${msgID}.`);
-        }
-        Send(msgID, data) {
-            let newData = new Uint8Array(data.length + 4);
-            ByteUtils_1.ByteUtils.Encode32u(newData, 0, msgID);
-            newData.set(data, 4);
-            this._socket.send(newData);
-        }
         Close() {
+            this._pid = 0;
             this._socket.close();
         }
-        RegisterMsg(msgID, handler) {
+        Send(type, message, rpcHandler = null) {
+            let opts = ProtoHelper_1.ProtoCreator.GetMsgOpts(message);
+            RC.Logger.Assert(opts != null, "invalid message options");
+            opts.pid = this._pid++;
+            if ((opts.flag & protos_2.Protos.MsgOpts.Flag.RPC) > 0 && rpcHandler != null) {
+                if (this._rpcHandlers.has(opts.pid))
+                    RC.Logger.Warn("packet id collision!!");
+                this._rpcHandlers.set(opts.pid, rpcHandler);
+            }
+            let msgData = type.encode(message).finish();
+            let data = new Uint8Array(msgData.length + 4);
+            ByteUtils_1.ByteUtils.Encode32u(data, 0, ProtoHelper_1.ProtoCreator.GetMsgID(message));
+            data.set(msgData, 4);
+            this._socket.send(data);
+        }
+        AddListener(msgID, handler) {
             this._msgCenter.Register(msgID, handler);
         }
-        UnregisterMsg(msgID, handler) {
+        RemoveListener(msgID, handler) {
             return this._msgCenter.Unregister(msgID, handler);
         }
+        OnReceived(ev) {
+            let data = new Uint8Array(ev.data);
+            let msgID = ByteUtils_1.ByteUtils.Decode32u(data, 0);
+            data.copyWithin(0, 4);
+            let message = ProtoHelper_1.ProtoCreator.DecodeMsg(msgID, data, data.length - 4);
+            let opts = ProtoHelper_1.ProtoCreator.GetMsgOpts(message);
+            RC.Logger.Assert(opts != null, "invalid msg options");
+            if ((opts.flag & protos_2.Protos.MsgOpts.Flag.RESP) > 0) {
+                let rcpHandler = this._rpcHandlers.get(opts.rpid);
+                RC.Logger.Assert(rcpHandler != null, "RPC handler not found");
+                this._rpcHandlers.delete(opts.rpid);
+                rcpHandler(message);
+            }
+            else {
+                let handler = this._msgCenter.GetHandler(msgID);
+                if (handler != null)
+                    handler(message);
+                else
+                    RC.Logger.Warn(`invalid msg:${msgID}`);
+            }
+        }
     }
-    exports.NetworkMgr = NetworkMgr;
+    exports.WSConnector = WSConnector;
 });
-define("View/UI/UILogin", ["require", "exports", "../../libs/protos", "Net/NetworkMgr"], function (require, exports, protos_1, NetworkMgr_1) {
+define("View/UI/UILogin", ["require", "exports", "../../libs/protos", "Net/WSConnector", "Protos/ProtoHelper"], function (require, exports, protos_3, WSConnector_1, ProtoHelper_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class UILogin {
@@ -160,23 +437,26 @@ define("View/UI/UILogin", ["require", "exports", "../../libs/protos", "Net/Netwo
         OnResize(e) {
         }
         OnLoginBtnClick() {
-            NetworkMgr_1.NetworkMgr.instance.Connect("localhost", 49996);
-            NetworkMgr_1.NetworkMgr.instance.OnConnected = ((e) => {
-                let login = new protos_1.Protos.GCToLS.AskLogin();
+            let connector = new WSConnector_1.WSConnector("localhost", 49996);
+            connector.OnConnected = ((e) => {
+                let login = ProtoHelper_2.ProtoCreator.Q_GC2LS_AskLogin();
                 login.uin = "1";
-                let data = protos_1.Protos.GCToLS.AskLogin.encode(login).finish();
-                NetworkMgr_1.NetworkMgr.instance.Send(protos_1.Protos.MsgID.GCToLS_AskLogin, data);
+                connector.Send(protos_3.Protos.GC2LS_AskLogin, login, this.OnLogin);
             }).bind(this);
-            NetworkMgr_1.NetworkMgr.instance.OnError = ((e) => {
+            connector.OnError = ((e) => {
                 RC.Logger.Debug(e);
             });
-            NetworkMgr_1.NetworkMgr.instance.RegisterMsg(protos_1.Protos.MsgID.GCToLS_AskLogin, ((data, offset, size, msgID) => {
+            connector.AddListener(protos_3.Protos.MsgID.eGC2LS_AskLogin, ((message) => {
                 RC.Logger.Log("ok");
             }).bind(this));
         }
         OnRegBtnClick() {
             this._root.getChild("name").asTextField.text = this._root.getChild("reg_name").asTextField.text;
             this._root.getChild("password").asTextField.text = this._root.getChild("reg_password").asTextField.text;
+        }
+        OnLogin(message) {
+            let loginResult = message;
+            RC.Logger.Log(loginResult.result);
         }
     }
     exports.UILogin = UILogin;

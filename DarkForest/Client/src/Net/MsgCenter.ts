@@ -1,4 +1,4 @@
-type GeneralHandler = (data: Uint8Array, offset: number, size: number, msgID: number) => void;
+type GeneralHandler = (message:any) => void;
 
 export class MsgCenter {
 	private readonly _generalHandlers: Map<number, GeneralHandler>;

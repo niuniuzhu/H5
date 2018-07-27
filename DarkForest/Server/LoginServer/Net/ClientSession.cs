@@ -39,8 +39,8 @@ namespace LoginServer.Net
 		private ErrorCode OnGCtoLSAskRegister( Google.Protobuf.IMessage message )
 		{
 			Protos.GC2LS_AskRegister register = ( Protos.GC2LS_AskRegister )message;
-
 			ErrorCode regError = LS.instance.userMgr.RegisterAccount( register );
+
 			Protos.LS2GC_Result response = ProtoCreator.R_GC2LS_AskRegister( register.Opts.Pid );
 			switch ( regError )
 			{
@@ -63,8 +63,13 @@ namespace LoginServer.Net
 
 		private ErrorCode OnGCtoLSAskLogin( Google.Protobuf.IMessage message )
 		{
-			Protos.GC2LS_AskLogin login = ( Protos.GC2LS_AskLogin ) message;
-			Logger.Log( "ask login" );
+			Protos.GC2LS_AskLogin login = ( Protos.GC2LS_AskLogin )message;
+			Logger.Log( "client request login" );
+
+			Protos.LS2GC_Result response = ProtoCreator.R_GC2LS_AskLogin( login.Opts.Pid );
+			response.Result = Protos.LS2GC_Result.Types.EResult.Failed;
+			this.owner.Send( this.id, response );
+
 			return ErrorCode.Success;
 		}
 	}

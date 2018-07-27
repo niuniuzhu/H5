@@ -999,7 +999,7 @@ define(["libs/protobufjs"], function($protobuf) {
              * @memberof Protos
              * @interface IG_AskPing
              * @property {Protos.IMsgOpts|null} [opts] G_AskPing opts
-             * @property {number|Long|null} [time] G_AskPing time
+             * @property {number|null} [time] G_AskPing time
              */
     
             /**
@@ -1027,7 +1027,7 @@ define(["libs/protobufjs"], function($protobuf) {
     
             /**
              * G_AskPing time.
-             * @member {number|Long} time
+             * @member {number} time
              * @memberof Protos.G_AskPing
              * @instance
              */
@@ -1228,8 +1228,8 @@ define(["libs/protobufjs"], function($protobuf) {
              * @memberof Protos
              * @interface IG_AskPingRet
              * @property {Protos.IMsgOpts|null} [opts] G_AskPingRet opts
-             * @property {number|Long|null} [stime] G_AskPingRet stime
-             * @property {number|Long|null} [time] G_AskPingRet time
+             * @property {number|null} [stime] G_AskPingRet stime
+             * @property {number|null} [time] G_AskPingRet time
              */
     
             /**
@@ -1257,7 +1257,7 @@ define(["libs/protobufjs"], function($protobuf) {
     
             /**
              * G_AskPingRet stime.
-             * @member {number|Long} stime
+             * @member {number} stime
              * @memberof Protos.G_AskPingRet
              * @instance
              */
@@ -1265,7 +1265,7 @@ define(["libs/protobufjs"], function($protobuf) {
     
             /**
              * G_AskPingRet time.
-             * @member {number|Long} time
+             * @member {number} time
              * @memberof Protos.G_AskPingRet
              * @instance
              */
