@@ -215,7 +215,6 @@ export namespace Protos {
         name?: (string|null);
         passwd?: (string|null);
         platform?: (number|null);
-        ip?: (string|null);
     }
 
     class GC2LS_AskRegister implements IGC2LS_AskRegister {
@@ -225,7 +224,6 @@ export namespace Protos {
         public name: string;
         public passwd: string;
         public platform: number;
-        public ip: string;
         public static create(properties?: Protos.IGC2LS_AskRegister): Protos.GC2LS_AskRegister;
         public static encode(message: Protos.IGC2LS_AskRegister, writer?: $protobuf.Writer): $protobuf.Writer;
         public static encodeDelimited(message: Protos.IGC2LS_AskRegister, writer?: $protobuf.Writer): $protobuf.Writer;

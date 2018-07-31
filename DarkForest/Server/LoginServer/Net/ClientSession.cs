@@ -1,5 +1,6 @@
 ﻿using Core.Misc;
 using Core.Net;
+using Protos;
 using Shared;
 using Shared.Net;
 
@@ -44,6 +45,9 @@ namespace LoginServer.Net
 			Protos.LS2GC_Result response = ProtoCreator.R_GC2LS_AskRegister( register.Opts.Pid );
 			switch ( regError )
 			{
+				case ErrorCode.Success:
+					response.Result = LS2GC_Result.Types.EResult.Success;
+					break;
 				case ErrorCode.UsernameExists:
 					response.Result = Protos.LS2GC_Result.Types.EResult.UsernameExists;
 					break;

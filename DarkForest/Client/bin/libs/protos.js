@@ -2056,7 +2056,6 @@ define(["libs/protobufjs"], function($protobuf) {
              * @property {string|null} [name] GC2LS_AskRegister name
              * @property {string|null} [passwd] GC2LS_AskRegister passwd
              * @property {number|null} [platform] GC2LS_AskRegister platform
-             * @property {string|null} [ip] GC2LS_AskRegister ip
              */
     
             /**
@@ -2115,14 +2114,6 @@ define(["libs/protobufjs"], function($protobuf) {
             GC2LS_AskRegister.prototype.platform = 0;
     
             /**
-             * GC2LS_AskRegister ip.
-             * @member {string} ip
-             * @memberof Protos.GC2LS_AskRegister
-             * @instance
-             */
-            GC2LS_AskRegister.prototype.ip = "";
-    
-            /**
              * Creates a new GC2LS_AskRegister instance using the specified properties.
              * @function create
              * @memberof Protos.GC2LS_AskRegister
@@ -2156,8 +2147,6 @@ define(["libs/protobufjs"], function($protobuf) {
                     writer.uint32(/* id 4, wireType 2 =*/34).string(message.passwd);
                 if (message.platform != null && message.hasOwnProperty("platform"))
                     writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.platform);
-                if (message.ip != null && message.hasOwnProperty("ip"))
-                    writer.uint32(/* id 6, wireType 2 =*/50).string(message.ip);
                 return writer;
             };
     
@@ -2206,9 +2195,6 @@ define(["libs/protobufjs"], function($protobuf) {
                         break;
                     case 5:
                         message.platform = reader.uint32();
-                        break;
-                    case 6:
-                        message.ip = reader.string();
                         break;
                     default:
                         reader.skipType(tag & 7);
@@ -2262,9 +2248,6 @@ define(["libs/protobufjs"], function($protobuf) {
                 if (message.platform != null && message.hasOwnProperty("platform"))
                     if (!$util.isInteger(message.platform))
                         return "platform: integer expected";
-                if (message.ip != null && message.hasOwnProperty("ip"))
-                    if (!$util.isString(message.ip))
-                        return "ip: string expected";
                 return null;
             };
     
@@ -2293,8 +2276,6 @@ define(["libs/protobufjs"], function($protobuf) {
                     message.passwd = String(object.passwd);
                 if (object.platform != null)
                     message.platform = object.platform >>> 0;
-                if (object.ip != null)
-                    message.ip = String(object.ip);
                 return message;
             };
     
@@ -2317,7 +2298,6 @@ define(["libs/protobufjs"], function($protobuf) {
                     object.name = "";
                     object.passwd = "";
                     object.platform = 0;
-                    object.ip = "";
                 }
                 if (message.opts != null && message.hasOwnProperty("opts"))
                     object.opts = $root.Protos.MsgOpts.toObject(message.opts, options);
@@ -2329,8 +2309,6 @@ define(["libs/protobufjs"], function($protobuf) {
                     object.passwd = message.passwd;
                 if (message.platform != null && message.hasOwnProperty("platform"))
                     object.platform = message.platform;
-                if (message.ip != null && message.hasOwnProperty("ip"))
-                    object.ip = message.ip;
                 return object;
             };
     

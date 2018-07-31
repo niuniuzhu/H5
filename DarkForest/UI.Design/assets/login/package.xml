@@ -5,7 +5,7 @@
     <image id="kqy51" name="00登录03.jpg" path="/assets/"/>
     <image id="kqy52" name="00登录01.jpg" path="/assets/"/>
     <image id="kqy53" name="denglu.png" path="/assets/"/>
-    <image id="kqy54" name="kuang06.png" path="/assets/"/>
+    <image id="kqy54" name="kuang06.png" path="/assets/" scale="" scale9grid="147,126,294,252"/>
     <image id="kqy55" name="kuang07.png" path="/assets/"/>
     <image id="kqy56" name="kuang08.png" path="/assets/"/>
     <image id="kqy57" name="xuanqu.png" path="/assets/"/>
@@ -18,6 +18,8 @@
     <component id="kqy5e" name="green_btn.xml" path="/coms/"/>
     <component id="kqy5f" name="blue_btn.xml" path="/coms/"/>
     <component id="kqy5g" name="area_btn.xml" path="/coms/"/>
+    <component id="mrmsh" name="alert.xml" path="/coms/" exported="true"/>
+    <image id="mrmsi" name="kuang05.png" path="/assets/" scale="9grid" scale9grid="170,37,340,74"/>
   </resources>
   <publish name="login"/>
 </packageDescription>

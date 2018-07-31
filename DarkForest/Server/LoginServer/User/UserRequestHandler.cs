@@ -35,13 +35,16 @@ namespace LoginServer.User
 			if ( errorCode != ErrorCode.Success )
 				return errorCode;
 			//开始注册
-			ulong guid = GuidHash.GetUInt64();
-			string pwd = Core.Crypto.MD5Util.GetMd5HexDigest( msg.Passwd );
-			if ( redisWrapper.IsConnected )
-				redisWrapper.HashSet( "unames", msg.Name, true );
-			this._accountDBWrapper.SqlExecNonQuery(
-				$"insert account_user( id,sdk,unames,pwd,ip ) values({guid}, {msg.Sdk}, \'{msg.Name}\', \'{pwd}\', \'{msg.Ip}\');", out int _ );
-			return ErrorCode.Success;
+			//ulong guid = GuidHash.GetUInt64();
+			string pwd = Core.Crypto.MD5Util.GetMd5HexDigest( msg.Passwd ).Replace( "-", string.Empty ).ToLower();
+			errorCode = this._accountDBWrapper.SqlExecNonQuery(
+				$"insert account_user( sdk,uname,pwd ) values({msg.Sdk}, \'{msg.Name}\', \'{pwd}\');", out int _ );
+			if ( errorCode == ErrorCode.Success )
+			{
+				if ( redisWrapper.IsConnected )
+					redisWrapper.HashSet( "unames", msg.Name, true );
+			}
+			return errorCode;
 		}
 	}
 }

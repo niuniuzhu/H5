@@ -2,42 +2,42 @@
 <component size="720,1280" designImageLayer="1">
   <controller name="c1" pages="0,,1,,2," selected="1"/>
   <displayList>
-    <image id="n0_kqy5" name="n0" src="kqy52r" pkg="c7x5i49r" xy="0,0"/>
-    <image id="n1_kqy5" name="n1" src="kqy54" xy="66,388"/>
-    <component id="n10_kqy5" name="exit_btn" src="kqy5d" xy="144,1049">
+    <image id="n0_kqy5" name="n0" src="kqy52r" fileName="assets/bg01.png" pkg="c7x5i49r" xy="0,0"/>
+    <image id="n1_kqy5" name="n1" src="kqy54" fileName="assets/kuang06.png" xy="66,388"/>
+    <component id="n10_kqy5" name="exit_btn" src="kqy5d" fileName="coms/big_btn.xml" xy="144,1049">
       <Button title="退出游戏" titleColor="#ffffff" titleFontSize="50"/>
     </component>
-    <component id="n7_kqy5" name="enter_reg_btn" src="kqy5f" xy="132,769">
+    <component id="n7_kqy5" name="enter_reg_btn" src="kqy5f" fileName="coms/blue_btn.xml" xy="132,769">
       <gearDisplay controller="c1" pages="0"/>
       <Button title="注册" titleColor="#ffffff" titleFontSize="36" controller="c1" page="1"/>
     </component>
-    <component id="n8_kqy5" name="login_btn" src="kqy5e" xy="368,769">
+    <component id="n8_kqy5" name="login_btn" src="kqy5e" fileName="coms/green_btn.xml" xy="368,769">
       <gearDisplay controller="c1" pages="0"/>
       <Button title="登陆" titleColor="#ffffff" titleFontSize="36" controller="c1" page="2"/>
     </component>
-    <image id="n13_kqy5" name="n13" src="kqy53" xy="300,397">
+    <image id="n13_kqy5" name="n13" src="kqy53" fileName="assets/denglu.png" xy="300,397">
       <gearDisplay controller="c1" pages="0"/>
     </image>
-    <image id="n15_kqy5" name="n15" src="kqy58" xy="301,398">
+    <image id="n15_kqy5" name="n15" src="kqy58" fileName="assets/zhuce.png" xy="301,398">
       <gearDisplay controller="c1" pages="1"/>
     </image>
-    <image id="n16_kqy5" name="n16" src="kqy57" xy="300,398">
+    <image id="n16_kqy5" name="n16" src="kqy57" fileName="assets/xuanqu.png" xy="300,398">
       <gearDisplay controller="c1" pages="2"/>
     </image>
-    <component id="n17_kqy5" name="cancel_btn" src="kqy5f" xy="132,769">
+    <component id="n17_kqy5" name="cancel_btn" src="kqy5f" fileName="coms/blue_btn.xml" xy="132,769">
       <gearDisplay controller="c1" pages="1,2"/>
       <Button title="取消" titleColor="#ffffff" titleFontSize="36" controller="c1" page="0"/>
     </component>
-    <component id="n18_kqy5" name="reg_btn" src="kqy5e" xy="368,769">
+    <component id="n18_kqy5" name="reg_btn" src="kqy5e" fileName="coms/green_btn.xml" xy="368,769">
       <gearDisplay controller="c1" pages="1"/>
-      <Button title="注册" titleColor="#ffffff" titleFontSize="36" controller="c1" page="0"/>
+      <Button title="注册" titleColor="#ffffff" titleFontSize="36"/>
     </component>
-    <component id="n19_kqy5" name="enter_btn" src="kqy5e" xy="368,769">
+    <component id="n19_kqy5" name="enter_btn" src="kqy5e" fileName="coms/green_btn.xml" xy="368,769">
       <gearDisplay controller="c1" pages="2"/>
       <Button title="进入游戏" titleColor="#ffffff" titleFontSize="36"/>
     </component>
-    <image id="n3_kqy5" name="n3" src="kqy55" xy="263,555" group="n20_kqy5"/>
-    <image id="n4_kqy5" name="n4" src="kqy55" xy="263,634" group="n20_kqy5"/>
+    <image id="n3_kqy5" name="n3" src="kqy55" fileName="assets/kuang07.png" xy="263,555" group="n20_kqy5"/>
+    <image id="n4_kqy5" name="n4" src="kqy55" fileName="assets/kuang07.png" xy="263,634" group="n20_kqy5"/>
     <text id="n5_kqy5" name="n5" xy="167,556" size="83,49" group="n20_kqy5" fontSize="38" color="#55acff" bold="true" text="账号"/>
     <text id="n6_kqy5" name="n6" xy="167,635" size="83,49" group="n20_kqy5" fontSize="38" color="#55acff" bold="true" text="密码"/>
     <group id="n20_kqy5" name="n20" xy="167,555" size="382,131" advanced="true" collapsed="true">
@@ -55,11 +55,11 @@
     <text id="n24_fwbx" name="reg_password" xy="263,634" size="286,52" input="true" password="true" fontSize="30" color="#ffffff" vAlign="middle" autoSize="none" bold="true" text="">
       <gearDisplay controller="c1" pages="1"/>
     </text>
-    <component id="n21_kqy5" name="n21" src="kqy5g" xy="217,551">
+    <component id="n21_kqy5" name="n21" src="kqy5g" fileName="coms/area_btn.xml" xy="217,551">
       <gearDisplay controller="c1" pages="2"/>
       <Button title="一区" titleColor="#ffffff" titleFontSize="30"/>
     </component>
-    <component id="n22_kqy5" name="n22" src="kqy5g" xy="217,637">
+    <component id="n22_kqy5" name="n22" src="kqy5g" fileName="coms/area_btn.xml" xy="217,637">
       <gearDisplay controller="c1" pages="2"/>
       <Button title="二区" titleColor="#ffffff" titleFontSize="30"/>
     </component>

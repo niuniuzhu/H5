@@ -2,9 +2,11 @@ import { Protos } from "../../libs/protos";
 import { WSConnector } from "../../Net/WSConnector";
 import { IUIModule } from "./IUIModule";
 import { ProtoCreator } from "../../Protos/ProtoHelper";
+import { UIAlert } from "./UIAlert";
 
 export class UILogin implements IUIModule {
 	private _root: fairygui.GComponent;
+	private _connector: WSConnector;
 
 	constructor() {
 		fairygui.UIPackage.addPackage("res/ui/login");
@@ -23,9 +25,23 @@ export class UILogin implements IUIModule {
 		this._root.addRelation(fairygui.GRoot.inst, fairygui.RelationType.Size);
 		this._root.getChild("login_btn").onClick(this, this.OnLoginBtnClick);
 		this._root.getChild("reg_btn").onClick(this, this.OnRegBtnClick);
+
+		this._connector = new WSConnector();
+		this._connector.onopen = ((e: Event) => {
+			fairygui.GRoot.inst.closeModalWait();
+		});
+		this._connector.onerror = ((e: Event) => {
+			fairygui.GRoot.inst.closeModalWait();
+			UIAlert.Show("无法连接服务器", () => {
+				this.Connect();
+			});
+		});
+		this.Connect();
 	}
 
 	public Leave(): void {
+		this._connector.Close();
+		this._connector = null;
 		this._root.dispose();
 		this._root = null;
 	}
@@ -36,22 +52,21 @@ export class UILogin implements IUIModule {
 	public OnResize(e: laya.events.Event): void {
 	}
 
+	private Connect(): void {
+		fairygui.GRoot.inst.showModalWait();
+		this._connector.Connect("localhost", 49996);
+	}
+
 	private OnLoginBtnClick(): void {
-		let connector = new WSConnector("localhost", 49996);
-		connector.OnConnected = ((e: Event) => {
-			let login = ProtoCreator.Q_GC2LS_AskLogin();
-			// login.packet = new Protos.Packet();
-			// login.packet.pid = 1;
-			login.uin = "1";
-			connector.Send(Protos.GC2LS_AskLogin, login, this.OnLogin);
-		}).bind(this);
-
-		connector.OnError = ((e: Event) => {
-			RC.Logger.Debug(e);
-		})
-
-		connector.AddListener(Protos.MsgID.eGC2LS_AskLogin, ((message:any) => {
-			RC.Logger.Log("ok");
+		let login = ProtoCreator.Q_GC2LS_AskLogin();
+		// login.packet = new Protos.Packet();
+		// login.packet.pid = 1;
+		login.uin = "1";
+		fairygui.GRoot.inst.showModalWait();
+		this._connector.Send(Protos.GC2LS_AskLogin, login, ((message) => {
+			let loginResult: Protos.LS2GC_Result = <Protos.LS2GC_Result>message;
+			RC.Logger.Log(loginResult.result);
+			fairygui.GRoot.inst.closeModalWait();
 		}).bind(this));
 
 		// let login=new Protos.GCToLS.AskLogin();
@@ -77,12 +92,45 @@ export class UILogin implements IUIModule {
 	}
 
 	private OnRegBtnClick(): void {
-		this._root.getChild("name").asTextField.text = this._root.getChild("reg_name").asTextField.text;
-		this._root.getChild("password").asTextField.text = this._root.getChild("reg_password").asTextField.text;
-	}
+		let regName = this._root.getChild("reg_name").asTextField.text;
+		if (regName == "") {
+			UIAlert.Show("无效用户名");
+			return;
+		}
+		let regPwd = this._root.getChild("reg_password").asTextField.text;
+		if (regPwd == "") {
+			UIAlert.Show("无效密码");
+			return;
+		}
+		let register = ProtoCreator.Q_GC2LS_AskRegister();
+		register.name = regName;
+		register.passwd = regPwd;
+		register.platform = 0;
+		register.sdk = 0;
 
-	private OnLogin(message: any): void {
-		let loginResult: Protos.LS2GC_Result = <Protos.LS2GC_Result>message;
-		RC.Logger.Log(loginResult.result);
+		fairygui.GRoot.inst.showModalWait();
+		this._connector.Send(Protos.GC2LS_AskRegister, register, ((message) => {
+			let resp: Protos.LS2GC_Result = <Protos.LS2GC_Result>message;
+			switch (resp.result) {
+				case Protos.LS2GC_Result.EResult.Success:
+					UIAlert.Show("注册成功");
+					this._root.getChild("name").asTextField.text = regName;
+					this._root.getChild("password").asTextField.text = regPwd;
+					break;
+				case Protos.LS2GC_Result.EResult.Failed:
+					UIAlert.Show("注册失败");
+					break;
+				case Protos.LS2GC_Result.EResult.UsernameExists:
+					UIAlert.Show("用户名已存在");
+					break;
+				case Protos.LS2GC_Result.EResult.IllegalName:
+					UIAlert.Show("无效用户名");
+					break;
+				case Protos.LS2GC_Result.EResult.IllegalPasswd:
+					UIAlert.Show("无效密码");
+					break;
+			}
+			fairygui.GRoot.inst.closeModalWait();
+		}).bind(this));
 	}
 }

@@ -343,25 +343,24 @@ define("Net/WSConnector", ["require", "exports", "Net/ByteUtils", "Net/MsgCenter
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class WSConnector {
-        constructor(ip, port) {
+        constructor() {
             this._pid = 0;
             this._msgCenter = new MsgCenter_1.MsgCenter();
             this._rpcHandlers = new Map();
-            this._socket = new WebSocket(`ws://${ip}:${port}`);
-            this._socket.binaryType = "arraybuffer";
-            this._socket.onmessage = this.OnReceived.bind(this);
         }
         get connected() { return this._socket.readyState == WebSocket.OPEN; }
         ;
-        get OnConnected() { return this._socket.onopen; }
-        set OnConnected(handler) { this._socket.onopen = handler; }
-        get OnClosed() { return this._socket.onclose; }
-        set OnClosed(handler) { this._socket.onclose = handler; }
-        get OnError() { return this._socket.onerror; }
-        set OnError(handler) { this._socket.onerror = handler; }
         Close() {
             this._pid = 0;
             this._socket.close();
+        }
+        Connect(ip, port) {
+            this._socket = new WebSocket(`ws://${ip}:${port}`);
+            this._socket.binaryType = "arraybuffer";
+            this._socket.onmessage = this.OnReceived.bind(this);
+            this._socket.onerror = this.onerror;
+            this._socket.onclose = this.onclose;
+            this._socket.onopen = this.onopen;
         }
         Send(type, message, rpcHandler = null) {
             let opts = ProtoHelper_1.ProtoCreator.GetMsgOpts(message);
@@ -408,7 +407,29 @@ define("Net/WSConnector", ["require", "exports", "Net/ByteUtils", "Net/MsgCenter
     }
     exports.WSConnector = WSConnector;
 });
-define("View/UI/UILogin", ["require", "exports", "../../libs/protos", "Net/WSConnector", "Protos/ProtoHelper"], function (require, exports, protos_3, WSConnector_1, ProtoHelper_2) {
+define("View/UI/UIAlert", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class UIAlert {
+        static Show(content, removeHandler = null) {
+            if (null == UIAlert._com) {
+                UIAlert._com = fairygui.UIPackage.createObject("login", "alert").asCom;
+            }
+            UIAlert._handler = removeHandler;
+            if (UIAlert._handler != null)
+                UIAlert._com.on(laya.events.Event.REMOVED, null, UIAlert.RemoveHandler);
+            fairygui.GRoot.inst.showPopup(UIAlert._com);
+            UIAlert._com.center();
+            UIAlert._com.getChild("text").asTextField.text = content;
+        }
+        static RemoveHandler() {
+            UIAlert._com.off(laya.events.Event.REMOVED, null, UIAlert.RemoveHandler);
+            UIAlert._handler();
+        }
+    }
+    exports.UIAlert = UIAlert;
+});
+define("View/UI/UILogin", ["require", "exports", "../../libs/protos", "Net/WSConnector", "Protos/ProtoHelper", "View/UI/UIAlert"], function (require, exports, protos_3, WSConnector_1, ProtoHelper_2, UIAlert_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class UILogin {
@@ -427,8 +448,21 @@ define("View/UI/UILogin", ["require", "exports", "../../libs/protos", "Net/WSCon
             this._root.addRelation(fairygui.GRoot.inst, fairygui.RelationType.Size);
             this._root.getChild("login_btn").onClick(this, this.OnLoginBtnClick);
             this._root.getChild("reg_btn").onClick(this, this.OnRegBtnClick);
+            this._connector = new WSConnector_1.WSConnector();
+            this._connector.onopen = ((e) => {
+                fairygui.GRoot.inst.closeModalWait();
+            });
+            this._connector.onerror = ((e) => {
+                fairygui.GRoot.inst.closeModalWait();
+                UIAlert_1.UIAlert.Show("无法连接服务器", () => {
+                    this.Connect();
+                });
+            });
+            this.Connect();
         }
         Leave() {
+            this._connector.Close();
+            this._connector = null;
             this._root.dispose();
             this._root = null;
         }
@@ -436,27 +470,58 @@ define("View/UI/UILogin", ["require", "exports", "../../libs/protos", "Net/WSCon
         }
         OnResize(e) {
         }
+        Connect() {
+            fairygui.GRoot.inst.showModalWait();
+            this._connector.Connect("localhost", 49996);
+        }
         OnLoginBtnClick() {
-            let connector = new WSConnector_1.WSConnector("localhost", 49996);
-            connector.OnConnected = ((e) => {
-                let login = ProtoHelper_2.ProtoCreator.Q_GC2LS_AskLogin();
-                login.uin = "1";
-                connector.Send(protos_3.Protos.GC2LS_AskLogin, login, this.OnLogin);
-            }).bind(this);
-            connector.OnError = ((e) => {
-                RC.Logger.Debug(e);
-            });
-            connector.AddListener(protos_3.Protos.MsgID.eGC2LS_AskLogin, ((message) => {
-                RC.Logger.Log("ok");
+            let login = ProtoHelper_2.ProtoCreator.Q_GC2LS_AskLogin();
+            login.uin = "1";
+            fairygui.GRoot.inst.showModalWait();
+            this._connector.Send(protos_3.Protos.GC2LS_AskLogin, login, ((message) => {
+                let loginResult = message;
+                RC.Logger.Log(loginResult.result);
+                fairygui.GRoot.inst.closeModalWait();
             }).bind(this));
         }
         OnRegBtnClick() {
-            this._root.getChild("name").asTextField.text = this._root.getChild("reg_name").asTextField.text;
-            this._root.getChild("password").asTextField.text = this._root.getChild("reg_password").asTextField.text;
-        }
-        OnLogin(message) {
-            let loginResult = message;
-            RC.Logger.Log(loginResult.result);
+            let regName = this._root.getChild("reg_name").asTextField.text;
+            if (regName == "") {
+                UIAlert_1.UIAlert.Show("无效用户名");
+                return;
+            }
+            let regPwd = this._root.getChild("reg_password").asTextField.text;
+            if (regPwd == "") {
+                UIAlert_1.UIAlert.Show("无效密码");
+                return;
+            }
+            let register = ProtoHelper_2.ProtoCreator.Q_GC2LS_AskRegister();
+            register.name = regName;
+            register.passwd = regPwd;
+            register.platform = 0;
+            register.sdk = 0;
+            fairygui.GRoot.inst.showModalWait();
+            this._connector.Send(protos_3.Protos.GC2LS_AskRegister, register, ((message) => {
+                let resp = message;
+                switch (resp.result) {
+                    case protos_3.Protos.LS2GC_Result.EResult.Success:
+                        UIAlert_1.UIAlert.Show("注册成功");
+                        break;
+                    case protos_3.Protos.LS2GC_Result.EResult.Failed:
+                        UIAlert_1.UIAlert.Show("注册失败");
+                        break;
+                    case protos_3.Protos.LS2GC_Result.EResult.UsernameExists:
+                        UIAlert_1.UIAlert.Show("用户名已存在");
+                        break;
+                    case protos_3.Protos.LS2GC_Result.EResult.IllegalName:
+                        UIAlert_1.UIAlert.Show("无效用户名");
+                        break;
+                    case protos_3.Protos.LS2GC_Result.EResult.IllegalPasswd:
+                        UIAlert_1.UIAlert.Show("无效密码");
+                        break;
+                }
+                fairygui.GRoot.inst.closeModalWait();
+            }).bind(this));
         }
     }
     exports.UILogin = UILogin;
@@ -2308,8 +2373,8 @@ define("View/UI/UIManager", ["require", "exports", "View/UI/UILogin", "View/UI/U
         static Init(resolution) {
             Laya.stage.addChild(fairygui.GRoot.inst.displayObject);
             fairygui.UIPackage.addPackage("res/ui/global");
-            fairygui.UIConfig.globalModalWaiting = fairygui.UIPackage.getItemURL("global", "qtm011");
-            fairygui.UIConfig.windowModalWaiting = fairygui.UIPackage.getItemURL("global", "qtm011");
+            fairygui.UIConfig.globalModalWaiting = fairygui.UIPackage.getItemURL("global", "modelWait");
+            fairygui.UIConfig.windowModalWaiting = fairygui.UIPackage.getItemURL("global", "modelWait");
             fairygui.UIConfig.buttonSound = fairygui.UIPackage.getItemURL("global", "click");
             this._login = new UILogin_1.UILogin();
             this._main = new UIMain_1.UIMain();

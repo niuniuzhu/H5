@@ -215,7 +215,7 @@ declare module fairygui {
         ensureSizeCorrect(): void;
         protected handleSizeChanged(): void;
         protected handleGrayedChanged(): void;
-        setup_beforeAdd(xml: Object): void;
+        setup_beforeAdd(xml: Object): void;        
     }
 }
 declare module fairygui {
@@ -575,12 +575,14 @@ declare module fairygui {
         align: string;
         verticalAlign: string;
         fill: number;
+        shrinkOnly: boolean;
         autoSize: boolean;
         playing: boolean;
         frame: number;
         color: string;
         showErrorSign: boolean;
         content: laya.display.Node;
+        component: GComponent;
         protected loadContent(): void;
         protected loadFromPackage(itemURL: string): void;
         protected loadExternal(): void;
@@ -629,14 +631,14 @@ declare module fairygui {
         _id: string;
         _name: string;
         _underConstruct: boolean;
-        _ructingData: Object;
-        _gearLocked: boolean;
         static _gInstanceCounter: number;
         constructor();
         id: string;
         name: string;
         x: number;
         y: number;
+        minX: number;
+        minY: number;
         pixelSnapping: boolean;
         setXY(xv: number, yv: number): void;
         center(restraint?: boolean): void;
@@ -662,6 +664,7 @@ declare module fairygui {
         setSkew(sx: number, sy: number): void;
         pivotX: number;
         pivotY: number;
+        pivotAsAnchor: boolean;
         setPivot(xv: number, yv?: number, asAnchor?: boolean): void;
         touchable: boolean;
         grayed: boolean;
@@ -863,6 +866,9 @@ declare module fairygui {
         handleControllerChanged(c: Controller): void;
         setup_beforeAdd(xml: Object): void;
         setup_afterAdd(xml: Object): void;
+        templateVars: any;
+        setVar(name: string, value: string): GTextField;
+        flushVars(): void;
     }
 }
 declare module fairygui {
@@ -1064,7 +1070,6 @@ declare module fairygui {
         clearAll(): void;
         copyFrom(source: Relations): void;
         dispose(): void;
-        onOwnerSizeChanged(dWidth: number, dHeight: number): void;
         ensureRelationsSizeCorrect(): void;
         empty: boolean;
         setup(xml: Object): void;
@@ -1135,6 +1140,8 @@ declare module fairygui {
         isRightMost: boolean;
         currentPageX: number;
         currentPageY: number;
+        setCurrentPageX(sc: number, ani?: boolean): void;
+        setPercX(sc: number, ani?: boolean): void;
         contentWidth: number;
         contentHeight: number;
         viewWidth: number;
@@ -1258,6 +1265,7 @@ declare module fairygui {
         static clickDragSensitivity: number;
         static bringWindowToFrontOnClick: boolean;
         static textureLinearSampling: boolean;
+        static packageFileExtension: string;
     }
 }
 declare module fairygui {

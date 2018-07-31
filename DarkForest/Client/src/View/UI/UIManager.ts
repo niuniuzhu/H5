@@ -16,8 +16,8 @@ export class UIManager {
 		Laya.stage.addChild(fairygui.GRoot.inst.displayObject);
 
 		fairygui.UIPackage.addPackage("res/ui/global");
-		fairygui.UIConfig.globalModalWaiting = fairygui.UIPackage.getItemURL("global", "qtm011");
-		fairygui.UIConfig.windowModalWaiting = fairygui.UIPackage.getItemURL("global", "qtm011");
+		fairygui.UIConfig.globalModalWaiting = fairygui.UIPackage.getItemURL("global", "modelWait");
+		fairygui.UIConfig.windowModalWaiting = fairygui.UIPackage.getItemURL("global", "modelWait");
 		fairygui.UIConfig.buttonSound = fairygui.UIPackage.getItemURL("global", "click");
 
 		this._login = new UILogin();

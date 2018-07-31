@@ -2,37 +2,37 @@ import { ByteUtils } from "./ByteUtils";
 import { MsgCenter } from "./MsgCenter";
 import { Protos } from "../libs/protos";
 import { ProtoCreator } from "../Protos/ProtoHelper";
-import protobuf = require("../libs/protobufjs");
 
 export class WSConnector {
 
 	public get connected(): boolean { return this._socket.readyState == WebSocket.OPEN };
 
-	public get OnConnected(): (this: WebSocket, ev: Event) => any { return this._socket.onopen; }
-	public set OnConnected(handler: (this: WebSocket, ev: Event) => any) { this._socket.onopen = handler; }
+	public onclose: ((ev: CloseEvent) => any) | null;
+	public onerror: ((ev: Event) => any) | null;
+	public onopen: ((ev: Event) => any) | null;
 
-	public get OnClosed(): (this: WebSocket, ev: Event) => any { return this._socket.onclose; }
-	public set OnClosed(handler: (this: WebSocket, ev: Event) => any) { this._socket.onclose = handler; }
-
-	public get OnError(): (this: WebSocket, ev: Event) => any { return this._socket.onerror; }
-	public set OnError(handler: (this: WebSocket, ev: Event) => any) { this._socket.onerror = handler; }
-
-	private readonly _socket: WebSocket;
+	private _socket: WebSocket;
 	private readonly _msgCenter: MsgCenter;
 	private readonly _rpcHandlers: Map<number, (any) => any>;//可能是异步写入,但必定是同步读取,所以不用加锁
 	private _pid: number = 0;
 
-	constructor(ip: string, port: number) {
+	constructor() {
 		this._msgCenter = new MsgCenter();
 		this._rpcHandlers = new Map<number, (any) => any>();
-		this._socket = new WebSocket(`ws://${ip}:${port}`);
-		this._socket.binaryType = "arraybuffer";
-		this._socket.onmessage = this.OnReceived.bind(this);
 	}
 
 	public Close(): void {
 		this._pid = 0;
 		this._socket.close();
+	}
+
+	public Connect(ip: string, port: number): void {
+		this._socket = new WebSocket(`ws://${ip}:${port}`);
+		this._socket.binaryType = "arraybuffer";
+		this._socket.onmessage = this.OnReceived.bind(this);
+		this._socket.onerror = this.onerror;
+		this._socket.onclose = this.onclose;
+		this._socket.onopen = this.onopen;
 	}
 
 	public Send(type: any, message: any, rpcHandler: (any) => any = null): void {

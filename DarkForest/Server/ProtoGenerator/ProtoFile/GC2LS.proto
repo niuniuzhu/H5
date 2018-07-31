@@ -9,7 +9,6 @@ message GC2LS_AskRegister{
 	string name = 3;
 	string passwd = 4;
 	uint32 platform = 5;
-	string ip = 6; 
 }
 
 message GC2LS_AskLogin

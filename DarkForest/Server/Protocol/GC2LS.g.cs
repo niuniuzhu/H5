@@ -24,16 +24,16 @@ namespace Protos {
     static GC2LSReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgtHQzJMUy5wcm90bxIGUHJvdG9zGgxHbG9iYWwucHJvdG8iewoRR0MyTFNf",
+            "CgtHQzJMUy5wcm90bxIGUHJvdG9zGgxHbG9iYWwucHJvdG8ibwoRR0MyTFNf",
             "QXNrUmVnaXN0ZXISHQoEb3B0cxgBIAEoCzIPLlByb3Rvcy5Nc2dPcHRzEgsK",
             "A3NkaxgCIAEoBRIMCgRuYW1lGAMgASgJEg4KBnBhc3N3ZBgEIAEoCRIQCghw",
-            "bGF0Zm9ybRgFIAEoDRIKCgJpcBgGIAEoCSJhCg5HQzJMU19Bc2tMb2dpbhId",
-            "CgRvcHRzGAEgASgLMg8uUHJvdG9zLk1zZ09wdHMSEAoIcGxhdGZvcm0YAiAB",
-            "KA0SCwoDdWluGAMgASgJEhEKCXNlc3Npb25pZBgEIAEoCWIGcHJvdG8z"));
+            "bGF0Zm9ybRgFIAEoDSJhCg5HQzJMU19Bc2tMb2dpbhIdCgRvcHRzGAEgASgL",
+            "Mg8uUHJvdG9zLk1zZ09wdHMSEAoIcGxhdGZvcm0YAiABKA0SCwoDdWluGAMg",
+            "ASgJEhEKCXNlc3Npb25pZBgEIAEoCWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Protos.GlobalReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.GC2LS_AskRegister), global::Protos.GC2LS_AskRegister.Parser, new[]{ "Opts", "Sdk", "Name", "Passwd", "Platform", "Ip" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.GC2LS_AskRegister), global::Protos.GC2LS_AskRegister.Parser, new[]{ "Opts", "Sdk", "Name", "Passwd", "Platform" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protos.GC2LS_AskLogin), global::Protos.GC2LS_AskLogin.Parser, new[]{ "Opts", "Platform", "Uin", "Sessionid" }, null, null, null)
           }));
     }
@@ -71,7 +71,6 @@ namespace Protos {
       name_ = other.name_;
       passwd_ = other.passwd_;
       platform_ = other.platform_;
-      ip_ = other.ip_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -135,17 +134,6 @@ namespace Protos {
       }
     }
 
-    /// <summary>Field number for the "ip" field.</summary>
-    public const int IpFieldNumber = 6;
-    private string ip_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string Ip {
-      get { return ip_; }
-      set {
-        ip_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as GC2LS_AskRegister);
@@ -164,7 +152,6 @@ namespace Protos {
       if (Name != other.Name) return false;
       if (Passwd != other.Passwd) return false;
       if (Platform != other.Platform) return false;
-      if (Ip != other.Ip) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -176,7 +163,6 @@ namespace Protos {
       if (Name.Length != 0) hash ^= Name.GetHashCode();
       if (Passwd.Length != 0) hash ^= Passwd.GetHashCode();
       if (Platform != 0) hash ^= Platform.GetHashCode();
-      if (Ip.Length != 0) hash ^= Ip.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -210,10 +196,6 @@ namespace Protos {
         output.WriteRawTag(40);
         output.WriteUInt32(Platform);
       }
-      if (Ip.Length != 0) {
-        output.WriteRawTag(50);
-        output.WriteString(Ip);
-      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -236,9 +218,6 @@ namespace Protos {
       }
       if (Platform != 0) {
         size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Platform);
-      }
-      if (Ip.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Ip);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -268,9 +247,6 @@ namespace Protos {
       }
       if (other.Platform != 0) {
         Platform = other.Platform;
-      }
-      if (other.Ip.Length != 0) {
-        Ip = other.Ip;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -304,10 +280,6 @@ namespace Protos {
           }
           case 40: {
             Platform = input.ReadUInt32();
-            break;
-          }
-          case 50: {
-            Ip = input.ReadString();
             break;
           }
         }

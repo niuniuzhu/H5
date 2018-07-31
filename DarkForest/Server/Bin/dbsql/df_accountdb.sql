@@ -9,7 +9,6 @@ CREATE TABLE `account_user` (
   `sdk` int(10) NOT NULL,
   `uname` varchar(32) NOT NULL,
   `pwd` varchar(32) NOT NULL,
-  `ip` varchar(32) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `uname_check` (`uname`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=10000 DEFAULT CHARSET=utf8;
