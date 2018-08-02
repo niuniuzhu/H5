@@ -67,12 +67,15 @@ export namespace Protos {
         eG_AskPingRet = 11,
         eGC2LS_AskRegister = 100,
         eGC2LS_AskLogin = 101,
-        eLS2GC_Result = 200,
-        eLS2GC_GSInfo = 201,
-        eGS2CS_ReportState = 300,
-        eCS2LS_GSInfos = 500,
-        eCS2LS_GSInfo = 501,
-        eCS2LS_GSLost = 502
+        eGC2GS_AskLogin = 200,
+        eLS2GC_RegResult = 300,
+        eLS2GC_LoginResult = 301,
+        eLS2GC_GSInfo = 302,
+        eGS2CS_ReportState = 400,
+        eGS2GC_LoginResult = 500,
+        eCS2LS_GSInfos = 600,
+        eCS2LS_GSInfo = 601,
+        eCS2LS_GSLost = 602
     }
 
     interface IMsgOpts {
@@ -209,6 +212,28 @@ export namespace Protos {
         public toJSON(): { [k: string]: any };
     }
 
+    interface IGC2GS_AskLogin {
+        opts?: (Protos.IMsgOpts|null);
+        pwd?: (string|null);
+        sessionID?: (number|null);
+    }
+
+    class GC2GS_AskLogin implements IGC2GS_AskLogin {
+        constructor(properties?: Protos.IGC2GS_AskLogin);
+        public opts?: (Protos.IMsgOpts|null);
+        public pwd: string;
+        public sessionID: number;
+        public static create(properties?: Protos.IGC2GS_AskLogin): Protos.GC2GS_AskLogin;
+        public static encode(message: Protos.IGC2GS_AskLogin, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: Protos.IGC2GS_AskLogin, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Protos.GC2GS_AskLogin;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Protos.GC2GS_AskLogin;
+        public static verify(message: { [k: string]: any }): (string|null);
+        public static fromObject(object: { [k: string]: any }): Protos.GC2GS_AskLogin;
+        public static toObject(message: Protos.GC2GS_AskLogin, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public toJSON(): { [k: string]: any };
+    }
+
     interface IGC2LS_AskRegister {
         opts?: (Protos.IMsgOpts|null);
         sdk?: (number|null);
@@ -237,17 +262,15 @@ export namespace Protos {
 
     interface IGC2LS_AskLogin {
         opts?: (Protos.IMsgOpts|null);
-        platform?: (number|null);
-        uin?: (string|null);
-        sessionid?: (string|null);
+        name?: (string|null);
+        passwd?: (string|null);
     }
 
     class GC2LS_AskLogin implements IGC2LS_AskLogin {
         constructor(properties?: Protos.IGC2LS_AskLogin);
         public opts?: (Protos.IMsgOpts|null);
-        public platform: number;
-        public uin: string;
-        public sessionid: string;
+        public name: string;
+        public passwd: string;
         public static create(properties?: Protos.IGC2LS_AskLogin): Protos.GC2LS_AskLogin;
         public static encode(message: Protos.IGC2LS_AskLogin, writer?: $protobuf.Writer): $protobuf.Writer;
         public static encodeDelimited(message: Protos.IGC2LS_AskLogin, writer?: $protobuf.Writer): $protobuf.Writer;
@@ -259,46 +282,108 @@ export namespace Protos {
         public toJSON(): { [k: string]: any };
     }
 
-    interface ILS2GC_Result {
+    interface IGS2GC_LoginResult {
         opts?: (Protos.IMsgOpts|null);
-        result?: (Protos.LS2GC_Result.EResult|null);
+        result?: (Protos.GS2GC_LoginResult.EResult|null);
     }
 
-    class LS2GC_Result implements ILS2GC_Result {
-        constructor(properties?: Protos.ILS2GC_Result);
+    class GS2GC_LoginResult implements IGS2GC_LoginResult {
+        constructor(properties?: Protos.IGS2GC_LoginResult);
         public opts?: (Protos.IMsgOpts|null);
-        public result: Protos.LS2GC_Result.EResult;
-        public static create(properties?: Protos.ILS2GC_Result): Protos.LS2GC_Result;
-        public static encode(message: Protos.ILS2GC_Result, writer?: $protobuf.Writer): $protobuf.Writer;
-        public static encodeDelimited(message: Protos.ILS2GC_Result, writer?: $protobuf.Writer): $protobuf.Writer;
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Protos.LS2GC_Result;
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Protos.LS2GC_Result;
+        public result: Protos.GS2GC_LoginResult.EResult;
+        public static create(properties?: Protos.IGS2GC_LoginResult): Protos.GS2GC_LoginResult;
+        public static encode(message: Protos.IGS2GC_LoginResult, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: Protos.IGS2GC_LoginResult, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Protos.GS2GC_LoginResult;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Protos.GS2GC_LoginResult;
         public static verify(message: { [k: string]: any }): (string|null);
-        public static fromObject(object: { [k: string]: any }): Protos.LS2GC_Result;
-        public static toObject(message: Protos.LS2GC_Result, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public static fromObject(object: { [k: string]: any }): Protos.GS2GC_LoginResult;
+        public static toObject(message: Protos.GS2GC_LoginResult, options?: $protobuf.IConversionOptions): { [k: string]: any };
         public toJSON(): { [k: string]: any };
     }
 
-    namespace LS2GC_Result {
+    namespace GS2GC_LoginResult {
+
+        enum EResult {
+            Success = 0,
+            Failed = 1
+        }
+    }
+
+    interface ILS2GC_RegResult {
+        opts?: (Protos.IMsgOpts|null);
+        result?: (Protos.LS2GC_RegResult.EResult|null);
+    }
+
+    class LS2GC_RegResult implements ILS2GC_RegResult {
+        constructor(properties?: Protos.ILS2GC_RegResult);
+        public opts?: (Protos.IMsgOpts|null);
+        public result: Protos.LS2GC_RegResult.EResult;
+        public static create(properties?: Protos.ILS2GC_RegResult): Protos.LS2GC_RegResult;
+        public static encode(message: Protos.ILS2GC_RegResult, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: Protos.ILS2GC_RegResult, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Protos.LS2GC_RegResult;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Protos.LS2GC_RegResult;
+        public static verify(message: { [k: string]: any }): (string|null);
+        public static fromObject(object: { [k: string]: any }): Protos.LS2GC_RegResult;
+        public static toObject(message: Protos.LS2GC_RegResult, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public toJSON(): { [k: string]: any };
+    }
+
+    namespace LS2GC_RegResult {
 
         enum EResult {
             Success = 0,
             Failed = 1,
-            UsernameExists = 2,
-            IllegalName = 3,
-            IllegalPasswd = 4
+            UnameExists = 2,
+            UnameIllegal = 3,
+            PwdIllegal = 4
+        }
+    }
+
+    interface ILS2GC_LoginResult {
+        opts?: (Protos.IMsgOpts|null);
+        result?: (Protos.LS2GC_LoginResult.EResult|null);
+        sessionID?: (number|null);
+        gsInfos?: (Protos.IGSInfo[]|null);
+    }
+
+    class LS2GC_LoginResult implements ILS2GC_LoginResult {
+        constructor(properties?: Protos.ILS2GC_LoginResult);
+        public opts?: (Protos.IMsgOpts|null);
+        public result: Protos.LS2GC_LoginResult.EResult;
+        public sessionID: number;
+        public gsInfos: Protos.IGSInfo[];
+        public static create(properties?: Protos.ILS2GC_LoginResult): Protos.LS2GC_LoginResult;
+        public static encode(message: Protos.ILS2GC_LoginResult, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: Protos.ILS2GC_LoginResult, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Protos.LS2GC_LoginResult;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Protos.LS2GC_LoginResult;
+        public static verify(message: { [k: string]: any }): (string|null);
+        public static fromObject(object: { [k: string]: any }): Protos.LS2GC_LoginResult;
+        public static toObject(message: Protos.LS2GC_LoginResult, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public toJSON(): { [k: string]: any };
+    }
+
+    namespace LS2GC_LoginResult {
+
+        enum EResult {
+            Success = 0,
+            Failed = 1,
+            InvalidUname = 2,
+            InvalidPwd = 3
         }
     }
 
     interface ILS2GC_GSInfo {
         opts?: (Protos.IMsgOpts|null);
-        gsInfo?: (Protos.IGSInfo[]|null);
+        gsInfos?: (Protos.IGSInfo[]|null);
     }
 
     class LS2GC_GSInfo implements ILS2GC_GSInfo {
         constructor(properties?: Protos.ILS2GC_GSInfo);
         public opts?: (Protos.IMsgOpts|null);
-        public gsInfo: Protos.IGSInfo[];
+        public gsInfos: Protos.IGSInfo[];
         public static create(properties?: Protos.ILS2GC_GSInfo): Protos.LS2GC_GSInfo;
         public static encode(message: Protos.ILS2GC_GSInfo, writer?: $protobuf.Writer): $protobuf.Writer;
         public static encodeDelimited(message: Protos.ILS2GC_GSInfo, writer?: $protobuf.Writer): $protobuf.Writer;

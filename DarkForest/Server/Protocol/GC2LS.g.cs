@@ -27,14 +27,14 @@ namespace Protos {
             "CgtHQzJMUy5wcm90bxIGUHJvdG9zGgxHbG9iYWwucHJvdG8ibwoRR0MyTFNf",
             "QXNrUmVnaXN0ZXISHQoEb3B0cxgBIAEoCzIPLlByb3Rvcy5Nc2dPcHRzEgsK",
             "A3NkaxgCIAEoBRIMCgRuYW1lGAMgASgJEg4KBnBhc3N3ZBgEIAEoCRIQCghw",
-            "bGF0Zm9ybRgFIAEoDSJhCg5HQzJMU19Bc2tMb2dpbhIdCgRvcHRzGAEgASgL",
-            "Mg8uUHJvdG9zLk1zZ09wdHMSEAoIcGxhdGZvcm0YAiABKA0SCwoDdWluGAMg",
-            "ASgJEhEKCXNlc3Npb25pZBgEIAEoCWIGcHJvdG8z"));
+            "bGF0Zm9ybRgFIAEoDSJNCg5HQzJMU19Bc2tMb2dpbhIdCgRvcHRzGAEgASgL",
+            "Mg8uUHJvdG9zLk1zZ09wdHMSDAoEbmFtZRgCIAEoCRIOCgZwYXNzd2QYAyAB",
+            "KAliBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Protos.GlobalReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Protos.GC2LS_AskRegister), global::Protos.GC2LS_AskRegister.Parser, new[]{ "Opts", "Sdk", "Name", "Passwd", "Platform" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.GC2LS_AskLogin), global::Protos.GC2LS_AskLogin.Parser, new[]{ "Opts", "Platform", "Uin", "Sessionid" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.GC2LS_AskLogin), global::Protos.GC2LS_AskLogin.Parser, new[]{ "Opts", "Name", "Passwd" }, null, null, null)
           }));
     }
     #endregion
@@ -314,9 +314,8 @@ namespace Protos {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public GC2LS_AskLogin(GC2LS_AskLogin other) : this() {
       opts_ = other.opts_ != null ? other.opts_.Clone() : null;
-      platform_ = other.platform_;
-      uin_ = other.uin_;
-      sessionid_ = other.sessionid_;
+      name_ = other.name_;
+      passwd_ = other.passwd_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -336,36 +335,25 @@ namespace Protos {
       }
     }
 
-    /// <summary>Field number for the "platform" field.</summary>
-    public const int PlatformFieldNumber = 2;
-    private uint platform_;
+    /// <summary>Field number for the "name" field.</summary>
+    public const int NameFieldNumber = 2;
+    private string name_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public uint Platform {
-      get { return platform_; }
+    public string Name {
+      get { return name_; }
       set {
-        platform_ = value;
+        name_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
-    /// <summary>Field number for the "uin" field.</summary>
-    public const int UinFieldNumber = 3;
-    private string uin_ = "";
+    /// <summary>Field number for the "passwd" field.</summary>
+    public const int PasswdFieldNumber = 3;
+    private string passwd_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string Uin {
-      get { return uin_; }
+    public string Passwd {
+      get { return passwd_; }
       set {
-        uin_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "sessionid" field.</summary>
-    public const int SessionidFieldNumber = 4;
-    private string sessionid_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string Sessionid {
-      get { return sessionid_; }
-      set {
-        sessionid_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        passwd_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -383,9 +371,8 @@ namespace Protos {
         return true;
       }
       if (!object.Equals(Opts, other.Opts)) return false;
-      if (Platform != other.Platform) return false;
-      if (Uin != other.Uin) return false;
-      if (Sessionid != other.Sessionid) return false;
+      if (Name != other.Name) return false;
+      if (Passwd != other.Passwd) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -393,9 +380,8 @@ namespace Protos {
     public override int GetHashCode() {
       int hash = 1;
       if (opts_ != null) hash ^= Opts.GetHashCode();
-      if (Platform != 0) hash ^= Platform.GetHashCode();
-      if (Uin.Length != 0) hash ^= Uin.GetHashCode();
-      if (Sessionid.Length != 0) hash ^= Sessionid.GetHashCode();
+      if (Name.Length != 0) hash ^= Name.GetHashCode();
+      if (Passwd.Length != 0) hash ^= Passwd.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -413,17 +399,13 @@ namespace Protos {
         output.WriteRawTag(10);
         output.WriteMessage(Opts);
       }
-      if (Platform != 0) {
-        output.WriteRawTag(16);
-        output.WriteUInt32(Platform);
+      if (Name.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(Name);
       }
-      if (Uin.Length != 0) {
+      if (Passwd.Length != 0) {
         output.WriteRawTag(26);
-        output.WriteString(Uin);
-      }
-      if (Sessionid.Length != 0) {
-        output.WriteRawTag(34);
-        output.WriteString(Sessionid);
+        output.WriteString(Passwd);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -436,14 +418,11 @@ namespace Protos {
       if (opts_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Opts);
       }
-      if (Platform != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Platform);
+      if (Name.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
       }
-      if (Uin.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Uin);
-      }
-      if (Sessionid.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Sessionid);
+      if (Passwd.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Passwd);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -462,14 +441,11 @@ namespace Protos {
         }
         Opts.MergeFrom(other.Opts);
       }
-      if (other.Platform != 0) {
-        Platform = other.Platform;
+      if (other.Name.Length != 0) {
+        Name = other.Name;
       }
-      if (other.Uin.Length != 0) {
-        Uin = other.Uin;
-      }
-      if (other.Sessionid.Length != 0) {
-        Sessionid = other.Sessionid;
+      if (other.Passwd.Length != 0) {
+        Passwd = other.Passwd;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -489,16 +465,12 @@ namespace Protos {
             input.ReadMessage(opts_);
             break;
           }
-          case 16: {
-            Platform = input.ReadUInt32();
+          case 18: {
+            Name = input.ReadString();
             break;
           }
           case 26: {
-            Uin = input.ReadString();
-            break;
-          }
-          case 34: {
-            Sessionid = input.ReadString();
+            Passwd = input.ReadString();
             break;
           }
         }

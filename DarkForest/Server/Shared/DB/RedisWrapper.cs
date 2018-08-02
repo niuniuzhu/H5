@@ -17,7 +17,7 @@ namespace Shared.DB
 			Connected
 		}
 
-		public bool reconnectTag = true;
+		public bool reconnectTag = false;
 
 		private State _state;
 		private ConnectionMultiplexer _connMultiplexer;

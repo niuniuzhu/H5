@@ -103,8 +103,19 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
             msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RPC;
             return msg;
         }
-        static Q_LS2GC_Result() {
-            let msg = new protos_1.Protos.LS2GC_Result();
+        static Q_GC2GS_AskLogin() {
+            let msg = new protos_1.Protos.GC2GS_AskLogin();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RPC;
+            return msg;
+        }
+        static Q_LS2GC_RegResult() {
+            let msg = new protos_1.Protos.LS2GC_RegResult();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            return msg;
+        }
+        static Q_LS2GC_LoginResult() {
+            let msg = new protos_1.Protos.LS2GC_LoginResult();
             msg.opts = new protos_1.Protos.MsgOpts();
             return msg;
         }
@@ -115,6 +126,11 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
         }
         static Q_GS2CS_ReportState() {
             let msg = new protos_1.Protos.GS2CS_ReportState();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            return msg;
+        }
+        static Q_GS2GC_LoginResult() {
+            let msg = new protos_1.Protos.GS2GC_LoginResult();
             msg.opts = new protos_1.Protos.MsgOpts();
             return msg;
         }
@@ -134,14 +150,14 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
             return msg;
         }
         static R_GC2LS_AskRegister(pid) {
-            let msg = new protos_1.Protos.LS2GC_Result();
+            let msg = new protos_1.Protos.LS2GC_RegResult();
             msg.opts = new protos_1.Protos.MsgOpts();
             msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RESP;
             msg.opts.rpid = pid;
             return msg;
         }
         static R_GC2LS_AskLogin(pid) {
-            let msg = new protos_1.Protos.LS2GC_Result();
+            let msg = new protos_1.Protos.LS2GC_LoginResult();
             msg.opts = new protos_1.Protos.MsgOpts();
             msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RESP;
             msg.opts.rpid = pid;
@@ -149,6 +165,13 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
         }
         static R_G_AskPing(pid) {
             let msg = new protos_1.Protos.G_AskPingRet();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RESP;
+            msg.opts.rpid = pid;
+            return msg;
+        }
+        static R_GC2GS_AskLogin(pid) {
+            let msg = new protos_1.Protos.GS2GC_LoginResult();
             msg.opts = new protos_1.Protos.MsgOpts();
             msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RESP;
             msg.opts.rpid = pid;
@@ -173,26 +196,38 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
                     return msg;
                 }
                 case 200: {
-                    let msg = protos_1.Protos.LS2GC_Result.decode(data, size);
-                    return msg;
-                }
-                case 201: {
-                    let msg = protos_1.Protos.LS2GC_GSInfo.decode(data, size);
+                    let msg = protos_1.Protos.GC2GS_AskLogin.decode(data, size);
                     return msg;
                 }
                 case 300: {
+                    let msg = protos_1.Protos.LS2GC_RegResult.decode(data, size);
+                    return msg;
+                }
+                case 301: {
+                    let msg = protos_1.Protos.LS2GC_LoginResult.decode(data, size);
+                    return msg;
+                }
+                case 302: {
+                    let msg = protos_1.Protos.LS2GC_GSInfo.decode(data, size);
+                    return msg;
+                }
+                case 400: {
                     let msg = protos_1.Protos.GS2CS_ReportState.decode(data, size);
                     return msg;
                 }
                 case 500: {
+                    let msg = protos_1.Protos.GS2GC_LoginResult.decode(data, size);
+                    return msg;
+                }
+                case 600: {
                     let msg = protos_1.Protos.CS2LS_GSInfos.decode(data, size);
                     return msg;
                 }
-                case 501: {
+                case 601: {
                     let msg = protos_1.Protos.CS2LS_GSInfo.decode(data, size);
                     return msg;
                 }
-                case 502: {
+                case 602: {
                     let msg = protos_1.Protos.CS2LS_GSLost.decode(data, size);
                     return msg;
                 }
@@ -215,8 +250,16 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
             let msg = protos_1.Protos.GC2LS_AskLogin.decode(data, size);
             return msg;
         }
-        static D_LS2GC_Result(data, size) {
-            let msg = protos_1.Protos.LS2GC_Result.decode(data, size);
+        static D_GC2GS_AskLogin(data, size) {
+            let msg = protos_1.Protos.GC2GS_AskLogin.decode(data, size);
+            return msg;
+        }
+        static D_LS2GC_RegResult(data, size) {
+            let msg = protos_1.Protos.LS2GC_RegResult.decode(data, size);
+            return msg;
+        }
+        static D_LS2GC_LoginResult(data, size) {
+            let msg = protos_1.Protos.LS2GC_LoginResult.decode(data, size);
             return msg;
         }
         static D_LS2GC_GSInfo(data, size) {
@@ -225,6 +268,10 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
         }
         static D_GS2CS_ReportState(data, size) {
             let msg = protos_1.Protos.GS2CS_ReportState.decode(data, size);
+            return msg;
+        }
+        static D_GS2GC_LoginResult(data, size) {
+            let msg = protos_1.Protos.GS2GC_LoginResult.decode(data, size);
             return msg;
         }
         static D_CS2LS_GSInfos(data, size) {
@@ -254,21 +301,30 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
                     return new protos_1.Protos.GC2LS_AskLogin();
                 }
                 case 200: {
-                    return new protos_1.Protos.LS2GC_Result();
-                }
-                case 201: {
-                    return new protos_1.Protos.LS2GC_GSInfo();
+                    return new protos_1.Protos.GC2GS_AskLogin();
                 }
                 case 300: {
+                    return new protos_1.Protos.LS2GC_RegResult();
+                }
+                case 301: {
+                    return new protos_1.Protos.LS2GC_LoginResult();
+                }
+                case 302: {
+                    return new protos_1.Protos.LS2GC_GSInfo();
+                }
+                case 400: {
                     return new protos_1.Protos.GS2CS_ReportState();
                 }
                 case 500: {
+                    return new protos_1.Protos.GS2GC_LoginResult();
+                }
+                case 600: {
                     return new protos_1.Protos.CS2LS_GSInfos();
                 }
-                case 501: {
+                case 601: {
                     return new protos_1.Protos.CS2LS_GSInfo();
                 }
-                case 502: {
+                case 602: {
                     return new protos_1.Protos.CS2LS_GSLost();
                 }
             }
@@ -292,19 +348,28 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
                 case 200: {
                     return message.opts;
                 }
-                case 201: {
+                case 300: {
                     return message.opts;
                 }
-                case 300: {
+                case 301: {
+                    return message.opts;
+                }
+                case 302: {
+                    return message.opts;
+                }
+                case 400: {
                     return message.opts;
                 }
                 case 500: {
                     return message.opts;
                 }
-                case 501: {
+                case 600: {
                     return message.opts;
                 }
-                case 502: {
+                case 601: {
+                    return message.opts;
+                }
+                case 602: {
                     return message.opts;
                 }
             }
@@ -318,24 +383,30 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
         [protos_1.Protos.G_AskPingRet, 11],
         [protos_1.Protos.GC2LS_AskRegister, 100],
         [protos_1.Protos.GC2LS_AskLogin, 101],
-        [protos_1.Protos.LS2GC_Result, 200],
-        [protos_1.Protos.LS2GC_GSInfo, 201],
-        [protos_1.Protos.GS2CS_ReportState, 300],
-        [protos_1.Protos.CS2LS_GSInfos, 500],
-        [protos_1.Protos.CS2LS_GSInfo, 501],
-        [protos_1.Protos.CS2LS_GSLost, 502],
+        [protos_1.Protos.GC2GS_AskLogin, 200],
+        [protos_1.Protos.LS2GC_RegResult, 300],
+        [protos_1.Protos.LS2GC_LoginResult, 301],
+        [protos_1.Protos.LS2GC_GSInfo, 302],
+        [protos_1.Protos.GS2CS_ReportState, 400],
+        [protos_1.Protos.GS2GC_LoginResult, 500],
+        [protos_1.Protos.CS2LS_GSInfos, 600],
+        [protos_1.Protos.CS2LS_GSInfo, 601],
+        [protos_1.Protos.CS2LS_GSLost, 602],
     ]);
     ProtoCreator._ID2TYPE = new Map([
         [10, protos_1.Protos.G_AskPing],
         [11, protos_1.Protos.G_AskPingRet],
         [100, protos_1.Protos.GC2LS_AskRegister],
         [101, protos_1.Protos.GC2LS_AskLogin],
-        [200, protos_1.Protos.LS2GC_Result],
-        [201, protos_1.Protos.LS2GC_GSInfo],
-        [300, protos_1.Protos.GS2CS_ReportState],
-        [500, protos_1.Protos.CS2LS_GSInfos],
-        [501, protos_1.Protos.CS2LS_GSInfo],
-        [502, protos_1.Protos.CS2LS_GSLost],
+        [200, protos_1.Protos.GC2GS_AskLogin],
+        [300, protos_1.Protos.LS2GC_RegResult],
+        [301, protos_1.Protos.LS2GC_LoginResult],
+        [302, protos_1.Protos.LS2GC_GSInfo],
+        [400, protos_1.Protos.GS2CS_ReportState],
+        [500, protos_1.Protos.GS2GC_LoginResult],
+        [600, protos_1.Protos.CS2LS_GSInfos],
+        [601, protos_1.Protos.CS2LS_GSInfo],
+        [602, protos_1.Protos.CS2LS_GSLost],
     ]);
     exports.ProtoCreator = ProtoCreator;
 });
@@ -348,13 +419,15 @@ define("Net/WSConnector", ["require", "exports", "Net/ByteUtils", "Net/MsgCenter
             this._msgCenter = new MsgCenter_1.MsgCenter();
             this._rpcHandlers = new Map();
         }
-        get connected() { return this._socket.readyState == WebSocket.OPEN; }
+        get connected() { return this._socket != null && this._socket.readyState == WebSocket.OPEN; }
         ;
         Close() {
             this._pid = 0;
             this._socket.close();
         }
         Connect(ip, port) {
+            if (this.connected)
+                this.Close();
             this._socket = new WebSocket(`ws://${ip}:${port}`);
             this._socket.binaryType = "arraybuffer";
             this._socket.onmessage = this.OnReceived.bind(this);
@@ -429,42 +502,66 @@ define("View/UI/UIAlert", ["require", "exports"], function (require, exports) {
     }
     exports.UIAlert = UIAlert;
 });
-define("View/UI/UILogin", ["require", "exports", "../../libs/protos", "Net/WSConnector", "Protos/ProtoHelper", "View/UI/UIAlert"], function (require, exports, protos_3, WSConnector_1, ProtoHelper_2, UIAlert_1) {
+define("Shared/Model/EntityParam", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class BattleParams {
+        constructor() {
+            this.frameRate = 0;
+            this.framesPerKeyFrame = 0;
+            this.uid = "";
+            this.id = "";
+            this.rndSeed = 0;
+            this.buildings = null;
+        }
+    }
+    exports.BattleParams = BattleParams;
+    class Building {
+        constructor() {
+            this.id = "";
+            this.uid = "";
+        }
+    }
+    exports.Building = Building;
+    class EntityParam {
+    }
+    exports.EntityParam = EntityParam;
+});
+define("View/UI/UILogin", ["require", "exports", "../../libs/protos", "Net/WSConnector", "Protos/ProtoHelper", "View/UI/UIAlert", "Shared/Model/EntityParam", "View/UI/UIManager"], function (require, exports, protos_3, WSConnector_1, ProtoHelper_2, UIAlert_1, EntityParam_1, UIManager_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class UILogin {
         constructor() {
             fairygui.UIPackage.addPackage("res/ui/login");
+            this._root = fairygui.UIPackage.createObject("login", "Main").asCom;
+            this._root.width = fairygui.GRoot.inst.width;
+            this._root.height = fairygui.GRoot.inst.height;
+            this._root.addRelation(fairygui.GRoot.inst, fairygui.RelationType.Size);
+            this._root.getChild("login_btn").onClick(this, this.OnLoginBtnClick);
+            this._root.getChild("reg_btn").onClick(this, this.OnRegBtnClick);
+            this._root.getChild("enter_btn").onClick(this, this.OnEnterBtnClick);
+            this._list = this._root.getChild("alist").asList;
+            this._list.on(fairygui.Events.CLICK_ITEM, this, this.OnAreaClick);
         }
         Dispose() {
             this._root.dispose();
             this._root = null;
         }
         Enter(param) {
-            this._root = fairygui.UIPackage.createObject("login", "Main").asCom;
             fairygui.GRoot.inst.addChild(this._root);
-            this._root.width = fairygui.GRoot.inst.width;
-            this._root.height = fairygui.GRoot.inst.height;
-            this._root.addRelation(fairygui.GRoot.inst, fairygui.RelationType.Size);
-            this._root.getChild("login_btn").onClick(this, this.OnLoginBtnClick);
-            this._root.getChild("reg_btn").onClick(this, this.OnRegBtnClick);
             this._connector = new WSConnector_1.WSConnector();
-            this._connector.onopen = ((e) => {
+            this._connector.onopen = () => fairygui.GRoot.inst.closeModalWait();
+            this._connector.onerror = () => {
                 fairygui.GRoot.inst.closeModalWait();
-            });
-            this._connector.onerror = ((e) => {
-                fairygui.GRoot.inst.closeModalWait();
-                UIAlert_1.UIAlert.Show("无法连接服务器", () => {
-                    this.Connect();
-                });
-            });
+                UIAlert_1.UIAlert.Show("无法连接服务器", () => this.Connect());
+            };
+            this._connector.onclose = () => RC.Logger.Log("connection closed.");
             this.Connect();
         }
         Leave() {
             this._connector.Close();
             this._connector = null;
-            this._root.dispose();
-            this._root = null;
+            fairygui.GRoot.inst.removeChild(this._root);
         }
         Update(deltaTime) {
         }
@@ -473,16 +570,6 @@ define("View/UI/UILogin", ["require", "exports", "../../libs/protos", "Net/WSCon
         Connect() {
             fairygui.GRoot.inst.showModalWait();
             this._connector.Connect("localhost", 49996);
-        }
-        OnLoginBtnClick() {
-            let login = ProtoHelper_2.ProtoCreator.Q_GC2LS_AskLogin();
-            login.uin = "1";
-            fairygui.GRoot.inst.showModalWait();
-            this._connector.Send(protos_3.Protos.GC2LS_AskLogin, login, ((message) => {
-                let loginResult = message;
-                RC.Logger.Log(loginResult.result);
-                fairygui.GRoot.inst.closeModalWait();
-            }).bind(this));
         }
         OnRegBtnClick() {
             let regName = this._root.getChild("reg_name").asTextField.text;
@@ -504,24 +591,115 @@ define("View/UI/UILogin", ["require", "exports", "../../libs/protos", "Net/WSCon
             this._connector.Send(protos_3.Protos.GC2LS_AskRegister, register, ((message) => {
                 let resp = message;
                 switch (resp.result) {
-                    case protos_3.Protos.LS2GC_Result.EResult.Success:
+                    case protos_3.Protos.LS2GC_RegResult.EResult.Success:
                         UIAlert_1.UIAlert.Show("注册成功");
+                        this._root.getChild("name").asTextField.text = regName;
+                        this._root.getChild("password").asTextField.text = regPwd;
+                        this._root.getController("c1").selectedIndex = 0;
                         break;
-                    case protos_3.Protos.LS2GC_Result.EResult.Failed:
+                    case protos_3.Protos.LS2GC_RegResult.EResult.Failed:
                         UIAlert_1.UIAlert.Show("注册失败");
                         break;
-                    case protos_3.Protos.LS2GC_Result.EResult.UsernameExists:
+                    case protos_3.Protos.LS2GC_RegResult.EResult.UnameExists:
                         UIAlert_1.UIAlert.Show("用户名已存在");
                         break;
-                    case protos_3.Protos.LS2GC_Result.EResult.IllegalName:
+                    case protos_3.Protos.LS2GC_RegResult.EResult.UnameIllegal:
                         UIAlert_1.UIAlert.Show("无效用户名");
                         break;
-                    case protos_3.Protos.LS2GC_Result.EResult.IllegalPasswd:
+                    case protos_3.Protos.LS2GC_RegResult.EResult.PwdIllegal:
                         UIAlert_1.UIAlert.Show("无效密码");
                         break;
                 }
                 fairygui.GRoot.inst.closeModalWait();
             }).bind(this));
+        }
+        OnLoginBtnClick() {
+            let uname = this._root.getChild("name").asTextField.text;
+            if (uname == "") {
+                UIAlert_1.UIAlert.Show("无效用户名");
+                return;
+            }
+            let password = this._root.getChild("password").asTextField.text;
+            if (password == "") {
+                UIAlert_1.UIAlert.Show("无效密码");
+                return;
+            }
+            let login = ProtoHelper_2.ProtoCreator.Q_GC2LS_AskLogin();
+            login.name = uname;
+            login.passwd = password;
+            fairygui.GRoot.inst.showModalWait();
+            this._connector.Send(protos_3.Protos.GC2LS_AskLogin, login, message => {
+                let resp = message;
+                switch (resp.result) {
+                    case protos_3.Protos.LS2GC_LoginResult.EResult.Success:
+                        this.HandleLoginLSSuccess(resp);
+                        break;
+                    case protos_3.Protos.LS2GC_LoginResult.EResult.Failed:
+                        UIAlert_1.UIAlert.Show("登陆失败");
+                        break;
+                    case protos_3.Protos.LS2GC_LoginResult.EResult.InvalidUname:
+                        UIAlert_1.UIAlert.Show("无效用户名");
+                        break;
+                    case protos_3.Protos.LS2GC_LoginResult.EResult.InvalidUname:
+                        UIAlert_1.UIAlert.Show("密码不正确");
+                        break;
+                }
+                fairygui.GRoot.inst.closeModalWait();
+            });
+        }
+        HandleLoginLSSuccess(loginResult) {
+            let count = loginResult.gsInfos.length;
+            for (let i = 0; i < count; ++i) {
+                let gsInfo = loginResult.gsInfos[i];
+                let item = this._list.addItemFromPool().asButton;
+                item.title = gsInfo.name;
+                let sessionID = loginResult.sessionID;
+                item.data = { "data": gsInfo, "s": sessionID.toNumber() };
+            }
+            if (count > 0)
+                this._list.selectedIndex = 0;
+        }
+        OnAreaClick() {
+        }
+        OnEnterBtnClick() {
+            let item = this._list.getChildAt(this._list.selectedIndex);
+            let data = item.data["data"];
+            this.ConnectToGS(data.ip, data.port, data.password, item.data["s"]);
+        }
+        ConnectToGS(ip, port, pwd, sessionID) {
+            fairygui.GRoot.inst.showModalWait();
+            this._connector.onopen = () => {
+                let askLogin = ProtoHelper_2.ProtoCreator.Q_GC2GS_AskLogin();
+                askLogin.pwd = pwd;
+                askLogin.sessionID = sessionID;
+                this._connector.Send(protos_3.Protos.GC2GS_AskLogin, askLogin, message => {
+                    let resp = message;
+                    switch (resp.result) {
+                        case protos_3.Protos.GS2GC_LoginResult.EResult.Success:
+                            this.HandleLoginBSSuccess(resp);
+                            break;
+                        case protos_3.Protos.GS2GC_LoginResult.EResult.Failed:
+                            UIAlert_1.UIAlert.Show("登陆失败");
+                            break;
+                            break;
+                    }
+                    fairygui.GRoot.inst.closeModalWait();
+                });
+            };
+            this._connector.Connect(ip, port);
+        }
+        HandleLoginBSSuccess(loginResult) {
+            let param = new EntityParam_1.BattleParams();
+            param.framesPerKeyFrame = 4;
+            param.frameRate = 20;
+            param.uid = "user";
+            param.id = "m0";
+            param.rndSeed = RC.Utils.Timer.utcTime;
+            let building = new EntityParam_1.Building();
+            building.uid = "user";
+            building.id = "b0";
+            param.buildings = [building];
+            UIManager_1.UIManager.EnterBattle(param);
         }
     }
     exports.UILogin = UILogin;
@@ -864,31 +1042,6 @@ define("Shared/Utils", ["require", "exports"], function (require, exports) {
         }
     }
     exports.Utils = Utils;
-});
-define("Shared/Model/EntityParam", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    class BattleParams {
-        constructor() {
-            this.frameRate = 0;
-            this.framesPerKeyFrame = 0;
-            this.uid = "";
-            this.id = "";
-            this.rndSeed = 0;
-            this.buildings = null;
-        }
-    }
-    exports.BattleParams = BattleParams;
-    class Building {
-        constructor() {
-            this.id = "";
-            this.uid = "";
-        }
-    }
-    exports.Building = Building;
-    class EntityParam {
-    }
-    exports.EntityParam = EntityParam;
 });
 define("Shared/GPoolObject", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -1780,7 +1933,7 @@ define("Shared/Event/UIEvent", ["require", "exports", "Shared/Event/BaseEvent"],
     UIEvent.POOL = new RC.Collections.Stack();
     exports.UIEvent = UIEvent;
 });
-define("View/Home", ["require", "exports", "View/EditingBuilding", "View/CBuilding", "View/CEntityManager", "View/GraphicManager", "View/Camera", "View/CTile", "View/Input", "View/MapGraphic", "Shared/Utils", "Shared/UpdateContext", "Shared/Model/EntityParam", "Shared/Model/ModelFactory", "Shared/Event/UIEvent"], function (require, exports, EditingBuilding_2, CBuilding_3, CEntityManager_1, GraphicManager_1, Camera_1, CTile_1, Input_1, MapGraphic_1, Utils_2, UpdateContext_1, EntityParam_1, ModelFactory_3, UIEvent_1) {
+define("View/Home", ["require", "exports", "View/EditingBuilding", "View/CBuilding", "View/CEntityManager", "View/GraphicManager", "View/Camera", "View/CTile", "View/Input", "View/MapGraphic", "Shared/Utils", "Shared/UpdateContext", "Shared/Model/EntityParam", "Shared/Model/ModelFactory", "Shared/Event/UIEvent"], function (require, exports, EditingBuilding_2, CBuilding_3, CEntityManager_1, GraphicManager_1, Camera_1, CTile_1, Input_1, MapGraphic_1, Utils_2, UpdateContext_1, EntityParam_2, ModelFactory_3, UIEvent_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class Home {
@@ -1840,7 +1993,7 @@ define("View/Home", ["require", "exports", "View/EditingBuilding", "View/CBuildi
         }
         CreateBuilding(id, position = RC.Numerics.Vec3.zero) {
             let rid = Utils_2.Utils.MakeRIDFromID(id);
-            let param = new EntityParam_1.EntityParam();
+            let param = new EntityParam_2.EntityParam();
             param.rid = rid;
             param.position = position;
             let entity = this._entityManager.Create(CBuilding_3.CBuilding, param);
@@ -1848,7 +2001,7 @@ define("View/Home", ["require", "exports", "View/EditingBuilding", "View/CBuildi
         }
         CreateEditingBuilding(id, position = RC.Numerics.Vec3.zero) {
             let rid = Utils_2.Utils.MakeRIDFromID(id);
-            let param = new EntityParam_1.EntityParam();
+            let param = new EntityParam_2.EntityParam();
             param.rid = rid;
             param.position = position;
             let entity = this._entityManager.Create(EditingBuilding_2.EditingBuilding, param);
@@ -2413,7 +2566,7 @@ define("View/UI/UIManager", ["require", "exports", "View/UI/UILogin", "View/UI/U
     }
     exports.UIManager = UIManager;
 });
-define("Game", ["require", "exports", "View/UI/UIManager", "Shared/Defs"], function (require, exports, UIManager_1, Defs_6) {
+define("Game", ["require", "exports", "View/UI/UIManager", "Shared/Defs"], function (require, exports, UIManager_2, Defs_6) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class Main {
@@ -2449,17 +2602,17 @@ define("Game", ["require", "exports", "View/UI/UIManager", "Shared/Defs"], funct
         }
         StartGame() {
             console.log("start game...");
-            UIManager_1.UIManager.Init(new RC.Numerics.Vec2(600, 800));
+            UIManager_2.UIManager.Init(new RC.Numerics.Vec2(600, 800));
             fairygui.GRoot.inst.on(fairygui.Events.SIZE_CHANGED, this, this.OnResize);
             Laya.timer.frameLoop(1, this, this.Update);
-            UIManager_1.UIManager.EnterLogin();
+            UIManager_2.UIManager.EnterLogin();
         }
         Update() {
             let dt = Laya.timer.delta;
-            UIManager_1.UIManager.Update(dt);
+            UIManager_2.UIManager.Update(dt);
         }
         OnResize(e) {
-            UIManager_1.UIManager.OnResize(e);
+            UIManager_2.UIManager.OnResize(e);
         }
     }
     exports.Main = Main;

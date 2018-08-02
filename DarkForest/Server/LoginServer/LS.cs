@@ -21,9 +21,9 @@ namespace LoginServer
 		public LSNetSessionMgr netSessionMgr { get; } = new LSNetSessionMgr();
 		public RedisWrapper redisWrapper { get; } = new RedisWrapper();
 		public UserMgr userMgr { get; } = new UserMgr();
+		public Dictionary<uint, GSInfo> gsInfos { get; } = new Dictionary<uint, GSInfo>();
 
 		private readonly Scheduler _heartBeater = new Scheduler();
-		private readonly Dictionary<uint, GSInfo> _gsInfos = new Dictionary<uint, GSInfo>();
 
 		public ErrorCode Initialize( Options opts )
 		{

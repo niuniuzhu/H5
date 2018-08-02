@@ -25,29 +25,35 @@ namespace Protos {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "CgtMUzJHQy5wcm90bxIGUHJvdG9zGgxHbG9iYWwucHJvdG8aC0dTMkNTLnBy",
-            "b3RvIrcBCgxMUzJHQ19SZXN1bHQSHQoEb3B0cxgBIAEoCzIPLlByb3Rvcy5N",
-            "c2dPcHRzEiwKBnJlc3VsdBgCIAEoDjIcLlByb3Rvcy5MUzJHQ19SZXN1bHQu",
-            "RVJlc3VsdCJaCgdFUmVzdWx0EgsKB1N1Y2Nlc3MQABIKCgZGYWlsZWQQARIS",
-            "Cg5Vc2VybmFtZUV4aXN0cxACEg8KC0lsbGVnYWxOYW1lEAMSEQoNSWxsZWdh",
-            "bFBhc3N3ZBAEIk0KDExTMkdDX0dTSW5mbxIdCgRvcHRzGAEgASgLMg8uUHJv",
-            "dG9zLk1zZ09wdHMSHgoGZ3NJbmZvGAIgAygLMg4uUHJvdG9zLkdTSW5mb2IG",
-            "cHJvdG8z"));
+            "b3RvIrgBCg9MUzJHQ19SZWdSZXN1bHQSHQoEb3B0cxgBIAEoCzIPLlByb3Rv",
+            "cy5Nc2dPcHRzEi8KBnJlc3VsdBgCIAEoDjIfLlByb3Rvcy5MUzJHQ19SZWdS",
+            "ZXN1bHQuRVJlc3VsdCJVCgdFUmVzdWx0EgsKB1N1Y2Nlc3MQABIKCgZGYWls",
+            "ZWQQARIPCgtVbmFtZUV4aXN0cxACEhAKDFVuYW1lSWxsZWdhbBADEg4KClB3",
+            "ZElsbGVnYWwQBCLfAQoRTFMyR0NfTG9naW5SZXN1bHQSHQoEb3B0cxgBIAEo",
+            "CzIPLlByb3Rvcy5Nc2dPcHRzEjEKBnJlc3VsdBgCIAEoDjIhLlByb3Rvcy5M",
+            "UzJHQ19Mb2dpblJlc3VsdC5FUmVzdWx0EhEKCXNlc3Npb25JRBgDIAEoBBIf",
+            "Cgdnc0luZm9zGAQgAygLMg4uUHJvdG9zLkdTSW5mbyJECgdFUmVzdWx0EgsK",
+            "B1N1Y2Nlc3MQABIKCgZGYWlsZWQQARIQCgxJbnZhbGlkVW5hbWUQAhIOCgpJ",
+            "bnZhbGlkUHdkEAMiTgoMTFMyR0NfR1NJbmZvEh0KBG9wdHMYASABKAsyDy5Q",
+            "cm90b3MuTXNnT3B0cxIfCgdnc0luZm9zGAIgAygLMg4uUHJvdG9zLkdTSW5m",
+            "b2IGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Protos.GlobalReflection.Descriptor, global::Protos.GS2CSReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.LS2GC_Result), global::Protos.LS2GC_Result.Parser, new[]{ "Opts", "Result" }, null, new[]{ typeof(global::Protos.LS2GC_Result.Types.EResult) }, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.LS2GC_GSInfo), global::Protos.LS2GC_GSInfo.Parser, new[]{ "Opts", "GsInfo" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.LS2GC_RegResult), global::Protos.LS2GC_RegResult.Parser, new[]{ "Opts", "Result" }, null, new[]{ typeof(global::Protos.LS2GC_RegResult.Types.EResult) }, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.LS2GC_LoginResult), global::Protos.LS2GC_LoginResult.Parser, new[]{ "Opts", "Result", "SessionID", "GsInfos" }, null, new[]{ typeof(global::Protos.LS2GC_LoginResult.Types.EResult) }, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.LS2GC_GSInfo), global::Protos.LS2GC_GSInfo.Parser, new[]{ "Opts", "GsInfos" }, null, null, null)
           }));
     }
     #endregion
 
   }
   #region Messages
-  public sealed partial class LS2GC_Result : pb::IMessage<LS2GC_Result> {
-    private static readonly pb::MessageParser<LS2GC_Result> _parser = new pb::MessageParser<LS2GC_Result>(() => new LS2GC_Result());
+  public sealed partial class LS2GC_RegResult : pb::IMessage<LS2GC_RegResult> {
+    private static readonly pb::MessageParser<LS2GC_RegResult> _parser = new pb::MessageParser<LS2GC_RegResult>(() => new LS2GC_RegResult());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<LS2GC_Result> Parser { get { return _parser; } }
+    public static pb::MessageParser<LS2GC_RegResult> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
@@ -60,22 +66,22 @@ namespace Protos {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public LS2GC_Result() {
+    public LS2GC_RegResult() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public LS2GC_Result(LS2GC_Result other) : this() {
+    public LS2GC_RegResult(LS2GC_RegResult other) : this() {
       opts_ = other.opts_ != null ? other.opts_.Clone() : null;
       result_ = other.result_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public LS2GC_Result Clone() {
-      return new LS2GC_Result(this);
+    public LS2GC_RegResult Clone() {
+      return new LS2GC_RegResult(this);
     }
 
     /// <summary>Field number for the "opts" field.</summary>
@@ -91,9 +97,9 @@ namespace Protos {
 
     /// <summary>Field number for the "result" field.</summary>
     public const int ResultFieldNumber = 2;
-    private global::Protos.LS2GC_Result.Types.EResult result_ = 0;
+    private global::Protos.LS2GC_RegResult.Types.EResult result_ = 0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Protos.LS2GC_Result.Types.EResult Result {
+    public global::Protos.LS2GC_RegResult.Types.EResult Result {
       get { return result_; }
       set {
         result_ = value;
@@ -102,11 +108,11 @@ namespace Protos {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
-      return Equals(other as LS2GC_Result);
+      return Equals(other as LS2GC_RegResult);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(LS2GC_Result other) {
+    public bool Equals(LS2GC_RegResult other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -165,7 +171,7 @@ namespace Protos {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(LS2GC_Result other) {
+    public void MergeFrom(LS2GC_RegResult other) {
       if (other == null) {
         return;
       }
@@ -197,7 +203,7 @@ namespace Protos {
             break;
           }
           case 16: {
-            result_ = (global::Protos.LS2GC_Result.Types.EResult) input.ReadEnum();
+            result_ = (global::Protos.LS2GC_RegResult.Types.EResult) input.ReadEnum();
             break;
           }
         }
@@ -205,15 +211,240 @@ namespace Protos {
     }
 
     #region Nested types
-    /// <summary>Container for nested types declared in the LS2GC_Result message type.</summary>
+    /// <summary>Container for nested types declared in the LS2GC_RegResult message type.</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static partial class Types {
       public enum EResult {
         [pbr::OriginalName("Success")] Success = 0,
         [pbr::OriginalName("Failed")] Failed = 1,
-        [pbr::OriginalName("UsernameExists")] UsernameExists = 2,
-        [pbr::OriginalName("IllegalName")] IllegalName = 3,
-        [pbr::OriginalName("IllegalPasswd")] IllegalPasswd = 4,
+        [pbr::OriginalName("UnameExists")] UnameExists = 2,
+        [pbr::OriginalName("UnameIllegal")] UnameIllegal = 3,
+        [pbr::OriginalName("PwdIllegal")] PwdIllegal = 4,
+      }
+
+    }
+    #endregion
+
+  }
+
+  public sealed partial class LS2GC_LoginResult : pb::IMessage<LS2GC_LoginResult> {
+    private static readonly pb::MessageParser<LS2GC_LoginResult> _parser = new pb::MessageParser<LS2GC_LoginResult>(() => new LS2GC_LoginResult());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<LS2GC_LoginResult> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Protos.LS2GCReflection.Descriptor.MessageTypes[1]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public LS2GC_LoginResult() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public LS2GC_LoginResult(LS2GC_LoginResult other) : this() {
+      opts_ = other.opts_ != null ? other.opts_.Clone() : null;
+      result_ = other.result_;
+      sessionID_ = other.sessionID_;
+      gsInfos_ = other.gsInfos_.Clone();
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public LS2GC_LoginResult Clone() {
+      return new LS2GC_LoginResult(this);
+    }
+
+    /// <summary>Field number for the "opts" field.</summary>
+    public const int OptsFieldNumber = 1;
+    private global::Protos.MsgOpts opts_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Protos.MsgOpts Opts {
+      get { return opts_; }
+      set {
+        opts_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "result" field.</summary>
+    public const int ResultFieldNumber = 2;
+    private global::Protos.LS2GC_LoginResult.Types.EResult result_ = 0;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Protos.LS2GC_LoginResult.Types.EResult Result {
+      get { return result_; }
+      set {
+        result_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "sessionID" field.</summary>
+    public const int SessionIDFieldNumber = 3;
+    private ulong sessionID_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ulong SessionID {
+      get { return sessionID_; }
+      set {
+        sessionID_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "gsInfos" field.</summary>
+    public const int GsInfosFieldNumber = 4;
+    private static readonly pb::FieldCodec<global::Protos.GSInfo> _repeated_gsInfos_codec
+        = pb::FieldCodec.ForMessage(34, global::Protos.GSInfo.Parser);
+    private readonly pbc::RepeatedField<global::Protos.GSInfo> gsInfos_ = new pbc::RepeatedField<global::Protos.GSInfo>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::RepeatedField<global::Protos.GSInfo> GsInfos {
+      get { return gsInfos_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as LS2GC_LoginResult);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(LS2GC_LoginResult other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!object.Equals(Opts, other.Opts)) return false;
+      if (Result != other.Result) return false;
+      if (SessionID != other.SessionID) return false;
+      if(!gsInfos_.Equals(other.gsInfos_)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (opts_ != null) hash ^= Opts.GetHashCode();
+      if (Result != 0) hash ^= Result.GetHashCode();
+      if (SessionID != 0UL) hash ^= SessionID.GetHashCode();
+      hash ^= gsInfos_.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (opts_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(Opts);
+      }
+      if (Result != 0) {
+        output.WriteRawTag(16);
+        output.WriteEnum((int) Result);
+      }
+      if (SessionID != 0UL) {
+        output.WriteRawTag(24);
+        output.WriteUInt64(SessionID);
+      }
+      gsInfos_.WriteTo(output, _repeated_gsInfos_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (opts_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Opts);
+      }
+      if (Result != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Result);
+      }
+      if (SessionID != 0UL) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(SessionID);
+      }
+      size += gsInfos_.CalculateSize(_repeated_gsInfos_codec);
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(LS2GC_LoginResult other) {
+      if (other == null) {
+        return;
+      }
+      if (other.opts_ != null) {
+        if (opts_ == null) {
+          opts_ = new global::Protos.MsgOpts();
+        }
+        Opts.MergeFrom(other.Opts);
+      }
+      if (other.Result != 0) {
+        Result = other.Result;
+      }
+      if (other.SessionID != 0UL) {
+        SessionID = other.SessionID;
+      }
+      gsInfos_.Add(other.gsInfos_);
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            if (opts_ == null) {
+              opts_ = new global::Protos.MsgOpts();
+            }
+            input.ReadMessage(opts_);
+            break;
+          }
+          case 16: {
+            result_ = (global::Protos.LS2GC_LoginResult.Types.EResult) input.ReadEnum();
+            break;
+          }
+          case 24: {
+            SessionID = input.ReadUInt64();
+            break;
+          }
+          case 34: {
+            gsInfos_.AddEntriesFrom(input, _repeated_gsInfos_codec);
+            break;
+          }
+        }
+      }
+    }
+
+    #region Nested types
+    /// <summary>Container for nested types declared in the LS2GC_LoginResult message type.</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static partial class Types {
+      public enum EResult {
+        [pbr::OriginalName("Success")] Success = 0,
+        [pbr::OriginalName("Failed")] Failed = 1,
+        [pbr::OriginalName("InvalidUname")] InvalidUname = 2,
+        [pbr::OriginalName("InvalidPwd")] InvalidPwd = 3,
       }
 
     }
@@ -229,7 +460,7 @@ namespace Protos {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Protos.LS2GCReflection.Descriptor.MessageTypes[1]; }
+      get { return global::Protos.LS2GCReflection.Descriptor.MessageTypes[2]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -247,7 +478,7 @@ namespace Protos {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public LS2GC_GSInfo(LS2GC_GSInfo other) : this() {
       opts_ = other.opts_ != null ? other.opts_.Clone() : null;
-      gsInfo_ = other.gsInfo_.Clone();
+      gsInfos_ = other.gsInfos_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -267,14 +498,14 @@ namespace Protos {
       }
     }
 
-    /// <summary>Field number for the "gsInfo" field.</summary>
-    public const int GsInfoFieldNumber = 2;
-    private static readonly pb::FieldCodec<global::Protos.GSInfo> _repeated_gsInfo_codec
+    /// <summary>Field number for the "gsInfos" field.</summary>
+    public const int GsInfosFieldNumber = 2;
+    private static readonly pb::FieldCodec<global::Protos.GSInfo> _repeated_gsInfos_codec
         = pb::FieldCodec.ForMessage(18, global::Protos.GSInfo.Parser);
-    private readonly pbc::RepeatedField<global::Protos.GSInfo> gsInfo_ = new pbc::RepeatedField<global::Protos.GSInfo>();
+    private readonly pbc::RepeatedField<global::Protos.GSInfo> gsInfos_ = new pbc::RepeatedField<global::Protos.GSInfo>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::Protos.GSInfo> GsInfo {
-      get { return gsInfo_; }
+    public pbc::RepeatedField<global::Protos.GSInfo> GsInfos {
+      get { return gsInfos_; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -291,7 +522,7 @@ namespace Protos {
         return true;
       }
       if (!object.Equals(Opts, other.Opts)) return false;
-      if(!gsInfo_.Equals(other.gsInfo_)) return false;
+      if(!gsInfos_.Equals(other.gsInfos_)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -299,7 +530,7 @@ namespace Protos {
     public override int GetHashCode() {
       int hash = 1;
       if (opts_ != null) hash ^= Opts.GetHashCode();
-      hash ^= gsInfo_.GetHashCode();
+      hash ^= gsInfos_.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -317,7 +548,7 @@ namespace Protos {
         output.WriteRawTag(10);
         output.WriteMessage(Opts);
       }
-      gsInfo_.WriteTo(output, _repeated_gsInfo_codec);
+      gsInfos_.WriteTo(output, _repeated_gsInfos_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -329,7 +560,7 @@ namespace Protos {
       if (opts_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Opts);
       }
-      size += gsInfo_.CalculateSize(_repeated_gsInfo_codec);
+      size += gsInfos_.CalculateSize(_repeated_gsInfos_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -347,7 +578,7 @@ namespace Protos {
         }
         Opts.MergeFrom(other.Opts);
       }
-      gsInfo_.Add(other.gsInfo_);
+      gsInfos_.Add(other.gsInfos_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -367,7 +598,7 @@ namespace Protos {
             break;
           }
           case 18: {
-            gsInfo_.AddEntriesFrom(input, _repeated_gsInfo_codec);
+            gsInfos_.AddEntriesFrom(input, _repeated_gsInfos_codec);
             break;
           }
         }

@@ -39,7 +39,7 @@ namespace Core.Misc
 
 		public static void Error( object obj, int startFrame = 2, int count = 1 ) => _log.Error( $"{ GetStacks( startFrame, count )}: {obj}" );
 
-		public static void Info( object obj, int startFrame = 2, int count = 1 ) => _log.Info( $"{ GetStacks( startFrame, count )}: {obj}" );
+		public static void Info( object obj ) => _log.Info( obj );
 
 		public static void Fatal( object obj, int startFrame = 2, int count = 100 ) => _log.Fatal( $"{obj}{Environment.NewLine}{ GetStacks( startFrame, count )}" );
 

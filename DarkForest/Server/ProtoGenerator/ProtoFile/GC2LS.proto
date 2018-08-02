@@ -3,7 +3,7 @@ package Protos;
 
 import "Global.proto";
 
-message GC2LS_AskRegister{
+message GC2LS_AskRegister {
 	MsgOpts opts = 1;
 	int32 sdk = 2;
 	string name = 3;
@@ -11,10 +11,8 @@ message GC2LS_AskRegister{
 	uint32 platform = 5;
 }
 
-message GC2LS_AskLogin
-{
+message GC2LS_AskLogin {
 	MsgOpts opts = 1;
-	uint32 platform = 2;
-	string uin = 3;
-	string sessionid = 4;
+	string name = 2;
+	string passwd = 3;
 }

@@ -9,19 +9,24 @@ enum MsgID {
 
 	eGC2LS_AskRegister = 100;
 	eGC2LS_AskLogin = 101;
-	
-	eLS2GC_Result = 200;
-	eLS2GC_GSInfo = 201;
 
-	eGS2CS_ReportState = 300;
+	eGC2GS_AskLogin = 200;
 
-	eCS2LS_GSInfos = 500;
-	eCS2LS_GSInfo = 501;
-	eCS2LS_GSLost = 502;
+	eLS2GC_RegResult = 300;
+	eLS2GC_LoginResult = 301;
+	eLS2GC_GSInfo = 302;
+
+	eGS2CS_ReportState = 400;
+
+	eGS2GC_LoginResult = 500;
+
+	eCS2LS_GSInfos = 600;
+	eCS2LS_GSInfo = 601;
+	eCS2LS_GSLost = 602;
 }
 
-message MsgOpts{
-	enum Flag{
+message MsgOpts {
+	enum Flag {
 		Unused = 0;
 		RPC = 1;
 		RESP = 2;
@@ -34,12 +39,12 @@ message MsgOpts{
 	uint32 nsid = 4;		//转发的网络id(暂时只会转发到客户端)
 }
 
-message G_AskPing{
+message G_AskPing {
 	MsgOpts opts = 1;
 	int64 time = 2;
 }
 
-message G_AskPingRet{
+message G_AskPingRet {
 	MsgOpts opts = 1;
 	int64 stime = 2;
 	int64 time = 3;
@@ -49,9 +54,10 @@ message G_AskPingRet{
 <ext>
 {
 	"RespID": {
-		"GC2LS_AskRegister": "LS2GC_Result",
-		"GC2LS_AskLogin": "LS2GC_Result",
-		"G_AskPing": "G_AskPingRet"
+		"GC2LS_AskRegister": "LS2GC_RegResult",
+		"GC2LS_AskLogin": "LS2GC_LoginResult",
+		"G_AskPing": "G_AskPingRet",
+		"GC2GS_AskLogin": "GS2GC_LoginResult",
 	}
 }
 </ext>

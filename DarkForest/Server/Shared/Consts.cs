@@ -1,11 +1,13 @@
-﻿namespace Shared
+﻿using System.Text.RegularExpressions;
+
+namespace Shared
 {
 	public static class Consts
 	{
 		/// <summary>
 		/// 线程睡眠时长
 		/// </summary>
-		public const int HEART_BEAT_CD_TICK = 5;
+		public const int HEART_BEAT_CD_TICK = 1;
 
 		/// <summary>
 		/// 心跳时间间隔
@@ -26,6 +28,12 @@
 		/// ping时间间隔
 		/// </summary>
 		public const long PING_INTERVAL = 10000;
+
+		public const int DEFAULT_UNAME_LEN = 3;
+
+		public const int DEFAULT_PWD_LEN = 3;
+
+		public static readonly Regex REGEX_PWD = new Regex( @"" );
 	}
 
 	public enum ErrorCode
@@ -42,8 +50,8 @@
 		ConnectToRedisFailed,
 		//register
 		UsernameExists,
-		IllegalName,
-		IllegalPasswd
+		InvalidUname,
+		InvalidPwd
 	}
 
 	public class GSInfo

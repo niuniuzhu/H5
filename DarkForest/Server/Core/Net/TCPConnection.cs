@@ -43,6 +43,7 @@ namespace Core.Net
 		{
 			lock ( this._lockObj )
 			{
+				this.Flush();
 				if ( this.socket == null )
 					return;
 				if ( this.connected )
@@ -192,6 +193,11 @@ namespace Core.Net
 		}
 
 		public void Update( UpdateContext updateContext )
+		{
+			this.Flush();
+		}
+
+		private void Flush()
 		{
 			this._sendQueue.Switch();
 			while ( !this._sendQueue.isEmpty )

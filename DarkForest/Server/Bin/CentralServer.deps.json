@@ -1286,6 +1286,7 @@
           "Core": "1.0.0",
           "Google.Protobuf": "3.5.1",
           "MySql.Data": "8.0.11",
+          "Protocol": "1.0.0",
           "StackExchange.Redis": "1.2.6"
         },
         "runtime": {

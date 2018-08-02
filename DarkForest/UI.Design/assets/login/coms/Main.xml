@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="720,1280" designImageLayer="1">
-  <controller name="c1" pages="0,,1,,2," selected="1"/>
+  <controller name="c1" pages="0,,1,,2," selected="2"/>
   <displayList>
     <image id="n0_kqy5" name="n0" src="kqy52r" fileName="assets/bg01.png" pkg="c7x5i49r" xy="0,0"/>
-    <image id="n1_kqy5" name="n1" src="kqy54" fileName="assets/kuang06.png" xy="66,388"/>
+    <image id="n1_kqy5" name="n1" src="kqy54" fileName="assets/kuang06.png" xy="67,388"/>
     <component id="n10_kqy5" name="exit_btn" src="kqy5d" fileName="coms/big_btn.xml" xy="144,1049">
       <Button title="退出游戏" titleColor="#ffffff" titleFontSize="50"/>
     </component>
@@ -55,13 +55,14 @@
     <text id="n24_fwbx" name="reg_password" xy="263,634" size="286,52" input="true" password="true" fontSize="30" color="#ffffff" vAlign="middle" autoSize="none" bold="true" text="">
       <gearDisplay controller="c1" pages="1"/>
     </text>
-    <component id="n21_kqy5" name="n21" src="kqy5g" fileName="coms/area_btn.xml" xy="217,551">
+    <list id="n25_bwsy" name="alist" xy="206,487" size="307,266" overflow="scroll" lineGap="18" defaultItem="ui://ytr6jf79kqy5g" autoClearItems="true">
       <gearDisplay controller="c1" pages="2"/>
-      <Button title="一区" titleColor="#ffffff" titleFontSize="30"/>
-    </component>
-    <component id="n22_kqy5" name="n22" src="kqy5g" fileName="coms/area_btn.xml" xy="217,637">
-      <gearDisplay controller="c1" pages="2"/>
-      <Button title="二区" titleColor="#ffffff" titleFontSize="30"/>
-    </component>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+    </list>
   </displayList>
 </component>

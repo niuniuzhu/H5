@@ -2,7 +2,7 @@
     "cliPort": 49996,
     "csIP": "127.0.0.1",
     "csPort": 10001,
-    "redisIP": "juntai.yytou.com",
-    "redisPort": 23680,
+    "redisIP": "127.0.0.1",
+    "redisPort": 7000,
     "redisPwd": "159753"
 }

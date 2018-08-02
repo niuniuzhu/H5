@@ -1,4 +1,10 @@
 {
+	"docs": [
+		"ytr6jf79",
+		"kqy59",
+		"ytr6jf79",
+		"kqy5g"
+	],
 	"expanded_nodes": [
 		"c7x5i49r",
 		"/",
@@ -6,16 +12,8 @@
 		"/"
 	],
 	"active_doc": [
-		"c7x5i49r",
-		"w4k42s"
+		"ytr6jf79",
+		"kqy59"
 	],
-	"hidden_packages": [],
-	"docs": [
-		"ytr6jf79",
-		"kqy59",
-		"ytr6jf79",
-		"mrmsh",
-		"c7x5i49r",
-		"w4k42s"
-	]
+	"hidden_packages": []
 }

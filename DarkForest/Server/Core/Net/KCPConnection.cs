@@ -75,6 +75,7 @@ namespace Core.Net
 
 		public void Close()
 		{
+			this.Flush( long.MaxValue );
 			if ( this.socket == null )
 				return;
 
@@ -405,6 +406,11 @@ namespace Core.Net
 
 		public void Update( UpdateContext updateContext )
 		{
+			this.Flush( updateContext.deltaTime );
+		}
+
+		private void Flush( long dt )
+		{
 			//process sendqueue
 			this._sendQueue.Switch();
 			while ( !this._sendQueue.isEmpty )
@@ -455,7 +461,7 @@ namespace Core.Net
 				this._bufferPool.Push( buffer );
 			}
 			//update kcp
-			this._kcpProxy.Update( updateContext.deltaTime );
+			this._kcpProxy.Update( dt );
 		}
 
 		private void CheckActive()

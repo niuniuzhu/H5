@@ -1,8 +1,8 @@
 ﻿using Core.Misc;
 using Core.Net;
-using Protos;
 using Shared;
 using Shared.Net;
+using System.Collections.Generic;
 
 namespace LoginServer.Net
 {
@@ -42,23 +42,23 @@ namespace LoginServer.Net
 			Protos.GC2LS_AskRegister register = ( Protos.GC2LS_AskRegister )message;
 			ErrorCode regError = LS.instance.userMgr.RegisterAccount( register );
 
-			Protos.LS2GC_Result response = ProtoCreator.R_GC2LS_AskRegister( register.Opts.Pid );
+			Protos.LS2GC_RegResult response = ProtoCreator.R_GC2LS_AskRegister( register.Opts.Pid );
 			switch ( regError )
 			{
 				case ErrorCode.Success:
-					response.Result = LS2GC_Result.Types.EResult.Success;
+					response.Result = Protos.LS2GC_RegResult.Types.EResult.Success;
 					break;
 				case ErrorCode.UsernameExists:
-					response.Result = Protos.LS2GC_Result.Types.EResult.UsernameExists;
+					response.Result = Protos.LS2GC_RegResult.Types.EResult.UnameExists;
 					break;
-				case ErrorCode.IllegalName:
-					response.Result = Protos.LS2GC_Result.Types.EResult.IllegalName;
+				case ErrorCode.InvalidUname:
+					response.Result = Protos.LS2GC_RegResult.Types.EResult.UnameIllegal;
 					break;
-				case ErrorCode.IllegalPasswd:
-					response.Result = Protos.LS2GC_Result.Types.EResult.IllegalName;
+				case ErrorCode.InvalidPwd:
+					response.Result = Protos.LS2GC_RegResult.Types.EResult.PwdIllegal;
 					break;
 				default:
-					response.Result = Protos.LS2GC_Result.Types.EResult.Failed;
+					response.Result = Protos.LS2GC_RegResult.Types.EResult.Failed;
 					break;
 			}
 			this.owner.Send( this.id, response );
@@ -68,12 +68,42 @@ namespace LoginServer.Net
 		private ErrorCode OnGCtoLSAskLogin( Google.Protobuf.IMessage message )
 		{
 			Protos.GC2LS_AskLogin login = ( Protos.GC2LS_AskLogin )message;
-			Logger.Log( "client request login" );
 
-			Protos.LS2GC_Result response = ProtoCreator.R_GC2LS_AskLogin( login.Opts.Pid );
-			response.Result = Protos.LS2GC_Result.Types.EResult.Failed;
+			ulong sessionID = 0;
+			ErrorCode loginError = LS.instance.userMgr.RequestLogin( login, ref sessionID );
+
+			Protos.LS2GC_LoginResult response = ProtoCreator.R_GC2LS_AskLogin( login.Opts.Pid );
+			switch ( loginError )
+			{
+				case ErrorCode.Success:
+					response.Result = Protos.LS2GC_LoginResult.Types.EResult.Success;
+					response.SessionID = sessionID;
+					foreach ( KeyValuePair<uint, GSInfo> kv in LS.instance.gsInfos )
+					{
+						GSInfo info = kv.Value;
+						Protos.GSInfo gsInfo = new Protos.GSInfo
+						{
+							Name = info.name,
+							Ip = info.ip,
+							Port = info.port,
+							Password = info.password,
+							State = ( Protos.GSInfo.Types.State )info.state
+						};
+						response.GsInfos.Add( gsInfo );
+					}
+					break;
+				case ErrorCode.InvalidUname:
+					response.Result = Protos.LS2GC_LoginResult.Types.EResult.InvalidUname;
+					break;
+				case ErrorCode.InvalidPwd:
+					response.Result = Protos.LS2GC_LoginResult.Types.EResult.InvalidPwd;
+					break;
+				default:
+					response.Result = Protos.LS2GC_LoginResult.Types.EResult.Failed;
+					break;
+			}
 			this.owner.Send( this.id, response );
-
+			this.Close( string.Empty );
 			return ErrorCode.Success;
 		}
 	}

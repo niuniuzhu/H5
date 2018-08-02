@@ -5,7 +5,7 @@ import { ProtoCreator } from "../Protos/ProtoHelper";
 
 export class WSConnector {
 
-	public get connected(): boolean { return this._socket.readyState == WebSocket.OPEN };
+	public get connected(): boolean { return this._socket != null && this._socket.readyState == WebSocket.OPEN };
 
 	public onclose: ((ev: CloseEvent) => any) | null;
 	public onerror: ((ev: Event) => any) | null;
@@ -27,6 +27,8 @@ export class WSConnector {
 	}
 
 	public Connect(ip: string, port: number): void {
+		if (this.connected)
+			this.Close();
 		this._socket = new WebSocket(`ws://${ip}:${port}`);
 		this._socket.binaryType = "arraybuffer";
 		this._socket.onmessage = this.OnReceived.bind(this);

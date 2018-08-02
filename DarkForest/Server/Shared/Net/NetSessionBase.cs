@@ -78,8 +78,6 @@ namespace Shared.Net
 				Logger.Warn( "invalid msg." );
 				return;
 			}
-			Logger.Log( BitConverter.ToString( data, offset, size ) );
-
 			ErrorCode errorCode = ErrorCode.Success;
 			//剥离消息ID
 			Protos.MsgID msgID = ( Protos.MsgID )ByteUtils.Decode32i( data, offset );
@@ -106,7 +104,7 @@ namespace Shared.Net
 				if ( ( opts.Flag & ( uint )Protos.MsgOpts.Types.Flag.Trans ) > 0 ) //这是一条转发消息
 				{
 					opts.Flag &= ~( uint )Protos.MsgOpts.Types.Flag.Trans;//去掉转发标记
-																		  //todo
+					//todo
 				}
 				else
 					Logger.Warn( $"invalid msg:{msgID}." );
