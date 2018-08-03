@@ -49,6 +49,9 @@ namespace Protos {
 
   }
   #region Messages
+  /// <summary>
+  ///返回注册结果
+  /// </summary>
   public sealed partial class LS2GC_RegResult : pb::IMessage<LS2GC_RegResult> {
     private static readonly pb::MessageParser<LS2GC_RegResult> _parser = new pb::MessageParser<LS2GC_RegResult>(() => new LS2GC_RegResult());
     private pb::UnknownFieldSet _unknownFields;
@@ -227,6 +230,9 @@ namespace Protos {
 
   }
 
+  /// <summary>
+  ///返回登陆结果
+  /// </summary>
   public sealed partial class LS2GC_LoginResult : pb::IMessage<LS2GC_LoginResult> {
     private static readonly pb::MessageParser<LS2GC_LoginResult> _parser = new pb::MessageParser<LS2GC_LoginResult>(() => new LS2GC_LoginResult());
     private pb::UnknownFieldSet _unknownFields;
@@ -452,6 +458,9 @@ namespace Protos {
 
   }
 
+  /// <summary>
+  ///通知客户端GS信息
+  /// </summary>
   public sealed partial class LS2GC_GSInfo : pb::IMessage<LS2GC_GSInfo> {
     private static readonly pb::MessageParser<LS2GC_GSInfo> _parser = new pb::MessageParser<LS2GC_GSInfo>(() => new LS2GC_GSInfo());
     private pb::UnknownFieldSet _unknownFields;

@@ -41,6 +41,9 @@ namespace Protos {
 
   }
   #region Messages
+  /// <summary>
+  ///客户端请求注册
+  /// </summary>
   public sealed partial class GC2LS_AskRegister : pb::IMessage<GC2LS_AskRegister> {
     private static readonly pb::MessageParser<GC2LS_AskRegister> _parser = new pb::MessageParser<GC2LS_AskRegister>(() => new GC2LS_AskRegister());
     private pb::UnknownFieldSet _unknownFields;
@@ -288,6 +291,9 @@ namespace Protos {
 
   }
 
+  /// <summary>
+  ///客户端请求登陆
+  /// </summary>
   public sealed partial class GC2LS_AskLogin : pb::IMessage<GC2LS_AskLogin> {
     private static readonly pb::MessageParser<GC2LS_AskLogin> _parser = new pb::MessageParser<GC2LS_AskLogin>(() => new GC2LS_AskLogin());
     private pb::UnknownFieldSet _unknownFields;

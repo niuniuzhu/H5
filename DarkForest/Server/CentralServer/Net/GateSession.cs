@@ -11,6 +11,7 @@ namespace CentralServer.Net
 		{
 			this._msgCenter.Register( Protos.MsgID.EGAskPing, this.OnGSAskPing );
 			this._msgCenter.Register( Protos.MsgID.EGs2CsReportState, this.OnGs2CsReportState );
+			this._msgCenter.Register( Protos.MsgID.EGs2CsGcaskLogin, this.OnGs2CsGcaskLogin );
 		}
 
 		protected override void OnEstablish()
@@ -44,6 +45,18 @@ namespace CentralServer.Net
 			Protos.GS2CS_ReportState reportState = ( Protos.GS2CS_ReportState )message;
 			this.logicID = reportState.GsInfo.Id;
 			return CS.instance.GCStateReportHandler( reportState.GsInfo );
+		}
+
+		private ErrorCode OnGs2CsGcaskLogin( Google.Protobuf.IMessage message )
+		{
+			Protos.GS2CS_GCAskLogin gcAskLogin = ( Protos.GS2CS_GCAskLogin )message;
+			ErrorCode errorCode = CS.instance.HandleGCAskLoginFromGS( gcAskLogin.SessionID, this.id );
+			Protos.CS2GS_GCLoginRet gcAskLoginRet = ProtoCreator.R_GS2CS_GCAskLogin( gcAskLogin.Opts.Pid );
+			gcAskLoginRet.Result = errorCode != ErrorCode.Success
+									   ? Protos.CS2GS_GCLoginRet.Types.EResult.Failed
+									   : Protos.CS2GS_GCLoginRet.Types.EResult.Success;
+			this.Send( gcAskLoginRet );
+			return ErrorCode.Success;
 		}
 	}
 }

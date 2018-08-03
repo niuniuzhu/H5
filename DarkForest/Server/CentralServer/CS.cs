@@ -16,9 +16,13 @@ namespace CentralServer
 		public CSNetSessionMgr netSessionMgr { get; } = new CSNetSessionMgr();
 		public CSConfig config { get; private set; }
 
-		private readonly Scheduler _heartBeater = new Scheduler();
-
+		//所有已登陆的客户端的sid
+		private readonly HashSet<ulong> _gcSIDForLogin = new HashSet<ulong>();
+		//客户端sid和GS sid的映射
+		private readonly Dictionary<ulong, uint> _gcSIDToGsSID = new Dictionary<ulong, uint>();
+		//GS id和其数据的映射
 		private readonly Dictionary<uint, GSInfo> _gsIDToInfos = new Dictionary<uint, GSInfo>();
+		private readonly Scheduler _heartBeater = new Scheduler();
 
 		public ErrorCode Initialize( Options opts )
 		{

@@ -4,17 +4,25 @@ package Protos;
 import "Global.proto";
 import "GS2CS.proto";
 
+//GS信息
 message CS2LS_GSInfos{
 	MsgOpts opts = 1;
 	repeated Protos.GSInfo gsInfo = 2;
 }
 
+//GS信息
 message CS2LS_GSInfo{
 	MsgOpts opts = 1;
 	Protos.GSInfo gsInfo = 2;
 }
 
+//GS关服
 message CS2LS_GSLost{
 	MsgOpts opts = 1;
 	uint32 gsid = 2;
+}
+
+//回应LS通知有客户端登陆
+message CS2LS_GCLoginRet{
+	MsgOpts opts = 1;
 }

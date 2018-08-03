@@ -17,26 +17,25 @@ define(["libs/protobufjs"], function($protobuf) {
          */
         var Protos = {};
     
-        Protos.CS2LS_GSInfos = (function() {
+        Protos.CS2GS_GCLoginRet = (function() {
     
             /**
-             * Properties of a CS2LS_GSInfos.
+             * Properties of a CS2GS_GCLoginRet.
              * @memberof Protos
-             * @interface ICS2LS_GSInfos
-             * @property {Protos.IMsgOpts|null} [opts] CS2LS_GSInfos opts
-             * @property {Array.<Protos.IGSInfo>|null} [gsInfo] CS2LS_GSInfos gsInfo
+             * @interface ICS2GS_GCLoginRet
+             * @property {Protos.IMsgOpts|null} [opts] CS2GS_GCLoginRet opts
+             * @property {Protos.CS2GS_GCLoginRet.EResult|null} [result] CS2GS_GCLoginRet result
              */
     
             /**
-             * Constructs a new CS2LS_GSInfos.
+             * Constructs a new CS2GS_GCLoginRet.
              * @memberof Protos
-             * @classdesc Represents a CS2LS_GSInfos.
-             * @implements ICS2LS_GSInfos
+             * @classdesc Represents a CS2GS_GCLoginRet.
+             * @implements ICS2GS_GCLoginRet
              * @constructor
-             * @param {Protos.ICS2LS_GSInfos=} [properties] Properties to set
+             * @param {Protos.ICS2GS_GCLoginRet=} [properties] Properties to set
              */
-            function CS2LS_GSInfos(properties) {
-                this.gsInfo = [];
+            function CS2GS_GCLoginRet(properties) {
                 if (properties)
                     for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                         if (properties[keys[i]] != null)
@@ -44,81 +43,80 @@ define(["libs/protobufjs"], function($protobuf) {
             }
     
             /**
-             * CS2LS_GSInfos opts.
+             * CS2GS_GCLoginRet opts.
              * @member {Protos.IMsgOpts|null|undefined} opts
-             * @memberof Protos.CS2LS_GSInfos
+             * @memberof Protos.CS2GS_GCLoginRet
              * @instance
              */
-            CS2LS_GSInfos.prototype.opts = null;
+            CS2GS_GCLoginRet.prototype.opts = null;
     
             /**
-             * CS2LS_GSInfos gsInfo.
-             * @member {Array.<Protos.IGSInfo>} gsInfo
-             * @memberof Protos.CS2LS_GSInfos
+             * CS2GS_GCLoginRet result.
+             * @member {Protos.CS2GS_GCLoginRet.EResult} result
+             * @memberof Protos.CS2GS_GCLoginRet
              * @instance
              */
-            CS2LS_GSInfos.prototype.gsInfo = $util.emptyArray;
+            CS2GS_GCLoginRet.prototype.result = 0;
     
             /**
-             * Creates a new CS2LS_GSInfos instance using the specified properties.
+             * Creates a new CS2GS_GCLoginRet instance using the specified properties.
              * @function create
-             * @memberof Protos.CS2LS_GSInfos
+             * @memberof Protos.CS2GS_GCLoginRet
              * @static
-             * @param {Protos.ICS2LS_GSInfos=} [properties] Properties to set
-             * @returns {Protos.CS2LS_GSInfos} CS2LS_GSInfos instance
+             * @param {Protos.ICS2GS_GCLoginRet=} [properties] Properties to set
+             * @returns {Protos.CS2GS_GCLoginRet} CS2GS_GCLoginRet instance
              */
-            CS2LS_GSInfos.create = function create(properties) {
-                return new CS2LS_GSInfos(properties);
+            CS2GS_GCLoginRet.create = function create(properties) {
+                return new CS2GS_GCLoginRet(properties);
             };
     
             /**
-             * Encodes the specified CS2LS_GSInfos message. Does not implicitly {@link Protos.CS2LS_GSInfos.verify|verify} messages.
+             * Encodes the specified CS2GS_GCLoginRet message. Does not implicitly {@link Protos.CS2GS_GCLoginRet.verify|verify} messages.
              * @function encode
-             * @memberof Protos.CS2LS_GSInfos
+             * @memberof Protos.CS2GS_GCLoginRet
              * @static
-             * @param {Protos.ICS2LS_GSInfos} message CS2LS_GSInfos message or plain object to encode
+             * @param {Protos.ICS2GS_GCLoginRet} message CS2GS_GCLoginRet message or plain object to encode
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            CS2LS_GSInfos.encode = function encode(message, writer) {
+            CS2GS_GCLoginRet.encode = function encode(message, writer) {
                 if (!writer)
                     writer = $Writer.create();
                 if (message.opts != null && message.hasOwnProperty("opts"))
                     $root.Protos.MsgOpts.encode(message.opts, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                if (message.gsInfo != null && message.gsInfo.length)
-                    for (var i = 0; i < message.gsInfo.length; ++i)
-                        $root.Protos.GSInfo.encode(message.gsInfo[i], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                if (message.result != null && message.hasOwnProperty("result"))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int32(message.result);
                 return writer;
             };
     
             /**
-             * Encodes the specified CS2LS_GSInfos message, length delimited. Does not implicitly {@link Protos.CS2LS_GSInfos.verify|verify} messages.
+             * Encodes the specified CS2GS_GCLoginRet message, length delimited. Does not implicitly {@link Protos.CS2GS_GCLoginRet.verify|verify} messages.
              * @function encodeDelimited
-             * @memberof Protos.CS2LS_GSInfos
+             * @memberof Protos.CS2GS_GCLoginRet
              * @static
-             * @param {Protos.ICS2LS_GSInfos} message CS2LS_GSInfos message or plain object to encode
+             * @param {Protos.ICS2GS_GCLoginRet} message CS2GS_GCLoginRet message or plain object to encode
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            CS2LS_GSInfos.encodeDelimited = function encodeDelimited(message, writer) {
+            CS2GS_GCLoginRet.encodeDelimited = function encodeDelimited(message, writer) {
                 return this.encode(message, writer).ldelim();
             };
     
             /**
-             * Decodes a CS2LS_GSInfos message from the specified reader or buffer.
+             * Decodes a CS2GS_GCLoginRet message from the specified reader or buffer.
              * @function decode
-             * @memberof Protos.CS2LS_GSInfos
+             * @memberof Protos.CS2GS_GCLoginRet
              * @static
              * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
              * @param {number} [length] Message length if known beforehand
-             * @returns {Protos.CS2LS_GSInfos} CS2LS_GSInfos
+             * @returns {Protos.CS2GS_GCLoginRet} CS2GS_GCLoginRet
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            CS2LS_GSInfos.decode = function decode(reader, length) {
+            CS2GS_GCLoginRet.decode = function decode(reader, length) {
                 if (!(reader instanceof $Reader))
                     reader = $Reader.create(reader);
-                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.Protos.CS2LS_GSInfos();
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.Protos.CS2GS_GCLoginRet();
                 while (reader.pos < end) {
                     var tag = reader.uint32();
                     switch (tag >>> 3) {
@@ -126,9 +124,7 @@ define(["libs/protobufjs"], function($protobuf) {
                         message.opts = $root.Protos.MsgOpts.decode(reader, reader.uint32());
                         break;
                     case 2:
-                        if (!(message.gsInfo && message.gsInfo.length))
-                            message.gsInfo = [];
-                        message.gsInfo.push($root.Protos.GSInfo.decode(reader, reader.uint32()));
+                        message.result = reader.int32();
                         break;
                     default:
                         reader.skipType(tag & 7);
@@ -139,30 +135,30 @@ define(["libs/protobufjs"], function($protobuf) {
             };
     
             /**
-             * Decodes a CS2LS_GSInfos message from the specified reader or buffer, length delimited.
+             * Decodes a CS2GS_GCLoginRet message from the specified reader or buffer, length delimited.
              * @function decodeDelimited
-             * @memberof Protos.CS2LS_GSInfos
+             * @memberof Protos.CS2GS_GCLoginRet
              * @static
              * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-             * @returns {Protos.CS2LS_GSInfos} CS2LS_GSInfos
+             * @returns {Protos.CS2GS_GCLoginRet} CS2GS_GCLoginRet
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            CS2LS_GSInfos.decodeDelimited = function decodeDelimited(reader) {
+            CS2GS_GCLoginRet.decodeDelimited = function decodeDelimited(reader) {
                 if (!(reader instanceof $Reader))
                     reader = new $Reader(reader);
                 return this.decode(reader, reader.uint32());
             };
     
             /**
-             * Verifies a CS2LS_GSInfos message.
+             * Verifies a CS2GS_GCLoginRet message.
              * @function verify
-             * @memberof Protos.CS2LS_GSInfos
+             * @memberof Protos.CS2GS_GCLoginRet
              * @static
              * @param {Object.<string,*>} message Plain object to verify
              * @returns {string|null} `null` if valid, otherwise the reason why it is not
              */
-            CS2LS_GSInfos.verify = function verify(message) {
+            CS2GS_GCLoginRet.verify = function verify(message) {
                 if (typeof message !== "object" || message === null)
                     return "object expected";
                 if (message.opts != null && message.hasOwnProperty("opts")) {
@@ -170,522 +166,97 @@ define(["libs/protobufjs"], function($protobuf) {
                     if (error)
                         return "opts." + error;
                 }
-                if (message.gsInfo != null && message.hasOwnProperty("gsInfo")) {
-                    if (!Array.isArray(message.gsInfo))
-                        return "gsInfo: array expected";
-                    for (var i = 0; i < message.gsInfo.length; ++i) {
-                        var error = $root.Protos.GSInfo.verify(message.gsInfo[i]);
-                        if (error)
-                            return "gsInfo." + error;
-                    }
-                }
-                return null;
-            };
-    
-            /**
-             * Creates a CS2LS_GSInfos message from a plain object. Also converts values to their respective internal types.
-             * @function fromObject
-             * @memberof Protos.CS2LS_GSInfos
-             * @static
-             * @param {Object.<string,*>} object Plain object
-             * @returns {Protos.CS2LS_GSInfos} CS2LS_GSInfos
-             */
-            CS2LS_GSInfos.fromObject = function fromObject(object) {
-                if (object instanceof $root.Protos.CS2LS_GSInfos)
-                    return object;
-                var message = new $root.Protos.CS2LS_GSInfos();
-                if (object.opts != null) {
-                    if (typeof object.opts !== "object")
-                        throw TypeError(".Protos.CS2LS_GSInfos.opts: object expected");
-                    message.opts = $root.Protos.MsgOpts.fromObject(object.opts);
-                }
-                if (object.gsInfo) {
-                    if (!Array.isArray(object.gsInfo))
-                        throw TypeError(".Protos.CS2LS_GSInfos.gsInfo: array expected");
-                    message.gsInfo = [];
-                    for (var i = 0; i < object.gsInfo.length; ++i) {
-                        if (typeof object.gsInfo[i] !== "object")
-                            throw TypeError(".Protos.CS2LS_GSInfos.gsInfo: object expected");
-                        message.gsInfo[i] = $root.Protos.GSInfo.fromObject(object.gsInfo[i]);
-                    }
-                }
-                return message;
-            };
-    
-            /**
-             * Creates a plain object from a CS2LS_GSInfos message. Also converts values to other types if specified.
-             * @function toObject
-             * @memberof Protos.CS2LS_GSInfos
-             * @static
-             * @param {Protos.CS2LS_GSInfos} message CS2LS_GSInfos
-             * @param {$protobuf.IConversionOptions} [options] Conversion options
-             * @returns {Object.<string,*>} Plain object
-             */
-            CS2LS_GSInfos.toObject = function toObject(message, options) {
-                if (!options)
-                    options = {};
-                var object = {};
-                if (options.arrays || options.defaults)
-                    object.gsInfo = [];
-                if (options.defaults)
-                    object.opts = null;
-                if (message.opts != null && message.hasOwnProperty("opts"))
-                    object.opts = $root.Protos.MsgOpts.toObject(message.opts, options);
-                if (message.gsInfo && message.gsInfo.length) {
-                    object.gsInfo = [];
-                    for (var j = 0; j < message.gsInfo.length; ++j)
-                        object.gsInfo[j] = $root.Protos.GSInfo.toObject(message.gsInfo[j], options);
-                }
-                return object;
-            };
-    
-            /**
-             * Converts this CS2LS_GSInfos to JSON.
-             * @function toJSON
-             * @memberof Protos.CS2LS_GSInfos
-             * @instance
-             * @returns {Object.<string,*>} JSON object
-             */
-            CS2LS_GSInfos.prototype.toJSON = function toJSON() {
-                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-            };
-    
-            return CS2LS_GSInfos;
-        })();
-    
-        Protos.CS2LS_GSInfo = (function() {
-    
-            /**
-             * Properties of a CS2LS_GSInfo.
-             * @memberof Protos
-             * @interface ICS2LS_GSInfo
-             * @property {Protos.IMsgOpts|null} [opts] CS2LS_GSInfo opts
-             * @property {Protos.IGSInfo|null} [gsInfo] CS2LS_GSInfo gsInfo
-             */
-    
-            /**
-             * Constructs a new CS2LS_GSInfo.
-             * @memberof Protos
-             * @classdesc Represents a CS2LS_GSInfo.
-             * @implements ICS2LS_GSInfo
-             * @constructor
-             * @param {Protos.ICS2LS_GSInfo=} [properties] Properties to set
-             */
-            function CS2LS_GSInfo(properties) {
-                if (properties)
-                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                        if (properties[keys[i]] != null)
-                            this[keys[i]] = properties[keys[i]];
-            }
-    
-            /**
-             * CS2LS_GSInfo opts.
-             * @member {Protos.IMsgOpts|null|undefined} opts
-             * @memberof Protos.CS2LS_GSInfo
-             * @instance
-             */
-            CS2LS_GSInfo.prototype.opts = null;
-    
-            /**
-             * CS2LS_GSInfo gsInfo.
-             * @member {Protos.IGSInfo|null|undefined} gsInfo
-             * @memberof Protos.CS2LS_GSInfo
-             * @instance
-             */
-            CS2LS_GSInfo.prototype.gsInfo = null;
-    
-            /**
-             * Creates a new CS2LS_GSInfo instance using the specified properties.
-             * @function create
-             * @memberof Protos.CS2LS_GSInfo
-             * @static
-             * @param {Protos.ICS2LS_GSInfo=} [properties] Properties to set
-             * @returns {Protos.CS2LS_GSInfo} CS2LS_GSInfo instance
-             */
-            CS2LS_GSInfo.create = function create(properties) {
-                return new CS2LS_GSInfo(properties);
-            };
-    
-            /**
-             * Encodes the specified CS2LS_GSInfo message. Does not implicitly {@link Protos.CS2LS_GSInfo.verify|verify} messages.
-             * @function encode
-             * @memberof Protos.CS2LS_GSInfo
-             * @static
-             * @param {Protos.ICS2LS_GSInfo} message CS2LS_GSInfo message or plain object to encode
-             * @param {$protobuf.Writer} [writer] Writer to encode to
-             * @returns {$protobuf.Writer} Writer
-             */
-            CS2LS_GSInfo.encode = function encode(message, writer) {
-                if (!writer)
-                    writer = $Writer.create();
-                if (message.opts != null && message.hasOwnProperty("opts"))
-                    $root.Protos.MsgOpts.encode(message.opts, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                if (message.gsInfo != null && message.hasOwnProperty("gsInfo"))
-                    $root.Protos.GSInfo.encode(message.gsInfo, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                return writer;
-            };
-    
-            /**
-             * Encodes the specified CS2LS_GSInfo message, length delimited. Does not implicitly {@link Protos.CS2LS_GSInfo.verify|verify} messages.
-             * @function encodeDelimited
-             * @memberof Protos.CS2LS_GSInfo
-             * @static
-             * @param {Protos.ICS2LS_GSInfo} message CS2LS_GSInfo message or plain object to encode
-             * @param {$protobuf.Writer} [writer] Writer to encode to
-             * @returns {$protobuf.Writer} Writer
-             */
-            CS2LS_GSInfo.encodeDelimited = function encodeDelimited(message, writer) {
-                return this.encode(message, writer).ldelim();
-            };
-    
-            /**
-             * Decodes a CS2LS_GSInfo message from the specified reader or buffer.
-             * @function decode
-             * @memberof Protos.CS2LS_GSInfo
-             * @static
-             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-             * @param {number} [length] Message length if known beforehand
-             * @returns {Protos.CS2LS_GSInfo} CS2LS_GSInfo
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            CS2LS_GSInfo.decode = function decode(reader, length) {
-                if (!(reader instanceof $Reader))
-                    reader = $Reader.create(reader);
-                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.Protos.CS2LS_GSInfo();
-                while (reader.pos < end) {
-                    var tag = reader.uint32();
-                    switch (tag >>> 3) {
-                    case 1:
-                        message.opts = $root.Protos.MsgOpts.decode(reader, reader.uint32());
-                        break;
-                    case 2:
-                        message.gsInfo = $root.Protos.GSInfo.decode(reader, reader.uint32());
-                        break;
+                if (message.result != null && message.hasOwnProperty("result"))
+                    switch (message.result) {
                     default:
-                        reader.skipType(tag & 7);
+                        return "result: enum value expected";
+                    case 0:
+                    case 1:
                         break;
                     }
-                }
-                return message;
-            };
-    
-            /**
-             * Decodes a CS2LS_GSInfo message from the specified reader or buffer, length delimited.
-             * @function decodeDelimited
-             * @memberof Protos.CS2LS_GSInfo
-             * @static
-             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-             * @returns {Protos.CS2LS_GSInfo} CS2LS_GSInfo
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            CS2LS_GSInfo.decodeDelimited = function decodeDelimited(reader) {
-                if (!(reader instanceof $Reader))
-                    reader = new $Reader(reader);
-                return this.decode(reader, reader.uint32());
-            };
-    
-            /**
-             * Verifies a CS2LS_GSInfo message.
-             * @function verify
-             * @memberof Protos.CS2LS_GSInfo
-             * @static
-             * @param {Object.<string,*>} message Plain object to verify
-             * @returns {string|null} `null` if valid, otherwise the reason why it is not
-             */
-            CS2LS_GSInfo.verify = function verify(message) {
-                if (typeof message !== "object" || message === null)
-                    return "object expected";
-                if (message.opts != null && message.hasOwnProperty("opts")) {
-                    var error = $root.Protos.MsgOpts.verify(message.opts);
-                    if (error)
-                        return "opts." + error;
-                }
-                if (message.gsInfo != null && message.hasOwnProperty("gsInfo")) {
-                    var error = $root.Protos.GSInfo.verify(message.gsInfo);
-                    if (error)
-                        return "gsInfo." + error;
-                }
                 return null;
             };
     
             /**
-             * Creates a CS2LS_GSInfo message from a plain object. Also converts values to their respective internal types.
+             * Creates a CS2GS_GCLoginRet message from a plain object. Also converts values to their respective internal types.
              * @function fromObject
-             * @memberof Protos.CS2LS_GSInfo
+             * @memberof Protos.CS2GS_GCLoginRet
              * @static
              * @param {Object.<string,*>} object Plain object
-             * @returns {Protos.CS2LS_GSInfo} CS2LS_GSInfo
+             * @returns {Protos.CS2GS_GCLoginRet} CS2GS_GCLoginRet
              */
-            CS2LS_GSInfo.fromObject = function fromObject(object) {
-                if (object instanceof $root.Protos.CS2LS_GSInfo)
+            CS2GS_GCLoginRet.fromObject = function fromObject(object) {
+                if (object instanceof $root.Protos.CS2GS_GCLoginRet)
                     return object;
-                var message = new $root.Protos.CS2LS_GSInfo();
+                var message = new $root.Protos.CS2GS_GCLoginRet();
                 if (object.opts != null) {
                     if (typeof object.opts !== "object")
-                        throw TypeError(".Protos.CS2LS_GSInfo.opts: object expected");
+                        throw TypeError(".Protos.CS2GS_GCLoginRet.opts: object expected");
                     message.opts = $root.Protos.MsgOpts.fromObject(object.opts);
                 }
-                if (object.gsInfo != null) {
-                    if (typeof object.gsInfo !== "object")
-                        throw TypeError(".Protos.CS2LS_GSInfo.gsInfo: object expected");
-                    message.gsInfo = $root.Protos.GSInfo.fromObject(object.gsInfo);
+                switch (object.result) {
+                case "Success":
+                case 0:
+                    message.result = 0;
+                    break;
+                case "Failed":
+                case 1:
+                    message.result = 1;
+                    break;
                 }
                 return message;
             };
     
             /**
-             * Creates a plain object from a CS2LS_GSInfo message. Also converts values to other types if specified.
+             * Creates a plain object from a CS2GS_GCLoginRet message. Also converts values to other types if specified.
              * @function toObject
-             * @memberof Protos.CS2LS_GSInfo
+             * @memberof Protos.CS2GS_GCLoginRet
              * @static
-             * @param {Protos.CS2LS_GSInfo} message CS2LS_GSInfo
+             * @param {Protos.CS2GS_GCLoginRet} message CS2GS_GCLoginRet
              * @param {$protobuf.IConversionOptions} [options] Conversion options
              * @returns {Object.<string,*>} Plain object
              */
-            CS2LS_GSInfo.toObject = function toObject(message, options) {
+            CS2GS_GCLoginRet.toObject = function toObject(message, options) {
                 if (!options)
                     options = {};
                 var object = {};
                 if (options.defaults) {
                     object.opts = null;
-                    object.gsInfo = null;
+                    object.result = options.enums === String ? "Success" : 0;
                 }
                 if (message.opts != null && message.hasOwnProperty("opts"))
                     object.opts = $root.Protos.MsgOpts.toObject(message.opts, options);
-                if (message.gsInfo != null && message.hasOwnProperty("gsInfo"))
-                    object.gsInfo = $root.Protos.GSInfo.toObject(message.gsInfo, options);
+                if (message.result != null && message.hasOwnProperty("result"))
+                    object.result = options.enums === String ? $root.Protos.CS2GS_GCLoginRet.EResult[message.result] : message.result;
                 return object;
             };
     
             /**
-             * Converts this CS2LS_GSInfo to JSON.
+             * Converts this CS2GS_GCLoginRet to JSON.
              * @function toJSON
-             * @memberof Protos.CS2LS_GSInfo
+             * @memberof Protos.CS2GS_GCLoginRet
              * @instance
              * @returns {Object.<string,*>} JSON object
              */
-            CS2LS_GSInfo.prototype.toJSON = function toJSON() {
+            CS2GS_GCLoginRet.prototype.toJSON = function toJSON() {
                 return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
             };
     
-            return CS2LS_GSInfo;
-        })();
-    
-        Protos.CS2LS_GSLost = (function() {
-    
             /**
-             * Properties of a CS2LS_GSLost.
-             * @memberof Protos
-             * @interface ICS2LS_GSLost
-             * @property {Protos.IMsgOpts|null} [opts] CS2LS_GSLost opts
-             * @property {number|null} [gsid] CS2LS_GSLost gsid
+             * EResult enum.
+             * @name Protos.CS2GS_GCLoginRet.EResult
+             * @enum {string}
+             * @property {number} Success=0 Success value
+             * @property {number} Failed=1 Failed value
              */
+            CS2GS_GCLoginRet.EResult = (function() {
+                var valuesById = {}, values = Object.create(valuesById);
+                values[valuesById[0] = "Success"] = 0;
+                values[valuesById[1] = "Failed"] = 1;
+                return values;
+            })();
     
-            /**
-             * Constructs a new CS2LS_GSLost.
-             * @memberof Protos
-             * @classdesc Represents a CS2LS_GSLost.
-             * @implements ICS2LS_GSLost
-             * @constructor
-             * @param {Protos.ICS2LS_GSLost=} [properties] Properties to set
-             */
-            function CS2LS_GSLost(properties) {
-                if (properties)
-                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                        if (properties[keys[i]] != null)
-                            this[keys[i]] = properties[keys[i]];
-            }
-    
-            /**
-             * CS2LS_GSLost opts.
-             * @member {Protos.IMsgOpts|null|undefined} opts
-             * @memberof Protos.CS2LS_GSLost
-             * @instance
-             */
-            CS2LS_GSLost.prototype.opts = null;
-    
-            /**
-             * CS2LS_GSLost gsid.
-             * @member {number} gsid
-             * @memberof Protos.CS2LS_GSLost
-             * @instance
-             */
-            CS2LS_GSLost.prototype.gsid = 0;
-    
-            /**
-             * Creates a new CS2LS_GSLost instance using the specified properties.
-             * @function create
-             * @memberof Protos.CS2LS_GSLost
-             * @static
-             * @param {Protos.ICS2LS_GSLost=} [properties] Properties to set
-             * @returns {Protos.CS2LS_GSLost} CS2LS_GSLost instance
-             */
-            CS2LS_GSLost.create = function create(properties) {
-                return new CS2LS_GSLost(properties);
-            };
-    
-            /**
-             * Encodes the specified CS2LS_GSLost message. Does not implicitly {@link Protos.CS2LS_GSLost.verify|verify} messages.
-             * @function encode
-             * @memberof Protos.CS2LS_GSLost
-             * @static
-             * @param {Protos.ICS2LS_GSLost} message CS2LS_GSLost message or plain object to encode
-             * @param {$protobuf.Writer} [writer] Writer to encode to
-             * @returns {$protobuf.Writer} Writer
-             */
-            CS2LS_GSLost.encode = function encode(message, writer) {
-                if (!writer)
-                    writer = $Writer.create();
-                if (message.opts != null && message.hasOwnProperty("opts"))
-                    $root.Protos.MsgOpts.encode(message.opts, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                if (message.gsid != null && message.hasOwnProperty("gsid"))
-                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.gsid);
-                return writer;
-            };
-    
-            /**
-             * Encodes the specified CS2LS_GSLost message, length delimited. Does not implicitly {@link Protos.CS2LS_GSLost.verify|verify} messages.
-             * @function encodeDelimited
-             * @memberof Protos.CS2LS_GSLost
-             * @static
-             * @param {Protos.ICS2LS_GSLost} message CS2LS_GSLost message or plain object to encode
-             * @param {$protobuf.Writer} [writer] Writer to encode to
-             * @returns {$protobuf.Writer} Writer
-             */
-            CS2LS_GSLost.encodeDelimited = function encodeDelimited(message, writer) {
-                return this.encode(message, writer).ldelim();
-            };
-    
-            /**
-             * Decodes a CS2LS_GSLost message from the specified reader or buffer.
-             * @function decode
-             * @memberof Protos.CS2LS_GSLost
-             * @static
-             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-             * @param {number} [length] Message length if known beforehand
-             * @returns {Protos.CS2LS_GSLost} CS2LS_GSLost
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            CS2LS_GSLost.decode = function decode(reader, length) {
-                if (!(reader instanceof $Reader))
-                    reader = $Reader.create(reader);
-                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.Protos.CS2LS_GSLost();
-                while (reader.pos < end) {
-                    var tag = reader.uint32();
-                    switch (tag >>> 3) {
-                    case 1:
-                        message.opts = $root.Protos.MsgOpts.decode(reader, reader.uint32());
-                        break;
-                    case 2:
-                        message.gsid = reader.uint32();
-                        break;
-                    default:
-                        reader.skipType(tag & 7);
-                        break;
-                    }
-                }
-                return message;
-            };
-    
-            /**
-             * Decodes a CS2LS_GSLost message from the specified reader or buffer, length delimited.
-             * @function decodeDelimited
-             * @memberof Protos.CS2LS_GSLost
-             * @static
-             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-             * @returns {Protos.CS2LS_GSLost} CS2LS_GSLost
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            CS2LS_GSLost.decodeDelimited = function decodeDelimited(reader) {
-                if (!(reader instanceof $Reader))
-                    reader = new $Reader(reader);
-                return this.decode(reader, reader.uint32());
-            };
-    
-            /**
-             * Verifies a CS2LS_GSLost message.
-             * @function verify
-             * @memberof Protos.CS2LS_GSLost
-             * @static
-             * @param {Object.<string,*>} message Plain object to verify
-             * @returns {string|null} `null` if valid, otherwise the reason why it is not
-             */
-            CS2LS_GSLost.verify = function verify(message) {
-                if (typeof message !== "object" || message === null)
-                    return "object expected";
-                if (message.opts != null && message.hasOwnProperty("opts")) {
-                    var error = $root.Protos.MsgOpts.verify(message.opts);
-                    if (error)
-                        return "opts." + error;
-                }
-                if (message.gsid != null && message.hasOwnProperty("gsid"))
-                    if (!$util.isInteger(message.gsid))
-                        return "gsid: integer expected";
-                return null;
-            };
-    
-            /**
-             * Creates a CS2LS_GSLost message from a plain object. Also converts values to their respective internal types.
-             * @function fromObject
-             * @memberof Protos.CS2LS_GSLost
-             * @static
-             * @param {Object.<string,*>} object Plain object
-             * @returns {Protos.CS2LS_GSLost} CS2LS_GSLost
-             */
-            CS2LS_GSLost.fromObject = function fromObject(object) {
-                if (object instanceof $root.Protos.CS2LS_GSLost)
-                    return object;
-                var message = new $root.Protos.CS2LS_GSLost();
-                if (object.opts != null) {
-                    if (typeof object.opts !== "object")
-                        throw TypeError(".Protos.CS2LS_GSLost.opts: object expected");
-                    message.opts = $root.Protos.MsgOpts.fromObject(object.opts);
-                }
-                if (object.gsid != null)
-                    message.gsid = object.gsid >>> 0;
-                return message;
-            };
-    
-            /**
-             * Creates a plain object from a CS2LS_GSLost message. Also converts values to other types if specified.
-             * @function toObject
-             * @memberof Protos.CS2LS_GSLost
-             * @static
-             * @param {Protos.CS2LS_GSLost} message CS2LS_GSLost
-             * @param {$protobuf.IConversionOptions} [options] Conversion options
-             * @returns {Object.<string,*>} Plain object
-             */
-            CS2LS_GSLost.toObject = function toObject(message, options) {
-                if (!options)
-                    options = {};
-                var object = {};
-                if (options.defaults) {
-                    object.opts = null;
-                    object.gsid = 0;
-                }
-                if (message.opts != null && message.hasOwnProperty("opts"))
-                    object.opts = $root.Protos.MsgOpts.toObject(message.opts, options);
-                if (message.gsid != null && message.hasOwnProperty("gsid"))
-                    object.gsid = message.gsid;
-                return object;
-            };
-    
-            /**
-             * Converts this CS2LS_GSLost to JSON.
-             * @function toJSON
-             * @memberof Protos.CS2LS_GSLost
-             * @instance
-             * @returns {Object.<string,*>} JSON object
-             */
-            CS2LS_GSLost.prototype.toJSON = function toJSON() {
-                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-            };
-    
-            return CS2LS_GSLost;
+            return CS2GS_GCLoginRet;
         })();
     
         /**
@@ -701,11 +272,15 @@ define(["libs/protobufjs"], function($protobuf) {
          * @property {number} eLS2GC_RegResult=300 eLS2GC_RegResult value
          * @property {number} eLS2GC_LoginResult=301 eLS2GC_LoginResult value
          * @property {number} eLS2GC_GSInfo=302 eLS2GC_GSInfo value
-         * @property {number} eGS2CS_ReportState=400 eGS2CS_ReportState value
-         * @property {number} eGS2GC_LoginResult=500 eGS2GC_LoginResult value
-         * @property {number} eCS2LS_GSInfos=600 eCS2LS_GSInfos value
-         * @property {number} eCS2LS_GSInfo=601 eCS2LS_GSInfo value
-         * @property {number} eCS2LS_GSLost=602 eCS2LS_GSLost value
+         * @property {number} eLS2CS_GCLogin=400 eLS2CS_GCLogin value
+         * @property {number} eGS2CS_ReportState=500 eGS2CS_ReportState value
+         * @property {number} eGS2CS_GCAskLogin=501 eGS2CS_GCAskLogin value
+         * @property {number} eGS2GC_LoginResult=600 eGS2GC_LoginResult value
+         * @property {number} eCS2LS_GSInfos=700 eCS2LS_GSInfos value
+         * @property {number} eCS2LS_GSInfo=701 eCS2LS_GSInfo value
+         * @property {number} eCS2LS_GSLost=702 eCS2LS_GSLost value
+         * @property {number} eCS2LS_GCLoginRet=703 eCS2LS_GCLoginRet value
+         * @property {number} eCS2GS_GCLoginRet=800 eCS2GS_GCLoginRet value
          */
         Protos.MsgID = (function() {
             var valuesById = {}, values = Object.create(valuesById);
@@ -718,11 +293,15 @@ define(["libs/protobufjs"], function($protobuf) {
             values[valuesById[300] = "eLS2GC_RegResult"] = 300;
             values[valuesById[301] = "eLS2GC_LoginResult"] = 301;
             values[valuesById[302] = "eLS2GC_GSInfo"] = 302;
-            values[valuesById[400] = "eGS2CS_ReportState"] = 400;
-            values[valuesById[500] = "eGS2GC_LoginResult"] = 500;
-            values[valuesById[600] = "eCS2LS_GSInfos"] = 600;
-            values[valuesById[601] = "eCS2LS_GSInfo"] = 601;
-            values[valuesById[602] = "eCS2LS_GSLost"] = 602;
+            values[valuesById[400] = "eLS2CS_GCLogin"] = 400;
+            values[valuesById[500] = "eGS2CS_ReportState"] = 500;
+            values[valuesById[501] = "eGS2CS_GCAskLogin"] = 501;
+            values[valuesById[600] = "eGS2GC_LoginResult"] = 600;
+            values[valuesById[700] = "eCS2LS_GSInfos"] = 700;
+            values[valuesById[701] = "eCS2LS_GSInfo"] = 701;
+            values[valuesById[702] = "eCS2LS_GSLost"] = 702;
+            values[valuesById[703] = "eCS2LS_GCLoginRet"] = 703;
+            values[valuesById[800] = "eCS2GS_GCLoginRet"] = 800;
             return values;
         })();
     
@@ -1492,6 +1071,869 @@ define(["libs/protobufjs"], function($protobuf) {
             return G_AskPingRet;
         })();
     
+        Protos.CS2LS_GSInfos = (function() {
+    
+            /**
+             * Properties of a CS2LS_GSInfos.
+             * @memberof Protos
+             * @interface ICS2LS_GSInfos
+             * @property {Protos.IMsgOpts|null} [opts] CS2LS_GSInfos opts
+             * @property {Array.<Protos.IGSInfo>|null} [gsInfo] CS2LS_GSInfos gsInfo
+             */
+    
+            /**
+             * Constructs a new CS2LS_GSInfos.
+             * @memberof Protos
+             * @classdesc Represents a CS2LS_GSInfos.
+             * @implements ICS2LS_GSInfos
+             * @constructor
+             * @param {Protos.ICS2LS_GSInfos=} [properties] Properties to set
+             */
+            function CS2LS_GSInfos(properties) {
+                this.gsInfo = [];
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+    
+            /**
+             * CS2LS_GSInfos opts.
+             * @member {Protos.IMsgOpts|null|undefined} opts
+             * @memberof Protos.CS2LS_GSInfos
+             * @instance
+             */
+            CS2LS_GSInfos.prototype.opts = null;
+    
+            /**
+             * CS2LS_GSInfos gsInfo.
+             * @member {Array.<Protos.IGSInfo>} gsInfo
+             * @memberof Protos.CS2LS_GSInfos
+             * @instance
+             */
+            CS2LS_GSInfos.prototype.gsInfo = $util.emptyArray;
+    
+            /**
+             * Creates a new CS2LS_GSInfos instance using the specified properties.
+             * @function create
+             * @memberof Protos.CS2LS_GSInfos
+             * @static
+             * @param {Protos.ICS2LS_GSInfos=} [properties] Properties to set
+             * @returns {Protos.CS2LS_GSInfos} CS2LS_GSInfos instance
+             */
+            CS2LS_GSInfos.create = function create(properties) {
+                return new CS2LS_GSInfos(properties);
+            };
+    
+            /**
+             * Encodes the specified CS2LS_GSInfos message. Does not implicitly {@link Protos.CS2LS_GSInfos.verify|verify} messages.
+             * @function encode
+             * @memberof Protos.CS2LS_GSInfos
+             * @static
+             * @param {Protos.ICS2LS_GSInfos} message CS2LS_GSInfos message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            CS2LS_GSInfos.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.opts != null && message.hasOwnProperty("opts"))
+                    $root.Protos.MsgOpts.encode(message.opts, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                if (message.gsInfo != null && message.gsInfo.length)
+                    for (var i = 0; i < message.gsInfo.length; ++i)
+                        $root.Protos.GSInfo.encode(message.gsInfo[i], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                return writer;
+            };
+    
+            /**
+             * Encodes the specified CS2LS_GSInfos message, length delimited. Does not implicitly {@link Protos.CS2LS_GSInfos.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof Protos.CS2LS_GSInfos
+             * @static
+             * @param {Protos.ICS2LS_GSInfos} message CS2LS_GSInfos message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            CS2LS_GSInfos.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+    
+            /**
+             * Decodes a CS2LS_GSInfos message from the specified reader or buffer.
+             * @function decode
+             * @memberof Protos.CS2LS_GSInfos
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {Protos.CS2LS_GSInfos} CS2LS_GSInfos
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            CS2LS_GSInfos.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.Protos.CS2LS_GSInfos();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1:
+                        message.opts = $root.Protos.MsgOpts.decode(reader, reader.uint32());
+                        break;
+                    case 2:
+                        if (!(message.gsInfo && message.gsInfo.length))
+                            message.gsInfo = [];
+                        message.gsInfo.push($root.Protos.GSInfo.decode(reader, reader.uint32()));
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                return message;
+            };
+    
+            /**
+             * Decodes a CS2LS_GSInfos message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof Protos.CS2LS_GSInfos
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {Protos.CS2LS_GSInfos} CS2LS_GSInfos
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            CS2LS_GSInfos.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+    
+            /**
+             * Verifies a CS2LS_GSInfos message.
+             * @function verify
+             * @memberof Protos.CS2LS_GSInfos
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            CS2LS_GSInfos.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.opts != null && message.hasOwnProperty("opts")) {
+                    var error = $root.Protos.MsgOpts.verify(message.opts);
+                    if (error)
+                        return "opts." + error;
+                }
+                if (message.gsInfo != null && message.hasOwnProperty("gsInfo")) {
+                    if (!Array.isArray(message.gsInfo))
+                        return "gsInfo: array expected";
+                    for (var i = 0; i < message.gsInfo.length; ++i) {
+                        var error = $root.Protos.GSInfo.verify(message.gsInfo[i]);
+                        if (error)
+                            return "gsInfo." + error;
+                    }
+                }
+                return null;
+            };
+    
+            /**
+             * Creates a CS2LS_GSInfos message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof Protos.CS2LS_GSInfos
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {Protos.CS2LS_GSInfos} CS2LS_GSInfos
+             */
+            CS2LS_GSInfos.fromObject = function fromObject(object) {
+                if (object instanceof $root.Protos.CS2LS_GSInfos)
+                    return object;
+                var message = new $root.Protos.CS2LS_GSInfos();
+                if (object.opts != null) {
+                    if (typeof object.opts !== "object")
+                        throw TypeError(".Protos.CS2LS_GSInfos.opts: object expected");
+                    message.opts = $root.Protos.MsgOpts.fromObject(object.opts);
+                }
+                if (object.gsInfo) {
+                    if (!Array.isArray(object.gsInfo))
+                        throw TypeError(".Protos.CS2LS_GSInfos.gsInfo: array expected");
+                    message.gsInfo = [];
+                    for (var i = 0; i < object.gsInfo.length; ++i) {
+                        if (typeof object.gsInfo[i] !== "object")
+                            throw TypeError(".Protos.CS2LS_GSInfos.gsInfo: object expected");
+                        message.gsInfo[i] = $root.Protos.GSInfo.fromObject(object.gsInfo[i]);
+                    }
+                }
+                return message;
+            };
+    
+            /**
+             * Creates a plain object from a CS2LS_GSInfos message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof Protos.CS2LS_GSInfos
+             * @static
+             * @param {Protos.CS2LS_GSInfos} message CS2LS_GSInfos
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            CS2LS_GSInfos.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.arrays || options.defaults)
+                    object.gsInfo = [];
+                if (options.defaults)
+                    object.opts = null;
+                if (message.opts != null && message.hasOwnProperty("opts"))
+                    object.opts = $root.Protos.MsgOpts.toObject(message.opts, options);
+                if (message.gsInfo && message.gsInfo.length) {
+                    object.gsInfo = [];
+                    for (var j = 0; j < message.gsInfo.length; ++j)
+                        object.gsInfo[j] = $root.Protos.GSInfo.toObject(message.gsInfo[j], options);
+                }
+                return object;
+            };
+    
+            /**
+             * Converts this CS2LS_GSInfos to JSON.
+             * @function toJSON
+             * @memberof Protos.CS2LS_GSInfos
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            CS2LS_GSInfos.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+    
+            return CS2LS_GSInfos;
+        })();
+    
+        Protos.CS2LS_GSInfo = (function() {
+    
+            /**
+             * Properties of a CS2LS_GSInfo.
+             * @memberof Protos
+             * @interface ICS2LS_GSInfo
+             * @property {Protos.IMsgOpts|null} [opts] CS2LS_GSInfo opts
+             * @property {Protos.IGSInfo|null} [gsInfo] CS2LS_GSInfo gsInfo
+             */
+    
+            /**
+             * Constructs a new CS2LS_GSInfo.
+             * @memberof Protos
+             * @classdesc Represents a CS2LS_GSInfo.
+             * @implements ICS2LS_GSInfo
+             * @constructor
+             * @param {Protos.ICS2LS_GSInfo=} [properties] Properties to set
+             */
+            function CS2LS_GSInfo(properties) {
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+    
+            /**
+             * CS2LS_GSInfo opts.
+             * @member {Protos.IMsgOpts|null|undefined} opts
+             * @memberof Protos.CS2LS_GSInfo
+             * @instance
+             */
+            CS2LS_GSInfo.prototype.opts = null;
+    
+            /**
+             * CS2LS_GSInfo gsInfo.
+             * @member {Protos.IGSInfo|null|undefined} gsInfo
+             * @memberof Protos.CS2LS_GSInfo
+             * @instance
+             */
+            CS2LS_GSInfo.prototype.gsInfo = null;
+    
+            /**
+             * Creates a new CS2LS_GSInfo instance using the specified properties.
+             * @function create
+             * @memberof Protos.CS2LS_GSInfo
+             * @static
+             * @param {Protos.ICS2LS_GSInfo=} [properties] Properties to set
+             * @returns {Protos.CS2LS_GSInfo} CS2LS_GSInfo instance
+             */
+            CS2LS_GSInfo.create = function create(properties) {
+                return new CS2LS_GSInfo(properties);
+            };
+    
+            /**
+             * Encodes the specified CS2LS_GSInfo message. Does not implicitly {@link Protos.CS2LS_GSInfo.verify|verify} messages.
+             * @function encode
+             * @memberof Protos.CS2LS_GSInfo
+             * @static
+             * @param {Protos.ICS2LS_GSInfo} message CS2LS_GSInfo message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            CS2LS_GSInfo.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.opts != null && message.hasOwnProperty("opts"))
+                    $root.Protos.MsgOpts.encode(message.opts, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                if (message.gsInfo != null && message.hasOwnProperty("gsInfo"))
+                    $root.Protos.GSInfo.encode(message.gsInfo, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                return writer;
+            };
+    
+            /**
+             * Encodes the specified CS2LS_GSInfo message, length delimited. Does not implicitly {@link Protos.CS2LS_GSInfo.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof Protos.CS2LS_GSInfo
+             * @static
+             * @param {Protos.ICS2LS_GSInfo} message CS2LS_GSInfo message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            CS2LS_GSInfo.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+    
+            /**
+             * Decodes a CS2LS_GSInfo message from the specified reader or buffer.
+             * @function decode
+             * @memberof Protos.CS2LS_GSInfo
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {Protos.CS2LS_GSInfo} CS2LS_GSInfo
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            CS2LS_GSInfo.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.Protos.CS2LS_GSInfo();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1:
+                        message.opts = $root.Protos.MsgOpts.decode(reader, reader.uint32());
+                        break;
+                    case 2:
+                        message.gsInfo = $root.Protos.GSInfo.decode(reader, reader.uint32());
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                return message;
+            };
+    
+            /**
+             * Decodes a CS2LS_GSInfo message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof Protos.CS2LS_GSInfo
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {Protos.CS2LS_GSInfo} CS2LS_GSInfo
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            CS2LS_GSInfo.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+    
+            /**
+             * Verifies a CS2LS_GSInfo message.
+             * @function verify
+             * @memberof Protos.CS2LS_GSInfo
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            CS2LS_GSInfo.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.opts != null && message.hasOwnProperty("opts")) {
+                    var error = $root.Protos.MsgOpts.verify(message.opts);
+                    if (error)
+                        return "opts." + error;
+                }
+                if (message.gsInfo != null && message.hasOwnProperty("gsInfo")) {
+                    var error = $root.Protos.GSInfo.verify(message.gsInfo);
+                    if (error)
+                        return "gsInfo." + error;
+                }
+                return null;
+            };
+    
+            /**
+             * Creates a CS2LS_GSInfo message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof Protos.CS2LS_GSInfo
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {Protos.CS2LS_GSInfo} CS2LS_GSInfo
+             */
+            CS2LS_GSInfo.fromObject = function fromObject(object) {
+                if (object instanceof $root.Protos.CS2LS_GSInfo)
+                    return object;
+                var message = new $root.Protos.CS2LS_GSInfo();
+                if (object.opts != null) {
+                    if (typeof object.opts !== "object")
+                        throw TypeError(".Protos.CS2LS_GSInfo.opts: object expected");
+                    message.opts = $root.Protos.MsgOpts.fromObject(object.opts);
+                }
+                if (object.gsInfo != null) {
+                    if (typeof object.gsInfo !== "object")
+                        throw TypeError(".Protos.CS2LS_GSInfo.gsInfo: object expected");
+                    message.gsInfo = $root.Protos.GSInfo.fromObject(object.gsInfo);
+                }
+                return message;
+            };
+    
+            /**
+             * Creates a plain object from a CS2LS_GSInfo message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof Protos.CS2LS_GSInfo
+             * @static
+             * @param {Protos.CS2LS_GSInfo} message CS2LS_GSInfo
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            CS2LS_GSInfo.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    object.opts = null;
+                    object.gsInfo = null;
+                }
+                if (message.opts != null && message.hasOwnProperty("opts"))
+                    object.opts = $root.Protos.MsgOpts.toObject(message.opts, options);
+                if (message.gsInfo != null && message.hasOwnProperty("gsInfo"))
+                    object.gsInfo = $root.Protos.GSInfo.toObject(message.gsInfo, options);
+                return object;
+            };
+    
+            /**
+             * Converts this CS2LS_GSInfo to JSON.
+             * @function toJSON
+             * @memberof Protos.CS2LS_GSInfo
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            CS2LS_GSInfo.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+    
+            return CS2LS_GSInfo;
+        })();
+    
+        Protos.CS2LS_GSLost = (function() {
+    
+            /**
+             * Properties of a CS2LS_GSLost.
+             * @memberof Protos
+             * @interface ICS2LS_GSLost
+             * @property {Protos.IMsgOpts|null} [opts] CS2LS_GSLost opts
+             * @property {number|null} [gsid] CS2LS_GSLost gsid
+             */
+    
+            /**
+             * Constructs a new CS2LS_GSLost.
+             * @memberof Protos
+             * @classdesc Represents a CS2LS_GSLost.
+             * @implements ICS2LS_GSLost
+             * @constructor
+             * @param {Protos.ICS2LS_GSLost=} [properties] Properties to set
+             */
+            function CS2LS_GSLost(properties) {
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+    
+            /**
+             * CS2LS_GSLost opts.
+             * @member {Protos.IMsgOpts|null|undefined} opts
+             * @memberof Protos.CS2LS_GSLost
+             * @instance
+             */
+            CS2LS_GSLost.prototype.opts = null;
+    
+            /**
+             * CS2LS_GSLost gsid.
+             * @member {number} gsid
+             * @memberof Protos.CS2LS_GSLost
+             * @instance
+             */
+            CS2LS_GSLost.prototype.gsid = 0;
+    
+            /**
+             * Creates a new CS2LS_GSLost instance using the specified properties.
+             * @function create
+             * @memberof Protos.CS2LS_GSLost
+             * @static
+             * @param {Protos.ICS2LS_GSLost=} [properties] Properties to set
+             * @returns {Protos.CS2LS_GSLost} CS2LS_GSLost instance
+             */
+            CS2LS_GSLost.create = function create(properties) {
+                return new CS2LS_GSLost(properties);
+            };
+    
+            /**
+             * Encodes the specified CS2LS_GSLost message. Does not implicitly {@link Protos.CS2LS_GSLost.verify|verify} messages.
+             * @function encode
+             * @memberof Protos.CS2LS_GSLost
+             * @static
+             * @param {Protos.ICS2LS_GSLost} message CS2LS_GSLost message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            CS2LS_GSLost.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.opts != null && message.hasOwnProperty("opts"))
+                    $root.Protos.MsgOpts.encode(message.opts, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                if (message.gsid != null && message.hasOwnProperty("gsid"))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.gsid);
+                return writer;
+            };
+    
+            /**
+             * Encodes the specified CS2LS_GSLost message, length delimited. Does not implicitly {@link Protos.CS2LS_GSLost.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof Protos.CS2LS_GSLost
+             * @static
+             * @param {Protos.ICS2LS_GSLost} message CS2LS_GSLost message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            CS2LS_GSLost.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+    
+            /**
+             * Decodes a CS2LS_GSLost message from the specified reader or buffer.
+             * @function decode
+             * @memberof Protos.CS2LS_GSLost
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {Protos.CS2LS_GSLost} CS2LS_GSLost
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            CS2LS_GSLost.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.Protos.CS2LS_GSLost();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1:
+                        message.opts = $root.Protos.MsgOpts.decode(reader, reader.uint32());
+                        break;
+                    case 2:
+                        message.gsid = reader.uint32();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                return message;
+            };
+    
+            /**
+             * Decodes a CS2LS_GSLost message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof Protos.CS2LS_GSLost
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {Protos.CS2LS_GSLost} CS2LS_GSLost
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            CS2LS_GSLost.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+    
+            /**
+             * Verifies a CS2LS_GSLost message.
+             * @function verify
+             * @memberof Protos.CS2LS_GSLost
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            CS2LS_GSLost.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.opts != null && message.hasOwnProperty("opts")) {
+                    var error = $root.Protos.MsgOpts.verify(message.opts);
+                    if (error)
+                        return "opts." + error;
+                }
+                if (message.gsid != null && message.hasOwnProperty("gsid"))
+                    if (!$util.isInteger(message.gsid))
+                        return "gsid: integer expected";
+                return null;
+            };
+    
+            /**
+             * Creates a CS2LS_GSLost message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof Protos.CS2LS_GSLost
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {Protos.CS2LS_GSLost} CS2LS_GSLost
+             */
+            CS2LS_GSLost.fromObject = function fromObject(object) {
+                if (object instanceof $root.Protos.CS2LS_GSLost)
+                    return object;
+                var message = new $root.Protos.CS2LS_GSLost();
+                if (object.opts != null) {
+                    if (typeof object.opts !== "object")
+                        throw TypeError(".Protos.CS2LS_GSLost.opts: object expected");
+                    message.opts = $root.Protos.MsgOpts.fromObject(object.opts);
+                }
+                if (object.gsid != null)
+                    message.gsid = object.gsid >>> 0;
+                return message;
+            };
+    
+            /**
+             * Creates a plain object from a CS2LS_GSLost message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof Protos.CS2LS_GSLost
+             * @static
+             * @param {Protos.CS2LS_GSLost} message CS2LS_GSLost
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            CS2LS_GSLost.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    object.opts = null;
+                    object.gsid = 0;
+                }
+                if (message.opts != null && message.hasOwnProperty("opts"))
+                    object.opts = $root.Protos.MsgOpts.toObject(message.opts, options);
+                if (message.gsid != null && message.hasOwnProperty("gsid"))
+                    object.gsid = message.gsid;
+                return object;
+            };
+    
+            /**
+             * Converts this CS2LS_GSLost to JSON.
+             * @function toJSON
+             * @memberof Protos.CS2LS_GSLost
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            CS2LS_GSLost.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+    
+            return CS2LS_GSLost;
+        })();
+    
+        Protos.CS2LS_GCLoginRet = (function() {
+    
+            /**
+             * Properties of a CS2LS_GCLoginRet.
+             * @memberof Protos
+             * @interface ICS2LS_GCLoginRet
+             * @property {Protos.IMsgOpts|null} [opts] CS2LS_GCLoginRet opts
+             */
+    
+            /**
+             * Constructs a new CS2LS_GCLoginRet.
+             * @memberof Protos
+             * @classdesc Represents a CS2LS_GCLoginRet.
+             * @implements ICS2LS_GCLoginRet
+             * @constructor
+             * @param {Protos.ICS2LS_GCLoginRet=} [properties] Properties to set
+             */
+            function CS2LS_GCLoginRet(properties) {
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+    
+            /**
+             * CS2LS_GCLoginRet opts.
+             * @member {Protos.IMsgOpts|null|undefined} opts
+             * @memberof Protos.CS2LS_GCLoginRet
+             * @instance
+             */
+            CS2LS_GCLoginRet.prototype.opts = null;
+    
+            /**
+             * Creates a new CS2LS_GCLoginRet instance using the specified properties.
+             * @function create
+             * @memberof Protos.CS2LS_GCLoginRet
+             * @static
+             * @param {Protos.ICS2LS_GCLoginRet=} [properties] Properties to set
+             * @returns {Protos.CS2LS_GCLoginRet} CS2LS_GCLoginRet instance
+             */
+            CS2LS_GCLoginRet.create = function create(properties) {
+                return new CS2LS_GCLoginRet(properties);
+            };
+    
+            /**
+             * Encodes the specified CS2LS_GCLoginRet message. Does not implicitly {@link Protos.CS2LS_GCLoginRet.verify|verify} messages.
+             * @function encode
+             * @memberof Protos.CS2LS_GCLoginRet
+             * @static
+             * @param {Protos.ICS2LS_GCLoginRet} message CS2LS_GCLoginRet message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            CS2LS_GCLoginRet.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.opts != null && message.hasOwnProperty("opts"))
+                    $root.Protos.MsgOpts.encode(message.opts, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                return writer;
+            };
+    
+            /**
+             * Encodes the specified CS2LS_GCLoginRet message, length delimited. Does not implicitly {@link Protos.CS2LS_GCLoginRet.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof Protos.CS2LS_GCLoginRet
+             * @static
+             * @param {Protos.ICS2LS_GCLoginRet} message CS2LS_GCLoginRet message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            CS2LS_GCLoginRet.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+    
+            /**
+             * Decodes a CS2LS_GCLoginRet message from the specified reader or buffer.
+             * @function decode
+             * @memberof Protos.CS2LS_GCLoginRet
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {Protos.CS2LS_GCLoginRet} CS2LS_GCLoginRet
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            CS2LS_GCLoginRet.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.Protos.CS2LS_GCLoginRet();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1:
+                        message.opts = $root.Protos.MsgOpts.decode(reader, reader.uint32());
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                return message;
+            };
+    
+            /**
+             * Decodes a CS2LS_GCLoginRet message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof Protos.CS2LS_GCLoginRet
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {Protos.CS2LS_GCLoginRet} CS2LS_GCLoginRet
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            CS2LS_GCLoginRet.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+    
+            /**
+             * Verifies a CS2LS_GCLoginRet message.
+             * @function verify
+             * @memberof Protos.CS2LS_GCLoginRet
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            CS2LS_GCLoginRet.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.opts != null && message.hasOwnProperty("opts")) {
+                    var error = $root.Protos.MsgOpts.verify(message.opts);
+                    if (error)
+                        return "opts." + error;
+                }
+                return null;
+            };
+    
+            /**
+             * Creates a CS2LS_GCLoginRet message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof Protos.CS2LS_GCLoginRet
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {Protos.CS2LS_GCLoginRet} CS2LS_GCLoginRet
+             */
+            CS2LS_GCLoginRet.fromObject = function fromObject(object) {
+                if (object instanceof $root.Protos.CS2LS_GCLoginRet)
+                    return object;
+                var message = new $root.Protos.CS2LS_GCLoginRet();
+                if (object.opts != null) {
+                    if (typeof object.opts !== "object")
+                        throw TypeError(".Protos.CS2LS_GCLoginRet.opts: object expected");
+                    message.opts = $root.Protos.MsgOpts.fromObject(object.opts);
+                }
+                return message;
+            };
+    
+            /**
+             * Creates a plain object from a CS2LS_GCLoginRet message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof Protos.CS2LS_GCLoginRet
+             * @static
+             * @param {Protos.CS2LS_GCLoginRet} message CS2LS_GCLoginRet
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            CS2LS_GCLoginRet.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults)
+                    object.opts = null;
+                if (message.opts != null && message.hasOwnProperty("opts"))
+                    object.opts = $root.Protos.MsgOpts.toObject(message.opts, options);
+                return object;
+            };
+    
+            /**
+             * Converts this CS2LS_GCLoginRet to JSON.
+             * @function toJSON
+             * @memberof Protos.CS2LS_GCLoginRet
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            CS2LS_GCLoginRet.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+    
+            return CS2LS_GCLoginRet;
+        })();
+    
         Protos.GSInfo = (function() {
     
             /**
@@ -2049,6 +2491,235 @@ define(["libs/protobufjs"], function($protobuf) {
             };
     
             return GS2CS_ReportState;
+        })();
+    
+        Protos.GS2CS_GCAskLogin = (function() {
+    
+            /**
+             * Properties of a GS2CS_GCAskLogin.
+             * @memberof Protos
+             * @interface IGS2CS_GCAskLogin
+             * @property {Protos.IMsgOpts|null} [opts] GS2CS_GCAskLogin opts
+             * @property {number|null} [sessionID] GS2CS_GCAskLogin sessionID
+             */
+    
+            /**
+             * Constructs a new GS2CS_GCAskLogin.
+             * @memberof Protos
+             * @classdesc Represents a GS2CS_GCAskLogin.
+             * @implements IGS2CS_GCAskLogin
+             * @constructor
+             * @param {Protos.IGS2CS_GCAskLogin=} [properties] Properties to set
+             */
+            function GS2CS_GCAskLogin(properties) {
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+    
+            /**
+             * GS2CS_GCAskLogin opts.
+             * @member {Protos.IMsgOpts|null|undefined} opts
+             * @memberof Protos.GS2CS_GCAskLogin
+             * @instance
+             */
+            GS2CS_GCAskLogin.prototype.opts = null;
+    
+            /**
+             * GS2CS_GCAskLogin sessionID.
+             * @member {number} sessionID
+             * @memberof Protos.GS2CS_GCAskLogin
+             * @instance
+             */
+            GS2CS_GCAskLogin.prototype.sessionID = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+    
+            /**
+             * Creates a new GS2CS_GCAskLogin instance using the specified properties.
+             * @function create
+             * @memberof Protos.GS2CS_GCAskLogin
+             * @static
+             * @param {Protos.IGS2CS_GCAskLogin=} [properties] Properties to set
+             * @returns {Protos.GS2CS_GCAskLogin} GS2CS_GCAskLogin instance
+             */
+            GS2CS_GCAskLogin.create = function create(properties) {
+                return new GS2CS_GCAskLogin(properties);
+            };
+    
+            /**
+             * Encodes the specified GS2CS_GCAskLogin message. Does not implicitly {@link Protos.GS2CS_GCAskLogin.verify|verify} messages.
+             * @function encode
+             * @memberof Protos.GS2CS_GCAskLogin
+             * @static
+             * @param {Protos.IGS2CS_GCAskLogin} message GS2CS_GCAskLogin message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GS2CS_GCAskLogin.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.opts != null && message.hasOwnProperty("opts"))
+                    $root.Protos.MsgOpts.encode(message.opts, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                if (message.sessionID != null && message.hasOwnProperty("sessionID"))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.sessionID);
+                return writer;
+            };
+    
+            /**
+             * Encodes the specified GS2CS_GCAskLogin message, length delimited. Does not implicitly {@link Protos.GS2CS_GCAskLogin.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof Protos.GS2CS_GCAskLogin
+             * @static
+             * @param {Protos.IGS2CS_GCAskLogin} message GS2CS_GCAskLogin message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GS2CS_GCAskLogin.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+    
+            /**
+             * Decodes a GS2CS_GCAskLogin message from the specified reader or buffer.
+             * @function decode
+             * @memberof Protos.GS2CS_GCAskLogin
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {Protos.GS2CS_GCAskLogin} GS2CS_GCAskLogin
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GS2CS_GCAskLogin.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.Protos.GS2CS_GCAskLogin();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1:
+                        message.opts = $root.Protos.MsgOpts.decode(reader, reader.uint32());
+                        break;
+                    case 2:
+                        message.sessionID = reader.uint64();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                return message;
+            };
+    
+            /**
+             * Decodes a GS2CS_GCAskLogin message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof Protos.GS2CS_GCAskLogin
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {Protos.GS2CS_GCAskLogin} GS2CS_GCAskLogin
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GS2CS_GCAskLogin.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+    
+            /**
+             * Verifies a GS2CS_GCAskLogin message.
+             * @function verify
+             * @memberof Protos.GS2CS_GCAskLogin
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            GS2CS_GCAskLogin.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.opts != null && message.hasOwnProperty("opts")) {
+                    var error = $root.Protos.MsgOpts.verify(message.opts);
+                    if (error)
+                        return "opts." + error;
+                }
+                if (message.sessionID != null && message.hasOwnProperty("sessionID"))
+                    if (!$util.isInteger(message.sessionID) && !(message.sessionID && $util.isInteger(message.sessionID.low) && $util.isInteger(message.sessionID.high)))
+                        return "sessionID: integer|Long expected";
+                return null;
+            };
+    
+            /**
+             * Creates a GS2CS_GCAskLogin message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof Protos.GS2CS_GCAskLogin
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {Protos.GS2CS_GCAskLogin} GS2CS_GCAskLogin
+             */
+            GS2CS_GCAskLogin.fromObject = function fromObject(object) {
+                if (object instanceof $root.Protos.GS2CS_GCAskLogin)
+                    return object;
+                var message = new $root.Protos.GS2CS_GCAskLogin();
+                if (object.opts != null) {
+                    if (typeof object.opts !== "object")
+                        throw TypeError(".Protos.GS2CS_GCAskLogin.opts: object expected");
+                    message.opts = $root.Protos.MsgOpts.fromObject(object.opts);
+                }
+                if (object.sessionID != null)
+                    if ($util.Long)
+                        (message.sessionID = $util.Long.fromValue(object.sessionID)).unsigned = true;
+                    else if (typeof object.sessionID === "string")
+                        message.sessionID = parseInt(object.sessionID, 10);
+                    else if (typeof object.sessionID === "number")
+                        message.sessionID = object.sessionID;
+                    else if (typeof object.sessionID === "object")
+                        message.sessionID = new $util.LongBits(object.sessionID.low >>> 0, object.sessionID.high >>> 0).toNumber(true);
+                return message;
+            };
+    
+            /**
+             * Creates a plain object from a GS2CS_GCAskLogin message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof Protos.GS2CS_GCAskLogin
+             * @static
+             * @param {Protos.GS2CS_GCAskLogin} message GS2CS_GCAskLogin
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            GS2CS_GCAskLogin.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    object.opts = null;
+                    if ($util.Long) {
+                        var long = new $util.Long(0, 0, true);
+                        object.sessionID = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                    } else
+                        object.sessionID = options.longs === String ? "0" : 0;
+                }
+                if (message.opts != null && message.hasOwnProperty("opts"))
+                    object.opts = $root.Protos.MsgOpts.toObject(message.opts, options);
+                if (message.sessionID != null && message.hasOwnProperty("sessionID"))
+                    if (typeof message.sessionID === "number")
+                        object.sessionID = options.longs === String ? String(message.sessionID) : message.sessionID;
+                    else
+                        object.sessionID = options.longs === String ? $util.Long.prototype.toString.call(message.sessionID) : options.longs === Number ? new $util.LongBits(message.sessionID.low >>> 0, message.sessionID.high >>> 0).toNumber(true) : message.sessionID;
+                return object;
+            };
+    
+            /**
+             * Converts this GS2CS_GCAskLogin to JSON.
+             * @function toJSON
+             * @memberof Protos.GS2CS_GCAskLogin
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            GS2CS_GCAskLogin.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+    
+            return GS2CS_GCAskLogin;
         })();
     
         Protos.GC2GS_AskLogin = (function() {
@@ -3060,6 +3731,235 @@ define(["libs/protobufjs"], function($protobuf) {
             })();
     
             return GS2GC_LoginResult;
+        })();
+    
+        Protos.LS2CS_GCLogin = (function() {
+    
+            /**
+             * Properties of a LS2CS_GCLogin.
+             * @memberof Protos
+             * @interface ILS2CS_GCLogin
+             * @property {Protos.IMsgOpts|null} [opts] LS2CS_GCLogin opts
+             * @property {number|null} [sessionID] LS2CS_GCLogin sessionID
+             */
+    
+            /**
+             * Constructs a new LS2CS_GCLogin.
+             * @memberof Protos
+             * @classdesc Represents a LS2CS_GCLogin.
+             * @implements ILS2CS_GCLogin
+             * @constructor
+             * @param {Protos.ILS2CS_GCLogin=} [properties] Properties to set
+             */
+            function LS2CS_GCLogin(properties) {
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+    
+            /**
+             * LS2CS_GCLogin opts.
+             * @member {Protos.IMsgOpts|null|undefined} opts
+             * @memberof Protos.LS2CS_GCLogin
+             * @instance
+             */
+            LS2CS_GCLogin.prototype.opts = null;
+    
+            /**
+             * LS2CS_GCLogin sessionID.
+             * @member {number} sessionID
+             * @memberof Protos.LS2CS_GCLogin
+             * @instance
+             */
+            LS2CS_GCLogin.prototype.sessionID = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+    
+            /**
+             * Creates a new LS2CS_GCLogin instance using the specified properties.
+             * @function create
+             * @memberof Protos.LS2CS_GCLogin
+             * @static
+             * @param {Protos.ILS2CS_GCLogin=} [properties] Properties to set
+             * @returns {Protos.LS2CS_GCLogin} LS2CS_GCLogin instance
+             */
+            LS2CS_GCLogin.create = function create(properties) {
+                return new LS2CS_GCLogin(properties);
+            };
+    
+            /**
+             * Encodes the specified LS2CS_GCLogin message. Does not implicitly {@link Protos.LS2CS_GCLogin.verify|verify} messages.
+             * @function encode
+             * @memberof Protos.LS2CS_GCLogin
+             * @static
+             * @param {Protos.ILS2CS_GCLogin} message LS2CS_GCLogin message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            LS2CS_GCLogin.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.opts != null && message.hasOwnProperty("opts"))
+                    $root.Protos.MsgOpts.encode(message.opts, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                if (message.sessionID != null && message.hasOwnProperty("sessionID"))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.sessionID);
+                return writer;
+            };
+    
+            /**
+             * Encodes the specified LS2CS_GCLogin message, length delimited. Does not implicitly {@link Protos.LS2CS_GCLogin.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof Protos.LS2CS_GCLogin
+             * @static
+             * @param {Protos.ILS2CS_GCLogin} message LS2CS_GCLogin message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            LS2CS_GCLogin.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+    
+            /**
+             * Decodes a LS2CS_GCLogin message from the specified reader or buffer.
+             * @function decode
+             * @memberof Protos.LS2CS_GCLogin
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {Protos.LS2CS_GCLogin} LS2CS_GCLogin
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            LS2CS_GCLogin.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.Protos.LS2CS_GCLogin();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1:
+                        message.opts = $root.Protos.MsgOpts.decode(reader, reader.uint32());
+                        break;
+                    case 2:
+                        message.sessionID = reader.uint64();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                return message;
+            };
+    
+            /**
+             * Decodes a LS2CS_GCLogin message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof Protos.LS2CS_GCLogin
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {Protos.LS2CS_GCLogin} LS2CS_GCLogin
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            LS2CS_GCLogin.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+    
+            /**
+             * Verifies a LS2CS_GCLogin message.
+             * @function verify
+             * @memberof Protos.LS2CS_GCLogin
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            LS2CS_GCLogin.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.opts != null && message.hasOwnProperty("opts")) {
+                    var error = $root.Protos.MsgOpts.verify(message.opts);
+                    if (error)
+                        return "opts." + error;
+                }
+                if (message.sessionID != null && message.hasOwnProperty("sessionID"))
+                    if (!$util.isInteger(message.sessionID) && !(message.sessionID && $util.isInteger(message.sessionID.low) && $util.isInteger(message.sessionID.high)))
+                        return "sessionID: integer|Long expected";
+                return null;
+            };
+    
+            /**
+             * Creates a LS2CS_GCLogin message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof Protos.LS2CS_GCLogin
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {Protos.LS2CS_GCLogin} LS2CS_GCLogin
+             */
+            LS2CS_GCLogin.fromObject = function fromObject(object) {
+                if (object instanceof $root.Protos.LS2CS_GCLogin)
+                    return object;
+                var message = new $root.Protos.LS2CS_GCLogin();
+                if (object.opts != null) {
+                    if (typeof object.opts !== "object")
+                        throw TypeError(".Protos.LS2CS_GCLogin.opts: object expected");
+                    message.opts = $root.Protos.MsgOpts.fromObject(object.opts);
+                }
+                if (object.sessionID != null)
+                    if ($util.Long)
+                        (message.sessionID = $util.Long.fromValue(object.sessionID)).unsigned = true;
+                    else if (typeof object.sessionID === "string")
+                        message.sessionID = parseInt(object.sessionID, 10);
+                    else if (typeof object.sessionID === "number")
+                        message.sessionID = object.sessionID;
+                    else if (typeof object.sessionID === "object")
+                        message.sessionID = new $util.LongBits(object.sessionID.low >>> 0, object.sessionID.high >>> 0).toNumber(true);
+                return message;
+            };
+    
+            /**
+             * Creates a plain object from a LS2CS_GCLogin message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof Protos.LS2CS_GCLogin
+             * @static
+             * @param {Protos.LS2CS_GCLogin} message LS2CS_GCLogin
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            LS2CS_GCLogin.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    object.opts = null;
+                    if ($util.Long) {
+                        var long = new $util.Long(0, 0, true);
+                        object.sessionID = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                    } else
+                        object.sessionID = options.longs === String ? "0" : 0;
+                }
+                if (message.opts != null && message.hasOwnProperty("opts"))
+                    object.opts = $root.Protos.MsgOpts.toObject(message.opts, options);
+                if (message.sessionID != null && message.hasOwnProperty("sessionID"))
+                    if (typeof message.sessionID === "number")
+                        object.sessionID = options.longs === String ? String(message.sessionID) : message.sessionID;
+                    else
+                        object.sessionID = options.longs === String ? $util.Long.prototype.toString.call(message.sessionID) : options.longs === Number ? new $util.LongBits(message.sessionID.low >>> 0, message.sessionID.high >>> 0).toNumber(true) : message.sessionID;
+                return object;
+            };
+    
+            /**
+             * Converts this LS2CS_GCLogin to JSON.
+             * @function toJSON
+             * @memberof Protos.LS2CS_GCLogin
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            LS2CS_GCLogin.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+    
+            return LS2CS_GCLogin;
         })();
     
         Protos.LS2GC_RegResult = (function() {

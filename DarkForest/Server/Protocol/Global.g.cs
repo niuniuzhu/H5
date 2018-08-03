@@ -30,13 +30,16 @@ namespace Protos {
             "UxAEIjgKCUdfQXNrUGluZxIdCgRvcHRzGAEgASgLMg8uUHJvdG9zLk1zZ09w",
             "dHMSDAoEdGltZRgCIAEoAyJKCgxHX0Fza1BpbmdSZXQSHQoEb3B0cxgBIAEo",
             "CzIPLlByb3Rvcy5Nc2dPcHRzEg0KBXN0aW1lGAIgASgDEgwKBHRpbWUYAyAB",
-            "KAMqrgIKBU1zZ0lEEgwKCFVuZGVmaW5lEAASDgoKZUdfQXNrUGluZxAKEhEK",
+            "KAMqiwMKBU1zZ0lEEgwKCFVuZGVmaW5lEAASDgoKZUdfQXNrUGluZxAKEhEK",
             "DWVHX0Fza1BpbmdSZXQQCxIWChJlR0MyTFNfQXNrUmVnaXN0ZXIQZBITCg9l",
             "R0MyTFNfQXNrTG9naW4QZRIUCg9lR0MyR1NfQXNrTG9naW4QyAESFQoQZUxT",
             "MkdDX1JlZ1Jlc3VsdBCsAhIXChJlTFMyR0NfTG9naW5SZXN1bHQQrQISEgoN",
-            "ZUxTMkdDX0dTSW5mbxCuAhIXChJlR1MyQ1NfUmVwb3J0U3RhdGUQkAMSFwoS",
-            "ZUdTMkdDX0xvZ2luUmVzdWx0EPQDEhMKDmVDUzJMU19HU0luZm9zENgEEhIK",
-            "DWVDUzJMU19HU0luZm8Q2QQSEgoNZUNTMkxTX0dTTG9zdBDaBGIGcHJvdG8z"));
+            "ZUxTMkdDX0dTSW5mbxCuAhITCg5lTFMyQ1NfR0NMb2dpbhCQAxIXChJlR1My",
+            "Q1NfUmVwb3J0U3RhdGUQ9AMSFgoRZUdTMkNTX0dDQXNrTG9naW4Q9QMSFwoS",
+            "ZUdTMkdDX0xvZ2luUmVzdWx0ENgEEhMKDmVDUzJMU19HU0luZm9zELwFEhIK",
+            "DWVDUzJMU19HU0luZm8QvQUSEgoNZUNTMkxTX0dTTG9zdBC+BRIWChFlQ1My",
+            "TFNfR0NMb2dpblJldBC/BRIWChFlQ1MyR1NfR0NMb2dpblJldBCgBmIGcHJv",
+            "dG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Protos.MsgID), }, new pbr::GeneratedClrTypeInfo[] {
@@ -59,11 +62,15 @@ namespace Protos {
     [pbr::OriginalName("eLS2GC_RegResult")] ELs2GcRegResult = 300,
     [pbr::OriginalName("eLS2GC_LoginResult")] ELs2GcLoginResult = 301,
     [pbr::OriginalName("eLS2GC_GSInfo")] ELs2GcGsinfo = 302,
-    [pbr::OriginalName("eGS2CS_ReportState")] EGs2CsReportState = 400,
-    [pbr::OriginalName("eGS2GC_LoginResult")] EGs2GcLoginResult = 500,
-    [pbr::OriginalName("eCS2LS_GSInfos")] ECs2LsGsinfos = 600,
-    [pbr::OriginalName("eCS2LS_GSInfo")] ECs2LsGsinfo = 601,
-    [pbr::OriginalName("eCS2LS_GSLost")] ECs2LsGslost = 602,
+    [pbr::OriginalName("eLS2CS_GCLogin")] ELs2CsGclogin = 400,
+    [pbr::OriginalName("eGS2CS_ReportState")] EGs2CsReportState = 500,
+    [pbr::OriginalName("eGS2CS_GCAskLogin")] EGs2CsGcaskLogin = 501,
+    [pbr::OriginalName("eGS2GC_LoginResult")] EGs2GcLoginResult = 600,
+    [pbr::OriginalName("eCS2LS_GSInfos")] ECs2LsGsinfos = 700,
+    [pbr::OriginalName("eCS2LS_GSInfo")] ECs2LsGsinfo = 701,
+    [pbr::OriginalName("eCS2LS_GSLost")] ECs2LsGslost = 702,
+    [pbr::OriginalName("eCS2LS_GCLoginRet")] ECs2LsGcloginRet = 703,
+    [pbr::OriginalName("eCS2GS_GCLoginRet")] ECs2GsGcloginRet = 800,
   }
 
   #endregion

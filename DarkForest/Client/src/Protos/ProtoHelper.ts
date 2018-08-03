@@ -15,11 +15,15 @@ export class ProtoCreator {
 		[Protos.LS2GC_RegResult, <Protos.MsgID>300],
 		[Protos.LS2GC_LoginResult, <Protos.MsgID>301],
 		[Protos.LS2GC_GSInfo, <Protos.MsgID>302],
-		[Protos.GS2CS_ReportState, <Protos.MsgID>400],
-		[Protos.GS2GC_LoginResult, <Protos.MsgID>500],
-		[Protos.CS2LS_GSInfos, <Protos.MsgID>600],
-		[Protos.CS2LS_GSInfo, <Protos.MsgID>601],
-		[Protos.CS2LS_GSLost, <Protos.MsgID>602],
+		[Protos.LS2CS_GCLogin, <Protos.MsgID>400],
+		[Protos.GS2CS_ReportState, <Protos.MsgID>500],
+		[Protos.GS2CS_GCAskLogin, <Protos.MsgID>501],
+		[Protos.GS2GC_LoginResult, <Protos.MsgID>600],
+		[Protos.CS2LS_GSInfos, <Protos.MsgID>700],
+		[Protos.CS2LS_GSInfo, <Protos.MsgID>701],
+		[Protos.CS2LS_GSLost, <Protos.MsgID>702],
+		[Protos.CS2LS_GCLoginRet, <Protos.MsgID>703],
+		[Protos.CS2GS_GCLoginRet, <Protos.MsgID>800],
 	]);
 
 	private static readonly _ID2TYPE = new Map<Protos.MsgID, new () => any>([
@@ -31,11 +35,15 @@ export class ProtoCreator {
 		[<Protos.MsgID>300, Protos.LS2GC_RegResult],
 		[<Protos.MsgID>301, Protos.LS2GC_LoginResult],
 		[<Protos.MsgID>302, Protos.LS2GC_GSInfo],
-		[<Protos.MsgID>400, Protos.GS2CS_ReportState],
-		[<Protos.MsgID>500, Protos.GS2GC_LoginResult],
-		[<Protos.MsgID>600, Protos.CS2LS_GSInfos],
-		[<Protos.MsgID>601, Protos.CS2LS_GSInfo],
-		[<Protos.MsgID>602, Protos.CS2LS_GSLost],
+		[<Protos.MsgID>400, Protos.LS2CS_GCLogin],
+		[<Protos.MsgID>500, Protos.GS2CS_ReportState],
+		[<Protos.MsgID>501, Protos.GS2CS_GCAskLogin],
+		[<Protos.MsgID>600, Protos.GS2GC_LoginResult],
+		[<Protos.MsgID>700, Protos.CS2LS_GSInfos],
+		[<Protos.MsgID>701, Protos.CS2LS_GSInfo],
+		[<Protos.MsgID>702, Protos.CS2LS_GSLost],
+		[<Protos.MsgID>703, Protos.CS2LS_GCLoginRet],
+		[<Protos.MsgID>800, Protos.CS2GS_GCLoginRet],
 	]);
 
 	public static Q_G_AskPing(): Protos.G_AskPing {
@@ -90,9 +98,23 @@ export class ProtoCreator {
 		return msg;
 	}
 
+	public static Q_LS2CS_GCLogin(): Protos.LS2CS_GCLogin {
+		let msg = new Protos.LS2CS_GCLogin();
+		msg.opts = new Protos.MsgOpts();
+		msg.opts.flag |= Protos.MsgOpts.Flag.RPC;
+		return msg;
+	}
+
 	public static Q_GS2CS_ReportState(): Protos.GS2CS_ReportState {
 		let msg = new Protos.GS2CS_ReportState();
 		msg.opts = new Protos.MsgOpts();
+		return msg;
+	}
+
+	public static Q_GS2CS_GCAskLogin(): Protos.GS2CS_GCAskLogin {
+		let msg = new Protos.GS2CS_GCAskLogin();
+		msg.opts = new Protos.MsgOpts();
+		msg.opts.flag |= Protos.MsgOpts.Flag.RPC;
 		return msg;
 	}
 
@@ -116,6 +138,18 @@ export class ProtoCreator {
 
 	public static Q_CS2LS_GSLost(): Protos.CS2LS_GSLost {
 		let msg = new Protos.CS2LS_GSLost();
+		msg.opts = new Protos.MsgOpts();
+		return msg;
+	}
+
+	public static Q_CS2LS_GCLoginRet(): Protos.CS2LS_GCLoginRet {
+		let msg = new Protos.CS2LS_GCLoginRet();
+		msg.opts = new Protos.MsgOpts();
+		return msg;
+	}
+
+	public static Q_CS2GS_GCLoginRet(): Protos.CS2GS_GCLoginRet {
+		let msg = new Protos.CS2GS_GCLoginRet();
 		msg.opts = new Protos.MsgOpts();
 		return msg;
 	}
@@ -147,6 +181,22 @@ export class ProtoCreator {
 
 	public static R_GC2GS_AskLogin(pid: number): Protos.GS2GC_LoginResult {
 		let msg = new Protos.GS2GC_LoginResult();
+		msg.opts = new Protos.MsgOpts();
+		msg.opts.flag |= Protos.MsgOpts.Flag.RESP;
+		msg.opts.rpid = pid;
+		return msg;
+	}
+
+	public static R_LS2CS_GCLogin(pid: number): Protos.CS2LS_GCLoginRet {
+		let msg = new Protos.CS2LS_GCLoginRet();
+		msg.opts = new Protos.MsgOpts();
+		msg.opts.flag |= Protos.MsgOpts.Flag.RESP;
+		msg.opts.rpid = pid;
+		return msg;
+	}
+
+	public static R_GS2CS_GCAskLogin(pid: number): Protos.CS2GS_GCLoginRet {
+		let msg = new Protos.CS2GS_GCLoginRet();
 		msg.opts = new Protos.MsgOpts();
 		msg.opts.flag |= Protos.MsgOpts.Flag.RESP;
 		msg.opts.rpid = pid;
@@ -189,23 +239,39 @@ export class ProtoCreator {
 				return msg;
 			}
 			case 400: {
-				let msg = Protos.GS2CS_ReportState.decode(data, size);
+				let msg = Protos.LS2CS_GCLogin.decode(data, size);
 				return msg;
 			}
 			case 500: {
-				let msg = Protos.GS2GC_LoginResult.decode(data, size);
+				let msg = Protos.GS2CS_ReportState.decode(data, size);
+				return msg;
+			}
+			case 501: {
+				let msg = Protos.GS2CS_GCAskLogin.decode(data, size);
 				return msg;
 			}
 			case 600: {
+				let msg = Protos.GS2GC_LoginResult.decode(data, size);
+				return msg;
+			}
+			case 700: {
 				let msg = Protos.CS2LS_GSInfos.decode(data, size);
 				return msg;
 			}
-			case 601: {
+			case 701: {
 				let msg = Protos.CS2LS_GSInfo.decode(data, size);
 				return msg;
 			}
-			case 602: {
+			case 702: {
 				let msg = Protos.CS2LS_GSLost.decode(data, size);
+				return msg;
+			}
+			case 703: {
+				let msg = Protos.CS2LS_GCLoginRet.decode(data, size);
+				return msg;
+			}
+			case 800: {
+				let msg = Protos.CS2GS_GCLoginRet.decode(data, size);
 				return msg;
 			}
 		}
@@ -252,8 +318,18 @@ export class ProtoCreator {
 		return msg;
 	}
 
+	public static D_LS2CS_GCLogin(data: Uint8Array, size: number): Protos.LS2CS_GCLogin {
+		let msg = Protos.LS2CS_GCLogin.decode(data, size);
+		return msg;
+	}
+
 	public static D_GS2CS_ReportState(data: Uint8Array, size: number): Protos.GS2CS_ReportState {
 		let msg = Protos.GS2CS_ReportState.decode(data, size);
+		return msg;
+	}
+
+	public static D_GS2CS_GCAskLogin(data: Uint8Array, size: number): Protos.GS2CS_GCAskLogin {
+		let msg = Protos.GS2CS_GCAskLogin.decode(data, size);
 		return msg;
 	}
 
@@ -274,6 +350,16 @@ export class ProtoCreator {
 
 	public static D_CS2LS_GSLost(data: Uint8Array, size: number): Protos.CS2LS_GSLost {
 		let msg = Protos.CS2LS_GSLost.decode(data, size);
+		return msg;
+	}
+
+	public static D_CS2LS_GCLoginRet(data: Uint8Array, size: number): Protos.CS2LS_GCLoginRet {
+		let msg = Protos.CS2LS_GCLoginRet.decode(data, size);
+		return msg;
+	}
+
+	public static D_CS2GS_GCLoginRet(data: Uint8Array, size: number): Protos.CS2GS_GCLoginRet {
+		let msg = Protos.CS2GS_GCLoginRet.decode(data, size);
 		return msg;
 	}
 
@@ -305,19 +391,31 @@ export class ProtoCreator {
 				return new Protos.LS2GC_GSInfo();
 			}
 			case 400: {
-				return new Protos.GS2CS_ReportState();
+				return new Protos.LS2CS_GCLogin();
 			}
 			case 500: {
-				return new Protos.GS2GC_LoginResult();
+				return new Protos.GS2CS_ReportState();
+			}
+			case 501: {
+				return new Protos.GS2CS_GCAskLogin();
 			}
 			case 600: {
+				return new Protos.GS2GC_LoginResult();
+			}
+			case 700: {
 				return new Protos.CS2LS_GSInfos();
 			}
-			case 601: {
+			case 701: {
 				return new Protos.CS2LS_GSInfo();
 			}
-			case 602: {
+			case 702: {
 				return new Protos.CS2LS_GSLost();
+			}
+			case 703: {
+				return new Protos.CS2LS_GCLoginRet();
+			}
+			case 800: {
+				return new Protos.CS2GS_GCLoginRet();
 			}
 		}
 		return null;
@@ -351,19 +449,31 @@ export class ProtoCreator {
 				return (<Protos.LS2GC_GSInfo>message).opts;
 			}
 			case 400: {
-				return (<Protos.GS2CS_ReportState>message).opts;
+				return (<Protos.LS2CS_GCLogin>message).opts;
 			}
 			case 500: {
-				return (<Protos.GS2GC_LoginResult>message).opts;
+				return (<Protos.GS2CS_ReportState>message).opts;
+			}
+			case 501: {
+				return (<Protos.GS2CS_GCAskLogin>message).opts;
 			}
 			case 600: {
+				return (<Protos.GS2GC_LoginResult>message).opts;
+			}
+			case 700: {
 				return (<Protos.CS2LS_GSInfos>message).opts;
 			}
-			case 601: {
+			case 701: {
 				return (<Protos.CS2LS_GSInfo>message).opts;
 			}
-			case 602: {
+			case 702: {
 				return (<Protos.CS2LS_GSLost>message).opts;
+			}
+			case 703: {
+				return (<Protos.CS2LS_GCLoginRet>message).opts;
+			}
+			case 800: {
+				return (<Protos.CS2GS_GCLoginRet>message).opts;
 			}
 		}
 		return null;

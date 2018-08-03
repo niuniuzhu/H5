@@ -16,13 +16,19 @@ enum MsgID {
 	eLS2GC_LoginResult = 301;
 	eLS2GC_GSInfo = 302;
 
-	eGS2CS_ReportState = 400;
+	eLS2CS_GCLogin = 400;
 
-	eGS2GC_LoginResult = 500;
+	eGS2CS_ReportState = 500;
+	eGS2CS_GCAskLogin = 501;
 
-	eCS2LS_GSInfos = 600;
-	eCS2LS_GSInfo = 601;
-	eCS2LS_GSLost = 602;
+	eGS2GC_LoginResult = 600;
+
+	eCS2LS_GSInfos = 700;
+	eCS2LS_GSInfo = 701;
+	eCS2LS_GSLost = 702;
+	eCS2LS_GCLoginRet = 703;
+
+	eCS2GS_GCLoginRet = 800;
 }
 
 message MsgOpts {
@@ -58,6 +64,8 @@ message G_AskPingRet {
 		"GC2LS_AskLogin": "LS2GC_LoginResult",
 		"G_AskPing": "G_AskPingRet",
 		"GC2GS_AskLogin": "GS2GC_LoginResult",
+		"LS2CS_GCLogin": "CS2LS_GCLoginRet",
+		"GS2CS_GCAskLogin": "CS2GS_GCLoginRet"
 	}
 }
 </ext>

@@ -22,3 +22,8 @@ message GS2CS_ReportState{
 	MsgOpts opts = 1;
 	GSInfo gsInfo = 2;
 }
+
+message GS2CS_GCAskLogin{
+	MsgOpts opts = 1;
+	uint64 sessionID = 2;
+}

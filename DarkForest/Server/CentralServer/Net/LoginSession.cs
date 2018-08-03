@@ -10,6 +10,7 @@ namespace CentralServer.Net
 		protected LoginSession( uint id, ProtoType type ) : base( id, type )
 		{
 			this._msgCenter.Register( Protos.MsgID.EGAskPing, this.OnLSAskPing );
+			this._msgCenter.Register( Protos.MsgID.ELs2CsGclogin, this.OnLs2CsGclogin );
 		}
 
 		protected override void OnEstablish()
@@ -32,6 +33,15 @@ namespace CentralServer.Net
 			askPingRet.Stime = askPing.Time;
 			askPingRet.Time = TimeUtils.utcTime;
 			this.Send( askPingRet );
+			return ErrorCode.Success;
+		}
+
+		private ErrorCode OnLs2CsGclogin( Google.Protobuf.IMessage message )
+		{
+			Protos.LS2CS_GCLogin gcLogin = ( Protos.LS2CS_GCLogin )message;
+			CS.instance.HandleGCLoginFromLS( gcLogin.SessionID );
+			Protos.CS2LS_GCLoginRet gcLoginRet = ProtoCreator.R_LS2CS_GCLogin( gcLogin.Opts.Pid );
+			this.Send( gcLoginRet );
 			return ErrorCode.Success;
 		}
 	}

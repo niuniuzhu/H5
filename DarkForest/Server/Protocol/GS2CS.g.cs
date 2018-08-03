@@ -30,12 +30,15 @@ namespace Protos {
             "cm90b3MuR1NJbmZvLlN0YXRlIjAKBVN0YXRlEggKBEZyZWUQABIICgRCdXN5",
             "EAESCAoERnVsbBACEgkKBUNsb3NlEAMiUgoRR1MyQ1NfUmVwb3J0U3RhdGUS",
             "HQoEb3B0cxgBIAEoCzIPLlByb3Rvcy5Nc2dPcHRzEh4KBmdzSW5mbxgCIAEo",
-            "CzIOLlByb3Rvcy5HU0luZm9iBnByb3RvMw=="));
+            "CzIOLlByb3Rvcy5HU0luZm8iRAoQR1MyQ1NfR0NBc2tMb2dpbhIdCgRvcHRz",
+            "GAEgASgLMg8uUHJvdG9zLk1zZ09wdHMSEQoJc2Vzc2lvbklEGAIgASgEYgZw",
+            "cm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Protos.GlobalReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Protos.GSInfo), global::Protos.GSInfo.Parser, new[]{ "Id", "Name", "Ip", "Port", "Password", "State" }, null, new[]{ typeof(global::Protos.GSInfo.Types.State) }, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.GS2CS_ReportState), global::Protos.GS2CS_ReportState.Parser, new[]{ "Opts", "GsInfo" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.GS2CS_ReportState), global::Protos.GS2CS_ReportState.Parser, new[]{ "Opts", "GsInfo" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.GS2CS_GCAskLogin), global::Protos.GS2CS_GCAskLogin.Parser, new[]{ "Opts", "SessionID" }, null, null, null)
           }));
     }
     #endregion
@@ -486,6 +489,169 @@ namespace Protos {
               gsInfo_ = new global::Protos.GSInfo();
             }
             input.ReadMessage(gsInfo_);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class GS2CS_GCAskLogin : pb::IMessage<GS2CS_GCAskLogin> {
+    private static readonly pb::MessageParser<GS2CS_GCAskLogin> _parser = new pb::MessageParser<GS2CS_GCAskLogin>(() => new GS2CS_GCAskLogin());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<GS2CS_GCAskLogin> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Protos.GS2CSReflection.Descriptor.MessageTypes[2]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public GS2CS_GCAskLogin() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public GS2CS_GCAskLogin(GS2CS_GCAskLogin other) : this() {
+      opts_ = other.opts_ != null ? other.opts_.Clone() : null;
+      sessionID_ = other.sessionID_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public GS2CS_GCAskLogin Clone() {
+      return new GS2CS_GCAskLogin(this);
+    }
+
+    /// <summary>Field number for the "opts" field.</summary>
+    public const int OptsFieldNumber = 1;
+    private global::Protos.MsgOpts opts_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Protos.MsgOpts Opts {
+      get { return opts_; }
+      set {
+        opts_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "sessionID" field.</summary>
+    public const int SessionIDFieldNumber = 2;
+    private ulong sessionID_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ulong SessionID {
+      get { return sessionID_; }
+      set {
+        sessionID_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as GS2CS_GCAskLogin);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(GS2CS_GCAskLogin other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!object.Equals(Opts, other.Opts)) return false;
+      if (SessionID != other.SessionID) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (opts_ != null) hash ^= Opts.GetHashCode();
+      if (SessionID != 0UL) hash ^= SessionID.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (opts_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(Opts);
+      }
+      if (SessionID != 0UL) {
+        output.WriteRawTag(16);
+        output.WriteUInt64(SessionID);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (opts_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Opts);
+      }
+      if (SessionID != 0UL) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(SessionID);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(GS2CS_GCAskLogin other) {
+      if (other == null) {
+        return;
+      }
+      if (other.opts_ != null) {
+        if (opts_ == null) {
+          opts_ = new global::Protos.MsgOpts();
+        }
+        Opts.MergeFrom(other.Opts);
+      }
+      if (other.SessionID != 0UL) {
+        SessionID = other.SessionID;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            if (opts_ == null) {
+              opts_ = new global::Protos.MsgOpts();
+            }
+            input.ReadMessage(opts_);
+            break;
+          }
+          case 16: {
+            SessionID = input.ReadUInt64();
             break;
           }
         }

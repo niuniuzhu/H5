@@ -29,20 +29,25 @@ namespace Protos {
             "c2dPcHRzEh4KBmdzSW5mbxgCIAMoCzIOLlByb3Rvcy5HU0luZm8iTQoMQ1My",
             "TFNfR1NJbmZvEh0KBG9wdHMYASABKAsyDy5Qcm90b3MuTXNnT3B0cxIeCgZn",
             "c0luZm8YAiABKAsyDi5Qcm90b3MuR1NJbmZvIjsKDENTMkxTX0dTTG9zdBId",
-            "CgRvcHRzGAEgASgLMg8uUHJvdG9zLk1zZ09wdHMSDAoEZ3NpZBgCIAEoDWIG",
-            "cHJvdG8z"));
+            "CgRvcHRzGAEgASgLMg8uUHJvdG9zLk1zZ09wdHMSDAoEZ3NpZBgCIAEoDSIx",
+            "ChBDUzJMU19HQ0xvZ2luUmV0Eh0KBG9wdHMYASABKAsyDy5Qcm90b3MuTXNn",
+            "T3B0c2IGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Protos.GlobalReflection.Descriptor, global::Protos.GS2CSReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Protos.CS2LS_GSInfos), global::Protos.CS2LS_GSInfos.Parser, new[]{ "Opts", "GsInfo" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protos.CS2LS_GSInfo), global::Protos.CS2LS_GSInfo.Parser, new[]{ "Opts", "GsInfo" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.CS2LS_GSLost), global::Protos.CS2LS_GSLost.Parser, new[]{ "Opts", "Gsid" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.CS2LS_GSLost), global::Protos.CS2LS_GSLost.Parser, new[]{ "Opts", "Gsid" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.CS2LS_GCLoginRet), global::Protos.CS2LS_GCLoginRet.Parser, new[]{ "Opts" }, null, null, null)
           }));
     }
     #endregion
 
   }
   #region Messages
+  /// <summary>
+  ///GS信息
+  /// </summary>
   public sealed partial class CS2LS_GSInfos : pb::IMessage<CS2LS_GSInfos> {
     private static readonly pb::MessageParser<CS2LS_GSInfos> _parser = new pb::MessageParser<CS2LS_GSInfos>(() => new CS2LS_GSInfos());
     private pb::UnknownFieldSet _unknownFields;
@@ -198,6 +203,9 @@ namespace Protos {
 
   }
 
+  /// <summary>
+  ///GS信息
+  /// </summary>
   public sealed partial class CS2LS_GSInfo : pb::IMessage<CS2LS_GSInfo> {
     private static readonly pb::MessageParser<CS2LS_GSInfo> _parser = new pb::MessageParser<CS2LS_GSInfo>(() => new CS2LS_GSInfo());
     private pb::UnknownFieldSet _unknownFields;
@@ -367,6 +375,9 @@ namespace Protos {
 
   }
 
+  /// <summary>
+  ///GS关服
+  /// </summary>
   public sealed partial class CS2LS_GSLost : pb::IMessage<CS2LS_GSLost> {
     private static readonly pb::MessageParser<CS2LS_GSLost> _parser = new pb::MessageParser<CS2LS_GSLost>(() => new CS2LS_GSLost());
     private pb::UnknownFieldSet _unknownFields;
@@ -522,6 +533,144 @@ namespace Protos {
           }
           case 16: {
             Gsid = input.ReadUInt32();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  /// <summary>
+  ///回应LS通知有客户端登陆
+  /// </summary>
+  public sealed partial class CS2LS_GCLoginRet : pb::IMessage<CS2LS_GCLoginRet> {
+    private static readonly pb::MessageParser<CS2LS_GCLoginRet> _parser = new pb::MessageParser<CS2LS_GCLoginRet>(() => new CS2LS_GCLoginRet());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<CS2LS_GCLoginRet> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Protos.CS2LSReflection.Descriptor.MessageTypes[3]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public CS2LS_GCLoginRet() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public CS2LS_GCLoginRet(CS2LS_GCLoginRet other) : this() {
+      opts_ = other.opts_ != null ? other.opts_.Clone() : null;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public CS2LS_GCLoginRet Clone() {
+      return new CS2LS_GCLoginRet(this);
+    }
+
+    /// <summary>Field number for the "opts" field.</summary>
+    public const int OptsFieldNumber = 1;
+    private global::Protos.MsgOpts opts_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Protos.MsgOpts Opts {
+      get { return opts_; }
+      set {
+        opts_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as CS2LS_GCLoginRet);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(CS2LS_GCLoginRet other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!object.Equals(Opts, other.Opts)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (opts_ != null) hash ^= Opts.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (opts_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(Opts);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (opts_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Opts);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(CS2LS_GCLoginRet other) {
+      if (other == null) {
+        return;
+      }
+      if (other.opts_ != null) {
+        if (opts_ == null) {
+          opts_ = new global::Protos.MsgOpts();
+        }
+        Opts.MergeFrom(other.Opts);
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            if (opts_ == null) {
+              opts_ = new global::Protos.MsgOpts();
+            }
+            input.ReadMessage(opts_);
             break;
           }
         }

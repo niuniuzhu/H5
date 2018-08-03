@@ -51,5 +51,15 @@ namespace CentralServer
 			}
 			return ErrorCode.Success;
 		}
+
+		public ErrorCode HandleGCAskLoginFromGS( ulong gcSID, uint id )
+		{
+			if ( !this._gcSIDForLogin.Contains( gcSID ) )
+				return ErrorCode.InvalidGcNID;
+
+			System.Diagnostics.Debug.Assert( !this._gcSIDToGsSID.ContainsKey( gcSID ), $"duplicate GC sessionID:{gcSID}." );
+			this._gcSIDToGsSID[gcSID] = id;
+			return ErrorCode.Success;
+		}
 	}
 }

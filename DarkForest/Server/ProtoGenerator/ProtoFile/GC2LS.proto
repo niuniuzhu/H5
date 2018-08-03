@@ -3,6 +3,7 @@ package Protos;
 
 import "Global.proto";
 
+//客户端请求注册
 message GC2LS_AskRegister {
 	MsgOpts opts = 1;
 	int32 sdk = 2;
@@ -11,6 +12,7 @@ message GC2LS_AskRegister {
 	uint32 platform = 5;
 }
 
+//客户端请求登陆
 message GC2LS_AskLogin {
 	MsgOpts opts = 1;
 	string name = 2;

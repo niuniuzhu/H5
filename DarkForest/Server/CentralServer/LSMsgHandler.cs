@@ -1,5 +1,6 @@
 ﻿using Shared;
 using System.Collections.Generic;
+using Core.Misc;
 
 namespace CentralServer
 {
@@ -23,6 +24,12 @@ namespace CentralServer
 				gsInfos.GsInfo.Add( gsInfo );
 			}
 			this.netSessionMgr.Send( sessionID, gsInfos );
+		}
+
+		public void HandleGCLoginFromLS( ulong gcSID )
+		{
+			if ( !this._gcSIDForLogin.Add( gcSID ) )
+				Logger.Warn( $"duplicate GC sessionID:{gcSID}." );
 		}
 	}
 }

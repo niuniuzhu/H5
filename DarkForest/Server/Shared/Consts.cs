@@ -51,7 +51,8 @@ namespace Shared
 		//register
 		UsernameExists,
 		InvalidUname,
-		InvalidPwd
+		InvalidPwd,
+		InvalidGcNID
 	}
 
 	public class GSInfo

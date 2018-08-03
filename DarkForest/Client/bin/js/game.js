@@ -124,9 +124,21 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
             msg.opts = new protos_1.Protos.MsgOpts();
             return msg;
         }
+        static Q_LS2CS_GCLogin() {
+            let msg = new protos_1.Protos.LS2CS_GCLogin();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RPC;
+            return msg;
+        }
         static Q_GS2CS_ReportState() {
             let msg = new protos_1.Protos.GS2CS_ReportState();
             msg.opts = new protos_1.Protos.MsgOpts();
+            return msg;
+        }
+        static Q_GS2CS_GCAskLogin() {
+            let msg = new protos_1.Protos.GS2CS_GCAskLogin();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RPC;
             return msg;
         }
         static Q_GS2GC_LoginResult() {
@@ -146,6 +158,11 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
         }
         static Q_CS2LS_GSLost() {
             let msg = new protos_1.Protos.CS2LS_GSLost();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            return msg;
+        }
+        static Q_CS2GS_GCLoginRet() {
+            let msg = new protos_1.Protos.CS2GS_GCLoginRet();
             msg.opts = new protos_1.Protos.MsgOpts();
             return msg;
         }
@@ -172,6 +189,20 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
         }
         static R_GC2GS_AskLogin(pid) {
             let msg = new protos_1.Protos.GS2GC_LoginResult();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RESP;
+            msg.opts.rpid = pid;
+            return msg;
+        }
+        static R_LS2CS_GCLogin(pid) {
+            let msg = new protos_1.Protos.CS2LS_GCLoginRet();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RESP;
+            msg.opts.rpid = pid;
+            return msg;
+        }
+        static R_GS2CS_GCAskLogin(pid) {
+            let msg = new protos_1.Protos.CS2GS_GCLoginRet();
             msg.opts = new protos_1.Protos.MsgOpts();
             msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RESP;
             msg.opts.rpid = pid;
@@ -212,23 +243,35 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
                     return msg;
                 }
                 case 400: {
-                    let msg = protos_1.Protos.GS2CS_ReportState.decode(data, size);
+                    let msg = protos_1.Protos.LS2CS_GCLogin.decode(data, size);
                     return msg;
                 }
                 case 500: {
-                    let msg = protos_1.Protos.GS2GC_LoginResult.decode(data, size);
+                    let msg = protos_1.Protos.GS2CS_ReportState.decode(data, size);
+                    return msg;
+                }
+                case 501: {
+                    let msg = protos_1.Protos.GS2CS_GCAskLogin.decode(data, size);
                     return msg;
                 }
                 case 600: {
+                    let msg = protos_1.Protos.GS2GC_LoginResult.decode(data, size);
+                    return msg;
+                }
+                case 700: {
                     let msg = protos_1.Protos.CS2LS_GSInfos.decode(data, size);
                     return msg;
                 }
-                case 601: {
+                case 701: {
                     let msg = protos_1.Protos.CS2LS_GSInfo.decode(data, size);
                     return msg;
                 }
-                case 602: {
+                case 702: {
                     let msg = protos_1.Protos.CS2LS_GSLost.decode(data, size);
+                    return msg;
+                }
+                case 800: {
+                    let msg = protos_1.Protos.CS2GS_GCLoginRet.decode(data, size);
                     return msg;
                 }
             }
@@ -266,8 +309,16 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
             let msg = protos_1.Protos.LS2GC_GSInfo.decode(data, size);
             return msg;
         }
+        static D_LS2CS_GCLogin(data, size) {
+            let msg = protos_1.Protos.LS2CS_GCLogin.decode(data, size);
+            return msg;
+        }
         static D_GS2CS_ReportState(data, size) {
             let msg = protos_1.Protos.GS2CS_ReportState.decode(data, size);
+            return msg;
+        }
+        static D_GS2CS_GCAskLogin(data, size) {
+            let msg = protos_1.Protos.GS2CS_GCAskLogin.decode(data, size);
             return msg;
         }
         static D_GS2GC_LoginResult(data, size) {
@@ -284,6 +335,10 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
         }
         static D_CS2LS_GSLost(data, size) {
             let msg = protos_1.Protos.CS2LS_GSLost.decode(data, size);
+            return msg;
+        }
+        static D_CS2GS_GCLoginRet(data, size) {
+            let msg = protos_1.Protos.CS2GS_GCLoginRet.decode(data, size);
             return msg;
         }
         static CreateMsgByID(msgID) {
@@ -313,19 +368,28 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
                     return new protos_1.Protos.LS2GC_GSInfo();
                 }
                 case 400: {
-                    return new protos_1.Protos.GS2CS_ReportState();
+                    return new protos_1.Protos.LS2CS_GCLogin();
                 }
                 case 500: {
-                    return new protos_1.Protos.GS2GC_LoginResult();
+                    return new protos_1.Protos.GS2CS_ReportState();
+                }
+                case 501: {
+                    return new protos_1.Protos.GS2CS_GCAskLogin();
                 }
                 case 600: {
+                    return new protos_1.Protos.GS2GC_LoginResult();
+                }
+                case 700: {
                     return new protos_1.Protos.CS2LS_GSInfos();
                 }
-                case 601: {
+                case 701: {
                     return new protos_1.Protos.CS2LS_GSInfo();
                 }
-                case 602: {
+                case 702: {
                     return new protos_1.Protos.CS2LS_GSLost();
+                }
+                case 800: {
+                    return new protos_1.Protos.CS2GS_GCLoginRet();
                 }
             }
             return null;
@@ -363,13 +427,22 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
                 case 500: {
                     return message.opts;
                 }
+                case 501: {
+                    return message.opts;
+                }
                 case 600: {
                     return message.opts;
                 }
-                case 601: {
+                case 700: {
                     return message.opts;
                 }
-                case 602: {
+                case 701: {
+                    return message.opts;
+                }
+                case 702: {
+                    return message.opts;
+                }
+                case 800: {
                     return message.opts;
                 }
             }
@@ -387,11 +460,14 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
         [protos_1.Protos.LS2GC_RegResult, 300],
         [protos_1.Protos.LS2GC_LoginResult, 301],
         [protos_1.Protos.LS2GC_GSInfo, 302],
-        [protos_1.Protos.GS2CS_ReportState, 400],
-        [protos_1.Protos.GS2GC_LoginResult, 500],
-        [protos_1.Protos.CS2LS_GSInfos, 600],
-        [protos_1.Protos.CS2LS_GSInfo, 601],
-        [protos_1.Protos.CS2LS_GSLost, 602],
+        [protos_1.Protos.LS2CS_GCLogin, 400],
+        [protos_1.Protos.GS2CS_ReportState, 500],
+        [protos_1.Protos.GS2CS_GCAskLogin, 501],
+        [protos_1.Protos.GS2GC_LoginResult, 600],
+        [protos_1.Protos.CS2LS_GSInfos, 700],
+        [protos_1.Protos.CS2LS_GSInfo, 701],
+        [protos_1.Protos.CS2LS_GSLost, 702],
+        [protos_1.Protos.CS2GS_GCLoginRet, 800],
     ]);
     ProtoCreator._ID2TYPE = new Map([
         [10, protos_1.Protos.G_AskPing],
@@ -402,11 +478,14 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
         [300, protos_1.Protos.LS2GC_RegResult],
         [301, protos_1.Protos.LS2GC_LoginResult],
         [302, protos_1.Protos.LS2GC_GSInfo],
-        [400, protos_1.Protos.GS2CS_ReportState],
-        [500, protos_1.Protos.GS2GC_LoginResult],
-        [600, protos_1.Protos.CS2LS_GSInfos],
-        [601, protos_1.Protos.CS2LS_GSInfo],
-        [602, protos_1.Protos.CS2LS_GSLost],
+        [400, protos_1.Protos.LS2CS_GCLogin],
+        [500, protos_1.Protos.GS2CS_ReportState],
+        [501, protos_1.Protos.GS2CS_GCAskLogin],
+        [600, protos_1.Protos.GS2GC_LoginResult],
+        [700, protos_1.Protos.CS2LS_GSInfos],
+        [701, protos_1.Protos.CS2LS_GSInfo],
+        [702, protos_1.Protos.CS2LS_GSLost],
+        [800, protos_1.Protos.CS2GS_GCLoginRet],
     ]);
     exports.ProtoCreator = ProtoCreator;
 });
@@ -680,7 +759,6 @@ define("View/UI/UILogin", ["require", "exports", "../../libs/protos", "Net/WSCon
                             break;
                         case protos_3.Protos.GS2GC_LoginResult.EResult.Failed:
                             UIAlert_1.UIAlert.Show("登陆失败");
-                            break;
                             break;
                     }
                     fairygui.GRoot.inst.closeModalWait();
