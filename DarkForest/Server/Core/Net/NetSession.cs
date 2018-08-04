@@ -1,4 +1,5 @@
 ﻿using System;
+using Core.Misc;
 
 namespace Core.Net
 {
@@ -16,6 +17,10 @@ namespace Core.Net
 		public bool isPassive { get; set; }
 
 		protected State _state;
+
+		private bool _delayClose;
+		private long _timeToClose;
+		private string _delayCloseReason;
 
 		protected NetSession( uint id, ProtoType type )
 		{
@@ -42,6 +47,13 @@ namespace Core.Net
 		public virtual void Dispose() => this.connection.Dispose();
 
 		public void Send( byte[] data, int offset, int size ) => this.connection.Send( data, offset, size );
+
+		public void DelayClose( long delay, string reason )
+		{
+			this._delayClose = true;
+			this._timeToClose = TimeUtils.utcTime + delay;
+			this._delayCloseReason = reason;
+		}
 
 		public void Close( string reason )
 		{
@@ -83,6 +95,14 @@ namespace Core.Net
 		{
 			if ( this._state == State.Connected )
 				this.connection.Update( updateContext );
+
+			if ( this._delayClose && TimeUtils.utcTime >= this._timeToClose )
+			{
+				this._delayClose = false;
+				this._timeToClose = 0;
+				this.Close( this._delayCloseReason );
+				this._delayCloseReason = string.Empty;
+			}
 		}
 
 		public void HeartBeat( long dt )

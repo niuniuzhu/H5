@@ -161,6 +161,11 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
             msg.opts = new protos_1.Protos.MsgOpts();
             return msg;
         }
+        static Q_CS2LS_GCLoginRet() {
+            let msg = new protos_1.Protos.CS2LS_GCLoginRet();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            return msg;
+        }
         static Q_CS2GS_GCLoginRet() {
             let msg = new protos_1.Protos.CS2GS_GCLoginRet();
             msg.opts = new protos_1.Protos.MsgOpts();
@@ -270,6 +275,10 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
                     let msg = protos_1.Protos.CS2LS_GSLost.decode(data, size);
                     return msg;
                 }
+                case 703: {
+                    let msg = protos_1.Protos.CS2LS_GCLoginRet.decode(data, size);
+                    return msg;
+                }
                 case 800: {
                     let msg = protos_1.Protos.CS2GS_GCLoginRet.decode(data, size);
                     return msg;
@@ -337,6 +346,10 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
             let msg = protos_1.Protos.CS2LS_GSLost.decode(data, size);
             return msg;
         }
+        static D_CS2LS_GCLoginRet(data, size) {
+            let msg = protos_1.Protos.CS2LS_GCLoginRet.decode(data, size);
+            return msg;
+        }
         static D_CS2GS_GCLoginRet(data, size) {
             let msg = protos_1.Protos.CS2GS_GCLoginRet.decode(data, size);
             return msg;
@@ -387,6 +400,9 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
                 }
                 case 702: {
                     return new protos_1.Protos.CS2LS_GSLost();
+                }
+                case 703: {
+                    return new protos_1.Protos.CS2LS_GCLoginRet();
                 }
                 case 800: {
                     return new protos_1.Protos.CS2GS_GCLoginRet();
@@ -442,6 +458,9 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
                 case 702: {
                     return message.opts;
                 }
+                case 703: {
+                    return message.opts;
+                }
                 case 800: {
                     return message.opts;
                 }
@@ -467,6 +486,7 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
         [protos_1.Protos.CS2LS_GSInfos, 700],
         [protos_1.Protos.CS2LS_GSInfo, 701],
         [protos_1.Protos.CS2LS_GSLost, 702],
+        [protos_1.Protos.CS2LS_GCLoginRet, 703],
         [protos_1.Protos.CS2GS_GCLoginRet, 800],
     ]);
     ProtoCreator._ID2TYPE = new Map([
@@ -485,6 +505,7 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
         [700, protos_1.Protos.CS2LS_GSInfos],
         [701, protos_1.Protos.CS2LS_GSInfo],
         [702, protos_1.Protos.CS2LS_GSLost],
+        [703, protos_1.Protos.CS2LS_GCLoginRet],
         [800, protos_1.Protos.CS2GS_GCLoginRet],
     ]);
     exports.ProtoCreator = ProtoCreator;
@@ -746,25 +767,6 @@ define("View/UI/UILogin", ["require", "exports", "../../libs/protos", "Net/WSCon
             this.ConnectToGS(data.ip, data.port, data.password, item.data["s"]);
         }
         ConnectToGS(ip, port, pwd, sessionID) {
-            fairygui.GRoot.inst.showModalWait();
-            this._connector.onopen = () => {
-                let askLogin = ProtoHelper_2.ProtoCreator.Q_GC2GS_AskLogin();
-                askLogin.pwd = pwd;
-                askLogin.sessionID = sessionID;
-                this._connector.Send(protos_3.Protos.GC2GS_AskLogin, askLogin, message => {
-                    let resp = message;
-                    switch (resp.result) {
-                        case protos_3.Protos.GS2GC_LoginResult.EResult.Success:
-                            this.HandleLoginBSSuccess(resp);
-                            break;
-                        case protos_3.Protos.GS2GC_LoginResult.EResult.Failed:
-                            UIAlert_1.UIAlert.Show("登陆失败");
-                            break;
-                    }
-                    fairygui.GRoot.inst.closeModalWait();
-                });
-            };
-            this._connector.Connect(ip, port);
         }
         HandleLoginBSSuccess(loginResult) {
             let param = new EntityParam_1.BattleParams();

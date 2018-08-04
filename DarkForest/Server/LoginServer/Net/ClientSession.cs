@@ -98,7 +98,7 @@ namespace LoginServer.Net
 				}
 				this.Send( response );
 			} );
-			this.Close( string.Empty );
+			this.DelayClose( 500, string.Empty );
 			return ErrorCode.Success;
 		}
 	}

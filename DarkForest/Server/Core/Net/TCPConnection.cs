@@ -43,11 +43,11 @@ namespace Core.Net
 		{
 			lock ( this._lockObj )
 			{
-				this.Flush();
 				if ( this.socket == null )
 					return;
 				if ( this.connected )
 				{
+					this.Flush();
 					try
 					{
 						this.socket.Shutdown( SocketShutdown.Both );
