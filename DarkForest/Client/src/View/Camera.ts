@@ -1,4 +1,4 @@
-import { UpdateContext } from "../Shared/UpdateContext";
+import { UpdateContext } from "./UpdateContext";
 
 export class Camera {
 	private _position: RC.Numerics.Vec3;

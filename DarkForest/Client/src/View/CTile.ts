@@ -1,5 +1,5 @@
 import { CBuilding } from "./CBuilding";
-import { TileBase } from "../Shared/TileBase";
+import { TileBase } from "./TileBase";
 
 export class CTile extends TileBase {
 	private readonly _tileToEntity: RC.Collections.Dictionary<number, CBuilding>;

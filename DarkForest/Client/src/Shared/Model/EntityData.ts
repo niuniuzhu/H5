@@ -1,4 +1,4 @@
-import { Defs } from "../Defs";
+import { Defs } from "./Defs";
 
 export class EntityData {
 	// generice

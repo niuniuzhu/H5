@@ -1,11 +1,11 @@
 import { UIMain } from "./UIMain";
 import { IMainPanel } from "./IMainPanel";
-import { CUser } from "../CUser";
-import { Home } from "../Home";
-import { BaseEvent } from "../../Shared/Event/BaseEvent";
-import { EventCenter } from "../../Shared/Event/EventCenter";
-import { UIEvent } from "../../Shared/Event/UIEvent";
-import { BattleParams } from "../../Shared/Model/EntityParam";
+import { CUser } from "../View/CUser";
+import { Home } from "../View/Home";
+import { BaseEvent } from "../Shared/Event/BaseEvent";
+import { EventCenter } from "../Shared/Event/EventCenter";
+import { UIEvent } from "../Shared/Event/UIEvent";
+import { BattleParams } from "../Shared/Model/EntityParam";
 
 export class HomePanel implements IMainPanel {
 	private _owner: UIMain;

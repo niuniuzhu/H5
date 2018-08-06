@@ -1,6 +1,6 @@
 import { IMainPanel } from "./IMainPanel";
 import { UIMain } from "./UIMain";
-import { CUser } from "../CUser";
+import { CUser } from "../View/CUser";
 
 export class FightPanel implements IMainPanel {
 	private static readonly MAX_HP = 300;

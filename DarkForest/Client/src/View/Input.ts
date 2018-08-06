@@ -1,7 +1,7 @@
 import { Home } from "./Home";
 import { CBuilding } from "./CBuilding";
 import { EditingBuilding } from "./EditingBuilding";
-import { UpdateContext } from "../Shared/UpdateContext";
+import { UpdateContext } from "./UpdateContext";
 
 export interface IInputState {
 	Enter(param: any[]): void;

@@ -2,7 +2,7 @@ import { CUser } from "./CUser";
 import { BuildingGraphic } from "./BuildingGraphic";
 import { CEntity } from "./CEntity";
 import { Home } from "./Home";
-import { UpdateContext } from "../Shared/UpdateContext";
+import { UpdateContext } from "./UpdateContext";
 import { EntityParam } from "../Shared/Model/EntityParam";
 
 export class CBuilding extends CEntity {

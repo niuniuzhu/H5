@@ -1,7 +1,7 @@
 import { ByteUtils } from "./ByteUtils";
 import { MsgCenter } from "./MsgCenter";
 import { Protos } from "../libs/protos";
-import { ProtoCreator } from "../Protos/ProtoHelper";
+import { ProtoCreator } from "./ProtoHelper";
 
 export class WSConnector {
 

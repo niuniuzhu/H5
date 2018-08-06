@@ -1,7 +1,7 @@
 import { IUIModule } from "./IUIModule";
 import { UILogin } from "./UILogin";
 import { UIMain } from "./UIMain";
-import { BattleParams } from "../../Shared/Model/EntityParam";
+import { BattleParams } from "../Shared/Model/EntityParam";
 
 export class UIManager {
 	private static _login: UILogin;

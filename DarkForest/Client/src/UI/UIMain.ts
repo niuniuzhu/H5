@@ -6,7 +6,7 @@ import { RolePanel } from "./RolePanel";
 import { TaskPanel } from "./TaskPanel";
 import { MsgPanel } from "./MsgPanel";
 import { IMainPanel } from "./IMainPanel";
-import { BattleParams } from "../../Shared/Model/EntityParam";
+import { BattleParams } from "../Shared/Model/EntityParam";
 
 export class UIMain implements IUIModule {
 	private _root: fairygui.GComponent;

@@ -1,5 +1,5 @@
-import { UIManager } from "./View/UI/UIManager";
-import { Defs } from "./Shared/Defs";
+import { UIManager } from "./UI/UIManager";
+import { Defs } from "./Shared/Model/Defs";
 
 export class Main {
 	constructor() {

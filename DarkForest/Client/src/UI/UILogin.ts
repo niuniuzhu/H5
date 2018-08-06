@@ -1,9 +1,9 @@
-import { Protos } from "../../libs/protos";
-import { WSConnector } from "../../Net/WSConnector";
+import { Protos } from "../libs/protos";
+import { WSConnector } from "../Net/WSConnector";
 import { IUIModule } from "./IUIModule";
-import { ProtoCreator } from "../../Protos/ProtoHelper";
+import { ProtoCreator } from "../Net/ProtoHelper";
 import { UIAlert } from "./UIAlert";
-import { BattleParams, Building } from "../../Shared/Model/EntityParam";
+import { BattleParams, Building } from "../Shared/Model/EntityParam";
 import { UIManager } from "./UIManager";
 
 export class UILogin implements IUIModule {

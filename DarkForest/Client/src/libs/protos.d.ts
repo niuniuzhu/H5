@@ -1,4 +1,4 @@
-import * as $protobuf from "protobufjs";
+import * as $protobuf from "../../node_modules/@types/protobufjs/index";
 export namespace Protos {
 
     interface ICS2GS_GCLoginRet {

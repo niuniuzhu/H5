@@ -1,6 +1,6 @@
 import { CEntity } from "../../View/CEntity";
 import { BaseEvent } from "./BaseEvent";
-import { EAttr } from "../Attr";
+import { EAttr } from "../Model/Attr";
 
 export class UIEvent extends BaseEvent {
 	public static readonly WIN: number = 10010;

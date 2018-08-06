@@ -1,12 +1,12 @@
-import { CUser } from "../CUser";
+import { CUser } from "../View/CUser";
 import { IMainPanel } from "./IMainPanel";
 import { UIMain } from "./UIMain";
-import { BaseEvent } from "../../Shared/Event/BaseEvent";
-import { UIEvent } from "../../Shared/Event/UIEvent";
-import { EventCenter } from "../../Shared/Event/EventCenter";
-import { Defs } from "../../Shared/Defs";
+import { UIEvent } from "../Shared/Event/UIEvent";
+import { EventCenter } from "../Shared/Event/EventCenter";
+import { BaseEvent } from "../Shared/Event/BaseEvent";
+import { Defs } from "../Shared/Model/Defs";
 
-export class MsgPanel implements IMainPanel {
+export class TaskPanel implements IMainPanel {
 	private _owner: UIMain;
 	private _root: fairygui.GComponent;
 	private _atk: fairygui.GTextField;
@@ -14,7 +14,7 @@ export class MsgPanel implements IMainPanel {
 
 	constructor(owner: UIMain) {
 		this._owner = owner;
-		this._root = owner.root.getChild("c5").asCom;
+		this._root = owner.root.getChild("c4").asCom;
 		this._atk = this._root.getChild("atk").asTextField;
 		this._def = this._root.getChild("def").asTextField;
 
@@ -29,7 +29,7 @@ export class MsgPanel implements IMainPanel {
 	}
 
 	public Enter(): void {
-		let tasksDef = Defs.GetMessage();
+		let tasksDef = Defs.GetTask();
 		let list = this._root.getChild("list").asList;
 		for (let taskDef of tasksDef) {
 			let com = list.addItemFromPool().asCom;

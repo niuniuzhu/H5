@@ -1,10 +1,10 @@
 import { EntityGraphic } from "./EntityGraphic";
 import { Home } from "./Home";
-import { Utils } from "../Shared/Utils";
+import { Utils } from "./Utils";
 import { EntityParam } from "../Shared/Model/EntityParam";
 import { EntityData } from "../Shared/Model/EntityData";
-import { GPoolObject } from "../Shared/GPoolObject";
-import { UpdateContext } from "../Shared/UpdateContext";
+import { GPoolObject } from "./GPoolObject";
+import { UpdateContext } from "./UpdateContext";
 import { ModelFactory } from "../Shared/Model/ModelFactory";
 
 export class CEntity extends GPoolObject {

@@ -2,10 +2,10 @@ import { Home } from "./Home";
 import { CEntity } from "./CEntity";
 import { CBuilding } from "./CBuilding";
 import { EditingBuilding } from "./EditingBuilding";
-import { UpdateContext } from "../Shared/UpdateContext";
+import { UpdateContext } from "./UpdateContext";
 import { EntityParam } from "../Shared/Model/EntityParam";
-import { GPoolObject } from "../Shared/GPoolObject";
-import { GPool } from "../Shared/GPool";
+import { GPoolObject } from "./GPoolObject";
+import { GPool } from "./GPool";
 
 export class CEntityManager {
 	private readonly _owner: Home;

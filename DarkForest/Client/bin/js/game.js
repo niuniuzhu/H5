@@ -1,4 +1,4 @@
-define("View/UI/IUIModule", ["require", "exports"], function (require, exports) {
+define("UI/IUIModule", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
 });
@@ -76,7 +76,7 @@ define("Net/MsgCenter", ["require", "exports"], function (require, exports) {
     }
     exports.MsgCenter = MsgCenter;
 });
-define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function (require, exports, protos_1) {
+define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (require, exports, protos_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class ProtoCreator {
@@ -168,6 +168,11 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
         }
         static Q_CS2GS_GCLoginRet() {
             let msg = new protos_1.Protos.CS2GS_GCLoginRet();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            return msg;
+        }
+        static Q_CS2GS_KeepAlive() {
+            let msg = new protos_1.Protos.CS2GS_KeepAlive();
             msg.opts = new protos_1.Protos.MsgOpts();
             return msg;
         }
@@ -283,6 +288,10 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
                     let msg = protos_1.Protos.CS2GS_GCLoginRet.decode(data, size);
                     return msg;
                 }
+                case 801: {
+                    let msg = protos_1.Protos.CS2GS_KeepAlive.decode(data, size);
+                    return msg;
+                }
             }
             return null;
         }
@@ -354,6 +363,10 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
             let msg = protos_1.Protos.CS2GS_GCLoginRet.decode(data, size);
             return msg;
         }
+        static D_CS2GS_KeepAlive(data, size) {
+            let msg = protos_1.Protos.CS2GS_KeepAlive.decode(data, size);
+            return msg;
+        }
         static CreateMsgByID(msgID) {
             switch (msgID) {
                 case 10: {
@@ -406,6 +419,9 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
                 }
                 case 800: {
                     return new protos_1.Protos.CS2GS_GCLoginRet();
+                }
+                case 801: {
+                    return new protos_1.Protos.CS2GS_KeepAlive();
                 }
             }
             return null;
@@ -464,6 +480,9 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
                 case 800: {
                     return message.opts;
                 }
+                case 801: {
+                    return message.opts;
+                }
             }
             return null;
         }
@@ -488,6 +507,7 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
         [protos_1.Protos.CS2LS_GSLost, 702],
         [protos_1.Protos.CS2LS_GCLoginRet, 703],
         [protos_1.Protos.CS2GS_GCLoginRet, 800],
+        [protos_1.Protos.CS2GS_KeepAlive, 801],
     ]);
     ProtoCreator._ID2TYPE = new Map([
         [10, protos_1.Protos.G_AskPing],
@@ -507,10 +527,11 @@ define("Protos/ProtoHelper", ["require", "exports", "../libs/protos"], function 
         [702, protos_1.Protos.CS2LS_GSLost],
         [703, protos_1.Protos.CS2LS_GCLoginRet],
         [800, protos_1.Protos.CS2GS_GCLoginRet],
+        [801, protos_1.Protos.CS2GS_KeepAlive],
     ]);
     exports.ProtoCreator = ProtoCreator;
 });
-define("Net/WSConnector", ["require", "exports", "Net/ByteUtils", "Net/MsgCenter", "../libs/protos", "Protos/ProtoHelper"], function (require, exports, ByteUtils_1, MsgCenter_1, protos_2, ProtoHelper_1) {
+define("Net/WSConnector", ["require", "exports", "Net/ByteUtils", "Net/MsgCenter", "../libs/protos", "Net/ProtoHelper"], function (require, exports, ByteUtils_1, MsgCenter_1, protos_2, ProtoHelper_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class WSConnector {
@@ -580,7 +601,7 @@ define("Net/WSConnector", ["require", "exports", "Net/ByteUtils", "Net/MsgCenter
     }
     exports.WSConnector = WSConnector;
 });
-define("View/UI/UIAlert", ["require", "exports"], function (require, exports) {
+define("UI/UIAlert", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class UIAlert {
@@ -627,7 +648,7 @@ define("Shared/Model/EntityParam", ["require", "exports"], function (require, ex
     }
     exports.EntityParam = EntityParam;
 });
-define("View/UI/UILogin", ["require", "exports", "../../libs/protos", "Net/WSConnector", "Protos/ProtoHelper", "View/UI/UIAlert", "Shared/Model/EntityParam", "View/UI/UIManager"], function (require, exports, protos_3, WSConnector_1, ProtoHelper_2, UIAlert_1, EntityParam_1, UIManager_1) {
+define("UI/UILogin", ["require", "exports", "../libs/protos", "Net/WSConnector", "Net/ProtoHelper", "UI/UIAlert", "Shared/Model/EntityParam", "UI/UIManager"], function (require, exports, protos_3, WSConnector_1, ProtoHelper_2, UIAlert_1, EntityParam_1, UIManager_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class UILogin {
@@ -811,11 +832,11 @@ define("View/UI/UILogin", ["require", "exports", "../../libs/protos", "Net/WSCon
     }
     exports.UILogin = UILogin;
 });
-define("View/UI/IMainPanel", ["require", "exports"], function (require, exports) {
+define("UI/IMainPanel", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
 });
-define("Shared/Defs", ["require", "exports"], function (require, exports) {
+define("Shared/Model/Defs", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class Defs {
@@ -859,7 +880,7 @@ define("Shared/Defs", ["require", "exports"], function (require, exports) {
     }
     exports.Defs = Defs;
 });
-define("Shared/Model/UserData", ["require", "exports", "Shared/Defs"], function (require, exports, Defs_1) {
+define("Shared/Model/UserData", ["require", "exports", "Shared/Model/Defs"], function (require, exports, Defs_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class UserData {
@@ -871,7 +892,7 @@ define("Shared/Model/UserData", ["require", "exports", "Shared/Defs"], function 
     }
     exports.UserData = UserData;
 });
-define("Shared/Model/MapData", ["require", "exports", "Shared/Defs"], function (require, exports, Defs_2) {
+define("Shared/Model/MapData", ["require", "exports", "Shared/Model/Defs"], function (require, exports, Defs_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class MapData {
@@ -888,7 +909,7 @@ define("Shared/Model/MapData", ["require", "exports", "Shared/Defs"], function (
     }
     exports.MapData = MapData;
 });
-define("Shared/Model/EntityData", ["require", "exports", "Shared/Defs"], function (require, exports, Defs_3) {
+define("Shared/Model/EntityData", ["require", "exports", "Shared/Model/Defs"], function (require, exports, Defs_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class EntityData {
@@ -1135,7 +1156,7 @@ define("View/BuildingGraphic", ["require", "exports", "View/EntityGraphic"], fun
     }
     exports.BuildingGraphic = BuildingGraphic;
 });
-define("Shared/Utils", ["require", "exports"], function (require, exports) {
+define("View/Utils", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class Utils {
@@ -1150,7 +1171,7 @@ define("Shared/Utils", ["require", "exports"], function (require, exports) {
     }
     exports.Utils = Utils;
 });
-define("Shared/GPoolObject", ["require", "exports"], function (require, exports) {
+define("View/GPoolObject", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class GPoolObject {
@@ -1161,7 +1182,7 @@ define("Shared/GPoolObject", ["require", "exports"], function (require, exports)
     }
     exports.GPoolObject = GPoolObject;
 });
-define("Shared/UpdateContext", ["require", "exports"], function (require, exports) {
+define("View/UpdateContext", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class UpdateContext {
@@ -1173,7 +1194,7 @@ define("Shared/UpdateContext", ["require", "exports"], function (require, export
     }
     exports.UpdateContext = UpdateContext;
 });
-define("View/CEntity", ["require", "exports", "View/EntityGraphic", "Shared/Utils", "Shared/GPoolObject", "Shared/Model/ModelFactory"], function (require, exports, EntityGraphic_2, Utils_1, GPoolObject_1, ModelFactory_2) {
+define("View/CEntity", ["require", "exports", "View/EntityGraphic", "View/Utils", "View/GPoolObject", "Shared/Model/ModelFactory"], function (require, exports, EntityGraphic_2, Utils_1, GPoolObject_1, ModelFactory_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class CEntity extends GPoolObject_1.GPoolObject {
@@ -1363,7 +1384,7 @@ define("View/EditingBuilding", ["require", "exports", "View/CBuilding"], functio
     }
     exports.EditingBuilding = EditingBuilding;
 });
-define("Shared/GPool", ["require", "exports"], function (require, exports) {
+define("View/GPool", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class GPool {
@@ -1402,7 +1423,7 @@ define("Shared/GPool", ["require", "exports"], function (require, exports) {
     }
     exports.GPool = GPool;
 });
-define("View/CEntityManager", ["require", "exports", "View/CBuilding", "View/EditingBuilding", "Shared/GPool"], function (require, exports, CBuilding_2, EditingBuilding_1, GPool_1) {
+define("View/CEntityManager", ["require", "exports", "View/CBuilding", "View/EditingBuilding", "View/GPool"], function (require, exports, CBuilding_2, EditingBuilding_1, GPool_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class CEntityManager {
@@ -1573,7 +1594,7 @@ define("View/Camera", ["require", "exports"], function (require, exports) {
     }
     exports.Camera = Camera;
 });
-define("Shared/TileBase", ["require", "exports"], function (require, exports) {
+define("View/TileBase", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class TileBase {
@@ -1671,7 +1692,7 @@ define("Shared/TileBase", ["require", "exports"], function (require, exports) {
     }
     exports.TileBase = TileBase;
 });
-define("View/CTile", ["require", "exports", "Shared/TileBase"], function (require, exports, TileBase_1) {
+define("View/CTile", ["require", "exports", "View/TileBase"], function (require, exports, TileBase_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class CTile extends TileBase_1.TileBase {
@@ -1956,7 +1977,7 @@ define("Shared/Event/BaseEvent", ["require", "exports", "Shared/Event/EventCente
     }
     exports.BaseEvent = BaseEvent;
 });
-define("Shared/Attr", ["require", "exports"], function (require, exports) {
+define("Shared/Model/Attr", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var EAttr;
@@ -2040,7 +2061,7 @@ define("Shared/Event/UIEvent", ["require", "exports", "Shared/Event/BaseEvent"],
     UIEvent.POOL = new RC.Collections.Stack();
     exports.UIEvent = UIEvent;
 });
-define("View/Home", ["require", "exports", "View/EditingBuilding", "View/CBuilding", "View/CEntityManager", "View/GraphicManager", "View/Camera", "View/CTile", "View/Input", "View/MapGraphic", "Shared/Utils", "Shared/UpdateContext", "Shared/Model/EntityParam", "Shared/Model/ModelFactory", "Shared/Event/UIEvent"], function (require, exports, EditingBuilding_2, CBuilding_3, CEntityManager_1, GraphicManager_1, Camera_1, CTile_1, Input_1, MapGraphic_1, Utils_2, UpdateContext_1, EntityParam_2, ModelFactory_3, UIEvent_1) {
+define("View/Home", ["require", "exports", "View/EditingBuilding", "View/CBuilding", "View/CEntityManager", "View/GraphicManager", "View/Camera", "View/CTile", "View/Input", "View/MapGraphic", "View/Utils", "View/UpdateContext", "Shared/Model/EntityParam", "Shared/Model/ModelFactory", "Shared/Event/UIEvent"], function (require, exports, EditingBuilding_2, CBuilding_3, CEntityManager_1, GraphicManager_1, Camera_1, CTile_1, Input_1, MapGraphic_1, Utils_2, UpdateContext_1, EntityParam_2, ModelFactory_3, UIEvent_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class Home {
@@ -2139,7 +2160,7 @@ define("View/Home", ["require", "exports", "View/EditingBuilding", "View/CBuildi
     }
     exports.Home = Home;
 });
-define("View/UI/HomePanel", ["require", "exports", "View/CUser", "View/Home", "Shared/Event/EventCenter", "Shared/Event/UIEvent"], function (require, exports, CUser_2, Home_1, EventCenter_2, UIEvent_2) {
+define("UI/HomePanel", ["require", "exports", "View/CUser", "View/Home", "Shared/Event/EventCenter", "Shared/Event/UIEvent"], function (require, exports, CUser_2, Home_1, EventCenter_2, UIEvent_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class HomePanel {
@@ -2229,7 +2250,7 @@ define("View/UI/HomePanel", ["require", "exports", "View/CUser", "View/Home", "S
     }
     exports.HomePanel = HomePanel;
 });
-define("View/UI/SearchPanel", ["require", "exports"], function (require, exports) {
+define("UI/SearchPanel", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class SearchPanel {
@@ -2271,7 +2292,7 @@ define("View/UI/SearchPanel", ["require", "exports"], function (require, exports
     SearchPanel.WAIT_TIME = 2000;
     exports.SearchPanel = SearchPanel;
 });
-define("View/UI/FightPanel", ["require", "exports", "View/CUser"], function (require, exports, CUser_3) {
+define("UI/FightPanel", ["require", "exports", "View/CUser"], function (require, exports, CUser_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class FightPanel {
@@ -2433,7 +2454,7 @@ define("View/UI/FightPanel", ["require", "exports", "View/CUser"], function (req
     }
     exports.FightRecord = FightRecord;
 });
-define("View/UI/RolePanel", ["require", "exports"], function (require, exports) {
+define("UI/RolePanel", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class RolePanel {
@@ -2475,7 +2496,7 @@ define("View/UI/RolePanel", ["require", "exports"], function (require, exports) 
     }
     exports.RolePanel = RolePanel;
 });
-define("View/UI/TaskPanel", ["require", "exports", "View/CUser", "Shared/Event/UIEvent", "Shared/Event/EventCenter", "Shared/Defs"], function (require, exports, CUser_4, UIEvent_3, EventCenter_3, Defs_4) {
+define("UI/TaskPanel", ["require", "exports", "View/CUser", "Shared/Event/UIEvent", "Shared/Event/EventCenter", "Shared/Model/Defs"], function (require, exports, CUser_4, UIEvent_3, EventCenter_3, Defs_4) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class TaskPanel {
@@ -2517,7 +2538,7 @@ define("View/UI/TaskPanel", ["require", "exports", "View/CUser", "Shared/Event/U
     }
     exports.TaskPanel = TaskPanel;
 });
-define("View/UI/MsgPanel", ["require", "exports", "View/CUser", "Shared/Event/UIEvent", "Shared/Event/EventCenter", "Shared/Defs"], function (require, exports, CUser_5, UIEvent_4, EventCenter_4, Defs_5) {
+define("UI/MsgPanel", ["require", "exports", "View/CUser", "Shared/Event/UIEvent", "Shared/Event/EventCenter", "Shared/Model/Defs"], function (require, exports, CUser_5, UIEvent_4, EventCenter_4, Defs_5) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class MsgPanel {
@@ -2559,7 +2580,7 @@ define("View/UI/MsgPanel", ["require", "exports", "View/CUser", "Shared/Event/UI
     }
     exports.MsgPanel = MsgPanel;
 });
-define("View/UI/UIMain", ["require", "exports", "View/UI/HomePanel", "View/UI/SearchPanel", "View/UI/FightPanel", "View/UI/RolePanel", "View/UI/TaskPanel", "View/UI/MsgPanel"], function (require, exports, HomePanel_1, SearchPanel_1, FightPanel_1, RolePanel_1, TaskPanel_1, MsgPanel_1) {
+define("UI/UIMain", ["require", "exports", "UI/HomePanel", "UI/SearchPanel", "UI/FightPanel", "UI/RolePanel", "UI/TaskPanel", "UI/MsgPanel"], function (require, exports, HomePanel_1, SearchPanel_1, FightPanel_1, RolePanel_1, TaskPanel_1, MsgPanel_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class UIMain {
@@ -2624,7 +2645,7 @@ define("View/UI/UIMain", ["require", "exports", "View/UI/HomePanel", "View/UI/Se
     }
     exports.UIMain = UIMain;
 });
-define("View/UI/UIManager", ["require", "exports", "View/UI/UILogin", "View/UI/UIMain"], function (require, exports, UILogin_1, UIMain_1) {
+define("UI/UIManager", ["require", "exports", "UI/UILogin", "UI/UIMain"], function (require, exports, UILogin_1, UIMain_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class UIManager {
@@ -2673,7 +2694,7 @@ define("View/UI/UIManager", ["require", "exports", "View/UI/UILogin", "View/UI/U
     }
     exports.UIManager = UIManager;
 });
-define("Game", ["require", "exports", "View/UI/UIManager", "Shared/Defs"], function (require, exports, UIManager_2, Defs_6) {
+define("Game", ["require", "exports", "UI/UIManager", "Shared/Model/Defs"], function (require, exports, UIManager_2, Defs_6) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class Main {
@@ -2723,87 +2744,5 @@ define("Game", ["require", "exports", "View/UI/UIManager", "Shared/Defs"], funct
         }
     }
     exports.Main = Main;
-});
-define("Shared/Event/SyncEvent", ["require", "exports", "Shared/Event/BaseEvent"], function (require, exports, BaseEvent_2) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    class SyncEvent extends BaseEvent_2.BaseEvent {
-        constructor() {
-            super(...arguments);
-            this.attrs = [];
-            this.attrValues = [];
-        }
-        static Get() {
-            if (SyncEvent.POOL.size() > 0)
-                return SyncEvent.POOL.pop();
-            return new SyncEvent();
-        }
-        static Release(element) {
-            SyncEvent.POOL.push(element);
-        }
-        Release() {
-            SyncEvent.Release(this);
-        }
-        static CreateBattle(id) {
-            let e = this.Get();
-            e._type = SyncEvent.BATTLE_CREATED;
-            e.genericId = id;
-            e.BeginInvoke();
-        }
-        static DestroyBattle() {
-            let e = this.Get();
-            e._type = SyncEvent.BATTLE_DESTROIED;
-            e.BeginInvoke();
-        }
-        static CreateEntity(type, param) {
-            let e = this.Get();
-            e._type = SyncEvent.ENTITY_CREATED;
-            e.entityType = type;
-            e.param = param;
-            e.BeginInvoke();
-        }
-        static EntityRemoveFromBattle(entityId) {
-            let e = this.Get();
-            e._type = SyncEvent.ENTITY_REMOVE_FROM_BATTLE;
-            e.targetId = entityId;
-            e.BeginInvoke();
-        }
-        static EntityAddedToBattle(entityId) {
-            let e = this.Get();
-            e._type = SyncEvent.ENTITY_ADDED_TO_BATTLE;
-            e.targetId = entityId;
-            e.BeginInvoke();
-        }
-        static BeginSyncProps(targetId) {
-            let e = this.Get();
-            e._type = SyncEvent.ENTITY_SYNC_PROPS;
-            e.attrs.splice(0);
-            e.targetId = targetId;
-            return e;
-        }
-        static EndSyncProps(e) {
-            e.BeginInvoke();
-        }
-        static AddSyncProp(e, attr, value) {
-            e.attrs.push(attr);
-            e.attrValues.push(value);
-        }
-        static HandleFrameAction() {
-            let e = SyncEvent.Get();
-            e._type = SyncEvent.SET_FRAME_ACTION;
-            e.BeginInvoke();
-        }
-    }
-    SyncEvent.BATTLE_CREATED = 10;
-    SyncEvent.BATTLE_DESTROIED = 11;
-    SyncEvent.WIN = 13;
-    SyncEvent.ENTITY_CREATED = 20;
-    SyncEvent.ENTITY_ADDED_TO_BATTLE = 21;
-    SyncEvent.ENTITY_REMOVE_FROM_BATTLE = 22;
-    SyncEvent.ENTITY_STATE_CHANGED = 23;
-    SyncEvent.ENTITY_SYNC_PROPS = 24;
-    SyncEvent.SET_FRAME_ACTION = 99;
-    SyncEvent.POOL = new RC.Collections.Stack();
-    exports.SyncEvent = SyncEvent;
 });
 //# sourceMappingURL=game.js.map
