@@ -10,7 +10,7 @@
 		"removeComments": true,
 		"alwaysStrict": true,
         "experimentalDecorators": true,
-        "emitDecoratorMetadata": true
+		"emitDecoratorMetadata": true
 		// "strict": true,
 		// "noImplicitReturns": true
 	},

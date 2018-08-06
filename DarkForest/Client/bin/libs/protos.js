@@ -584,7 +584,7 @@ define(["libs/protobufjs"], function($protobuf) {
              * @memberof Protos
              * @interface IG_AskPing
              * @property {Protos.IMsgOpts|null} [opts] G_AskPing opts
-             * @property {number|Long|null} [time] G_AskPing time
+             * @property {Long|null} [time] G_AskPing time
              */
     
             /**
@@ -612,7 +612,7 @@ define(["libs/protobufjs"], function($protobuf) {
     
             /**
              * G_AskPing time.
-             * @member {number|Long} time
+             * @member {Long} time
              * @memberof Protos.G_AskPing
              * @instance
              */
@@ -813,8 +813,8 @@ define(["libs/protobufjs"], function($protobuf) {
              * @memberof Protos
              * @interface IG_AskPingRet
              * @property {Protos.IMsgOpts|null} [opts] G_AskPingRet opts
-             * @property {number|Long|null} [stime] G_AskPingRet stime
-             * @property {number|Long|null} [time] G_AskPingRet time
+             * @property {Long|null} [stime] G_AskPingRet stime
+             * @property {Long|null} [time] G_AskPingRet time
              */
     
             /**
@@ -842,7 +842,7 @@ define(["libs/protobufjs"], function($protobuf) {
     
             /**
              * G_AskPingRet stime.
-             * @member {number|Long} stime
+             * @member {Long} stime
              * @memberof Protos.G_AskPingRet
              * @instance
              */
@@ -850,7 +850,7 @@ define(["libs/protobufjs"], function($protobuf) {
     
             /**
              * G_AskPingRet time.
-             * @member {number|Long} time
+             * @member {Long} time
              * @memberof Protos.G_AskPingRet
              * @instance
              */
@@ -2500,7 +2500,7 @@ define(["libs/protobufjs"], function($protobuf) {
              * @memberof Protos
              * @interface IGS2CS_GCAskLogin
              * @property {Protos.IMsgOpts|null} [opts] GS2CS_GCAskLogin opts
-             * @property {number|Long|null} [sessionID] GS2CS_GCAskLogin sessionID
+             * @property {Long|null} [sessionID] GS2CS_GCAskLogin sessionID
              */
     
             /**
@@ -2528,7 +2528,7 @@ define(["libs/protobufjs"], function($protobuf) {
     
             /**
              * GS2CS_GCAskLogin sessionID.
-             * @member {number|Long} sessionID
+             * @member {Long} sessionID
              * @memberof Protos.GS2CS_GCAskLogin
              * @instance
              */
@@ -2730,7 +2730,7 @@ define(["libs/protobufjs"], function($protobuf) {
              * @interface IGC2GS_AskLogin
              * @property {Protos.IMsgOpts|null} [opts] GC2GS_AskLogin opts
              * @property {string|null} [pwd] GC2GS_AskLogin pwd
-             * @property {number|Long|null} [sessionID] GC2GS_AskLogin sessionID
+             * @property {Long|null} [sessionID] GC2GS_AskLogin sessionID
              */
     
             /**
@@ -2766,7 +2766,7 @@ define(["libs/protobufjs"], function($protobuf) {
     
             /**
              * GC2GS_AskLogin sessionID.
-             * @member {number|Long} sessionID
+             * @member {Long} sessionID
              * @memberof Protos.GC2GS_AskLogin
              * @instance
              */
@@ -3740,7 +3740,7 @@ define(["libs/protobufjs"], function($protobuf) {
              * @memberof Protos
              * @interface ILS2CS_GCLogin
              * @property {Protos.IMsgOpts|null} [opts] LS2CS_GCLogin opts
-             * @property {number|Long|null} [sessionID] LS2CS_GCLogin sessionID
+             * @property {Long|null} [sessionID] LS2CS_GCLogin sessionID
              */
     
             /**
@@ -3768,7 +3768,7 @@ define(["libs/protobufjs"], function($protobuf) {
     
             /**
              * LS2CS_GCLogin sessionID.
-             * @member {number|Long} sessionID
+             * @member {Long} sessionID
              * @memberof Protos.LS2CS_GCLogin
              * @instance
              */
@@ -4233,7 +4233,7 @@ define(["libs/protobufjs"], function($protobuf) {
              * @interface ILS2GC_LoginResult
              * @property {Protos.IMsgOpts|null} [opts] LS2GC_LoginResult opts
              * @property {Protos.LS2GC_LoginResult.EResult|null} [result] LS2GC_LoginResult result
-             * @property {number|Long|null} [sessionID] LS2GC_LoginResult sessionID
+             * @property {Long|null} [sessionID] LS2GC_LoginResult sessionID
              * @property {Array.<Protos.IGSInfo>|null} [gsInfos] LS2GC_LoginResult gsInfos
              */
     
@@ -4271,7 +4271,7 @@ define(["libs/protobufjs"], function($protobuf) {
     
             /**
              * LS2GC_LoginResult sessionID.
-             * @member {number|Long} sessionID
+             * @member {Long} sessionID
              * @memberof Protos.LS2GC_LoginResult
              * @instance
              */

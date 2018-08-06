@@ -3,7 +3,6 @@
 //</auto-generated>
 //ReSharper disable CheckNamespace
 import { Protos } from "../libs/protos";
-import protobuf = require( "../libs/protobufjs" );
 
 export class ProtoCreator {
 	private static readonly _TYPE2ID = new Map<new () => any, Protos.MsgID>([

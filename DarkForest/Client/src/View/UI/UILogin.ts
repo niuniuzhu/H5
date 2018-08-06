@@ -5,7 +5,6 @@ import { ProtoCreator } from "../../Protos/ProtoHelper";
 import { UIAlert } from "./UIAlert";
 import { BattleParams, Building } from "../../Shared/Model/EntityParam";
 import { UIManager } from "./UIManager";
-import Long from "../../libs/long";
 
 export class UILogin implements IUIModule {
 	private _root: fairygui.GComponent;

@@ -1,5 +1,4 @@
-import * as $protobuf from "protobufjs";
-import { Long } from "protobufjs";
+import * as $protobuf from "protobufjs";// respectively "./node_modules/protobufjs"
 export namespace Protos {
 
     interface ICS2GS_GCLoginRet {
@@ -87,13 +86,13 @@ export namespace Protos {
 
     interface IG_AskPing {
         opts?: (Protos.IMsgOpts|null);
-        time?: (number|Long|null);
+        time?: (Long|null);
     }
 
     class G_AskPing implements IG_AskPing {
         constructor(properties?: Protos.IG_AskPing);
         public opts?: (Protos.IMsgOpts|null);
-        public time: (number|Long);
+        public time: Long;
         public static create(properties?: Protos.IG_AskPing): Protos.G_AskPing;
         public static encode(message: Protos.IG_AskPing, writer?: $protobuf.Writer): $protobuf.Writer;
         public static encodeDelimited(message: Protos.IG_AskPing, writer?: $protobuf.Writer): $protobuf.Writer;
@@ -107,15 +106,15 @@ export namespace Protos {
 
     interface IG_AskPingRet {
         opts?: (Protos.IMsgOpts|null);
-        stime?: (number|Long|null);
-        time?: (number|Long|null);
+        stime?: (Long|null);
+        time?: (Long|null);
     }
 
     class G_AskPingRet implements IG_AskPingRet {
         constructor(properties?: Protos.IG_AskPingRet);
         public opts?: (Protos.IMsgOpts|null);
-        public stime: (number|Long);
-        public time: (number|Long);
+        public stime: Long;
+        public time: Long;
         public static create(properties?: Protos.IG_AskPingRet): Protos.G_AskPingRet;
         public static encode(message: Protos.IG_AskPingRet, writer?: $protobuf.Writer): $protobuf.Writer;
         public static encodeDelimited(message: Protos.IG_AskPingRet, writer?: $protobuf.Writer): $protobuf.Writer;
@@ -265,13 +264,13 @@ export namespace Protos {
 
     interface IGS2CS_GCAskLogin {
         opts?: (Protos.IMsgOpts|null);
-        sessionID?: (number|Long|null);
+        sessionID?: (Long|null);
     }
 
     class GS2CS_GCAskLogin implements IGS2CS_GCAskLogin {
         constructor(properties?: Protos.IGS2CS_GCAskLogin);
         public opts?: (Protos.IMsgOpts|null);
-        public sessionID: (number|Long);
+        public sessionID: Long;
         public static create(properties?: Protos.IGS2CS_GCAskLogin): Protos.GS2CS_GCAskLogin;
         public static encode(message: Protos.IGS2CS_GCAskLogin, writer?: $protobuf.Writer): $protobuf.Writer;
         public static encodeDelimited(message: Protos.IGS2CS_GCAskLogin, writer?: $protobuf.Writer): $protobuf.Writer;
@@ -286,14 +285,14 @@ export namespace Protos {
     interface IGC2GS_AskLogin {
         opts?: (Protos.IMsgOpts|null);
         pwd?: (string|null);
-        sessionID?: (number|Long|null);
+        sessionID?: (Long|null);
     }
 
     class GC2GS_AskLogin implements IGC2GS_AskLogin {
         constructor(properties?: Protos.IGC2GS_AskLogin);
         public opts?: (Protos.IMsgOpts|null);
         public pwd: string;
-        public sessionID: (number|Long);
+        public sessionID: Long;
         public static create(properties?: Protos.IGC2GS_AskLogin): Protos.GC2GS_AskLogin;
         public static encode(message: Protos.IGC2GS_AskLogin, writer?: $protobuf.Writer): $protobuf.Writer;
         public static encodeDelimited(message: Protos.IGC2GS_AskLogin, writer?: $protobuf.Writer): $protobuf.Writer;
@@ -383,13 +382,13 @@ export namespace Protos {
 
     interface ILS2CS_GCLogin {
         opts?: (Protos.IMsgOpts|null);
-        sessionID?: (number|Long|null);
+        sessionID?: (Long|null);
     }
 
     class LS2CS_GCLogin implements ILS2CS_GCLogin {
         constructor(properties?: Protos.ILS2CS_GCLogin);
         public opts?: (Protos.IMsgOpts|null);
-        public sessionID: (number|Long);
+        public sessionID: Long;
         public static create(properties?: Protos.ILS2CS_GCLogin): Protos.LS2CS_GCLogin;
         public static encode(message: Protos.ILS2CS_GCLogin, writer?: $protobuf.Writer): $protobuf.Writer;
         public static encodeDelimited(message: Protos.ILS2CS_GCLogin, writer?: $protobuf.Writer): $protobuf.Writer;
@@ -435,7 +434,7 @@ export namespace Protos {
     interface ILS2GC_LoginResult {
         opts?: (Protos.IMsgOpts|null);
         result?: (Protos.LS2GC_LoginResult.EResult|null);
-        sessionID?: (number|Long|null);
+        sessionID?: (Long|null);
         gsInfos?: (Protos.IGSInfo[]|null);
     }
 
@@ -443,7 +442,7 @@ export namespace Protos {
         constructor(properties?: Protos.ILS2GC_LoginResult);
         public opts?: (Protos.IMsgOpts|null);
         public result: Protos.LS2GC_LoginResult.EResult;
-        public sessionID: (number|Long);
+        public sessionID: Long;
         public gsInfos: Protos.IGSInfo[];
         public static create(properties?: Protos.ILS2GC_LoginResult): Protos.LS2GC_LoginResult;
         public static encode(message: Protos.ILS2GC_LoginResult, writer?: $protobuf.Writer): $protobuf.Writer;
