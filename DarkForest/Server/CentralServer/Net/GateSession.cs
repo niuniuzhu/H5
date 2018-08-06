@@ -12,6 +12,7 @@ namespace CentralServer.Net
 			this._msgCenter.Register( Protos.MsgID.EGAskPing, this.OnGSAskPing );
 			this._msgCenter.Register( Protos.MsgID.EGs2CsReportState, this.OnGs2CsReportState );
 			this._msgCenter.Register( Protos.MsgID.EGs2CsGcaskLogin, this.OnGs2CsGcaskLogin );
+			this._msgCenter.Register( Protos.MsgID.EGs2CsGclost, this.OnGs2CsGclost );
 		}
 
 		protected override void OnEstablish()
@@ -65,6 +66,13 @@ namespace CentralServer.Net
 			}
 			this.Send( gcAskLoginRet );
 			return ErrorCode.Success;
+		}
+
+		private ErrorCode OnGs2CsGclost( Google.Protobuf.IMessage message )
+		{
+			Protos.GS2CS_GCLost gcLost = ( Protos.GS2CS_GCLost )message;
+			ErrorCode errorCode = CS.instance.HandleGCLost( gcLost.SessionID );
+			return errorCode;
 		}
 	}
 }

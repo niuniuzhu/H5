@@ -27,3 +27,8 @@ message GS2CS_GCAskLogin{
 	MsgOpts opts = 1;
 	uint64 sessionID = 2;
 }
+
+message GS2CS_GCLost{
+	MsgOpts opts = 1;
+	uint64 sessionID = 2;
+}

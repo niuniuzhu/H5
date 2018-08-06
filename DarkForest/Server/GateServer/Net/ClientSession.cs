@@ -8,6 +8,7 @@ namespace GateServer.Net
 	public class ClientSession : SrvCliSession
 	{
 		private long _activeTime;
+		private ulong _sid;
 
 		protected ClientSession( uint id, ProtoType type ) : base( id, type )
 		{
@@ -26,16 +27,25 @@ namespace GateServer.Net
 		{
 			base.OnClose( reason );
 			Logger.Info( $"client({this.id}) disconnected with msg:{reason}" );
+
+			//通知cs客户端丢失
+			Protos.GS2CS_GCLost gcLost = ProtoCreator.Q_GS2CS_GCLost();
+			gcLost.SessionID = this._sid;
+			this.owner.Send( SessionType.ServerG2CS, gcLost );
+
 			this._activeTime = 0;
-			//todo 通知cs客户端断开
+			this._sid = 0;
 		}
 
 		private ErrorCode OnGc2GsAskLogin( Google.Protobuf.IMessage message )
 		{
 			Protos.GC2GS_AskLogin login = ( Protos.GC2GS_AskLogin )message;
+			this._sid = login.SessionID;
+
 			Protos.GS2CS_GCAskLogin gcAskLogin = ProtoCreator.Q_GS2CS_GCAskLogin();
-			gcAskLogin.SessionID = login.SessionID;
+			gcAskLogin.SessionID = this._sid;
 			Logger.Log( $"client:{gcAskLogin.SessionID} ask login" );
+
 			//向CS请求客户端登陆
 			this.owner.Send( SessionType.ServerG2CS, gcAskLogin, msgRet =>
 			{

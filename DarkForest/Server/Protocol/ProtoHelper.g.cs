@@ -18,6 +18,7 @@ public static class ProtoCreator {
 		{typeof(Protos.LS2CS_GCLogin), (Protos.MsgID)400},
 		{typeof(Protos.GS2CS_ReportState), (Protos.MsgID)500},
 		{typeof(Protos.GS2CS_GCAskLogin), (Protos.MsgID)501},
+		{typeof(Protos.GS2CS_GCLost), (Protos.MsgID)502},
 		{typeof(Protos.GS2GC_LoginResult), (Protos.MsgID)600},
 		{typeof(Protos.CS2LS_GSInfos), (Protos.MsgID)700},
 		{typeof(Protos.CS2LS_GSInfo), (Protos.MsgID)701},
@@ -39,6 +40,7 @@ public static class ProtoCreator {
 		{(Protos.MsgID)400, typeof(Protos.LS2CS_GCLogin)},
 		{(Protos.MsgID)500, typeof(Protos.GS2CS_ReportState)},
 		{(Protos.MsgID)501, typeof(Protos.GS2CS_GCAskLogin)},
+		{(Protos.MsgID)502, typeof(Protos.GS2CS_GCLost)},
 		{(Protos.MsgID)600, typeof(Protos.GS2GC_LoginResult)},
 		{(Protos.MsgID)700, typeof(Protos.CS2LS_GSInfos)},
 		{(Protos.MsgID)701, typeof(Protos.CS2LS_GSInfo)},
@@ -124,6 +126,12 @@ public static class ProtoCreator {
 		var msg = new Protos.GS2CS_GCAskLogin();
 		msg.Opts = new Protos.MsgOpts();
 		msg.Opts.Flag |= (uint)Protos.MsgOpts.Types.Flag.Rpc;
+		return msg;
+	}
+
+	public static Protos.GS2CS_GCLost Q_GS2CS_GCLost() {
+		var msg = new Protos.GS2CS_GCLost();
+		msg.Opts = new Protos.MsgOpts();
 		return msg;
 	}
 
@@ -279,6 +287,11 @@ public static class ProtoCreator {
 				msg.MergeFrom( data, offset, size );
 				return msg;
 			}
+			case (Protos.MsgID)502: {
+				var msg = new Protos.GS2CS_GCLost();
+				msg.MergeFrom( data, offset, size );
+				return msg;
+			}
 			case (Protos.MsgID)600: {
 				var msg = new Protos.GS2GC_LoginResult();
 				msg.MergeFrom( data, offset, size );
@@ -385,6 +398,12 @@ public static class ProtoCreator {
 		return msg;
 	}
 
+	public static Protos.GS2CS_GCLost D_GS2CS_GCLost( byte[] data, int offset, int size ) {
+		var msg = new Protos.GS2CS_GCLost();
+		msg.MergeFrom( data, offset, size );
+		return msg;
+	}
+
 	public static Protos.GS2GC_LoginResult D_GS2GC_LoginResult( byte[] data, int offset, int size ) {
 		var msg = new Protos.GS2GC_LoginResult();
 		msg.MergeFrom( data, offset, size );
@@ -462,6 +481,9 @@ public static class ProtoCreator {
 			case (Protos.MsgID)501: {
 				return new Protos.GS2CS_GCAskLogin();
 			}
+			case (Protos.MsgID)502: {
+				return new Protos.GS2CS_GCLost();
+			}
 			case (Protos.MsgID)600: {
 				return new Protos.GS2GC_LoginResult();
 			}
@@ -524,6 +546,9 @@ public static class ProtoCreator {
 			}
 			case (Protos.MsgID)501: {
 				return ((Protos.GS2CS_GCAskLogin)message).Opts;
+			}
+			case (Protos.MsgID)502: {
+				return ((Protos.GS2CS_GCLost)message).Opts;
 			}
 			case (Protos.MsgID)600: {
 				return ((Protos.GS2GC_LoginResult)message).Opts;

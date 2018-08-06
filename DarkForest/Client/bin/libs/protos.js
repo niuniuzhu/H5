@@ -276,6 +276,7 @@ define(["libs/protobufjs"], function($protobuf) {
          * @property {number} eLS2CS_GCLogin=400 eLS2CS_GCLogin value
          * @property {number} eGS2CS_ReportState=500 eGS2CS_ReportState value
          * @property {number} eGS2CS_GCAskLogin=501 eGS2CS_GCAskLogin value
+         * @property {number} eGS2CS_GCLost=502 eGS2CS_GCLost value
          * @property {number} eGS2GC_LoginResult=600 eGS2GC_LoginResult value
          * @property {number} eCS2LS_GSInfos=700 eCS2LS_GSInfos value
          * @property {number} eCS2LS_GSInfo=701 eCS2LS_GSInfo value
@@ -298,6 +299,7 @@ define(["libs/protobufjs"], function($protobuf) {
             values[valuesById[400] = "eLS2CS_GCLogin"] = 400;
             values[valuesById[500] = "eGS2CS_ReportState"] = 500;
             values[valuesById[501] = "eGS2CS_GCAskLogin"] = 501;
+            values[valuesById[502] = "eGS2CS_GCLost"] = 502;
             values[valuesById[600] = "eGS2GC_LoginResult"] = 600;
             values[valuesById[700] = "eCS2LS_GSInfos"] = 700;
             values[valuesById[701] = "eCS2LS_GSInfo"] = 701;
@@ -2722,6 +2724,235 @@ define(["libs/protobufjs"], function($protobuf) {
             };
     
             return GS2CS_GCAskLogin;
+        })();
+    
+        Protos.GS2CS_GCLost = (function() {
+    
+            /**
+             * Properties of a GS2CS_GCLost.
+             * @memberof Protos
+             * @interface IGS2CS_GCLost
+             * @property {Protos.IMsgOpts|null} [opts] GS2CS_GCLost opts
+             * @property {Long|null} [sessionID] GS2CS_GCLost sessionID
+             */
+    
+            /**
+             * Constructs a new GS2CS_GCLost.
+             * @memberof Protos
+             * @classdesc Represents a GS2CS_GCLost.
+             * @implements IGS2CS_GCLost
+             * @constructor
+             * @param {Protos.IGS2CS_GCLost=} [properties] Properties to set
+             */
+            function GS2CS_GCLost(properties) {
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+    
+            /**
+             * GS2CS_GCLost opts.
+             * @member {Protos.IMsgOpts|null|undefined} opts
+             * @memberof Protos.GS2CS_GCLost
+             * @instance
+             */
+            GS2CS_GCLost.prototype.opts = null;
+    
+            /**
+             * GS2CS_GCLost sessionID.
+             * @member {Long} sessionID
+             * @memberof Protos.GS2CS_GCLost
+             * @instance
+             */
+            GS2CS_GCLost.prototype.sessionID = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+    
+            /**
+             * Creates a new GS2CS_GCLost instance using the specified properties.
+             * @function create
+             * @memberof Protos.GS2CS_GCLost
+             * @static
+             * @param {Protos.IGS2CS_GCLost=} [properties] Properties to set
+             * @returns {Protos.GS2CS_GCLost} GS2CS_GCLost instance
+             */
+            GS2CS_GCLost.create = function create(properties) {
+                return new GS2CS_GCLost(properties);
+            };
+    
+            /**
+             * Encodes the specified GS2CS_GCLost message. Does not implicitly {@link Protos.GS2CS_GCLost.verify|verify} messages.
+             * @function encode
+             * @memberof Protos.GS2CS_GCLost
+             * @static
+             * @param {Protos.IGS2CS_GCLost} message GS2CS_GCLost message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GS2CS_GCLost.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.opts != null && message.hasOwnProperty("opts"))
+                    $root.Protos.MsgOpts.encode(message.opts, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                if (message.sessionID != null && message.hasOwnProperty("sessionID"))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.sessionID);
+                return writer;
+            };
+    
+            /**
+             * Encodes the specified GS2CS_GCLost message, length delimited. Does not implicitly {@link Protos.GS2CS_GCLost.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof Protos.GS2CS_GCLost
+             * @static
+             * @param {Protos.IGS2CS_GCLost} message GS2CS_GCLost message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GS2CS_GCLost.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+    
+            /**
+             * Decodes a GS2CS_GCLost message from the specified reader or buffer.
+             * @function decode
+             * @memberof Protos.GS2CS_GCLost
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {Protos.GS2CS_GCLost} GS2CS_GCLost
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GS2CS_GCLost.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.Protos.GS2CS_GCLost();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1:
+                        message.opts = $root.Protos.MsgOpts.decode(reader, reader.uint32());
+                        break;
+                    case 2:
+                        message.sessionID = reader.uint64();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                return message;
+            };
+    
+            /**
+             * Decodes a GS2CS_GCLost message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof Protos.GS2CS_GCLost
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {Protos.GS2CS_GCLost} GS2CS_GCLost
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GS2CS_GCLost.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+    
+            /**
+             * Verifies a GS2CS_GCLost message.
+             * @function verify
+             * @memberof Protos.GS2CS_GCLost
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            GS2CS_GCLost.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.opts != null && message.hasOwnProperty("opts")) {
+                    var error = $root.Protos.MsgOpts.verify(message.opts);
+                    if (error)
+                        return "opts." + error;
+                }
+                if (message.sessionID != null && message.hasOwnProperty("sessionID"))
+                    if (!$util.isInteger(message.sessionID) && !(message.sessionID && $util.isInteger(message.sessionID.low) && $util.isInteger(message.sessionID.high)))
+                        return "sessionID: integer|Long expected";
+                return null;
+            };
+    
+            /**
+             * Creates a GS2CS_GCLost message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof Protos.GS2CS_GCLost
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {Protos.GS2CS_GCLost} GS2CS_GCLost
+             */
+            GS2CS_GCLost.fromObject = function fromObject(object) {
+                if (object instanceof $root.Protos.GS2CS_GCLost)
+                    return object;
+                var message = new $root.Protos.GS2CS_GCLost();
+                if (object.opts != null) {
+                    if (typeof object.opts !== "object")
+                        throw TypeError(".Protos.GS2CS_GCLost.opts: object expected");
+                    message.opts = $root.Protos.MsgOpts.fromObject(object.opts);
+                }
+                if (object.sessionID != null)
+                    if ($util.Long)
+                        (message.sessionID = $util.Long.fromValue(object.sessionID)).unsigned = true;
+                    else if (typeof object.sessionID === "string")
+                        message.sessionID = parseInt(object.sessionID, 10);
+                    else if (typeof object.sessionID === "number")
+                        message.sessionID = object.sessionID;
+                    else if (typeof object.sessionID === "object")
+                        message.sessionID = new $util.LongBits(object.sessionID.low >>> 0, object.sessionID.high >>> 0).toNumber(true);
+                return message;
+            };
+    
+            /**
+             * Creates a plain object from a GS2CS_GCLost message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof Protos.GS2CS_GCLost
+             * @static
+             * @param {Protos.GS2CS_GCLost} message GS2CS_GCLost
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            GS2CS_GCLost.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    object.opts = null;
+                    if ($util.Long) {
+                        var long = new $util.Long(0, 0, true);
+                        object.sessionID = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                    } else
+                        object.sessionID = options.longs === String ? "0" : 0;
+                }
+                if (message.opts != null && message.hasOwnProperty("opts"))
+                    object.opts = $root.Protos.MsgOpts.toObject(message.opts, options);
+                if (message.sessionID != null && message.hasOwnProperty("sessionID"))
+                    if (typeof message.sessionID === "number")
+                        object.sessionID = options.longs === String ? String(message.sessionID) : message.sessionID;
+                    else
+                        object.sessionID = options.longs === String ? $util.Long.prototype.toString.call(message.sessionID) : options.longs === Number ? new $util.LongBits(message.sessionID.low >>> 0, message.sessionID.high >>> 0).toNumber(true) : message.sessionID;
+                return object;
+            };
+    
+            /**
+             * Converts this GS2CS_GCLost to JSON.
+             * @function toJSON
+             * @memberof Protos.GS2CS_GCLost
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            GS2CS_GCLost.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+    
+            return GS2CS_GCLost;
         })();
     
         Protos.GC2GS_AskLogin = (function() {

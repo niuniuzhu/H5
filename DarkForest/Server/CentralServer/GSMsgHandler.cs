@@ -1,5 +1,4 @@
-﻿using Core.Misc;
-using Shared;
+﻿using Shared;
 using Shared.Net;
 
 namespace CentralServer
@@ -60,6 +59,17 @@ namespace CentralServer
 
 			System.Diagnostics.Debug.Assert( !this._gcSIDToGsSID.ContainsKey( gcSID ), $"duplicate GC sessionID:{gcSID}." );
 			this._gcSIDToGsSID[gcSID] = id;
+			return ErrorCode.Success;
+		}
+
+		public ErrorCode HandleGCLost( ulong gcSID )
+		{
+			if ( !this._gcSIDForLogin.Remove( gcSID ) )
+			{
+				System.Diagnostics.Debug.Assert( false, $"duplicate GC sessionID:{gcSID}." );
+				return ErrorCode.InvalidGcNID;
+			}
+			this._gcSIDToGsSID.Remove( gcSID );
 			return ErrorCode.Success;
 		}
 	}

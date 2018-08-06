@@ -18,6 +18,7 @@ export class ProtoCreator {
 		[Protos.LS2CS_GCLogin, <Protos.MsgID>400],
 		[Protos.GS2CS_ReportState, <Protos.MsgID>500],
 		[Protos.GS2CS_GCAskLogin, <Protos.MsgID>501],
+		[Protos.GS2CS_GCLost, <Protos.MsgID>502],
 		[Protos.GS2GC_LoginResult, <Protos.MsgID>600],
 		[Protos.CS2LS_GSInfos, <Protos.MsgID>700],
 		[Protos.CS2LS_GSInfo, <Protos.MsgID>701],
@@ -39,6 +40,7 @@ export class ProtoCreator {
 		[<Protos.MsgID>400, Protos.LS2CS_GCLogin],
 		[<Protos.MsgID>500, Protos.GS2CS_ReportState],
 		[<Protos.MsgID>501, Protos.GS2CS_GCAskLogin],
+		[<Protos.MsgID>502, Protos.GS2CS_GCLost],
 		[<Protos.MsgID>600, Protos.GS2GC_LoginResult],
 		[<Protos.MsgID>700, Protos.CS2LS_GSInfos],
 		[<Protos.MsgID>701, Protos.CS2LS_GSInfo],
@@ -122,6 +124,12 @@ export class ProtoCreator {
 		let msg = new Protos.GS2CS_GCAskLogin();
 		msg.opts = new Protos.MsgOpts();
 		msg.opts.flag |= Protos.MsgOpts.Flag.RPC;
+		return msg;
+	}
+
+	public static Q_GS2CS_GCLost(): Protos.GS2CS_GCLost {
+		let msg = new Protos.GS2CS_GCLost();
+		msg.opts = new Protos.MsgOpts();
 		return msg;
 	}
 
@@ -261,6 +269,10 @@ export class ProtoCreator {
 				let msg = Protos.GS2CS_GCAskLogin.decode(data, size);
 				return msg;
 			}
+			case 502: {
+				let msg = Protos.GS2CS_GCLost.decode(data, size);
+				return msg;
+			}
 			case 600: {
 				let msg = Protos.GS2GC_LoginResult.decode(data, size);
 				return msg;
@@ -349,6 +361,11 @@ export class ProtoCreator {
 		return msg;
 	}
 
+	public static D_GS2CS_GCLost(data: Uint8Array, size: number): Protos.GS2CS_GCLost {
+		let msg = Protos.GS2CS_GCLost.decode(data, size);
+		return msg;
+	}
+
 	public static D_GS2GC_LoginResult(data: Uint8Array, size: number): Protos.GS2GC_LoginResult {
 		let msg = Protos.GS2GC_LoginResult.decode(data, size);
 		return msg;
@@ -418,6 +435,9 @@ export class ProtoCreator {
 			case 501: {
 				return new Protos.GS2CS_GCAskLogin();
 			}
+			case 502: {
+				return new Protos.GS2CS_GCLost();
+			}
 			case 600: {
 				return new Protos.GS2GC_LoginResult();
 			}
@@ -478,6 +498,9 @@ export class ProtoCreator {
 			}
 			case 501: {
 				return (<Protos.GS2CS_GCAskLogin>message).opts;
+			}
+			case 502: {
+				return (<Protos.GS2CS_GCLost>message).opts;
 			}
 			case 600: {
 				return (<Protos.GS2GC_LoginResult>message).opts;

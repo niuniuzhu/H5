@@ -43,6 +43,7 @@ export namespace Protos {
         eLS2CS_GCLogin = 400,
         eGS2CS_ReportState = 500,
         eGS2CS_GCAskLogin = 501,
+        eGS2CS_GCLost = 502,
         eGS2GC_LoginResult = 600,
         eCS2LS_GSInfos = 700,
         eCS2LS_GSInfo = 701,
@@ -280,6 +281,26 @@ export namespace Protos {
         public static verify(message: { [k: string]: any }): (string|null);
         public static fromObject(object: { [k: string]: any }): Protos.GS2CS_GCAskLogin;
         public static toObject(message: Protos.GS2CS_GCAskLogin, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public toJSON(): { [k: string]: any };
+    }
+
+    interface IGS2CS_GCLost {
+        opts?: (Protos.IMsgOpts|null);
+        sessionID?: (Long|null);
+    }
+
+    class GS2CS_GCLost implements IGS2CS_GCLost {
+        constructor(properties?: Protos.IGS2CS_GCLost);
+        public opts?: (Protos.IMsgOpts|null);
+        public sessionID: Long;
+        public static create(properties?: Protos.IGS2CS_GCLost): Protos.GS2CS_GCLost;
+        public static encode(message: Protos.IGS2CS_GCLost, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: Protos.IGS2CS_GCLost, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Protos.GS2CS_GCLost;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Protos.GS2CS_GCLost;
+        public static verify(message: { [k: string]: any }): (string|null);
+        public static fromObject(object: { [k: string]: any }): Protos.GS2CS_GCLost;
+        public static toObject(message: Protos.GS2CS_GCLost, options?: $protobuf.IConversionOptions): { [k: string]: any };
         public toJSON(): { [k: string]: any };
     }
 

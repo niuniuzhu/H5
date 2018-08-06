@@ -21,6 +21,7 @@ enum MsgID {
 
 	eGS2CS_ReportState = 500;
 	eGS2CS_GCAskLogin = 501;
+	eGS2CS_GCLost = 502;
 
 	eGS2GC_LoginResult = 600;
 
