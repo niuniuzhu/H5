@@ -11,6 +11,7 @@ enum MsgID {
 	eGC2LS_AskLogin = 101;
 
 	eGC2GS_AskLogin = 200;
+	eGC2GS_KeepAlive = 201;
 
 	eLS2GC_RegResult = 300;
 	eLS2GC_LoginResult = 301;
@@ -29,7 +30,6 @@ enum MsgID {
 	eCS2LS_GCLoginRet = 703;
 
 	eCS2GS_GCLoginRet = 800;
-	eCS2GS_KeepAlive = 801;
 }
 
 message MsgOpts {

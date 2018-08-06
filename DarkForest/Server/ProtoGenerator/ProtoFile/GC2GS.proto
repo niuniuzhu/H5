@@ -8,3 +8,7 @@ message GC2GS_AskLogin{
 	string pwd = 2;
 	uint64 sessionID = 3;
 }
+
+message GC2GS_KeepAlive{
+	MsgOpts opts = 1;
+}

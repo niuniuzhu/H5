@@ -1,4 +1,4 @@
-import * as $protobuf from "../../node_modules/@types/protobufjs/index";
+import * as $protobuf from "protobufjs";
 export namespace Protos {
 
     interface ICS2GS_GCLoginRet {
@@ -29,24 +29,6 @@ export namespace Protos {
         }
     }
 
-    interface ICS2GS_KeepAlive {
-        opts?: (Protos.IMsgOpts|null);
-    }
-
-    class CS2GS_KeepAlive implements ICS2GS_KeepAlive {
-        constructor(properties?: Protos.ICS2GS_KeepAlive);
-        public opts?: (Protos.IMsgOpts|null);
-        public static create(properties?: Protos.ICS2GS_KeepAlive): Protos.CS2GS_KeepAlive;
-        public static encode(message: Protos.ICS2GS_KeepAlive, writer?: $protobuf.Writer): $protobuf.Writer;
-        public static encodeDelimited(message: Protos.ICS2GS_KeepAlive, writer?: $protobuf.Writer): $protobuf.Writer;
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Protos.CS2GS_KeepAlive;
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Protos.CS2GS_KeepAlive;
-        public static verify(message: { [k: string]: any }): (string|null);
-        public static fromObject(object: { [k: string]: any }): Protos.CS2GS_KeepAlive;
-        public static toObject(message: Protos.CS2GS_KeepAlive, options?: $protobuf.IConversionOptions): { [k: string]: any };
-        public toJSON(): { [k: string]: any };
-    }
-
     enum MsgID {
         Undefine = 0,
         eG_AskPing = 10,
@@ -54,6 +36,7 @@ export namespace Protos {
         eGC2LS_AskRegister = 100,
         eGC2LS_AskLogin = 101,
         eGC2GS_AskLogin = 200,
+        eGC2GS_KeepAlive = 201,
         eLS2GC_RegResult = 300,
         eLS2GC_LoginResult = 301,
         eLS2GC_GSInfo = 302,
@@ -65,8 +48,7 @@ export namespace Protos {
         eCS2LS_GSInfo = 701,
         eCS2LS_GSLost = 702,
         eCS2LS_GCLoginRet = 703,
-        eCS2GS_GCLoginRet = 800,
-        eCS2GS_KeepAlive = 801
+        eCS2GS_GCLoginRet = 800
     }
 
     interface IMsgOpts {
@@ -320,6 +302,24 @@ export namespace Protos {
         public static verify(message: { [k: string]: any }): (string|null);
         public static fromObject(object: { [k: string]: any }): Protos.GC2GS_AskLogin;
         public static toObject(message: Protos.GC2GS_AskLogin, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public toJSON(): { [k: string]: any };
+    }
+
+    interface IGC2GS_KeepAlive {
+        opts?: (Protos.IMsgOpts|null);
+    }
+
+    class GC2GS_KeepAlive implements IGC2GS_KeepAlive {
+        constructor(properties?: Protos.IGC2GS_KeepAlive);
+        public opts?: (Protos.IMsgOpts|null);
+        public static create(properties?: Protos.IGC2GS_KeepAlive): Protos.GC2GS_KeepAlive;
+        public static encode(message: Protos.IGC2GS_KeepAlive, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: Protos.IGC2GS_KeepAlive, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Protos.GC2GS_KeepAlive;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Protos.GC2GS_KeepAlive;
+        public static verify(message: { [k: string]: any }): (string|null);
+        public static fromObject(object: { [k: string]: any }): Protos.GC2GS_KeepAlive;
+        public static toObject(message: Protos.GC2GS_KeepAlive, options?: $protobuf.IConversionOptions): { [k: string]: any };
         public toJSON(): { [k: string]: any };
     }
 

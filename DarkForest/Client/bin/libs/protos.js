@@ -259,198 +259,6 @@ define(["libs/protobufjs"], function($protobuf) {
             return CS2GS_GCLoginRet;
         })();
     
-        Protos.CS2GS_KeepAlive = (function() {
-    
-            /**
-             * Properties of a CS2GS_KeepAlive.
-             * @memberof Protos
-             * @interface ICS2GS_KeepAlive
-             * @property {Protos.IMsgOpts|null} [opts] CS2GS_KeepAlive opts
-             */
-    
-            /**
-             * Constructs a new CS2GS_KeepAlive.
-             * @memberof Protos
-             * @classdesc Represents a CS2GS_KeepAlive.
-             * @implements ICS2GS_KeepAlive
-             * @constructor
-             * @param {Protos.ICS2GS_KeepAlive=} [properties] Properties to set
-             */
-            function CS2GS_KeepAlive(properties) {
-                if (properties)
-                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                        if (properties[keys[i]] != null)
-                            this[keys[i]] = properties[keys[i]];
-            }
-    
-            /**
-             * CS2GS_KeepAlive opts.
-             * @member {Protos.IMsgOpts|null|undefined} opts
-             * @memberof Protos.CS2GS_KeepAlive
-             * @instance
-             */
-            CS2GS_KeepAlive.prototype.opts = null;
-    
-            /**
-             * Creates a new CS2GS_KeepAlive instance using the specified properties.
-             * @function create
-             * @memberof Protos.CS2GS_KeepAlive
-             * @static
-             * @param {Protos.ICS2GS_KeepAlive=} [properties] Properties to set
-             * @returns {Protos.CS2GS_KeepAlive} CS2GS_KeepAlive instance
-             */
-            CS2GS_KeepAlive.create = function create(properties) {
-                return new CS2GS_KeepAlive(properties);
-            };
-    
-            /**
-             * Encodes the specified CS2GS_KeepAlive message. Does not implicitly {@link Protos.CS2GS_KeepAlive.verify|verify} messages.
-             * @function encode
-             * @memberof Protos.CS2GS_KeepAlive
-             * @static
-             * @param {Protos.ICS2GS_KeepAlive} message CS2GS_KeepAlive message or plain object to encode
-             * @param {$protobuf.Writer} [writer] Writer to encode to
-             * @returns {$protobuf.Writer} Writer
-             */
-            CS2GS_KeepAlive.encode = function encode(message, writer) {
-                if (!writer)
-                    writer = $Writer.create();
-                if (message.opts != null && message.hasOwnProperty("opts"))
-                    $root.Protos.MsgOpts.encode(message.opts, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                return writer;
-            };
-    
-            /**
-             * Encodes the specified CS2GS_KeepAlive message, length delimited. Does not implicitly {@link Protos.CS2GS_KeepAlive.verify|verify} messages.
-             * @function encodeDelimited
-             * @memberof Protos.CS2GS_KeepAlive
-             * @static
-             * @param {Protos.ICS2GS_KeepAlive} message CS2GS_KeepAlive message or plain object to encode
-             * @param {$protobuf.Writer} [writer] Writer to encode to
-             * @returns {$protobuf.Writer} Writer
-             */
-            CS2GS_KeepAlive.encodeDelimited = function encodeDelimited(message, writer) {
-                return this.encode(message, writer).ldelim();
-            };
-    
-            /**
-             * Decodes a CS2GS_KeepAlive message from the specified reader or buffer.
-             * @function decode
-             * @memberof Protos.CS2GS_KeepAlive
-             * @static
-             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-             * @param {number} [length] Message length if known beforehand
-             * @returns {Protos.CS2GS_KeepAlive} CS2GS_KeepAlive
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            CS2GS_KeepAlive.decode = function decode(reader, length) {
-                if (!(reader instanceof $Reader))
-                    reader = $Reader.create(reader);
-                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.Protos.CS2GS_KeepAlive();
-                while (reader.pos < end) {
-                    var tag = reader.uint32();
-                    switch (tag >>> 3) {
-                    case 1:
-                        message.opts = $root.Protos.MsgOpts.decode(reader, reader.uint32());
-                        break;
-                    default:
-                        reader.skipType(tag & 7);
-                        break;
-                    }
-                }
-                return message;
-            };
-    
-            /**
-             * Decodes a CS2GS_KeepAlive message from the specified reader or buffer, length delimited.
-             * @function decodeDelimited
-             * @memberof Protos.CS2GS_KeepAlive
-             * @static
-             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-             * @returns {Protos.CS2GS_KeepAlive} CS2GS_KeepAlive
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            CS2GS_KeepAlive.decodeDelimited = function decodeDelimited(reader) {
-                if (!(reader instanceof $Reader))
-                    reader = new $Reader(reader);
-                return this.decode(reader, reader.uint32());
-            };
-    
-            /**
-             * Verifies a CS2GS_KeepAlive message.
-             * @function verify
-             * @memberof Protos.CS2GS_KeepAlive
-             * @static
-             * @param {Object.<string,*>} message Plain object to verify
-             * @returns {string|null} `null` if valid, otherwise the reason why it is not
-             */
-            CS2GS_KeepAlive.verify = function verify(message) {
-                if (typeof message !== "object" || message === null)
-                    return "object expected";
-                if (message.opts != null && message.hasOwnProperty("opts")) {
-                    var error = $root.Protos.MsgOpts.verify(message.opts);
-                    if (error)
-                        return "opts." + error;
-                }
-                return null;
-            };
-    
-            /**
-             * Creates a CS2GS_KeepAlive message from a plain object. Also converts values to their respective internal types.
-             * @function fromObject
-             * @memberof Protos.CS2GS_KeepAlive
-             * @static
-             * @param {Object.<string,*>} object Plain object
-             * @returns {Protos.CS2GS_KeepAlive} CS2GS_KeepAlive
-             */
-            CS2GS_KeepAlive.fromObject = function fromObject(object) {
-                if (object instanceof $root.Protos.CS2GS_KeepAlive)
-                    return object;
-                var message = new $root.Protos.CS2GS_KeepAlive();
-                if (object.opts != null) {
-                    if (typeof object.opts !== "object")
-                        throw TypeError(".Protos.CS2GS_KeepAlive.opts: object expected");
-                    message.opts = $root.Protos.MsgOpts.fromObject(object.opts);
-                }
-                return message;
-            };
-    
-            /**
-             * Creates a plain object from a CS2GS_KeepAlive message. Also converts values to other types if specified.
-             * @function toObject
-             * @memberof Protos.CS2GS_KeepAlive
-             * @static
-             * @param {Protos.CS2GS_KeepAlive} message CS2GS_KeepAlive
-             * @param {$protobuf.IConversionOptions} [options] Conversion options
-             * @returns {Object.<string,*>} Plain object
-             */
-            CS2GS_KeepAlive.toObject = function toObject(message, options) {
-                if (!options)
-                    options = {};
-                var object = {};
-                if (options.defaults)
-                    object.opts = null;
-                if (message.opts != null && message.hasOwnProperty("opts"))
-                    object.opts = $root.Protos.MsgOpts.toObject(message.opts, options);
-                return object;
-            };
-    
-            /**
-             * Converts this CS2GS_KeepAlive to JSON.
-             * @function toJSON
-             * @memberof Protos.CS2GS_KeepAlive
-             * @instance
-             * @returns {Object.<string,*>} JSON object
-             */
-            CS2GS_KeepAlive.prototype.toJSON = function toJSON() {
-                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-            };
-    
-            return CS2GS_KeepAlive;
-        })();
-    
         /**
          * MsgID enum.
          * @name Protos.MsgID
@@ -461,6 +269,7 @@ define(["libs/protobufjs"], function($protobuf) {
          * @property {number} eGC2LS_AskRegister=100 eGC2LS_AskRegister value
          * @property {number} eGC2LS_AskLogin=101 eGC2LS_AskLogin value
          * @property {number} eGC2GS_AskLogin=200 eGC2GS_AskLogin value
+         * @property {number} eGC2GS_KeepAlive=201 eGC2GS_KeepAlive value
          * @property {number} eLS2GC_RegResult=300 eLS2GC_RegResult value
          * @property {number} eLS2GC_LoginResult=301 eLS2GC_LoginResult value
          * @property {number} eLS2GC_GSInfo=302 eLS2GC_GSInfo value
@@ -473,7 +282,6 @@ define(["libs/protobufjs"], function($protobuf) {
          * @property {number} eCS2LS_GSLost=702 eCS2LS_GSLost value
          * @property {number} eCS2LS_GCLoginRet=703 eCS2LS_GCLoginRet value
          * @property {number} eCS2GS_GCLoginRet=800 eCS2GS_GCLoginRet value
-         * @property {number} eCS2GS_KeepAlive=801 eCS2GS_KeepAlive value
          */
         Protos.MsgID = (function() {
             var valuesById = {}, values = Object.create(valuesById);
@@ -483,6 +291,7 @@ define(["libs/protobufjs"], function($protobuf) {
             values[valuesById[100] = "eGC2LS_AskRegister"] = 100;
             values[valuesById[101] = "eGC2LS_AskLogin"] = 101;
             values[valuesById[200] = "eGC2GS_AskLogin"] = 200;
+            values[valuesById[201] = "eGC2GS_KeepAlive"] = 201;
             values[valuesById[300] = "eLS2GC_RegResult"] = 300;
             values[valuesById[301] = "eLS2GC_LoginResult"] = 301;
             values[valuesById[302] = "eLS2GC_GSInfo"] = 302;
@@ -495,7 +304,6 @@ define(["libs/protobufjs"], function($protobuf) {
             values[valuesById[702] = "eCS2LS_GSLost"] = 702;
             values[valuesById[703] = "eCS2LS_GCLoginRet"] = 703;
             values[valuesById[800] = "eCS2GS_GCLoginRet"] = 800;
-            values[valuesById[801] = "eCS2GS_KeepAlive"] = 801;
             return values;
         })();
     
@@ -3165,6 +2973,198 @@ define(["libs/protobufjs"], function($protobuf) {
             };
     
             return GC2GS_AskLogin;
+        })();
+    
+        Protos.GC2GS_KeepAlive = (function() {
+    
+            /**
+             * Properties of a GC2GS_KeepAlive.
+             * @memberof Protos
+             * @interface IGC2GS_KeepAlive
+             * @property {Protos.IMsgOpts|null} [opts] GC2GS_KeepAlive opts
+             */
+    
+            /**
+             * Constructs a new GC2GS_KeepAlive.
+             * @memberof Protos
+             * @classdesc Represents a GC2GS_KeepAlive.
+             * @implements IGC2GS_KeepAlive
+             * @constructor
+             * @param {Protos.IGC2GS_KeepAlive=} [properties] Properties to set
+             */
+            function GC2GS_KeepAlive(properties) {
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+    
+            /**
+             * GC2GS_KeepAlive opts.
+             * @member {Protos.IMsgOpts|null|undefined} opts
+             * @memberof Protos.GC2GS_KeepAlive
+             * @instance
+             */
+            GC2GS_KeepAlive.prototype.opts = null;
+    
+            /**
+             * Creates a new GC2GS_KeepAlive instance using the specified properties.
+             * @function create
+             * @memberof Protos.GC2GS_KeepAlive
+             * @static
+             * @param {Protos.IGC2GS_KeepAlive=} [properties] Properties to set
+             * @returns {Protos.GC2GS_KeepAlive} GC2GS_KeepAlive instance
+             */
+            GC2GS_KeepAlive.create = function create(properties) {
+                return new GC2GS_KeepAlive(properties);
+            };
+    
+            /**
+             * Encodes the specified GC2GS_KeepAlive message. Does not implicitly {@link Protos.GC2GS_KeepAlive.verify|verify} messages.
+             * @function encode
+             * @memberof Protos.GC2GS_KeepAlive
+             * @static
+             * @param {Protos.IGC2GS_KeepAlive} message GC2GS_KeepAlive message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GC2GS_KeepAlive.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.opts != null && message.hasOwnProperty("opts"))
+                    $root.Protos.MsgOpts.encode(message.opts, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                return writer;
+            };
+    
+            /**
+             * Encodes the specified GC2GS_KeepAlive message, length delimited. Does not implicitly {@link Protos.GC2GS_KeepAlive.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof Protos.GC2GS_KeepAlive
+             * @static
+             * @param {Protos.IGC2GS_KeepAlive} message GC2GS_KeepAlive message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GC2GS_KeepAlive.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+    
+            /**
+             * Decodes a GC2GS_KeepAlive message from the specified reader or buffer.
+             * @function decode
+             * @memberof Protos.GC2GS_KeepAlive
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {Protos.GC2GS_KeepAlive} GC2GS_KeepAlive
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GC2GS_KeepAlive.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.Protos.GC2GS_KeepAlive();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1:
+                        message.opts = $root.Protos.MsgOpts.decode(reader, reader.uint32());
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                return message;
+            };
+    
+            /**
+             * Decodes a GC2GS_KeepAlive message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof Protos.GC2GS_KeepAlive
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {Protos.GC2GS_KeepAlive} GC2GS_KeepAlive
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GC2GS_KeepAlive.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+    
+            /**
+             * Verifies a GC2GS_KeepAlive message.
+             * @function verify
+             * @memberof Protos.GC2GS_KeepAlive
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            GC2GS_KeepAlive.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.opts != null && message.hasOwnProperty("opts")) {
+                    var error = $root.Protos.MsgOpts.verify(message.opts);
+                    if (error)
+                        return "opts." + error;
+                }
+                return null;
+            };
+    
+            /**
+             * Creates a GC2GS_KeepAlive message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof Protos.GC2GS_KeepAlive
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {Protos.GC2GS_KeepAlive} GC2GS_KeepAlive
+             */
+            GC2GS_KeepAlive.fromObject = function fromObject(object) {
+                if (object instanceof $root.Protos.GC2GS_KeepAlive)
+                    return object;
+                var message = new $root.Protos.GC2GS_KeepAlive();
+                if (object.opts != null) {
+                    if (typeof object.opts !== "object")
+                        throw TypeError(".Protos.GC2GS_KeepAlive.opts: object expected");
+                    message.opts = $root.Protos.MsgOpts.fromObject(object.opts);
+                }
+                return message;
+            };
+    
+            /**
+             * Creates a plain object from a GC2GS_KeepAlive message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof Protos.GC2GS_KeepAlive
+             * @static
+             * @param {Protos.GC2GS_KeepAlive} message GC2GS_KeepAlive
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            GC2GS_KeepAlive.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults)
+                    object.opts = null;
+                if (message.opts != null && message.hasOwnProperty("opts"))
+                    object.opts = $root.Protos.MsgOpts.toObject(message.opts, options);
+                return object;
+            };
+    
+            /**
+             * Converts this GC2GS_KeepAlive to JSON.
+             * @function toJSON
+             * @memberof Protos.GC2GS_KeepAlive
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            GC2GS_KeepAlive.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+    
+            return GC2GS_KeepAlive;
         })();
     
         Protos.GC2LS_AskRegister = (function() {

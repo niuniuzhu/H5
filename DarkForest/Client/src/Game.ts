@@ -1,5 +1,9 @@
 import { UIManager } from "./UI/UIManager";
 import { Defs } from "./Shared/Model/Defs";
+import { Network } from "./Net/Network";
+import { EventCenter } from "./Shared/Event/EventCenter";
+import { UIEvent } from "./Shared/Event/UIEvent";
+import { UIAlert } from "./UI/UIAlert";
 
 export class Main {
 	constructor() {
@@ -45,12 +49,19 @@ export class Main {
 		fairygui.GRoot.inst.on(fairygui.Events.SIZE_CHANGED, this, this.OnResize);
 		Laya.timer.frameLoop(1, this, this.Update);
 
+		EventCenter.AddListener(UIEvent.NETWORK_DISCONNECT, this.HandleNetworkDisconnect);
+
 		UIManager.EnterLogin();
+	}
+
+	private HandleNetworkDisconnect(): void {
+		UIAlert.Show("与服务器断开连接", () => UIManager.EnterLogin());
 	}
 
 	private Update(): void {
 		let dt = Laya.timer.delta;
 		UIManager.Update(dt);
+		Network.Update(dt);
 	}
 
 	private OnResize(e: laya.events.Event): void {

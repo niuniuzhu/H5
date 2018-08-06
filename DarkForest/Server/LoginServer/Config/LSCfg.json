@@ -4,5 +4,6 @@
     "csPort": 10001,
     "redisIP": "127.0.0.1",
     "redisPort": 7000,
-    "redisPwd": "159753"
+    "redisPwd": "159753",
+    "pingInterval": 10000
 }

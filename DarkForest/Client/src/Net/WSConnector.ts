@@ -7,9 +7,27 @@ export class WSConnector {
 
 	public get connected(): boolean { return this._socket != null && this._socket.readyState == WebSocket.OPEN };
 
-	public onclose: ((ev: CloseEvent) => any) | null;
-	public onerror: ((ev: Event) => any) | null;
-	public onopen: ((ev: Event) => any) | null;
+	public set onclose(handler: (ev: CloseEvent) => any) {
+		this._onclose = handler;
+		if (this._socket != null)
+			this._socket.onclose = this._onclose;
+	}
+	
+	public set onerror(handler: (ev: CloseEvent) => any) {
+		this._onerror = handler;
+		if (this._socket != null)
+			this._socket.onerror = this._onerror;
+	}
+
+	public set onopen(handler: (ev: CloseEvent) => any) {
+		this._onopen = handler;
+		if (this._socket != null)
+			this._socket.onopen = this._onopen;
+	}
+
+	private _onclose: ((ev: Event) => any) | null;
+	private _onerror: ((ev: Event) => any) | null;
+	private _onopen: ((ev: Event) => any) | null;
 
 	private _socket: WebSocket;
 	private readonly _msgCenter: MsgCenter;
@@ -32,9 +50,9 @@ export class WSConnector {
 		this._socket = new WebSocket(`ws://${ip}:${port}`);
 		this._socket.binaryType = "arraybuffer";
 		this._socket.onmessage = this.OnReceived.bind(this);
-		this._socket.onerror = this.onerror;
-		this._socket.onclose = this.onclose;
-		this._socket.onopen = this.onopen;
+		this._socket.onerror = this._onerror;
+		this._socket.onclose = this._onclose;
+		this._socket.onopen = this._onopen;
 	}
 
 	public Send(type: any, message: any, rpcHandler: (any) => any = null): void {

@@ -11,6 +11,7 @@ export class ProtoCreator {
 		[Protos.GC2LS_AskRegister, <Protos.MsgID>100],
 		[Protos.GC2LS_AskLogin, <Protos.MsgID>101],
 		[Protos.GC2GS_AskLogin, <Protos.MsgID>200],
+		[Protos.GC2GS_KeepAlive, <Protos.MsgID>201],
 		[Protos.LS2GC_RegResult, <Protos.MsgID>300],
 		[Protos.LS2GC_LoginResult, <Protos.MsgID>301],
 		[Protos.LS2GC_GSInfo, <Protos.MsgID>302],
@@ -23,7 +24,6 @@ export class ProtoCreator {
 		[Protos.CS2LS_GSLost, <Protos.MsgID>702],
 		[Protos.CS2LS_GCLoginRet, <Protos.MsgID>703],
 		[Protos.CS2GS_GCLoginRet, <Protos.MsgID>800],
-		[Protos.CS2GS_KeepAlive, <Protos.MsgID>801],
 	]);
 
 	private static readonly _ID2TYPE = new Map<Protos.MsgID, new () => any>([
@@ -32,6 +32,7 @@ export class ProtoCreator {
 		[<Protos.MsgID>100, Protos.GC2LS_AskRegister],
 		[<Protos.MsgID>101, Protos.GC2LS_AskLogin],
 		[<Protos.MsgID>200, Protos.GC2GS_AskLogin],
+		[<Protos.MsgID>201, Protos.GC2GS_KeepAlive],
 		[<Protos.MsgID>300, Protos.LS2GC_RegResult],
 		[<Protos.MsgID>301, Protos.LS2GC_LoginResult],
 		[<Protos.MsgID>302, Protos.LS2GC_GSInfo],
@@ -44,7 +45,6 @@ export class ProtoCreator {
 		[<Protos.MsgID>702, Protos.CS2LS_GSLost],
 		[<Protos.MsgID>703, Protos.CS2LS_GCLoginRet],
 		[<Protos.MsgID>800, Protos.CS2GS_GCLoginRet],
-		[<Protos.MsgID>801, Protos.CS2GS_KeepAlive],
 	]);
 
 	public static Q_G_AskPing(): Protos.G_AskPing {
@@ -78,6 +78,12 @@ export class ProtoCreator {
 		let msg = new Protos.GC2GS_AskLogin();
 		msg.opts = new Protos.MsgOpts();
 		msg.opts.flag |= Protos.MsgOpts.Flag.RPC;
+		return msg;
+	}
+
+	public static Q_GC2GS_KeepAlive(): Protos.GC2GS_KeepAlive {
+		let msg = new Protos.GC2GS_KeepAlive();
+		msg.opts = new Protos.MsgOpts();
 		return msg;
 	}
 
@@ -155,12 +161,6 @@ export class ProtoCreator {
 		return msg;
 	}
 
-	public static Q_CS2GS_KeepAlive(): Protos.CS2GS_KeepAlive {
-		let msg = new Protos.CS2GS_KeepAlive();
-		msg.opts = new Protos.MsgOpts();
-		return msg;
-	}
-
 
 	public static R_GC2LS_AskRegister(pid: number): Protos.LS2GC_RegResult {
 		let msg = new Protos.LS2GC_RegResult();
@@ -233,6 +233,10 @@ export class ProtoCreator {
 				let msg = Protos.GC2GS_AskLogin.decode(data, size);
 				return msg;
 			}
+			case 201: {
+				let msg = Protos.GC2GS_KeepAlive.decode(data, size);
+				return msg;
+			}
 			case 300: {
 				let msg = Protos.LS2GC_RegResult.decode(data, size);
 				return msg;
@@ -281,10 +285,6 @@ export class ProtoCreator {
 				let msg = Protos.CS2GS_GCLoginRet.decode(data, size);
 				return msg;
 			}
-			case 801: {
-				let msg = Protos.CS2GS_KeepAlive.decode(data, size);
-				return msg;
-			}
 		}
 		return null;
 	}
@@ -311,6 +311,11 @@ export class ProtoCreator {
 
 	public static D_GC2GS_AskLogin(data: Uint8Array, size: number): Protos.GC2GS_AskLogin {
 		let msg = Protos.GC2GS_AskLogin.decode(data, size);
+		return msg;
+	}
+
+	public static D_GC2GS_KeepAlive(data: Uint8Array, size: number): Protos.GC2GS_KeepAlive {
+		let msg = Protos.GC2GS_KeepAlive.decode(data, size);
 		return msg;
 	}
 
@@ -374,11 +379,6 @@ export class ProtoCreator {
 		return msg;
 	}
 
-	public static D_CS2GS_KeepAlive(data: Uint8Array, size: number): Protos.CS2GS_KeepAlive {
-		let msg = Protos.CS2GS_KeepAlive.decode(data, size);
-		return msg;
-	}
-
 
 	public static CreateMsgByID(msgID:Protos.MsgID): any {
 		switch ( msgID ) {
@@ -396,6 +396,9 @@ export class ProtoCreator {
 			}
 			case 200: {
 				return new Protos.GC2GS_AskLogin();
+			}
+			case 201: {
+				return new Protos.GC2GS_KeepAlive();
 			}
 			case 300: {
 				return new Protos.LS2GC_RegResult();
@@ -433,9 +436,6 @@ export class ProtoCreator {
 			case 800: {
 				return new Protos.CS2GS_GCLoginRet();
 			}
-			case 801: {
-				return new Protos.CS2GS_KeepAlive();
-			}
 		}
 		return null;
 	}
@@ -457,6 +457,9 @@ export class ProtoCreator {
 			}
 			case 200: {
 				return (<Protos.GC2GS_AskLogin>message).opts;
+			}
+			case 201: {
+				return (<Protos.GC2GS_KeepAlive>message).opts;
 			}
 			case 300: {
 				return (<Protos.LS2GC_RegResult>message).opts;
@@ -493,9 +496,6 @@ export class ProtoCreator {
 			}
 			case 800: {
 				return (<Protos.CS2GS_GCLoginRet>message).opts;
-			}
-			case 801: {
-				return (<Protos.CS2GS_KeepAlive>message).opts;
 			}
 		}
 		return null;

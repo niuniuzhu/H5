@@ -17,6 +17,9 @@
 		public int maxConnection;
 		public string csIP;
 		public int csPort;
+		public long reportInterval;
+		public long pingInterval;
+		public long gcLive;
 
 		public void CopyFromCLIOptions( Options opts )
 		{
@@ -28,6 +31,9 @@
 			this.maxConnection = opts.maxConnection;
 			this.csIP = opts.csIP;
 			this.csPort = opts.csPort;
+			this.reportInterval = opts.reportInterval;
+			this.pingInterval = opts.pingInterval;
+			this.gcLive = opts.gcLive;
 		}
 	}
 }

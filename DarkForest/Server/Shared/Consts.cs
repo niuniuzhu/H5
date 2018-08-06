@@ -19,16 +19,6 @@ namespace Shared
 		/// </summary>
 		public const long RECONN_INTERVAL = 2000;
 
-		/// <summary>
-		/// GS报告状态的时间间隔
-		/// </summary>
-		public const long GS_REPORT_INTERVAL = 10000;
-
-		/// <summary>
-		/// ping时间间隔
-		/// </summary>
-		public const long PING_INTERVAL = 10000;
-
 		public const int DEFAULT_UNAME_LEN = 3;
 
 		public const int DEFAULT_PWD_LEN = 3;

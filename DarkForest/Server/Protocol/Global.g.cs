@@ -32,14 +32,14 @@ namespace Protos {
             "CzIPLlByb3Rvcy5Nc2dPcHRzEg0KBXN0aW1lGAIgASgDEgwKBHRpbWUYAyAB",
             "KAMqogMKBU1zZ0lEEgwKCFVuZGVmaW5lEAASDgoKZUdfQXNrUGluZxAKEhEK",
             "DWVHX0Fza1BpbmdSZXQQCxIWChJlR0MyTFNfQXNrUmVnaXN0ZXIQZBITCg9l",
-            "R0MyTFNfQXNrTG9naW4QZRIUCg9lR0MyR1NfQXNrTG9naW4QyAESFQoQZUxT",
-            "MkdDX1JlZ1Jlc3VsdBCsAhIXChJlTFMyR0NfTG9naW5SZXN1bHQQrQISEgoN",
-            "ZUxTMkdDX0dTSW5mbxCuAhITCg5lTFMyQ1NfR0NMb2dpbhCQAxIXChJlR1My",
-            "Q1NfUmVwb3J0U3RhdGUQ9AMSFgoRZUdTMkNTX0dDQXNrTG9naW4Q9QMSFwoS",
-            "ZUdTMkdDX0xvZ2luUmVzdWx0ENgEEhMKDmVDUzJMU19HU0luZm9zELwFEhIK",
-            "DWVDUzJMU19HU0luZm8QvQUSEgoNZUNTMkxTX0dTTG9zdBC+BRIWChFlQ1My",
-            "TFNfR0NMb2dpblJldBC/BRIWChFlQ1MyR1NfR0NMb2dpblJldBCgBhIVChBl",
-            "Q1MyR1NfS2VlcEFsaXZlEKEGYgZwcm90bzM="));
+            "R0MyTFNfQXNrTG9naW4QZRIUCg9lR0MyR1NfQXNrTG9naW4QyAESFQoQZUdD",
+            "MkdTX0tlZXBBbGl2ZRDJARIVChBlTFMyR0NfUmVnUmVzdWx0EKwCEhcKEmVM",
+            "UzJHQ19Mb2dpblJlc3VsdBCtAhISCg1lTFMyR0NfR1NJbmZvEK4CEhMKDmVM",
+            "UzJDU19HQ0xvZ2luEJADEhcKEmVHUzJDU19SZXBvcnRTdGF0ZRD0AxIWChFl",
+            "R1MyQ1NfR0NBc2tMb2dpbhD1AxIXChJlR1MyR0NfTG9naW5SZXN1bHQQ2AQS",
+            "EwoOZUNTMkxTX0dTSW5mb3MQvAUSEgoNZUNTMkxTX0dTSW5mbxC9BRISCg1l",
+            "Q1MyTFNfR1NMb3N0EL4FEhYKEWVDUzJMU19HQ0xvZ2luUmV0EL8FEhYKEWVD",
+            "UzJHU19HQ0xvZ2luUmV0EKAGYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Protos.MsgID), }, new pbr::GeneratedClrTypeInfo[] {
@@ -59,6 +59,7 @@ namespace Protos {
     [pbr::OriginalName("eGC2LS_AskRegister")] EGc2LsAskRegister = 100,
     [pbr::OriginalName("eGC2LS_AskLogin")] EGc2LsAskLogin = 101,
     [pbr::OriginalName("eGC2GS_AskLogin")] EGc2GsAskLogin = 200,
+    [pbr::OriginalName("eGC2GS_KeepAlive")] EGc2GsKeepAlive = 201,
     [pbr::OriginalName("eLS2GC_RegResult")] ELs2GcRegResult = 300,
     [pbr::OriginalName("eLS2GC_LoginResult")] ELs2GcLoginResult = 301,
     [pbr::OriginalName("eLS2GC_GSInfo")] ELs2GcGsinfo = 302,
@@ -71,7 +72,6 @@ namespace Protos {
     [pbr::OriginalName("eCS2LS_GSLost")] ECs2LsGslost = 702,
     [pbr::OriginalName("eCS2LS_GCLoginRet")] ECs2LsGcloginRet = 703,
     [pbr::OriginalName("eCS2GS_GCLoginRet")] ECs2GsGcloginRet = 800,
-    [pbr::OriginalName("eCS2GS_KeepAlive")] ECs2GsKeepAlive = 801,
   }
 
   #endregion

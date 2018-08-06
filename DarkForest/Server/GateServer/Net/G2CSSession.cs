@@ -1,6 +1,5 @@
 ﻿using Core.Misc;
 using Core.Net;
-using Shared;
 using Shared.Net;
 
 namespace GateServer.Net
@@ -35,7 +34,7 @@ namespace GateServer.Net
 			base.OnHeartBeat( dt );
 
 			this._pingTime += dt;
-			if ( this._pingTime >= Consts.PING_INTERVAL )
+			if ( this._pingTime >= GS.instance.config.pingInterval )
 			{
 				this._pingTime = 0;
 				Protos.G_AskPing msg = ProtoCreator.Q_G_AskPing();
@@ -44,7 +43,7 @@ namespace GateServer.Net
 			}
 
 			this._reportTime += dt;
-			if ( this._state == State.Connected && this._reportTime >= Consts.GS_REPORT_INTERVAL )
+			if ( this._state == State.Connected && this._reportTime >= GS.instance.config.reportInterval )
 			{
 				this._reportTime = 0;
 				GS.instance.ReportStateToCS();

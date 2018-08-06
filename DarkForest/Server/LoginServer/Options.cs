@@ -55,5 +55,11 @@ namespace LoginServer
 			SetName = "bysetting",
 			HelpText = "Password for redis server." )]
 		public string redisPwd { get; set; }
+
+		[Option( "ping_interval",
+			Default = 10000,
+			SetName = "bysetting",
+			HelpText = "interval to ping to cs." )]
+		public long pingInterval { get; set; }
 	}
 }

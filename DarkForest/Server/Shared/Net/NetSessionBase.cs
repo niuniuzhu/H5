@@ -1,5 +1,4 @@
-﻿using System;
-using Core.Misc;
+﻿using Core.Misc;
 using Core.Net;
 using Google.Protobuf;
 using System.Collections.Generic;
@@ -15,7 +14,7 @@ namespace Shared.Net
 		protected readonly MsgCenter _msgCenter;
 
 		private uint _pid;
-		private readonly Dictionary<uint, System.Action<IMessage>> _rpcHandlers = new Dictionary<uint, System.Action<IMessage>>();//可能是异步写入,但必定是同步读取,所以不用加锁
+		private readonly Dictionary<uint, System.Action<IMessage>> _rpcHandlers = new Dictionary<uint, System.Action<IMessage>>();//可能是异步写入,但必定是同步读取,不用加锁
 
 		protected NetSessionBase( uint id, ProtoType type ) : base( id, type )
 		{

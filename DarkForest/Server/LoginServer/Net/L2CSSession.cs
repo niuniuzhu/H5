@@ -33,7 +33,7 @@ namespace LoginServer.Net
 		{
 			base.OnHeartBeat( dt );
 			this._pingTime += dt;
-			if ( this._pingTime >= Consts.PING_INTERVAL )
+			if ( this._pingTime >= LS.instance.config.pingInterval )
 			{
 				this._pingTime = 0;
 				Protos.G_AskPing msg = ProtoCreator.Q_G_AskPing();

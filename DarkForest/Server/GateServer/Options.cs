@@ -62,5 +62,23 @@ namespace GateServer
 			SetName = "bysetting",
 			HelpText = "central server port." )]
 		public int csPort { get; set; }
+
+		[Option( "report_interval",
+			Default = 10000,
+			SetName = "bysetting",
+			HelpText = "interval to report to cs." )]
+		public long reportInterval { get; set; }
+
+		[Option( "ping_interval",
+			Default = 10000,
+			SetName = "bysetting",
+			HelpText = "interval to ping to cs." )]
+		public long pingInterval { get; set; }
+
+		[Option( "gc_live",
+			Default = 15000,
+			SetName = "bysetting",
+			HelpText = "gate client live time." )]
+		public long gcLive { get; set; }
 	}
 }

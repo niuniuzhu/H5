@@ -109,6 +109,11 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
             msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RPC;
             return msg;
         }
+        static Q_GC2GS_KeepAlive() {
+            let msg = new protos_1.Protos.GC2GS_KeepAlive();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            return msg;
+        }
         static Q_LS2GC_RegResult() {
             let msg = new protos_1.Protos.LS2GC_RegResult();
             msg.opts = new protos_1.Protos.MsgOpts();
@@ -168,11 +173,6 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
         }
         static Q_CS2GS_GCLoginRet() {
             let msg = new protos_1.Protos.CS2GS_GCLoginRet();
-            msg.opts = new protos_1.Protos.MsgOpts();
-            return msg;
-        }
-        static Q_CS2GS_KeepAlive() {
-            let msg = new protos_1.Protos.CS2GS_KeepAlive();
             msg.opts = new protos_1.Protos.MsgOpts();
             return msg;
         }
@@ -240,6 +240,10 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
                     let msg = protos_1.Protos.GC2GS_AskLogin.decode(data, size);
                     return msg;
                 }
+                case 201: {
+                    let msg = protos_1.Protos.GC2GS_KeepAlive.decode(data, size);
+                    return msg;
+                }
                 case 300: {
                     let msg = protos_1.Protos.LS2GC_RegResult.decode(data, size);
                     return msg;
@@ -288,10 +292,6 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
                     let msg = protos_1.Protos.CS2GS_GCLoginRet.decode(data, size);
                     return msg;
                 }
-                case 801: {
-                    let msg = protos_1.Protos.CS2GS_KeepAlive.decode(data, size);
-                    return msg;
-                }
             }
             return null;
         }
@@ -313,6 +313,10 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
         }
         static D_GC2GS_AskLogin(data, size) {
             let msg = protos_1.Protos.GC2GS_AskLogin.decode(data, size);
+            return msg;
+        }
+        static D_GC2GS_KeepAlive(data, size) {
+            let msg = protos_1.Protos.GC2GS_KeepAlive.decode(data, size);
             return msg;
         }
         static D_LS2GC_RegResult(data, size) {
@@ -363,10 +367,6 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
             let msg = protos_1.Protos.CS2GS_GCLoginRet.decode(data, size);
             return msg;
         }
-        static D_CS2GS_KeepAlive(data, size) {
-            let msg = protos_1.Protos.CS2GS_KeepAlive.decode(data, size);
-            return msg;
-        }
         static CreateMsgByID(msgID) {
             switch (msgID) {
                 case 10: {
@@ -383,6 +383,9 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
                 }
                 case 200: {
                     return new protos_1.Protos.GC2GS_AskLogin();
+                }
+                case 201: {
+                    return new protos_1.Protos.GC2GS_KeepAlive();
                 }
                 case 300: {
                     return new protos_1.Protos.LS2GC_RegResult();
@@ -420,9 +423,6 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
                 case 800: {
                     return new protos_1.Protos.CS2GS_GCLoginRet();
                 }
-                case 801: {
-                    return new protos_1.Protos.CS2GS_KeepAlive();
-                }
             }
             return null;
         }
@@ -442,6 +442,9 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
                     return message.opts;
                 }
                 case 200: {
+                    return message.opts;
+                }
+                case 201: {
                     return message.opts;
                 }
                 case 300: {
@@ -480,9 +483,6 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
                 case 800: {
                     return message.opts;
                 }
-                case 801: {
-                    return message.opts;
-                }
             }
             return null;
         }
@@ -495,6 +495,7 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
         [protos_1.Protos.GC2LS_AskRegister, 100],
         [protos_1.Protos.GC2LS_AskLogin, 101],
         [protos_1.Protos.GC2GS_AskLogin, 200],
+        [protos_1.Protos.GC2GS_KeepAlive, 201],
         [protos_1.Protos.LS2GC_RegResult, 300],
         [protos_1.Protos.LS2GC_LoginResult, 301],
         [protos_1.Protos.LS2GC_GSInfo, 302],
@@ -507,7 +508,6 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
         [protos_1.Protos.CS2LS_GSLost, 702],
         [protos_1.Protos.CS2LS_GCLoginRet, 703],
         [protos_1.Protos.CS2GS_GCLoginRet, 800],
-        [protos_1.Protos.CS2GS_KeepAlive, 801],
     ]);
     ProtoCreator._ID2TYPE = new Map([
         [10, protos_1.Protos.G_AskPing],
@@ -515,6 +515,7 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
         [100, protos_1.Protos.GC2LS_AskRegister],
         [101, protos_1.Protos.GC2LS_AskLogin],
         [200, protos_1.Protos.GC2GS_AskLogin],
+        [201, protos_1.Protos.GC2GS_KeepAlive],
         [300, protos_1.Protos.LS2GC_RegResult],
         [301, protos_1.Protos.LS2GC_LoginResult],
         [302, protos_1.Protos.LS2GC_GSInfo],
@@ -527,7 +528,6 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
         [702, protos_1.Protos.CS2LS_GSLost],
         [703, protos_1.Protos.CS2LS_GCLoginRet],
         [800, protos_1.Protos.CS2GS_GCLoginRet],
-        [801, protos_1.Protos.CS2GS_KeepAlive],
     ]);
     exports.ProtoCreator = ProtoCreator;
 });
@@ -542,6 +542,21 @@ define("Net/WSConnector", ["require", "exports", "Net/ByteUtils", "Net/MsgCenter
         }
         get connected() { return this._socket != null && this._socket.readyState == WebSocket.OPEN; }
         ;
+        set onclose(handler) {
+            this._onclose = handler;
+            if (this._socket != null)
+                this._socket.onclose = this._onclose;
+        }
+        set onerror(handler) {
+            this._onerror = handler;
+            if (this._socket != null)
+                this._socket.onerror = this._onerror;
+        }
+        set onopen(handler) {
+            this._onopen = handler;
+            if (this._socket != null)
+                this._socket.onopen = this._onopen;
+        }
         Close() {
             this._pid = 0;
             this._socket.close();
@@ -552,9 +567,9 @@ define("Net/WSConnector", ["require", "exports", "Net/ByteUtils", "Net/MsgCenter
             this._socket = new WebSocket(`ws://${ip}:${port}`);
             this._socket.binaryType = "arraybuffer";
             this._socket.onmessage = this.OnReceived.bind(this);
-            this._socket.onerror = this.onerror;
-            this._socket.onclose = this.onclose;
-            this._socket.onopen = this.onopen;
+            this._socket.onerror = this._onerror;
+            this._socket.onclose = this._onclose;
+            this._socket.onopen = this._onopen;
         }
         Send(type, message, rpcHandler = null) {
             let opts = ProtoHelper_1.ProtoCreator.GetMsgOpts(message);
@@ -648,193 +663,40 @@ define("Shared/Model/EntityParam", ["require", "exports"], function (require, ex
     }
     exports.EntityParam = EntityParam;
 });
-define("UI/UILogin", ["require", "exports", "../libs/protos", "Net/WSConnector", "Net/ProtoHelper", "UI/UIAlert", "Shared/Model/EntityParam", "UI/UIManager"], function (require, exports, protos_3, WSConnector_1, ProtoHelper_2, UIAlert_1, EntityParam_1, UIManager_1) {
+define("View/Graphic", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    class UILogin {
-        constructor() {
-            fairygui.UIPackage.addPackage("res/ui/login");
-            this._root = fairygui.UIPackage.createObject("login", "Main").asCom;
-            this._root.width = fairygui.GRoot.inst.width;
-            this._root.height = fairygui.GRoot.inst.height;
-            this._root.addRelation(fairygui.GRoot.inst, fairygui.RelationType.Size);
-            this._root.getChild("login_btn").onClick(this, this.OnLoginBtnClick);
-            this._root.getChild("reg_btn").onClick(this, this.OnRegBtnClick);
-            this._root.getChild("enter_btn").onClick(this, this.OnEnterBtnClick);
-            this._list = this._root.getChild("alist").asList;
-            this._list.on(fairygui.Events.CLICK_ITEM, this, this.OnAreaClick);
+    class Graphic {
+        get root() { return this._root; }
+        get position() { return this._position.Clone(); }
+        set position(value) {
+            if (value.EqualsTo(this._position))
+                return;
+            this._position.CopyFrom(value);
+            this.UpdatePosition();
+        }
+        get alpha() { return this._root.alpha; }
+        set alpha(value) { this._root.alpha = value; }
+        get visible() { return this._root.visible; }
+        set visible(value) { this._root.visible = value; }
+        get sortingOrder() { return this._root.sortingOrder; }
+        set sortingOrder(value) { this._root.sortingOrder = value; }
+        constructor(manager) {
+            this._manager = manager;
+            this._root = new fairygui.GComponent();
+            this._manager.root.addChild(this._root);
+            this._position = RC.Numerics.Vec3.zero;
+            this.UpdatePosition();
         }
         Dispose() {
             this._root.dispose();
-            this._root = null;
         }
-        Enter(param) {
-            fairygui.GRoot.inst.addChild(this._root);
-        }
-        Leave() {
-            fairygui.GRoot.inst.removeChild(this._root);
-        }
-        Update(deltaTime) {
-        }
-        OnResize(e) {
-        }
-        BackToRegister() {
-            this._root.getController("c1").selectedIndex = 1;
-        }
-        BackToLogin() {
-            this._root.getController("c1").selectedIndex = 0;
-        }
-        OnRegBtnClick() {
-            let regName = this._root.getChild("reg_name").asTextField.text;
-            if (regName == "") {
-                UIAlert_1.UIAlert.Show("无效的用户名");
-                return;
-            }
-            let regPwd = this._root.getChild("reg_password").asTextField.text;
-            if (regPwd == "") {
-                UIAlert_1.UIAlert.Show("无效的密码");
-                return;
-            }
-            let register = ProtoHelper_2.ProtoCreator.Q_GC2LS_AskRegister();
-            register.name = regName;
-            register.passwd = regPwd;
-            register.platform = 0;
-            register.sdk = 0;
-            let connector = new WSConnector_1.WSConnector();
-            connector.onerror = () => UIAlert_1.UIAlert.Show("无法连接服务器", () => connector.Connect("localhost", 49996));
-            connector.onclose = () => RC.Logger.Log("connection closed.");
-            connector.onopen = () => {
-                connector.Send(protos_3.Protos.GC2LS_AskRegister, register, message => {
-                    fairygui.GRoot.inst.closeModalWait();
-                    let resp = message;
-                    switch (resp.result) {
-                        case protos_3.Protos.LS2GC_RegResult.EResult.Success:
-                            UIAlert_1.UIAlert.Show("注册成功");
-                            this._root.getChild("name").asTextField.text = regName;
-                            this._root.getChild("password").asTextField.text = regPwd;
-                            this._root.getController("c1").selectedIndex = 0;
-                            break;
-                        case protos_3.Protos.LS2GC_RegResult.EResult.Failed:
-                            UIAlert_1.UIAlert.Show("注册失败", this.BackToRegister.bind(this));
-                            break;
-                        case protos_3.Protos.LS2GC_RegResult.EResult.UnameExists:
-                            UIAlert_1.UIAlert.Show("用户名已存在", this.BackToRegister.bind(this));
-                            break;
-                        case protos_3.Protos.LS2GC_RegResult.EResult.UnameIllegal:
-                            UIAlert_1.UIAlert.Show("无效的用户名", this.BackToRegister.bind(this));
-                            break;
-                        case protos_3.Protos.LS2GC_RegResult.EResult.PwdIllegal:
-                            UIAlert_1.UIAlert.Show("无效的密码", this.BackToRegister.bind(this));
-                            break;
-                    }
-                    connector.Close();
-                });
-            };
-            fairygui.GRoot.inst.showModalWait();
-            connector.Connect("localhost", 49996);
-        }
-        OnLoginBtnClick() {
-            let uname = this._root.getChild("name").asTextField.text;
-            if (uname == "") {
-                UIAlert_1.UIAlert.Show("无效用户名");
-                return;
-            }
-            let password = this._root.getChild("password").asTextField.text;
-            if (password == "") {
-                UIAlert_1.UIAlert.Show("无效密码");
-                return;
-            }
-            let login = ProtoHelper_2.ProtoCreator.Q_GC2LS_AskLogin();
-            login.name = uname;
-            login.passwd = password;
-            let connector = new WSConnector_1.WSConnector();
-            connector.onerror = () => UIAlert_1.UIAlert.Show("无法连接服务器", () => connector.Connect("localhost", 49996));
-            connector.onclose = () => RC.Logger.Log("connection closed.");
-            connector.onopen = () => {
-                connector.Send(protos_3.Protos.GC2LS_AskLogin, login, message => {
-                    fairygui.GRoot.inst.closeModalWait();
-                    let resp = message;
-                    switch (resp.result) {
-                        case protos_3.Protos.LS2GC_LoginResult.EResult.Success:
-                            this.HandleLoginLSSuccess(resp);
-                            break;
-                        case protos_3.Protos.LS2GC_LoginResult.EResult.Failed:
-                            UIAlert_1.UIAlert.Show("登陆失败", this.BackToLogin.bind(this));
-                            break;
-                        case protos_3.Protos.LS2GC_LoginResult.EResult.InvalidUname:
-                            UIAlert_1.UIAlert.Show("无效的用户名", this.BackToLogin.bind(this));
-                            break;
-                        case protos_3.Protos.LS2GC_LoginResult.EResult.InvalidPwd:
-                            UIAlert_1.UIAlert.Show("请输入正确的密码", this.BackToLogin.bind(this));
-                            break;
-                    }
-                });
-            };
-            fairygui.GRoot.inst.showModalWait();
-            connector.Connect("localhost", 49996);
-        }
-        HandleLoginLSSuccess(loginResult) {
-            let count = loginResult.gsInfos.length;
-            for (let i = 0; i < count; ++i) {
-                let gsInfo = loginResult.gsInfos[i];
-                let item = this._list.addItemFromPool().asButton;
-                item.title = gsInfo.name;
-                item.data = { "data": gsInfo, "s": loginResult.sessionID };
-            }
-            if (count > 0)
-                this._list.selectedIndex = 0;
-            this._root.getController("c1").selectedIndex = 2;
-        }
-        OnAreaClick() {
-        }
-        OnEnterBtnClick() {
-            let item = this._list.getChildAt(this._list.selectedIndex);
-            let data = item.data["data"];
-            this.ConnectToGS(data.ip, data.port, data.password, item.data["s"]);
-        }
-        ConnectToGS(ip, port, pwd, sessionID) {
-            let connector = new WSConnector_1.WSConnector();
-            connector.onerror = () => UIAlert_1.UIAlert.Show("无法连接服务器", this.BackToLogin.bind(this));
-            connector.onclose = () => RC.Logger.Log("connection closed.");
-            connector.onopen = () => {
-                let askLogin = ProtoHelper_2.ProtoCreator.Q_GC2GS_AskLogin();
-                askLogin.pwd = pwd;
-                askLogin.sessionID = sessionID;
-                connector.Send(protos_3.Protos.GC2GS_AskLogin, askLogin, message => {
-                    fairygui.GRoot.inst.closeModalWait();
-                    let resp = message;
-                    switch (resp.result) {
-                        case protos_3.Protos.GS2GC_LoginResult.EResult.Success:
-                            this.HandleLoginBSSuccess(resp);
-                            break;
-                        case protos_3.Protos.GS2GC_LoginResult.EResult.Failed:
-                            UIAlert_1.UIAlert.Show("登陆失败", this.BackToLogin.bind(this));
-                            break;
-                    }
-                });
-            };
-            fairygui.GRoot.inst.showModalWait();
-            connector.Connect(ip, port);
-        }
-        HandleLoginBSSuccess(loginResult) {
-            let param = new EntityParam_1.BattleParams();
-            param.framesPerKeyFrame = 4;
-            param.frameRate = 20;
-            param.uid = "user";
-            param.id = "m0";
-            param.rndSeed = RC.Utils.Timer.utcTime;
-            let building = new EntityParam_1.Building();
-            building.uid = "user";
-            building.id = "b0";
-            param.buildings = [building];
-            UIManager_1.UIManager.EnterBattle(param);
+        UpdatePosition() {
+            let localPos = this._manager.battle.camera.WorldToScreen(this._position);
+            this._root.setXY(localPos.x, localPos.y);
         }
     }
-    exports.UILogin = UILogin;
-});
-define("UI/IMainPanel", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Graphic = Graphic;
 });
 define("Shared/Model/Defs", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -999,119 +861,6 @@ define("View/CUser", ["require", "exports", "Shared/Model/ModelFactory"], functi
     CUser.G_ENERGY = 0;
     exports.CUser = CUser;
 });
-define("View/Graphic", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    class Graphic {
-        get root() { return this._root; }
-        get position() { return this._position.Clone(); }
-        set position(value) {
-            if (value.EqualsTo(this._position))
-                return;
-            this._position.CopyFrom(value);
-            this.UpdatePosition();
-        }
-        get alpha() { return this._root.alpha; }
-        set alpha(value) { this._root.alpha = value; }
-        get visible() { return this._root.visible; }
-        set visible(value) { this._root.visible = value; }
-        get sortingOrder() { return this._root.sortingOrder; }
-        set sortingOrder(value) { this._root.sortingOrder = value; }
-        constructor(manager) {
-            this._manager = manager;
-            this._root = new fairygui.GComponent();
-            this._manager.root.addChild(this._root);
-            this._position = RC.Numerics.Vec3.zero;
-            this.UpdatePosition();
-        }
-        Dispose() {
-            this._root.dispose();
-        }
-        UpdatePosition() {
-            let localPos = this._manager.battle.camera.WorldToScreen(this._position);
-            this._root.setXY(localPos.x, localPos.y);
-        }
-    }
-    exports.Graphic = Graphic;
-});
-define("View/GraphicManager", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    class GraphicManager {
-        get battle() { return this._owner; }
-        get root() { return this._root; }
-        set root(value) { this._root = value; }
-        constructor(owner) {
-            this._owner = owner;
-            this._root = new fairygui.GComponent();
-            this._graphics = [];
-        }
-        Dispose() {
-            let count = this._graphics.length;
-            for (let i = 0; i < count; ++i) {
-                let graphic = this._graphics[i];
-                graphic.Dispose();
-            }
-            this._graphics.splice(0);
-        }
-        OnCameraTRSChanged() {
-            let count = this._graphics.length;
-            for (let i = 0; i < count; ++i) {
-                let graphic = this._graphics[i];
-                graphic.UpdatePosition();
-            }
-        }
-        CreateGraphic(c) {
-            let graphic = new c(this);
-            this._graphics.push(graphic);
-            this.SortGraphics(graphic);
-            return graphic;
-        }
-        DestroyGraphic(graphic) {
-            let pos = this._graphics.indexOf(graphic);
-            if (pos < 0)
-                return false;
-            graphic.Dispose();
-            this._graphics.splice(pos, 1);
-            return true;
-        }
-        SortGraphics(graphic) {
-            this._graphics.sort(this.SortFunc.bind(this));
-            let count = this._graphics.length;
-            for (let i = 1; i < count; ++i) {
-                this._graphics[i].sortingOrder = i + 100;
-            }
-        }
-        SortFunc(a, b) {
-            if (a == this._graphics[0] || b == this._graphics[0])
-                return 0;
-            return a.position.z > b.position.z ? -1 : 1;
-        }
-    }
-    exports.GraphicManager = GraphicManager;
-});
-define("View/EntityGraphic", ["require", "exports", "View/Graphic"], function (require, exports, Graphic_1) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    class EntityGraphic extends Graphic_1.Graphic {
-        constructor(manager) {
-            super(manager);
-        }
-        Dispose() {
-            this._sprite.dispose();
-            super.Dispose();
-        }
-        Load(id) {
-            this._sprite = fairygui.UIPackage.createObject("global", id).asCom;
-            this._root.addChild(this._sprite);
-            this._sprite.touchable = false;
-            this.OnLoadComplete();
-        }
-        OnLoadComplete() {
-        }
-    }
-    exports.EntityGraphic = EntityGraphic;
-});
 define("View/BuildingGraphic", ["require", "exports", "View/EntityGraphic"], function (require, exports, EntityGraphic_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -1156,32 +905,6 @@ define("View/BuildingGraphic", ["require", "exports", "View/EntityGraphic"], fun
     }
     exports.BuildingGraphic = BuildingGraphic;
 });
-define("View/Utils", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    class Utils {
-        static MakeRIDFromID(id) {
-            return `${id}@${btoa(RC.Utils.GUID.Generate().ToString(RC.Utils.GuidFormat.DASHES))}`;
-        }
-        static GetIDFromRID(rid) {
-            let pos = rid.indexOf("@");
-            let id = pos != -1 ? rid.substring(0, pos) : rid;
-            return id;
-        }
-    }
-    exports.Utils = Utils;
-});
-define("View/GPoolObject", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    class GPoolObject {
-        get rid() { return this._rid; }
-        Dispose() {
-            this.InternalDispose();
-        }
-    }
-    exports.GPoolObject = GPoolObject;
-});
 define("View/UpdateContext", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -1193,62 +916,6 @@ define("View/UpdateContext", ["require", "exports"], function (require, exports)
         }
     }
     exports.UpdateContext = UpdateContext;
-});
-define("View/CEntity", ["require", "exports", "View/EntityGraphic", "View/Utils", "View/GPoolObject", "Shared/Model/ModelFactory"], function (require, exports, EntityGraphic_2, Utils_1, GPoolObject_1, ModelFactory_2) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    class CEntity extends GPoolObject_1.GPoolObject {
-        constructor() {
-            super();
-            this._data = null;
-            this._position = RC.Numerics.Vec3.zero;
-        }
-        get id() { return this._data.id; }
-        get position() { return this._position.Clone(); }
-        set position(value) {
-            if (this._position.EqualsTo(value))
-                return;
-            this._position.CopyFrom(value);
-            if (this._graphic != null)
-                this._graphic.position = this._position;
-            this.OnPositionChanged();
-        }
-        get footprint() { return this._data.footprint.Clone(); }
-        get battle() { return this._owner; }
-        get graphic() { return this._graphic; }
-        get markToDestroy() { return this._markToDestroy; }
-        InternalDispose() {
-        }
-        OnCreated(owner, param) {
-            this._owner = owner;
-            this._rid = param.rid;
-            this._data = ModelFactory_2.ModelFactory.GetEntityData(Utils_1.Utils.GetIDFromRID(this.rid));
-            this.position = param.position;
-            this.CreateGraphic();
-        }
-        OnAddedToBattle() {
-        }
-        OnRemoveFromBattle() {
-            this._markToDestroy = false;
-            this._owner.graphicManager.DestroyGraphic(this._graphic);
-            this._graphic = null;
-            this._owner = null;
-            this._data = null;
-        }
-        OnPositionChanged() {
-        }
-        MarkToDestroy() {
-            this._markToDestroy = true;
-        }
-        OnUpdateState(context) {
-        }
-        CreateGraphic() {
-            this._graphic = this._owner.graphicManager.CreateGraphic(EntityGraphic_2.EntityGraphic);
-            this._graphic.Load(this._data.model);
-            this._graphic.position = this.position;
-        }
-    }
-    exports.CEntity = CEntity;
 });
 define("View/CBuilding", ["require", "exports", "View/CUser", "View/BuildingGraphic", "View/CEntity"], function (require, exports, CUser_1, BuildingGraphic_1, CEntity_1) {
     "use strict";
@@ -1383,6 +1050,17 @@ define("View/EditingBuilding", ["require", "exports", "View/CBuilding"], functio
         }
     }
     exports.EditingBuilding = EditingBuilding;
+});
+define("View/GPoolObject", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class GPoolObject {
+        get rid() { return this._rid; }
+        Dispose() {
+            this.InternalDispose();
+        }
+    }
+    exports.GPoolObject = GPoolObject;
 });
 define("View/GPool", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -1896,10 +1574,10 @@ define("View/Input", ["require", "exports"], function (require, exports) {
     }
     exports.Input = Input;
 });
-define("View/MapGraphic", ["require", "exports", "View/Graphic"], function (require, exports, Graphic_2) {
+define("View/MapGraphic", ["require", "exports", "View/Graphic"], function (require, exports, Graphic_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    class MapGraphic extends Graphic_2.Graphic {
+    class MapGraphic extends Graphic_1.Graphic {
         get sprite() { return this._sprite; }
         constructor(manager) {
             super(manager);
@@ -1914,6 +1592,254 @@ define("View/MapGraphic", ["require", "exports", "View/Graphic"], function (requ
         }
     }
     exports.MapGraphic = MapGraphic;
+});
+define("View/Utils", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class Utils {
+        static MakeRIDFromID(id) {
+            return `${id}@${btoa(RC.Utils.GUID.Generate().ToString(RC.Utils.GuidFormat.DASHES))}`;
+        }
+        static GetIDFromRID(rid) {
+            let pos = rid.indexOf("@");
+            let id = pos != -1 ? rid.substring(0, pos) : rid;
+            return id;
+        }
+    }
+    exports.Utils = Utils;
+});
+define("View/Home", ["require", "exports", "View/EditingBuilding", "View/CBuilding", "View/CEntityManager", "View/GraphicManager", "View/Camera", "View/CTile", "View/Input", "View/MapGraphic", "View/Utils", "View/UpdateContext", "Shared/Model/EntityParam", "Shared/Model/ModelFactory", "Shared/Event/UIEvent"], function (require, exports, EditingBuilding_2, CBuilding_3, CEntityManager_1, GraphicManager_1, Camera_1, CTile_1, Input_1, MapGraphic_1, Utils_1, UpdateContext_1, EntityParam_1, ModelFactory_2, UIEvent_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class Home {
+        constructor(param) {
+            this._frame = 0;
+            this._deltaTime = 0;
+            this._time = 0;
+            this._data = ModelFactory_2.ModelFactory.GetMapData(Utils_1.Utils.GetIDFromRID(param.id));
+            this._entityManager = new CEntityManager_1.CEntityManager(this);
+            this._graphicManager = new GraphicManager_1.GraphicManager(this);
+            this._context = new UpdateContext_1.UpdateContext();
+            this._camera = new Camera_1.Camera();
+            this._camera.seekerPos = new RC.Numerics.Vec3((this._data.size.x - fairygui.GRoot.inst.width) * 0.5, 0, (this._data.size.y - fairygui.GRoot.inst.height) * -0.5);
+            this._camera.position = this._camera.seekerPos;
+            this._camera.cameraTRSChangedHandler = this._graphicManager.OnCameraTRSChanged.bind(this._graphicManager);
+            this._graphic = this._graphicManager.CreateGraphic(MapGraphic_1.MapGraphic);
+            this._graphic.Load(this._data.model);
+            this._tile = new CTile_1.CTile(this._data.tileSlope, this._data.tileAspect, this._data.tileRatio);
+            this._input = new Input_1.Input(this);
+            this.camera.UpdateRestriction(RC.Numerics.Vec3.zero, new RC.Numerics.Vec3(this._graphic.sprite.width - fairygui.GRoot.inst.width, this._graphic.sprite.height - fairygui.GRoot.inst.height, 0));
+        }
+        get frame() { return this._frame; }
+        get deltaTime() { return this._deltaTime; }
+        get time() { return this._time; }
+        get graphicManager() { return this._graphicManager; }
+        ;
+        get entityManager() { return this._entityManager; }
+        ;
+        get camera() { return this._camera; }
+        ;
+        get graphic() { return this._graphic; }
+        ;
+        get tile() { return this._tile; }
+        ;
+        get input() { return this._input; }
+        Dispose() {
+            this._graphicManager.Dispose();
+            this._entityManager.Dispose();
+            this._tile.Dispose();
+        }
+        Update(deltaTime) {
+            ++this._frame;
+            this._deltaTime = deltaTime;
+            this._time += this.deltaTime;
+            this._context.deltaTime = this.deltaTime;
+            this._context.time = this.time;
+            this._context.frame = this.frame;
+            this._entityManager.Update(this._context);
+            this._camera.Update(this._context);
+            this._input.Update(this._context);
+        }
+        OnResize(e) {
+            this.camera.UpdateRestriction(RC.Numerics.Vec3.zero, new RC.Numerics.Vec3(this._graphic.sprite.width - fairygui.GRoot.inst.width, this._graphic.sprite.height - fairygui.GRoot.inst.height, 0));
+        }
+        SetGraphicRoot(graphicRoot) {
+            graphicRoot.addChild(this.graphicManager.root);
+        }
+        CreateBuilding(id, position = RC.Numerics.Vec3.zero) {
+            let rid = Utils_1.Utils.MakeRIDFromID(id);
+            let param = new EntityParam_1.EntityParam();
+            param.rid = rid;
+            param.position = position;
+            let entity = this._entityManager.Create(CBuilding_3.CBuilding, param);
+            return entity;
+        }
+        CreateEditingBuilding(id, position = RC.Numerics.Vec3.zero) {
+            let rid = Utils_1.Utils.MakeRIDFromID(id);
+            let param = new EntityParam_1.EntityParam();
+            param.rid = rid;
+            param.position = position;
+            let entity = this._entityManager.Create(EditingBuilding_2.EditingBuilding, param);
+            return entity;
+        }
+        NewBuilding(id, position) {
+            let building = this.CreateBuilding(id, position);
+            building.SnapToTile();
+            if (!building.CanPlace()) {
+                this.input.ChangeState(Input_1.InputStateType.Layout, building, null, true);
+                return false;
+            }
+            building.Place();
+            building.BeginBuild();
+            this.NotifyEndLayout();
+            this.NotifyUpdateBuilding();
+            return true;
+        }
+        NotifyStartLayout() {
+            UIEvent_1.UIEvent.StartLayout();
+        }
+        NotifyEndLayout() {
+            UIEvent_1.UIEvent.EndLayout();
+        }
+        NotifyUpdateBuilding() {
+            UIEvent_1.UIEvent.UpdateBuilding();
+        }
+    }
+    exports.Home = Home;
+});
+define("View/GraphicManager", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class GraphicManager {
+        get battle() { return this._owner; }
+        get root() { return this._root; }
+        set root(value) { this._root = value; }
+        constructor(owner) {
+            this._owner = owner;
+            this._root = new fairygui.GComponent();
+            this._graphics = [];
+        }
+        Dispose() {
+            let count = this._graphics.length;
+            for (let i = 0; i < count; ++i) {
+                let graphic = this._graphics[i];
+                graphic.Dispose();
+            }
+            this._graphics.splice(0);
+        }
+        OnCameraTRSChanged() {
+            let count = this._graphics.length;
+            for (let i = 0; i < count; ++i) {
+                let graphic = this._graphics[i];
+                graphic.UpdatePosition();
+            }
+        }
+        CreateGraphic(c) {
+            let graphic = new c(this);
+            this._graphics.push(graphic);
+            this.SortGraphics(graphic);
+            return graphic;
+        }
+        DestroyGraphic(graphic) {
+            let pos = this._graphics.indexOf(graphic);
+            if (pos < 0)
+                return false;
+            graphic.Dispose();
+            this._graphics.splice(pos, 1);
+            return true;
+        }
+        SortGraphics(graphic) {
+            this._graphics.sort(this.SortFunc.bind(this));
+            let count = this._graphics.length;
+            for (let i = 1; i < count; ++i) {
+                this._graphics[i].sortingOrder = i + 100;
+            }
+        }
+        SortFunc(a, b) {
+            if (a == this._graphics[0] || b == this._graphics[0])
+                return 0;
+            return a.position.z > b.position.z ? -1 : 1;
+        }
+    }
+    exports.GraphicManager = GraphicManager;
+});
+define("View/EntityGraphic", ["require", "exports", "View/Graphic"], function (require, exports, Graphic_2) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class EntityGraphic extends Graphic_2.Graphic {
+        constructor(manager) {
+            super(manager);
+        }
+        Dispose() {
+            this._sprite.dispose();
+            super.Dispose();
+        }
+        Load(id) {
+            this._sprite = fairygui.UIPackage.createObject("global", id).asCom;
+            this._root.addChild(this._sprite);
+            this._sprite.touchable = false;
+            this.OnLoadComplete();
+        }
+        OnLoadComplete() {
+        }
+    }
+    exports.EntityGraphic = EntityGraphic;
+});
+define("View/CEntity", ["require", "exports", "View/EntityGraphic", "View/Utils", "View/GPoolObject", "Shared/Model/ModelFactory"], function (require, exports, EntityGraphic_2, Utils_2, GPoolObject_1, ModelFactory_3) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class CEntity extends GPoolObject_1.GPoolObject {
+        constructor() {
+            super();
+            this._data = null;
+            this._position = RC.Numerics.Vec3.zero;
+        }
+        get id() { return this._data.id; }
+        get position() { return this._position.Clone(); }
+        set position(value) {
+            if (this._position.EqualsTo(value))
+                return;
+            this._position.CopyFrom(value);
+            if (this._graphic != null)
+                this._graphic.position = this._position;
+            this.OnPositionChanged();
+        }
+        get footprint() { return this._data.footprint.Clone(); }
+        get battle() { return this._owner; }
+        get graphic() { return this._graphic; }
+        get markToDestroy() { return this._markToDestroy; }
+        InternalDispose() {
+        }
+        OnCreated(owner, param) {
+            this._owner = owner;
+            this._rid = param.rid;
+            this._data = ModelFactory_3.ModelFactory.GetEntityData(Utils_2.Utils.GetIDFromRID(this.rid));
+            this.position = param.position;
+            this.CreateGraphic();
+        }
+        OnAddedToBattle() {
+        }
+        OnRemoveFromBattle() {
+            this._markToDestroy = false;
+            this._owner.graphicManager.DestroyGraphic(this._graphic);
+            this._graphic = null;
+            this._owner = null;
+            this._data = null;
+        }
+        OnPositionChanged() {
+        }
+        MarkToDestroy() {
+            this._markToDestroy = true;
+        }
+        OnUpdateState(context) {
+        }
+        CreateGraphic() {
+            this._graphic = this._owner.graphicManager.CreateGraphic(EntityGraphic_2.EntityGraphic);
+            this._graphic.Load(this._data.model);
+            this._graphic.position = this.position;
+        }
+    }
+    exports.CEntity = CEntity;
 });
 define("Shared/Event/EventCenter", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -2049,6 +1975,11 @@ define("Shared/Event/UIEvent", ["require", "exports", "Shared/Event/BaseEvent"],
             e._type = UIEvent.UPDATE_BUILDING;
             e.Invoke();
         }
+        static NetworkDisconnect() {
+            let e = this.Get();
+            e._type = UIEvent.NETWORK_DISCONNECT;
+            e.Invoke();
+        }
     }
     UIEvent.WIN = 10010;
     UIEvent.ENTITY_CREATED = 10020;
@@ -2058,109 +1989,234 @@ define("Shared/Event/UIEvent", ["require", "exports", "Shared/Event/BaseEvent"],
     UIEvent.START_LAYOUT = 10050;
     UIEvent.END_LAYOUT = 10051;
     UIEvent.UPDATE_BUILDING = 10052;
+    UIEvent.NETWORK_DISCONNECT = 10500;
     UIEvent.POOL = new RC.Collections.Stack();
     exports.UIEvent = UIEvent;
 });
-define("View/Home", ["require", "exports", "View/EditingBuilding", "View/CBuilding", "View/CEntityManager", "View/GraphicManager", "View/Camera", "View/CTile", "View/Input", "View/MapGraphic", "View/Utils", "View/UpdateContext", "Shared/Model/EntityParam", "Shared/Model/ModelFactory", "Shared/Event/UIEvent"], function (require, exports, EditingBuilding_2, CBuilding_3, CEntityManager_1, GraphicManager_1, Camera_1, CTile_1, Input_1, MapGraphic_1, Utils_2, UpdateContext_1, EntityParam_2, ModelFactory_3, UIEvent_1) {
+define("Net/Network", ["require", "exports", "Shared/Event/UIEvent", "Net/ProtoHelper", "../libs/protos"], function (require, exports, UIEvent_2, ProtoHelper_2, protos_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    class Home {
-        constructor(param) {
-            this._frame = 0;
-            this._deltaTime = 0;
-            this._time = 0;
-            this._data = ModelFactory_3.ModelFactory.GetMapData(Utils_2.Utils.GetIDFromRID(param.id));
-            this._entityManager = new CEntityManager_1.CEntityManager(this);
-            this._graphicManager = new GraphicManager_1.GraphicManager(this);
-            this._context = new UpdateContext_1.UpdateContext();
-            this._camera = new Camera_1.Camera();
-            this._camera.seekerPos = new RC.Numerics.Vec3((this._data.size.x - fairygui.GRoot.inst.width) * 0.5, 0, (this._data.size.y - fairygui.GRoot.inst.height) * -0.5);
-            this._camera.position = this._camera.seekerPos;
-            this._camera.cameraTRSChangedHandler = this._graphicManager.OnCameraTRSChanged.bind(this._graphicManager);
-            this._graphic = this._graphicManager.CreateGraphic(MapGraphic_1.MapGraphic);
-            this._graphic.Load(this._data.model);
-            this._tile = new CTile_1.CTile(this._data.tileSlope, this._data.tileAspect, this._data.tileRatio);
-            this._input = new Input_1.Input(this);
-            this.camera.UpdateRestriction(RC.Numerics.Vec3.zero, new RC.Numerics.Vec3(this._graphic.sprite.width - fairygui.GRoot.inst.width, this._graphic.sprite.height - fairygui.GRoot.inst.height, 0));
+    class Network {
+        static Init(connector) {
+            Network._init = true;
+            Network._time = 0;
+            Network._connector = connector;
+            Network._connector.onerror = Network.HandleDisconnect;
+            Network._connector.onclose = Network.HandleDisconnect;
         }
-        get frame() { return this._frame; }
-        get deltaTime() { return this._deltaTime; }
-        get time() { return this._time; }
-        get graphicManager() { return this._graphicManager; }
-        ;
-        get entityManager() { return this._entityManager; }
-        ;
-        get camera() { return this._camera; }
-        ;
-        get graphic() { return this._graphic; }
-        ;
-        get tile() { return this._tile; }
-        ;
-        get input() { return this._input; }
-        Dispose() {
-            this._graphicManager.Dispose();
-            this._entityManager.Dispose();
-            this._tile.Dispose();
+        static HandleDisconnect() {
+            this._init = false;
+            Network._time = 0;
+            UIEvent_2.UIEvent.NetworkDisconnect();
         }
-        Update(deltaTime) {
-            ++this._frame;
-            this._deltaTime = deltaTime;
-            this._time += this.deltaTime;
-            this._context.deltaTime = this.deltaTime;
-            this._context.time = this.time;
-            this._context.frame = this.frame;
-            this._entityManager.Update(this._context);
-            this._camera.Update(this._context);
-            this._input.Update(this._context);
+        static Send(type, message, rpcHandler = null) {
+            Network._connector.Send(type, message, rpcHandler);
         }
-        OnResize(e) {
-            this.camera.UpdateRestriction(RC.Numerics.Vec3.zero, new RC.Numerics.Vec3(this._graphic.sprite.width - fairygui.GRoot.inst.width, this._graphic.sprite.height - fairygui.GRoot.inst.height, 0));
-        }
-        SetGraphicRoot(graphicRoot) {
-            graphicRoot.addChild(this.graphicManager.root);
-        }
-        CreateBuilding(id, position = RC.Numerics.Vec3.zero) {
-            let rid = Utils_2.Utils.MakeRIDFromID(id);
-            let param = new EntityParam_2.EntityParam();
-            param.rid = rid;
-            param.position = position;
-            let entity = this._entityManager.Create(CBuilding_3.CBuilding, param);
-            return entity;
-        }
-        CreateEditingBuilding(id, position = RC.Numerics.Vec3.zero) {
-            let rid = Utils_2.Utils.MakeRIDFromID(id);
-            let param = new EntityParam_2.EntityParam();
-            param.rid = rid;
-            param.position = position;
-            let entity = this._entityManager.Create(EditingBuilding_2.EditingBuilding, param);
-            return entity;
-        }
-        NewBuilding(id, position) {
-            let building = this.CreateBuilding(id, position);
-            building.SnapToTile();
-            if (!building.CanPlace()) {
-                this.input.ChangeState(Input_1.InputStateType.Layout, building, null, true);
-                return false;
+        static Update(dt) {
+            if (!Network._init)
+                return;
+            Network._time += dt;
+            if (Network._time >= Network.PING_INTERVAL) {
+                let keepAlive = ProtoHelper_2.ProtoCreator.Q_GC2GS_KeepAlive();
+                Network.Send(protos_3.Protos.GC2GS_KeepAlive, keepAlive);
             }
-            building.Place();
-            building.BeginBuild();
-            this.NotifyEndLayout();
-            this.NotifyUpdateBuilding();
-            return true;
-        }
-        NotifyStartLayout() {
-            UIEvent_1.UIEvent.StartLayout();
-        }
-        NotifyEndLayout() {
-            UIEvent_1.UIEvent.EndLayout();
-        }
-        NotifyUpdateBuilding() {
-            UIEvent_1.UIEvent.UpdateBuilding();
         }
     }
-    exports.Home = Home;
+    Network.PING_INTERVAL = 10000;
+    exports.Network = Network;
 });
-define("UI/HomePanel", ["require", "exports", "View/CUser", "View/Home", "Shared/Event/EventCenter", "Shared/Event/UIEvent"], function (require, exports, CUser_2, Home_1, EventCenter_2, UIEvent_2) {
+define("UI/UILogin", ["require", "exports", "../libs/protos", "Net/WSConnector", "Net/ProtoHelper", "UI/UIAlert", "Shared/Model/EntityParam", "UI/UIManager", "Net/Network"], function (require, exports, protos_4, WSConnector_1, ProtoHelper_3, UIAlert_1, EntityParam_2, UIManager_1, Network_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class UILogin {
+        constructor() {
+            fairygui.UIPackage.addPackage("res/ui/login");
+            this._root = fairygui.UIPackage.createObject("login", "Main").asCom;
+            this._root.width = fairygui.GRoot.inst.width;
+            this._root.height = fairygui.GRoot.inst.height;
+            this._root.addRelation(fairygui.GRoot.inst, fairygui.RelationType.Size);
+            this._root.getChild("login_btn").onClick(this, this.OnLoginBtnClick);
+            this._root.getChild("reg_btn").onClick(this, this.OnRegBtnClick);
+            this._root.getChild("enter_btn").onClick(this, this.OnEnterBtnClick);
+            this._areaList = this._root.getChild("alist").asList;
+            this._areaList.on(fairygui.Events.CLICK_ITEM, this, this.OnAreaClick);
+        }
+        Dispose() {
+            this._root.dispose();
+            this._root = null;
+        }
+        Enter(param) {
+            fairygui.GRoot.inst.addChild(this._root);
+        }
+        Leave() {
+            this.BackToLogin();
+            this._areaList.removeChildrenToPool();
+            fairygui.GRoot.inst.removeChild(this._root);
+        }
+        Update(deltaTime) {
+        }
+        OnResize(e) {
+        }
+        BackToRegister() {
+            this._root.getController("c1").selectedIndex = 1;
+        }
+        BackToLogin() {
+            this._root.getController("c1").selectedIndex = 0;
+        }
+        OnRegBtnClick() {
+            let regName = this._root.getChild("reg_name").asTextField.text;
+            if (regName == "") {
+                UIAlert_1.UIAlert.Show("无效的用户名");
+                return;
+            }
+            let regPwd = this._root.getChild("reg_password").asTextField.text;
+            if (regPwd == "") {
+                UIAlert_1.UIAlert.Show("无效的密码");
+                return;
+            }
+            let register = ProtoHelper_3.ProtoCreator.Q_GC2LS_AskRegister();
+            register.name = regName;
+            register.passwd = regPwd;
+            register.platform = 0;
+            register.sdk = 0;
+            let connector = new WSConnector_1.WSConnector();
+            connector.onerror = () => UIAlert_1.UIAlert.Show("无法连接服务器", () => connector.Connect("localhost", 49996));
+            connector.onclose = () => RC.Logger.Log("connection closed.");
+            connector.onopen = () => {
+                connector.Send(protos_4.Protos.GC2LS_AskRegister, register, message => {
+                    fairygui.GRoot.inst.closeModalWait();
+                    let resp = message;
+                    switch (resp.result) {
+                        case protos_4.Protos.LS2GC_RegResult.EResult.Success:
+                            UIAlert_1.UIAlert.Show("注册成功");
+                            this._root.getChild("name").asTextField.text = regName;
+                            this._root.getChild("password").asTextField.text = regPwd;
+                            this._root.getController("c1").selectedIndex = 0;
+                            break;
+                        case protos_4.Protos.LS2GC_RegResult.EResult.Failed:
+                            UIAlert_1.UIAlert.Show("注册失败", this.BackToRegister.bind(this));
+                            break;
+                        case protos_4.Protos.LS2GC_RegResult.EResult.UnameExists:
+                            UIAlert_1.UIAlert.Show("用户名已存在", this.BackToRegister.bind(this));
+                            break;
+                        case protos_4.Protos.LS2GC_RegResult.EResult.UnameIllegal:
+                            UIAlert_1.UIAlert.Show("无效的用户名", this.BackToRegister.bind(this));
+                            break;
+                        case protos_4.Protos.LS2GC_RegResult.EResult.PwdIllegal:
+                            UIAlert_1.UIAlert.Show("无效的密码", this.BackToRegister.bind(this));
+                            break;
+                    }
+                    connector.Close();
+                });
+            };
+            fairygui.GRoot.inst.showModalWait();
+            connector.Connect("localhost", 49996);
+        }
+        OnLoginBtnClick() {
+            let uname = this._root.getChild("name").asTextField.text;
+            if (uname == "") {
+                UIAlert_1.UIAlert.Show("无效用户名");
+                return;
+            }
+            let password = this._root.getChild("password").asTextField.text;
+            if (password == "") {
+                UIAlert_1.UIAlert.Show("无效密码");
+                return;
+            }
+            let login = ProtoHelper_3.ProtoCreator.Q_GC2LS_AskLogin();
+            login.name = uname;
+            login.passwd = password;
+            let connector = new WSConnector_1.WSConnector();
+            connector.onerror = () => UIAlert_1.UIAlert.Show("无法连接服务器", () => connector.Connect("localhost", 49996));
+            connector.onclose = () => RC.Logger.Log("connection closed.");
+            connector.onopen = () => {
+                connector.Send(protos_4.Protos.GC2LS_AskLogin, login, message => {
+                    fairygui.GRoot.inst.closeModalWait();
+                    let resp = message;
+                    switch (resp.result) {
+                        case protos_4.Protos.LS2GC_LoginResult.EResult.Success:
+                            this.HandleLoginLSSuccess(resp);
+                            break;
+                        case protos_4.Protos.LS2GC_LoginResult.EResult.Failed:
+                            UIAlert_1.UIAlert.Show("登陆失败", this.BackToLogin.bind(this));
+                            break;
+                        case protos_4.Protos.LS2GC_LoginResult.EResult.InvalidUname:
+                            UIAlert_1.UIAlert.Show("无效的用户名", this.BackToLogin.bind(this));
+                            break;
+                        case protos_4.Protos.LS2GC_LoginResult.EResult.InvalidPwd:
+                            UIAlert_1.UIAlert.Show("请输入正确的密码", this.BackToLogin.bind(this));
+                            break;
+                    }
+                });
+            };
+            fairygui.GRoot.inst.showModalWait();
+            connector.Connect("localhost", 49996);
+        }
+        HandleLoginLSSuccess(loginResult) {
+            let count = loginResult.gsInfos.length;
+            for (let i = 0; i < count; ++i) {
+                let gsInfo = loginResult.gsInfos[i];
+                let item = this._areaList.addItemFromPool().asButton;
+                item.title = gsInfo.name;
+                item.data = { "data": gsInfo, "s": loginResult.sessionID };
+            }
+            if (count > 0)
+                this._areaList.selectedIndex = 0;
+            this._root.getController("c1").selectedIndex = 2;
+        }
+        OnAreaClick() {
+        }
+        OnEnterBtnClick() {
+            let item = this._areaList.getChildAt(this._areaList.selectedIndex);
+            let data = item.data["data"];
+            this.ConnectToGS(data.ip, data.port, data.password, item.data["s"]);
+        }
+        ConnectToGS(ip, port, pwd, sessionID) {
+            let connector = new WSConnector_1.WSConnector();
+            connector.onerror = () => UIAlert_1.UIAlert.Show("无法连接服务器", this.BackToLogin.bind(this));
+            connector.onclose = () => RC.Logger.Log("connection closed.");
+            connector.onopen = () => {
+                let askLogin = ProtoHelper_3.ProtoCreator.Q_GC2GS_AskLogin();
+                askLogin.pwd = pwd;
+                askLogin.sessionID = sessionID;
+                connector.Send(protos_4.Protos.GC2GS_AskLogin, askLogin, message => {
+                    fairygui.GRoot.inst.closeModalWait();
+                    let resp = message;
+                    switch (resp.result) {
+                        case protos_4.Protos.GS2GC_LoginResult.EResult.Success:
+                            this.HandleLoginBSSuccess(connector);
+                            break;
+                        case protos_4.Protos.GS2GC_LoginResult.EResult.Failed:
+                            UIAlert_1.UIAlert.Show("登陆失败", this.BackToLogin.bind(this));
+                            break;
+                    }
+                });
+            };
+            fairygui.GRoot.inst.showModalWait();
+            connector.Connect(ip, port);
+        }
+        HandleLoginBSSuccess(connector) {
+            Network_1.Network.Init(connector);
+            let param = new EntityParam_2.BattleParams();
+            param.framesPerKeyFrame = 4;
+            param.frameRate = 20;
+            param.uid = "user";
+            param.id = "m0";
+            param.rndSeed = RC.Utils.Timer.utcTime;
+            let building = new EntityParam_2.Building();
+            building.uid = "user";
+            building.id = "b0";
+            param.buildings = [building];
+            UIManager_1.UIManager.EnterBattle(param);
+        }
+    }
+    exports.UILogin = UILogin;
+});
+define("UI/IMainPanel", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+});
+define("UI/HomePanel", ["require", "exports", "View/CUser", "View/Home", "Shared/Event/EventCenter", "Shared/Event/UIEvent"], function (require, exports, CUser_2, Home_1, EventCenter_2, UIEvent_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class HomePanel {
@@ -2190,16 +2246,16 @@ define("UI/HomePanel", ["require", "exports", "View/CUser", "View/Home", "Shared
                 fairygui.GRoot.inst.togglePopup(this._buildPanel, fairygui.GRoot.inst);
                 this._buildPanel.center();
             });
-            EventCenter_2.EventCenter.AddListener(UIEvent_2.UIEvent.START_LAYOUT, this.HandleStartLayout.bind(this));
-            EventCenter_2.EventCenter.AddListener(UIEvent_2.UIEvent.END_LAYOUT, this.HandleEndLayout.bind(this));
-            EventCenter_2.EventCenter.AddListener(UIEvent_2.UIEvent.UPDATE_BUILDING, this.HandleUpdateBuilding.bind(this));
+            EventCenter_2.EventCenter.AddListener(UIEvent_3.UIEvent.START_LAYOUT, this.HandleStartLayout.bind(this));
+            EventCenter_2.EventCenter.AddListener(UIEvent_3.UIEvent.END_LAYOUT, this.HandleEndLayout.bind(this));
+            EventCenter_2.EventCenter.AddListener(UIEvent_3.UIEvent.UPDATE_BUILDING, this.HandleUpdateBuilding.bind(this));
             this._home = new Home_1.Home(param);
             this._home.SetGraphicRoot(this._root.getChild("n37").asCom);
         }
         Dispose() {
-            EventCenter_2.EventCenter.RemoveListener(UIEvent_2.UIEvent.START_LAYOUT, this.HandleStartLayout.bind(this));
-            EventCenter_2.EventCenter.RemoveListener(UIEvent_2.UIEvent.END_LAYOUT, this.HandleEndLayout.bind(this));
-            EventCenter_2.EventCenter.RemoveListener(UIEvent_2.UIEvent.UPDATE_BUILDING, this.HandleUpdateBuilding.bind(this));
+            EventCenter_2.EventCenter.RemoveListener(UIEvent_3.UIEvent.START_LAYOUT, this.HandleStartLayout.bind(this));
+            EventCenter_2.EventCenter.RemoveListener(UIEvent_3.UIEvent.END_LAYOUT, this.HandleEndLayout.bind(this));
+            EventCenter_2.EventCenter.RemoveListener(UIEvent_3.UIEvent.UPDATE_BUILDING, this.HandleUpdateBuilding.bind(this));
             if (this._buildPanel != null) {
                 this._buildPanel.dispose();
                 this._buildPanel = null;
@@ -2496,7 +2552,7 @@ define("UI/RolePanel", ["require", "exports"], function (require, exports) {
     }
     exports.RolePanel = RolePanel;
 });
-define("UI/TaskPanel", ["require", "exports", "View/CUser", "Shared/Event/UIEvent", "Shared/Event/EventCenter", "Shared/Model/Defs"], function (require, exports, CUser_4, UIEvent_3, EventCenter_3, Defs_4) {
+define("UI/TaskPanel", ["require", "exports", "View/CUser", "Shared/Event/UIEvent", "Shared/Event/EventCenter", "Shared/Model/Defs"], function (require, exports, CUser_4, UIEvent_4, EventCenter_3, Defs_4) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class TaskPanel {
@@ -2507,10 +2563,10 @@ define("UI/TaskPanel", ["require", "exports", "View/CUser", "Shared/Event/UIEven
             this._def = this._root.getChild("def").asTextField;
             let backBtn = this._root.getChild("back_btn");
             backBtn.onClick(this, (e) => { this._owner.panelIndex = 0; });
-            EventCenter_3.EventCenter.AddListener(UIEvent_3.UIEvent.UPDATE_BUILDING, this.HandleUpdateBuilding.bind(this));
+            EventCenter_3.EventCenter.AddListener(UIEvent_4.UIEvent.UPDATE_BUILDING, this.HandleUpdateBuilding.bind(this));
         }
         Dispose() {
-            EventCenter_3.EventCenter.RemoveListener(UIEvent_3.UIEvent.UPDATE_BUILDING, this.HandleUpdateBuilding.bind(this));
+            EventCenter_3.EventCenter.RemoveListener(UIEvent_4.UIEvent.UPDATE_BUILDING, this.HandleUpdateBuilding.bind(this));
         }
         Enter() {
             let tasksDef = Defs_4.Defs.GetTask();
@@ -2538,7 +2594,7 @@ define("UI/TaskPanel", ["require", "exports", "View/CUser", "Shared/Event/UIEven
     }
     exports.TaskPanel = TaskPanel;
 });
-define("UI/MsgPanel", ["require", "exports", "View/CUser", "Shared/Event/UIEvent", "Shared/Event/EventCenter", "Shared/Model/Defs"], function (require, exports, CUser_5, UIEvent_4, EventCenter_4, Defs_5) {
+define("UI/MsgPanel", ["require", "exports", "View/CUser", "Shared/Event/UIEvent", "Shared/Event/EventCenter", "Shared/Model/Defs"], function (require, exports, CUser_5, UIEvent_5, EventCenter_4, Defs_5) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class MsgPanel {
@@ -2549,10 +2605,10 @@ define("UI/MsgPanel", ["require", "exports", "View/CUser", "Shared/Event/UIEvent
             this._def = this._root.getChild("def").asTextField;
             let backBtn = this._root.getChild("back_btn");
             backBtn.onClick(this, (e) => { this._owner.panelIndex = 0; });
-            EventCenter_4.EventCenter.AddListener(UIEvent_4.UIEvent.UPDATE_BUILDING, this.HandleUpdateBuilding.bind(this));
+            EventCenter_4.EventCenter.AddListener(UIEvent_5.UIEvent.UPDATE_BUILDING, this.HandleUpdateBuilding.bind(this));
         }
         Dispose() {
-            EventCenter_4.EventCenter.RemoveListener(UIEvent_4.UIEvent.UPDATE_BUILDING, this.HandleUpdateBuilding.bind(this));
+            EventCenter_4.EventCenter.RemoveListener(UIEvent_5.UIEvent.UPDATE_BUILDING, this.HandleUpdateBuilding.bind(this));
         }
         Enter() {
             let tasksDef = Defs_5.Defs.GetMessage();
@@ -2694,7 +2750,7 @@ define("UI/UIManager", ["require", "exports", "UI/UILogin", "UI/UIMain"], functi
     }
     exports.UIManager = UIManager;
 });
-define("Game", ["require", "exports", "UI/UIManager", "Shared/Model/Defs"], function (require, exports, UIManager_2, Defs_6) {
+define("Game", ["require", "exports", "UI/UIManager", "Shared/Model/Defs", "Net/Network", "Shared/Event/EventCenter", "Shared/Event/UIEvent", "UI/UIAlert"], function (require, exports, UIManager_2, Defs_6, Network_2, EventCenter_5, UIEvent_6, UIAlert_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class Main {
@@ -2733,11 +2789,16 @@ define("Game", ["require", "exports", "UI/UIManager", "Shared/Model/Defs"], func
             UIManager_2.UIManager.Init(new RC.Numerics.Vec2(600, 800));
             fairygui.GRoot.inst.on(fairygui.Events.SIZE_CHANGED, this, this.OnResize);
             Laya.timer.frameLoop(1, this, this.Update);
+            EventCenter_5.EventCenter.AddListener(UIEvent_6.UIEvent.NETWORK_DISCONNECT, this.HandleNetworkDisconnect);
             UIManager_2.UIManager.EnterLogin();
+        }
+        HandleNetworkDisconnect() {
+            UIAlert_2.UIAlert.Show("与服务器断开连接", () => UIManager_2.UIManager.EnterLogin());
         }
         Update() {
             let dt = Laya.timer.delta;
             UIManager_2.UIManager.Update(dt);
+            Network_2.Network.Update(dt);
         }
         OnResize(e) {
             UIManager_2.UIManager.OnResize(e);

@@ -5,10 +5,11 @@ import { ProtoCreator } from "../Net/ProtoHelper";
 import { UIAlert } from "./UIAlert";
 import { BattleParams, Building } from "../Shared/Model/EntityParam";
 import { UIManager } from "./UIManager";
+import { Network } from "../Net/Network";
 
 export class UILogin implements IUIModule {
 	private _root: fairygui.GComponent;
-	private _list: fairygui.GList;
+	private _areaList: fairygui.GList;
 
 	constructor() {
 		fairygui.UIPackage.addPackage("res/ui/login");
@@ -20,8 +21,8 @@ export class UILogin implements IUIModule {
 		this._root.getChild("login_btn").onClick(this, this.OnLoginBtnClick);
 		this._root.getChild("reg_btn").onClick(this, this.OnRegBtnClick);
 		this._root.getChild("enter_btn").onClick(this, this.OnEnterBtnClick);
-		this._list = this._root.getChild("alist").asList;
-		this._list.on(fairygui.Events.CLICK_ITEM, this, this.OnAreaClick);
+		this._areaList = this._root.getChild("alist").asList;
+		this._areaList.on(fairygui.Events.CLICK_ITEM, this, this.OnAreaClick);
 	}
 
 	public Dispose(): void {
@@ -34,6 +35,8 @@ export class UILogin implements IUIModule {
 	}
 
 	public Leave(): void {
+		this.BackToLogin();
+		this._areaList.removeChildrenToPool();
 		fairygui.GRoot.inst.removeChild(this._root);
 	}
 
@@ -150,12 +153,12 @@ export class UILogin implements IUIModule {
 		let count = loginResult.gsInfos.length;
 		for (let i = 0; i < count; ++i) {
 			let gsInfo = loginResult.gsInfos[i];
-			let item = this._list.addItemFromPool().asButton;
+			let item = this._areaList.addItemFromPool().asButton;
 			item.title = gsInfo.name;
 			item.data = { "data": gsInfo, "s": loginResult.sessionID };
 		}
 		if (count > 0)
-			this._list.selectedIndex = 0;
+			this._areaList.selectedIndex = 0;
 		this._root.getController("c1").selectedIndex = 2;
 	}
 
@@ -163,7 +166,7 @@ export class UILogin implements IUIModule {
 	}
 
 	private OnEnterBtnClick(): void {
-		let item = this._list.getChildAt(this._list.selectedIndex);
+		let item = this._areaList.getChildAt(this._areaList.selectedIndex);
 		let data: Protos.GSInfo = <Protos.GSInfo>item.data["data"];
 		this.ConnectToGS(data.ip, data.port, data.password, item.data["s"]);
 	}
@@ -181,7 +184,7 @@ export class UILogin implements IUIModule {
 				let resp: Protos.GS2GC_LoginResult = <Protos.GS2GC_LoginResult>message;
 				switch (resp.result) {
 					case Protos.GS2GC_LoginResult.EResult.Success:
-						this.HandleLoginBSSuccess(resp);
+						this.HandleLoginBSSuccess(connector);
 						break;
 					case Protos.GS2GC_LoginResult.EResult.Failed:
 						UIAlert.Show("登陆失败", this.BackToLogin.bind(this));
@@ -193,7 +196,9 @@ export class UILogin implements IUIModule {
 		connector.Connect(ip, port);
 	}
 
-	private HandleLoginBSSuccess(loginResult: Protos.GS2GC_LoginResult): void {
+	private HandleLoginBSSuccess(connector: WSConnector): void {
+		Network.Init(connector);
+
 		let param = new BattleParams();
 		param.framesPerKeyFrame = 4;
 		param.frameRate = 20;

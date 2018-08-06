@@ -11,7 +11,3 @@ message CS2GS_GCLoginRet{
 	MsgOpts opts = 1;
 	EResult result = 2;
 }
-
-message CS2GS_KeepAlive{
-	MsgOpts opts = 1;
-}

@@ -8,6 +8,7 @@
 		public string redisIP;
 		public int redisPort;
 		public string redisPwd;
+		public long pingInterval;
 
 		public void CopyFromCLIOptions( Options opts )
 		{
@@ -17,6 +18,7 @@
 			this.redisIP = opts.redisIP;
 			this.redisPort = opts.redisPort;
 			this.redisPwd = opts.redisPwd;
+			this.pingInterval = opts.pingInterval;
 		}
 	}
 }
