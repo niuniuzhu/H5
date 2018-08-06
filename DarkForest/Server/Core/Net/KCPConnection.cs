@@ -28,7 +28,7 @@ namespace Core.Net
 		public bool isRefSocket { private get; set; }
 		public EndPoint remoteEndPoint
 		{
-			private get => this._recvEventArgs.RemoteEndPoint;
+			get => this._recvEventArgs.RemoteEndPoint;
 			set
 			{
 				this._sendEventArgs.RemoteEndPoint = value;

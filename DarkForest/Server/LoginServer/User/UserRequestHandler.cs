@@ -14,7 +14,7 @@ namespace LoginServer.User
 
 		public ErrorCode RegisterAccount( Protos.GC2LS_AskRegister msg )
 		{
-			if ( this.allUserNameToGuidMap.ContainsKey( msg.Name ) ) //如果内存里找到相同用户名
+			if ( this.userNameToGuidMap.ContainsKey( msg.Name ) ) //如果内存里找到相同用户名
 				return ErrorCode.UsernameExists;
 
 			if ( string.IsNullOrEmpty( msg.Name ) || msg.Name.Length < Consts.DEFAULT_UNAME_LEN )
@@ -70,34 +70,56 @@ namespace LoginServer.User
 				RedisValue pwd = redisWrapper.HashGet( "unames", msg.Name );
 				if ( !pwd.HasValue ) //redis找不到用户名
 					return ErrorCode.InvalidUname;
-				if ( pwd != Core.Crypto.MD5Util.GetMd5HexDigest( msg.Passwd ).Replace( "-", string.Empty ).ToLower() )
+				if ( pwd != Core.Crypto.MD5Util.GetMd5HexDigest( msg.Passwd ).Replace( "-", string.Empty )
+								.ToLower() )
 					return ErrorCode.InvalidPwd;
 			}
 			else
 			{
-				string pwd = Core.Crypto.MD5Util.GetMd5HexDigest( msg.Passwd ).Replace( "-", string.Empty ).ToLower();
-				errorCode = this._accountDBWrapper.SqlExecQuery( $"select pwd from account_user where uname={msg.Name}",
-																 dataReader =>
-																 {
-																	 if ( !dataReader.HasRows )
-																		 return ErrorCode.InvalidUname;
-																	 dataReader.Read();
-																	 return ( string )dataReader["pwd"] != pwd
-																				? ErrorCode.InvalidPwd
-																				: ErrorCode.Success;
-																 } );
+				string pwd = Core.Crypto.MD5Util.GetMd5HexDigest( msg.Passwd ).Replace( "-", string.Empty )
+								 .ToLower();
+				errorCode = this._accountDBWrapper.SqlExecQuery(
+					$"select pwd from account_user where uname={msg.Name}",
+					dataReader =>
+					{
+						if ( !dataReader.HasRows )
+							return ErrorCode.InvalidUname;
+						dataReader.Read();
+						return ( string )dataReader["pwd"] != pwd
+								   ? ErrorCode.InvalidPwd
+								   : ErrorCode.Success;
+					} );
 			}
 			if ( errorCode != ErrorCode.Success )
 				return errorCode;
 
+			//检查内存是否有该玩家,有则踢掉
+			if ( this.userNameToGuidMap.TryGetValue( msg.Name, out sessionID ) && this.guidToUser.TryGetValue( sessionID, out User oldUser ) )
+				this.KickUser( oldUser );
+
 			sessionID = GuidHash.GetUInt64();
-			this.allUserNameToGuidMap[msg.Name] = sessionID;
+			this.UserOnline( new User( sessionID, msg.Name ) );
+
 			return ErrorCode.Success;
 		}
 
 		private void UserOnline( User user )
 		{
+			this.userNameToGuidMap[user.name] = user.sessionID;
+			this.guidToUser[user.sessionID] = user;
 
+		}
+
+		private void UserOffline( User user )
+		{
+			this.userNameToGuidMap.Remove( user.name );
+			this.guidToUser.Remove( user.sessionID );
+		}
+
+		private void KickUser( User user )
+		{
+			this.UserOffline( user );
+			//todo send to client and cs
 		}
 	}
 }

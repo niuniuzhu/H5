@@ -52,9 +52,17 @@ namespace CentralServer.Net
 			Protos.GS2CS_GCAskLogin gcAskLogin = ( Protos.GS2CS_GCAskLogin )message;
 			ErrorCode errorCode = CS.instance.HandleGCAskLoginFromGS( gcAskLogin.SessionID, this.id );
 			Protos.CS2GS_GCLoginRet gcAskLoginRet = ProtoCreator.R_GS2CS_GCAskLogin( gcAskLogin.Opts.Pid );
-			gcAskLoginRet.Result = errorCode != ErrorCode.Success
-									   ? Protos.CS2GS_GCLoginRet.Types.EResult.Failed
-									   : Protos.CS2GS_GCLoginRet.Types.EResult.Success;
+			switch ( errorCode )
+			{
+				case ErrorCode.Success:
+					gcAskLoginRet.Result = Protos.CS2GS_GCLoginRet.Types.EResult.Success;
+					break;
+
+				default:
+					Logger.Warn( $"an invalid gcSid:{gcAskLogin.SessionID} try to login with remote address:{this.connection.remoteEndPoint}." );
+					gcAskLoginRet.Result = Protos.CS2GS_GCLoginRet.Types.EResult.Failed;
+					break;
+			}
 			this.Send( gcAskLoginRet );
 			return ErrorCode.Success;
 		}

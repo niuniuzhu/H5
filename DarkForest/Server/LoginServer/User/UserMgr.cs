@@ -8,8 +8,8 @@ namespace LoginServer.User
 		/// <summary>
 		/// 用户名和id的映射
 		/// </summary>
-		public Dictionary<string, ulong> allUserNameToGuidMap { get; } = new Dictionary<string, ulong>();
-		public Dictionary<ulong, User> guidToUsers { get; } = new Dictionary<ulong, User>();
+		public Dictionary<string, ulong> userNameToGuidMap { get; } = new Dictionary<string, ulong>();
+		public Dictionary<ulong, User> guidToUser { get; } = new Dictionary<ulong, User>();
 
 		private readonly DBWrapper _accountDBWrapper = new DBWrapper();
 

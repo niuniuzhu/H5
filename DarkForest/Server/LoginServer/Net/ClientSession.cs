@@ -85,6 +85,7 @@ namespace LoginServer.Net
 							};
 							response.GsInfos.Add( gsInfo );
 						}
+						Logger.Log( $"client:{login.Name}, sid:{sessionID} login success" );
 						break;
 					case ErrorCode.InvalidUname:
 						response.Result = Protos.LS2GC_LoginResult.Types.EResult.InvalidUname;

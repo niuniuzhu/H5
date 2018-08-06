@@ -3,7 +3,6 @@ using log4net;
 using log4net.Config;
 using log4net.Core;
 using log4net.Repository;
-using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -31,17 +30,17 @@ namespace Core.Misc
 
 		public static void Dispose() => LogManager.Shutdown();
 
-		public static void Debug( object obj, int startFrame = 2, int count = 100 ) => _log.Debug( $"{obj}{Environment.NewLine}{ GetStacks( startFrame, count )}" );
+		public static void Debug( object obj, int startFrame = 2, int count = 100 ) => _log.Debug( Stacks( ref obj, startFrame, count ) );
 
 		public static void Log( object obj ) => _log.Log( obj );
 
-		public static void Warn( object obj, int startFrame = 2, int count = 1 ) => _log.Warn( $"{ GetStacks( startFrame, count )}: {obj}" );
+		public static void Warn( object obj ) => _log.Warn( SimpleInfo( ref obj ) );
 
-		public static void Error( object obj, int startFrame = 2, int count = 1 ) => _log.Error( $"{ GetStacks( startFrame, count )}: {obj}" );
+		public static void Error( object obj, int startFrame = 2, int count = 1 ) => _log.Error( Stacks( ref obj, startFrame, count ) );
 
 		public static void Info( object obj ) => _log.Info( obj );
 
-		public static void Fatal( object obj, int startFrame = 2, int count = 100 ) => _log.Fatal( $"{obj}{Environment.NewLine}{ GetStacks( startFrame, count )}" );
+		public static void Fatal( object obj, int startFrame = 2, int count = 100 ) => _log.Fatal( Stacks( ref obj, startFrame, count ) );
 
 		private static Stream GenerateStreamFromString( string s )
 		{
@@ -53,22 +52,30 @@ namespace Core.Misc
 			return stream;
 		}
 
-		private static string GetStacks( int startFrame, int count )
+		private static string SimpleInfo( ref object obj )
 		{
 			StackTrace st = new StackTrace( true );
-			int endFrame = startFrame + count - 1;
-			endFrame = MathUtils.Min( st.FrameCount, endFrame );
-			if ( startFrame > endFrame )
-				return string.Empty;
+			StackFrame sf = st.GetFrame( 2 );
+			return $"[{sf.GetFileName()}:{sf.GetFileLineNumber()}] {obj}";
+		}
+
+		private static string Stacks( ref object obj, int startFrame, int count )
+		{
+			if ( count == 0 )
+				return obj.ToString();
+			StackTrace st = new StackTrace( true );
+			int endFrame = MathUtils.Min( st.FrameCount, startFrame + count );
+			if ( startFrame >= endFrame )
+				return obj.ToString();
 
 			StringBuilder sb = new StringBuilder();
+			sb.Append( obj );
 			for ( int i = startFrame; i < endFrame; i++ )
 			{
+				sb.AppendLine();
 				StackFrame sf = st.GetFrame( i );
 				MethodBase method = sf.GetMethod();
-				sb.Append( $"{method.DeclaringType.FullName}::{method.Name}:{sf.GetFileLineNumber()}" );
-				if ( i != endFrame )
-					sb.AppendLine( "\t" );
+				sb.Append( $"\t{method.DeclaringType.FullName}::{method.Name}:{sf.GetFileLineNumber()},{sf.GetFileColumnNumber()}" );
 			}
 			return sb.ToString();
 		}

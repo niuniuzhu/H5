@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="720,1280" designImageLayer="1">
-  <controller name="c1" pages="0,,1,,2," selected="2"/>
+  <controller name="c1" pages="0,,1,,2," selected="0"/>
   <displayList>
     <image id="n0_kqy5" name="n0" src="kqy52r" fileName="assets/bg01.png" pkg="c7x5i49r" xy="0,0"/>
     <image id="n1_kqy5" name="n1" src="kqy54" fileName="assets/kuang06.png" xy="67,388"/>
@@ -13,7 +13,7 @@
     </component>
     <component id="n8_kqy5" name="login_btn" src="kqy5e" fileName="coms/green_btn.xml" xy="368,769">
       <gearDisplay controller="c1" pages="0"/>
-      <Button title="登陆" titleColor="#ffffff" titleFontSize="36" controller="c1" page="2"/>
+      <Button title="登陆" titleColor="#ffffff" titleFontSize="36"/>
     </component>
     <image id="n13_kqy5" name="n13" src="kqy53" fileName="assets/denglu.png" xy="300,397">
       <gearDisplay controller="c1" pages="0"/>

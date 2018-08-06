@@ -40,6 +40,7 @@ namespace CentralServer.Net
 		{
 			Protos.LS2CS_GCLogin gcLogin = ( Protos.LS2CS_GCLogin )message;
 			CS.instance.HandleGCLoginFromLS( gcLogin.SessionID );
+			Logger.Log( $"client:{gcLogin.SessionID} login CS" );
 			Protos.CS2LS_GCLoginRet gcLoginRet = ProtoCreator.R_LS2CS_GCLogin( gcLogin.Opts.Pid );
 			this.Send( gcLoginRet );
 			return ErrorCode.Success;

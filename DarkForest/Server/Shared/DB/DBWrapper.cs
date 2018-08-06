@@ -131,7 +131,7 @@ namespace Shared.DB
 			}
 			catch ( Exception e )
 			{
-				Logger.Warn( $"sql:{sqlCmd.CommandText} execute error:{e}", 2, 2 );
+				Logger.Warn( $"sql:{sqlCmd.CommandText} execute error:{e}" );
 				dataReader?.Close();
 				this._db.Close();
 				return ErrorCode.SqlExecError;
@@ -170,7 +170,7 @@ namespace Shared.DB
 			}
 			catch ( Exception e )
 			{
-				Logger.Warn( $"sql:{sqlCmd.CommandText} execute error:{e}", 2, 2 );
+				Logger.Warn( $"sql:{sqlCmd.CommandText} execute error:{e}" );
 				return ErrorCode.SqlExecError;
 			}
 			finally
@@ -205,7 +205,7 @@ namespace Shared.DB
 			}
 			catch ( Exception e )
 			{
-				Logger.Warn( $"sql:{sqlCmd.CommandText} execute error:{e}", 2, 2 );
+				Logger.Warn( $"sql:{sqlCmd.CommandText} execute error:{e}" );
 				return ErrorCode.SqlExecError;
 			}
 			finally

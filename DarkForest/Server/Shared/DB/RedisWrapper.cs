@@ -27,7 +27,7 @@ namespace Shared.DB
 		private string _password;
 		private IDatabase _database;
 
-		public bool IsConnected => this._connMultiplexer.IsConnected;
+		public bool IsConnected => this._connMultiplexer != null && this._connMultiplexer.IsConnected;
 
 		public ErrorCode Connect( string ip, int port, string password )
 		{

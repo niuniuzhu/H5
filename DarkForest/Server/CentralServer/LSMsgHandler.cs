@@ -1,6 +1,5 @@
 ﻿using Shared;
 using System.Collections.Generic;
-using Core.Misc;
 
 namespace CentralServer
 {
@@ -28,8 +27,8 @@ namespace CentralServer
 
 		public void HandleGCLoginFromLS( ulong gcSID )
 		{
-			if ( !this._gcSIDForLogin.Add( gcSID ) )
-				Logger.Warn( $"duplicate GC sessionID:{gcSID}." );
+			bool result = this._gcSIDForLogin.Add( gcSID );
+			System.Diagnostics.Debug.Assert( result, $"duplicate GC sessionID:{gcSID}." );
 		}
 	}
 }

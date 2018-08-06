@@ -3,14 +3,13 @@ import { WSConnector } from "../../Net/WSConnector";
 import { IUIModule } from "./IUIModule";
 import { ProtoCreator } from "../../Protos/ProtoHelper";
 import { UIAlert } from "./UIAlert";
-import Long from "../../libs/long";
 import { BattleParams, Building } from "../../Shared/Model/EntityParam";
 import { UIManager } from "./UIManager";
+import Long from "../../libs/long";
 
 export class UILogin implements IUIModule {
 	private _root: fairygui.GComponent;
 	private _list: fairygui.GList;
-	private _connector: WSConnector;
 
 	constructor() {
 		fairygui.UIPackage.addPackage("res/ui/login");
@@ -33,20 +32,9 @@ export class UILogin implements IUIModule {
 
 	public Enter(param: any): void {
 		fairygui.GRoot.inst.addChild(this._root);
-
-		this._connector = new WSConnector();
-		this._connector.onopen = () => fairygui.GRoot.inst.closeModalWait();
-		this._connector.onerror = () => {
-			fairygui.GRoot.inst.closeModalWait();
-			UIAlert.Show("无法连接服务器", () => this.Connect());
-		};
-		this._connector.onclose = () => RC.Logger.Log("connection closed.");
-		this.Connect();
 	}
 
 	public Leave(): void {
-		this._connector.Close();
-		this._connector = null;
 		fairygui.GRoot.inst.removeChild(this._root);
 	}
 
@@ -56,53 +44,64 @@ export class UILogin implements IUIModule {
 	public OnResize(e: laya.events.Event): void {
 	}
 
-	private Connect(): void {
-		fairygui.GRoot.inst.showModalWait();
-		this._connector.Connect("localhost", 49996);
+	private BackToRegister(): void {
+		this._root.getController("c1").selectedIndex = 1;
+	}
+
+	private BackToLogin(): void {
+		this._root.getController("c1").selectedIndex = 0;
 	}
 
 	private OnRegBtnClick(): void {
 		let regName = this._root.getChild("reg_name").asTextField.text;
 		if (regName == "") {
-			UIAlert.Show("无效用户名");
+			UIAlert.Show("无效的用户名");
 			return;
 		}
 		let regPwd = this._root.getChild("reg_password").asTextField.text;
 		if (regPwd == "") {
-			UIAlert.Show("无效密码");
+			UIAlert.Show("无效的密码");
 			return;
 		}
+
 		let register = ProtoCreator.Q_GC2LS_AskRegister();
 		register.name = regName;
 		register.passwd = regPwd;
 		register.platform = 0;
 		register.sdk = 0;
 
+		let connector = new WSConnector();
+		connector.onerror = () => UIAlert.Show("无法连接服务器", () => connector.Connect("localhost", 49996));
+		connector.onclose = () => RC.Logger.Log("connection closed.");
+		connector.onopen = () => {
+			connector.Send(Protos.GC2LS_AskRegister, register, message => {
+				fairygui.GRoot.inst.closeModalWait();
+				let resp: Protos.LS2GC_RegResult = <Protos.LS2GC_RegResult>message;
+				switch (resp.result) {
+					case Protos.LS2GC_RegResult.EResult.Success:
+						UIAlert.Show("注册成功");
+						this._root.getChild("name").asTextField.text = regName;
+						this._root.getChild("password").asTextField.text = regPwd;
+						this._root.getController("c1").selectedIndex = 0;
+						break;
+					case Protos.LS2GC_RegResult.EResult.Failed:
+						UIAlert.Show("注册失败", this.BackToRegister.bind(this));
+						break;
+					case Protos.LS2GC_RegResult.EResult.UnameExists:
+						UIAlert.Show("用户名已存在", this.BackToRegister.bind(this));
+						break;
+					case Protos.LS2GC_RegResult.EResult.UnameIllegal:
+						UIAlert.Show("无效的用户名", this.BackToRegister.bind(this));
+						break;
+					case Protos.LS2GC_RegResult.EResult.PwdIllegal:
+						UIAlert.Show("无效的密码", this.BackToRegister.bind(this));
+						break;
+				}
+				connector.Close();
+			});
+		}
 		fairygui.GRoot.inst.showModalWait();
-		this._connector.Send(Protos.GC2LS_AskRegister, register, ((message) => {
-			let resp: Protos.LS2GC_RegResult = <Protos.LS2GC_RegResult>message;
-			switch (resp.result) {
-				case Protos.LS2GC_RegResult.EResult.Success:
-					UIAlert.Show("注册成功");
-					this._root.getChild("name").asTextField.text = regName;
-					this._root.getChild("password").asTextField.text = regPwd;
-					this._root.getController("c1").selectedIndex = 0;
-					break;
-				case Protos.LS2GC_RegResult.EResult.Failed:
-					UIAlert.Show("注册失败");
-					break;
-				case Protos.LS2GC_RegResult.EResult.UnameExists:
-					UIAlert.Show("用户名已存在");
-					break;
-				case Protos.LS2GC_RegResult.EResult.UnameIllegal:
-					UIAlert.Show("无效用户名");
-					break;
-				case Protos.LS2GC_RegResult.EResult.PwdIllegal:
-					UIAlert.Show("无效密码");
-					break;
-			}
-			fairygui.GRoot.inst.closeModalWait();
-		}).bind(this));
+		connector.Connect("localhost", 49996);
 	}
 
 	private OnLoginBtnClick(): void {
@@ -116,28 +115,36 @@ export class UILogin implements IUIModule {
 			UIAlert.Show("无效密码");
 			return;
 		}
+
 		let login = ProtoCreator.Q_GC2LS_AskLogin();
 		login.name = uname;
 		login.passwd = password;
+
+		let connector = new WSConnector();
+		connector.onerror = () => UIAlert.Show("无法连接服务器", () => connector.Connect("localhost", 49996));
+		connector.onclose = () => RC.Logger.Log("connection closed.");
+		connector.onopen = () => {
+			connector.Send(Protos.GC2LS_AskLogin, login, message => {
+				fairygui.GRoot.inst.closeModalWait();
+				let resp: Protos.LS2GC_LoginResult = <Protos.LS2GC_LoginResult>message;
+				switch (resp.result) {
+					case Protos.LS2GC_LoginResult.EResult.Success:
+						this.HandleLoginLSSuccess(resp);
+						break;
+					case Protos.LS2GC_LoginResult.EResult.Failed:
+						UIAlert.Show("登陆失败", this.BackToLogin.bind(this));
+						break;
+					case Protos.LS2GC_LoginResult.EResult.InvalidUname:
+						UIAlert.Show("无效的用户名", this.BackToLogin.bind(this));
+						break;
+					case Protos.LS2GC_LoginResult.EResult.InvalidPwd:
+						UIAlert.Show("请输入正确的密码", this.BackToLogin.bind(this));
+						break;
+				}
+			});
+		};
 		fairygui.GRoot.inst.showModalWait();
-		this._connector.Send(Protos.GC2LS_AskLogin, login, message => {
-			let resp: Protos.LS2GC_LoginResult = <Protos.LS2GC_LoginResult>message;
-			switch (resp.result) {
-				case Protos.LS2GC_LoginResult.EResult.Success:
-					this.HandleLoginLSSuccess(resp);
-					break;
-				case Protos.LS2GC_LoginResult.EResult.Failed:
-					UIAlert.Show("登陆失败");
-					break;
-				case Protos.LS2GC_LoginResult.EResult.InvalidUname:
-					UIAlert.Show("无效用户名");
-					break;
-				case Protos.LS2GC_LoginResult.EResult.InvalidUname:
-					UIAlert.Show("密码不正确");
-					break;
-			}
-			fairygui.GRoot.inst.closeModalWait();
-		});
+		connector.Connect("localhost", 49996);
 	}
 
 	private HandleLoginLSSuccess(loginResult: Protos.LS2GC_LoginResult): void {
@@ -146,11 +153,11 @@ export class UILogin implements IUIModule {
 			let gsInfo = loginResult.gsInfos[i];
 			let item = this._list.addItemFromPool().asButton;
 			item.title = gsInfo.name;
-			let sessionID: Long = <Long><any>loginResult.sessionID;
-			item.data = { "data": gsInfo, "s": sessionID.toNumber() };
+			item.data = { "data": gsInfo, "s": loginResult.sessionID };
 		}
 		if (count > 0)
 			this._list.selectedIndex = 0;
+		this._root.getController("c1").selectedIndex = 2;
 	}
 
 	private OnAreaClick(): void {
@@ -162,26 +169,29 @@ export class UILogin implements IUIModule {
 		this.ConnectToGS(data.ip, data.port, data.password, item.data["s"]);
 	}
 
-	private ConnectToGS(ip: string, port: number, pwd: string, sessionID: number): void {
-		fairygui.GRoot.inst.showModalWait();
-		this._connector.onopen = () => {
+	private ConnectToGS(ip: string, port: number, pwd: string, sessionID: Long): void {
+		let connector = new WSConnector();
+		connector.onerror = () => UIAlert.Show("无法连接服务器", this.BackToLogin.bind(this));
+		connector.onclose = () => RC.Logger.Log("connection closed.");
+		connector.onopen = () => {
 			let askLogin = ProtoCreator.Q_GC2GS_AskLogin();
 			askLogin.pwd = pwd;
 			askLogin.sessionID = sessionID;
-			this._connector.Send(Protos.GC2GS_AskLogin, askLogin, message => {
+			connector.Send(Protos.GC2GS_AskLogin, askLogin, message => {
+				fairygui.GRoot.inst.closeModalWait();
 				let resp: Protos.GS2GC_LoginResult = <Protos.GS2GC_LoginResult>message;
 				switch (resp.result) {
 					case Protos.GS2GC_LoginResult.EResult.Success:
 						this.HandleLoginBSSuccess(resp);
 						break;
 					case Protos.GS2GC_LoginResult.EResult.Failed:
-						UIAlert.Show("登陆失败");
+						UIAlert.Show("登陆失败", this.BackToLogin.bind(this));
 						break;
 				}
-				fairygui.GRoot.inst.closeModalWait();
 			});
 		}
-		this._connector.Connect(ip, port);
+		fairygui.GRoot.inst.showModalWait();
+		connector.Connect(ip, port);
 	}
 
 	private HandleLoginBSSuccess(loginResult: Protos.GS2GC_LoginResult): void {

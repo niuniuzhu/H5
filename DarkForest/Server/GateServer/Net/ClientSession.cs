@@ -30,9 +30,10 @@ namespace GateServer.Net
 			Protos.GC2GS_AskLogin login = ( Protos.GC2GS_AskLogin )message;
 			Protos.GS2CS_GCAskLogin gcAskLogin = ProtoCreator.Q_GS2CS_GCAskLogin();
 			gcAskLogin.SessionID = login.SessionID;
+			Logger.Log( $"client:{gcAskLogin.SessionID} ask login" );
 			this.owner.Send( SessionType.ServerG2CS, gcAskLogin, msgRet =>
 			{
-				Protos.GS2GC_LoginResult gsLoginRet = ProtoCreator.Q_GS2GC_LoginResult();
+				Protos.GS2GC_LoginResult gsLoginRet = ProtoCreator.R_GC2GS_AskLogin( login.Opts.Pid );
 				Protos.CS2GS_GCLoginRet csLoginRet = ( Protos.CS2GS_GCLoginRet )msgRet;
 				switch ( csLoginRet.Result )
 				{
