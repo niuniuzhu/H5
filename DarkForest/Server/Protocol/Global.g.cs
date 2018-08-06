@@ -30,7 +30,7 @@ namespace Protos {
             "UxAEIjgKCUdfQXNrUGluZxIdCgRvcHRzGAEgASgLMg8uUHJvdG9zLk1zZ09w",
             "dHMSDAoEdGltZRgCIAEoAyJKCgxHX0Fza1BpbmdSZXQSHQoEb3B0cxgBIAEo",
             "CzIPLlByb3Rvcy5Nc2dPcHRzEg0KBXN0aW1lGAIgASgDEgwKBHRpbWUYAyAB",
-            "KAMqiwMKBU1zZ0lEEgwKCFVuZGVmaW5lEAASDgoKZUdfQXNrUGluZxAKEhEK",
+            "KAMqogMKBU1zZ0lEEgwKCFVuZGVmaW5lEAASDgoKZUdfQXNrUGluZxAKEhEK",
             "DWVHX0Fza1BpbmdSZXQQCxIWChJlR0MyTFNfQXNrUmVnaXN0ZXIQZBITCg9l",
             "R0MyTFNfQXNrTG9naW4QZRIUCg9lR0MyR1NfQXNrTG9naW4QyAESFQoQZUxT",
             "MkdDX1JlZ1Jlc3VsdBCsAhIXChJlTFMyR0NfTG9naW5SZXN1bHQQrQISEgoN",
@@ -38,8 +38,8 @@ namespace Protos {
             "Q1NfUmVwb3J0U3RhdGUQ9AMSFgoRZUdTMkNTX0dDQXNrTG9naW4Q9QMSFwoS",
             "ZUdTMkdDX0xvZ2luUmVzdWx0ENgEEhMKDmVDUzJMU19HU0luZm9zELwFEhIK",
             "DWVDUzJMU19HU0luZm8QvQUSEgoNZUNTMkxTX0dTTG9zdBC+BRIWChFlQ1My",
-            "TFNfR0NMb2dpblJldBC/BRIWChFlQ1MyR1NfR0NMb2dpblJldBCgBmIGcHJv",
-            "dG8z"));
+            "TFNfR0NMb2dpblJldBC/BRIWChFlQ1MyR1NfR0NMb2dpblJldBCgBhIVChBl",
+            "Q1MyR1NfS2VlcEFsaXZlEKEGYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Protos.MsgID), }, new pbr::GeneratedClrTypeInfo[] {
@@ -71,6 +71,7 @@ namespace Protos {
     [pbr::OriginalName("eCS2LS_GSLost")] ECs2LsGslost = 702,
     [pbr::OriginalName("eCS2LS_GCLoginRet")] ECs2LsGcloginRet = 703,
     [pbr::OriginalName("eCS2GS_GCLoginRet")] ECs2GsGcloginRet = 800,
+    [pbr::OriginalName("eCS2GS_KeepAlive")] ECs2GsKeepAlive = 801,
   }
 
   #endregion

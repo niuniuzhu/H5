@@ -29,6 +29,7 @@ enum MsgID {
 	eCS2LS_GCLoginRet = 703;
 
 	eCS2GS_GCLoginRet = 800;
+	eCS2GS_KeepAlive = 801;
 }
 
 message MsgOpts {

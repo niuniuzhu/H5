@@ -1,4 +1,4 @@
-import * as $protobuf from "protobufjs";// respectively "./node_modules/protobufjs"
+import * as $protobuf from "protobufjs";
 export namespace Protos {
 
     interface ICS2GS_GCLoginRet {
@@ -29,6 +29,24 @@ export namespace Protos {
         }
     }
 
+    interface ICS2GS_KeepAlive {
+        opts?: (Protos.IMsgOpts|null);
+    }
+
+    class CS2GS_KeepAlive implements ICS2GS_KeepAlive {
+        constructor(properties?: Protos.ICS2GS_KeepAlive);
+        public opts?: (Protos.IMsgOpts|null);
+        public static create(properties?: Protos.ICS2GS_KeepAlive): Protos.CS2GS_KeepAlive;
+        public static encode(message: Protos.ICS2GS_KeepAlive, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: Protos.ICS2GS_KeepAlive, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Protos.CS2GS_KeepAlive;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Protos.CS2GS_KeepAlive;
+        public static verify(message: { [k: string]: any }): (string|null);
+        public static fromObject(object: { [k: string]: any }): Protos.CS2GS_KeepAlive;
+        public static toObject(message: Protos.CS2GS_KeepAlive, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public toJSON(): { [k: string]: any };
+    }
+
     enum MsgID {
         Undefine = 0,
         eG_AskPing = 10,
@@ -47,7 +65,8 @@ export namespace Protos {
         eCS2LS_GSInfo = 701,
         eCS2LS_GSLost = 702,
         eCS2LS_GCLoginRet = 703,
-        eCS2GS_GCLoginRet = 800
+        eCS2GS_GCLoginRet = 800,
+        eCS2GS_KeepAlive = 801
     }
 
     interface IMsgOpts {

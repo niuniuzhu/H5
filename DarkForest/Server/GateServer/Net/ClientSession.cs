@@ -31,6 +31,7 @@ namespace GateServer.Net
 			Protos.GS2CS_GCAskLogin gcAskLogin = ProtoCreator.Q_GS2CS_GCAskLogin();
 			gcAskLogin.SessionID = login.SessionID;
 			Logger.Log( $"client:{gcAskLogin.SessionID} ask login" );
+			//向CS请求客户端登陆
 			this.owner.Send( SessionType.ServerG2CS, gcAskLogin, msgRet =>
 			{
 				Protos.GS2GC_LoginResult gsLoginRet = ProtoCreator.R_GC2GS_AskLogin( login.Opts.Pid );
@@ -42,6 +43,7 @@ namespace GateServer.Net
 						break;
 					case Protos.CS2GS_GCLoginRet.Types.EResult.Failed:
 						gsLoginRet.Result = Protos.GS2GC_LoginResult.Types.EResult.Failed;
+						this.DelayClose( 500, "client login failed" );
 						break;
 				}
 				this.Send( gsLoginRet );

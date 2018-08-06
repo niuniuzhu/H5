@@ -23,6 +23,7 @@ export class ProtoCreator {
 		[Protos.CS2LS_GSLost, <Protos.MsgID>702],
 		[Protos.CS2LS_GCLoginRet, <Protos.MsgID>703],
 		[Protos.CS2GS_GCLoginRet, <Protos.MsgID>800],
+		[Protos.CS2GS_KeepAlive, <Protos.MsgID>801],
 	]);
 
 	private static readonly _ID2TYPE = new Map<Protos.MsgID, new () => any>([
@@ -43,6 +44,7 @@ export class ProtoCreator {
 		[<Protos.MsgID>702, Protos.CS2LS_GSLost],
 		[<Protos.MsgID>703, Protos.CS2LS_GCLoginRet],
 		[<Protos.MsgID>800, Protos.CS2GS_GCLoginRet],
+		[<Protos.MsgID>801, Protos.CS2GS_KeepAlive],
 	]);
 
 	public static Q_G_AskPing(): Protos.G_AskPing {
@@ -149,6 +151,12 @@ export class ProtoCreator {
 
 	public static Q_CS2GS_GCLoginRet(): Protos.CS2GS_GCLoginRet {
 		let msg = new Protos.CS2GS_GCLoginRet();
+		msg.opts = new Protos.MsgOpts();
+		return msg;
+	}
+
+	public static Q_CS2GS_KeepAlive(): Protos.CS2GS_KeepAlive {
+		let msg = new Protos.CS2GS_KeepAlive();
 		msg.opts = new Protos.MsgOpts();
 		return msg;
 	}
@@ -273,6 +281,10 @@ export class ProtoCreator {
 				let msg = Protos.CS2GS_GCLoginRet.decode(data, size);
 				return msg;
 			}
+			case 801: {
+				let msg = Protos.CS2GS_KeepAlive.decode(data, size);
+				return msg;
+			}
 		}
 		return null;
 	}
@@ -362,6 +374,11 @@ export class ProtoCreator {
 		return msg;
 	}
 
+	public static D_CS2GS_KeepAlive(data: Uint8Array, size: number): Protos.CS2GS_KeepAlive {
+		let msg = Protos.CS2GS_KeepAlive.decode(data, size);
+		return msg;
+	}
+
 
 	public static CreateMsgByID(msgID:Protos.MsgID): any {
 		switch ( msgID ) {
@@ -415,6 +432,9 @@ export class ProtoCreator {
 			}
 			case 800: {
 				return new Protos.CS2GS_GCLoginRet();
+			}
+			case 801: {
+				return new Protos.CS2GS_KeepAlive();
 			}
 		}
 		return null;
@@ -473,6 +493,9 @@ export class ProtoCreator {
 			}
 			case 800: {
 				return (<Protos.CS2GS_GCLoginRet>message).opts;
+			}
+			case 801: {
+				return (<Protos.CS2GS_KeepAlive>message).opts;
 			}
 		}
 		return null;

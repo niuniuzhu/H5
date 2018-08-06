@@ -23,6 +23,7 @@ public static class ProtoCreator {
 		{typeof(Protos.CS2LS_GSLost), (Protos.MsgID)702},
 		{typeof(Protos.CS2LS_GCLoginRet), (Protos.MsgID)703},
 		{typeof(Protos.CS2GS_GCLoginRet), (Protos.MsgID)800},
+		{typeof(Protos.CS2GS_KeepAlive), (Protos.MsgID)801},
 	};
 
 	internal static readonly System.Collections.Generic.Dictionary<Protos.MsgID, System.Type> _ID2TYPE = new System.Collections.Generic.Dictionary<Protos.MsgID, System.Type> {
@@ -43,6 +44,7 @@ public static class ProtoCreator {
 		{(Protos.MsgID)702, typeof(Protos.CS2LS_GSLost)},
 		{(Protos.MsgID)703, typeof(Protos.CS2LS_GCLoginRet)},
 		{(Protos.MsgID)800, typeof(Protos.CS2GS_GCLoginRet)},
+		{(Protos.MsgID)801, typeof(Protos.CS2GS_KeepAlive)},
 	};
 	#endregion
 
@@ -151,6 +153,12 @@ public static class ProtoCreator {
 
 	public static Protos.CS2GS_GCLoginRet Q_CS2GS_GCLoginRet() {
 		var msg = new Protos.CS2GS_GCLoginRet();
+		msg.Opts = new Protos.MsgOpts();
+		return msg;
+	}
+
+	public static Protos.CS2GS_KeepAlive Q_CS2GS_KeepAlive() {
+		var msg = new Protos.CS2GS_KeepAlive();
 		msg.Opts = new Protos.MsgOpts();
 		return msg;
 	}
@@ -296,6 +304,11 @@ public static class ProtoCreator {
 				msg.MergeFrom( data, offset, size );
 				return msg;
 			}
+			case (Protos.MsgID)801: {
+				var msg = new Protos.CS2GS_KeepAlive();
+				msg.MergeFrom( data, offset, size );
+				return msg;
+			}
 		}
 		return null;
 	}
@@ -402,6 +415,12 @@ public static class ProtoCreator {
 		return msg;
 	}
 
+	public static Protos.CS2GS_KeepAlive D_CS2GS_KeepAlive( byte[] data, int offset, int size ) {
+		var msg = new Protos.CS2GS_KeepAlive();
+		msg.MergeFrom( data, offset, size );
+		return msg;
+	}
+
 	#endregion
 
 	#region create message static functions
@@ -457,6 +476,9 @@ public static class ProtoCreator {
 			}
 			case (Protos.MsgID)800: {
 				return new Protos.CS2GS_GCLoginRet();
+			}
+			case (Protos.MsgID)801: {
+				return new Protos.CS2GS_KeepAlive();
 			}
 		}
 		return null;
@@ -517,6 +539,9 @@ public static class ProtoCreator {
 			}
 			case (Protos.MsgID)800: {
 				return ((Protos.CS2GS_GCLoginRet)message).Opts;
+			}
+			case (Protos.MsgID)801: {
+				return ((Protos.CS2GS_KeepAlive)message).Opts;
 			}
 		}
 		return null;
