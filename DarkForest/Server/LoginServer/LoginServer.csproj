@@ -24,6 +24,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Update="Config\LSDBCfg.json">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 		<None Update="Config\LSCfg.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>

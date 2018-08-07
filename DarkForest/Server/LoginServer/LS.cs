@@ -15,6 +15,7 @@ namespace LoginServer
 		public static LS instance => _instance ?? ( _instance = new LS() );
 
 		public LSConfig config { get; private set; }
+		public DBConfig dbConfig { get; private set; }
 		public LSNetSessionMgr netSessionMgr { get; } = new LSNetSessionMgr();
 		public Dictionary<uint, GSInfo> gsInfos { get; } = new Dictionary<uint, GSInfo>();
 
@@ -28,7 +29,6 @@ namespace LoginServer
 				this.config.CopyFromCLIOptions( opts );
 				return ErrorCode.Success;
 			}
-
 			try
 			{
 				this.config = JsonConvert.DeserializeObject<LSConfig>( File.ReadAllText( opts.cfg ) );
@@ -37,6 +37,16 @@ namespace LoginServer
 			{
 				Logger.Error( e );
 				return ErrorCode.CfgLoadFailed;
+			}
+			try
+			{
+				this.dbConfig = new DBConfig();
+				this.dbConfig.Load( opts.dbCfg );
+			}
+			catch ( System.Exception e )
+			{
+				Logger.Error( e );
+				return ErrorCode.DBCfgLoadFailed;
 			}
 			return ErrorCode.Success;
 		}

@@ -45,7 +45,6 @@ namespace CentralServer
 				Logger.Error( e );
 				return ErrorCode.CfgLoadFailed;
 			}
-
 			if ( string.IsNullOrEmpty( opts.dbCfg ) )
 				return ErrorCode.DBCfgLoadFailed;
 			try
