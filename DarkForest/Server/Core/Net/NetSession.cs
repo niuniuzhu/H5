@@ -64,6 +64,8 @@ namespace Core.Net
 				NetworkMgr.instance.RemoveSession( this );
 			this.OnClose( reason );
 			this.isPassive = false;
+			this._timeToClose = 0;
+			this._delayClose = false;
 			this._state = State.Close;
 		}
 
@@ -98,8 +100,6 @@ namespace Core.Net
 
 			if ( this._delayClose && TimeUtils.utcTime >= this._timeToClose )
 			{
-				this._delayClose = false;
-				this._timeToClose = 0;
 				this.Close( this._delayCloseReason );
 				this._delayCloseReason = string.Empty;
 			}

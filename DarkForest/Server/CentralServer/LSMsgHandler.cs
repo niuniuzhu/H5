@@ -8,7 +8,7 @@ namespace CentralServer
 		public void NotifyGSInfosToLS( uint sessionID )
 		{
 			Protos.CS2LS_GSInfos gsInfos = ProtoCreator.Q_CS2LS_GSInfos();
-			foreach ( KeyValuePair<uint, GSInfo> kv in this._gsIDToInfos )
+			foreach ( KeyValuePair<uint, GSInfo> kv in this.gsNIDToGSInfos )
 			{
 				GSInfo mGSInfo = kv.Value;
 				Protos.GSInfo gsInfo = new Protos.GSInfo
@@ -23,12 +23,6 @@ namespace CentralServer
 				gsInfos.GsInfo.Add( gsInfo );
 			}
 			this.netSessionMgr.Send( sessionID, gsInfos );
-		}
-
-		public void HandleGCLoginFromLS( ulong gcSID )
-		{
-			bool result = this._gcSIDForLogin.Add( gcSID );
-			System.Diagnostics.Debug.Assert( result, $"duplicate GC sessionID:{gcSID}." );
 		}
 	}
 }

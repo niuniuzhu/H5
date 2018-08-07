@@ -7,11 +7,11 @@ namespace CentralServer
 	{
 		public ErrorCode GCStateReportHandler( Protos.GSInfo gsInfoRecv )
 		{
-			bool hasRecord = this._gsIDToInfos.TryGetValue( gsInfoRecv.Id, out GSInfo gsInfo );
+			bool hasRecord = this.gsNIDToGSInfos.TryGetValue( gsInfoRecv.Id, out GSInfo gsInfo );
 			if ( !hasRecord )
 			{
 				gsInfo = new GSInfo();
-				this._gsIDToInfos[gsInfoRecv.Id] = gsInfo;
+				this.gsNIDToGSInfos[gsInfoRecv.Id] = gsInfo;
 			}
 			//更新GS信息
 			gsInfo.id = gsInfoRecv.Id;
@@ -37,40 +37,34 @@ namespace CentralServer
 			return ErrorCode.Success;
 		}
 
-
-		public ErrorCode GSDisconnectHandler( uint gsID )
+		public ErrorCode GSDisconnectHandler( uint gsNID )
 		{
-			bool result = this._gsIDToInfos.Remove( gsID );
-			System.Diagnostics.Debug.Assert( result, $"gsID:{gsID} not found" );
+			bool result = this.gsNIDToGSInfos.Remove( gsNID );
+			System.Diagnostics.Debug.Assert( result, $"gsNID:{gsNID} not found" );
 			if ( result )
 			{
+				//踢出所有连接到该GS的玩家
+				this.userMgr.KickUsers( gsNID );
 				//通知LS有GS断开连接了
 				Protos.CS2LS_GSLost gsLost = ProtoCreator.Q_CS2LS_GSLost();
-				gsLost.Gsid = gsID;
+				gsLost.Gsid = gsNID;
 				this.netSessionMgr.Send( SessionType.ServerLS, gsLost );
 			}
 			return ErrorCode.Success;
 		}
 
-		public ErrorCode HandleGCAskLoginFromGS( ulong gcSID, uint id )
+		public ErrorCode HandleGCAskLoginFromGS( ulong gcNID, uint gsNID )
 		{
-			if ( !this._gcSIDForLogin.Contains( gcSID ) )
+			if ( !this.gcNIDMgr.Contains( gcNID ) )
 				return ErrorCode.InvalidGcNID;
-
-			System.Diagnostics.Debug.Assert( !this._gcSIDToGsSID.ContainsKey( gcSID ), $"duplicate GC sessionID:{gcSID}." );
-			this._gcSIDToGsSID[gcSID] = id;
+			this.gcNIDMgr.Remove( gcNID );
+			this.userMgr.UserOnline( gcNID, gsNID );
 			return ErrorCode.Success;
 		}
 
-		public ErrorCode HandleGCLost( ulong gcSID )
+		public ErrorCode HandleGCLost( ulong gcNID )
 		{
-			if ( !this._gcSIDForLogin.Remove( gcSID ) )
-			{
-				System.Diagnostics.Debug.Assert( false, $"duplicate GC sessionID:{gcSID}." );
-				return ErrorCode.InvalidGcNID;
-			}
-			this._gcSIDToGsSID.Remove( gcSID );
-			return ErrorCode.Success;
+			return this.userMgr.UserOffline( gcNID );
 		}
 	}
 }

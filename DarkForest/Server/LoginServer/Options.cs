@@ -9,11 +9,6 @@ namespace LoginServer
 			HelpText = "Specify configuration file for log." )]
 		public string logCfg { get; set; }
 
-		[Option( 'd', "dbcfg",
-			Default = "",
-			HelpText = "Specify configuration file for database." )]
-		public string dbCfg { get; set; }
-
 		[Option( 'c', "cfg",
 			Default = "",
 			SetName = "bycfg",

@@ -17,6 +17,7 @@
 		public string redisIP;
 		public int redisPort;
 		public string redisPwd;
+		public long sessionExpTime;
 
 		public void CopyFromCLIOptions( Options opts )
 		{
@@ -27,6 +28,7 @@
 			this.redisIP = opts.redisIP;
 			this.redisPort = opts.redisPort;
 			this.redisPwd = opts.redisPwd;
+			this.sessionExpTime = opts.sessionExpTime;
 		}
 	}
 }

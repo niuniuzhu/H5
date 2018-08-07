@@ -39,6 +39,8 @@ namespace Core.Net
 
 		public override bool Send( byte[] data, int offset, int size )
 		{
+			if ( this.socket == null || !this.connected )
+				return false;
 			StreamBuffer buffer = this._bufferPool.Pop();
 			MakeHeader( buffer, data, offset, size, OPCode.Binary );
 			this._sendQueue.Push( buffer );

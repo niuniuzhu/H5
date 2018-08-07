@@ -51,7 +51,7 @@ namespace CentralServer.Net
 		private ErrorCode OnGs2CsGcaskLogin( Google.Protobuf.IMessage message )
 		{
 			Protos.GS2CS_GCAskLogin gcAskLogin = ( Protos.GS2CS_GCAskLogin )message;
-			ErrorCode errorCode = CS.instance.HandleGCAskLoginFromGS( gcAskLogin.SessionID, this.id );
+			ErrorCode errorCode = CS.instance.HandleGCAskLoginFromGS( gcAskLogin.SessionID, this.logicID );
 			Protos.CS2GS_GCLoginRet gcAskLoginRet = ProtoCreator.R_GS2CS_GCAskLogin( gcAskLogin.Opts.Pid );
 			switch ( errorCode )
 			{
@@ -60,7 +60,6 @@ namespace CentralServer.Net
 					break;
 
 				default:
-					Logger.Warn( $"an invalid gcSid:{gcAskLogin.SessionID} try to login with remote address:{this.connection.remoteEndPoint}." );
 					gcAskLoginRet.Result = Protos.CS2GS_GCLoginRet.Types.EResult.Failed;
 					break;
 			}

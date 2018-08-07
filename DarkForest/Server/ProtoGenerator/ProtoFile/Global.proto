@@ -12,23 +12,25 @@ enum MsgID {
 
 	eGC2GS_AskLogin = 200;
 	eGC2GS_KeepAlive = 201;
+	
+	eLS2GC_GSInfo = 300;
+	eLS2GC_AskRegRet = 301;
+	eLS2GC_AskLoginRet = 302;
 
-	eLS2GC_RegResult = 300;
-	eLS2GC_LoginResult = 301;
-	eLS2GC_GSInfo = 302;
-
-	eLS2CS_GCLogin = 400;
+	eLS2CS_AskRegister = 400;
+	eLS2CS_GCAskLogin = 401;
 
 	eGS2CS_ReportState = 500;
 	eGS2CS_GCAskLogin = 501;
 	eGS2CS_GCLost = 502;
 
-	eGS2GC_LoginResult = 600;
+	eGS2GC_LoginRet = 600;
 
 	eCS2LS_GSInfos = 700;
 	eCS2LS_GSInfo = 701;
 	eCS2LS_GSLost = 702;
-	eCS2LS_GCLoginRet = 703;
+	eCS2LS_GCAskRegRet = 703;
+	eCS2LS_GCAskLoginRet = 704;
 
 	eCS2GS_GCLoginRet = 800;
 }
@@ -62,11 +64,13 @@ message G_AskPingRet {
 <ext>
 {
 	"RespID": {
-		"GC2LS_AskRegister": "LS2GC_RegResult",
-		"GC2LS_AskLogin": "LS2GC_LoginResult",
 		"G_AskPing": "G_AskPingRet",
-		"GC2GS_AskLogin": "GS2GC_LoginResult",
-		"LS2CS_GCLogin": "CS2LS_GCLoginRet",
+		"GC2LS_AskRegister": "LS2GC_AskRegRet",
+		"LS2CS_AskRegister": "CS2LS_GCAskRegRet",
+		"GC2LS_AskLogin": "LS2GC_AskLoginRet",
+		"LS2CS_GCAskLogin": "CS2LS_GCAskLoginRet",
+		"GC2GS_AskLogin": "GS2GC_LoginRet",
+		"LS2CS_GCLogin": "CS2LS_GCAskLoginRet",
 		"GS2CS_GCAskLogin": "CS2GS_GCLoginRet"
 	}
 }

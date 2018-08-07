@@ -78,24 +78,24 @@ export class UILogin implements IUIModule {
 		connector.onopen = () => {
 			connector.Send(Protos.GC2LS_AskRegister, register, message => {
 				fairygui.GRoot.inst.closeModalWait();
-				let resp: Protos.LS2GC_RegResult = <Protos.LS2GC_RegResult>message;
+				let resp: Protos.LS2GC_AskRegRet = <Protos.LS2GC_AskRegRet>message;
 				switch (resp.result) {
-					case Protos.LS2GC_RegResult.EResult.Success:
+					case Protos.LS2GC_AskRegRet.EResult.Success:
 						UIAlert.Show("注册成功");
 						this._root.getChild("name").asTextField.text = regName;
 						this._root.getChild("password").asTextField.text = regPwd;
 						this._root.getController("c1").selectedIndex = 0;
 						break;
-					case Protos.LS2GC_RegResult.EResult.Failed:
+					case Protos.LS2GC_AskRegRet.EResult.Failed:
 						UIAlert.Show("注册失败", this.BackToRegister.bind(this));
 						break;
-					case Protos.LS2GC_RegResult.EResult.UnameExists:
+					case Protos.LS2GC_AskRegRet.EResult.UnameExists:
 						UIAlert.Show("用户名已存在", this.BackToRegister.bind(this));
 						break;
-					case Protos.LS2GC_RegResult.EResult.UnameIllegal:
+					case Protos.LS2GC_AskRegRet.EResult.UnameIllegal:
 						UIAlert.Show("无效的用户名", this.BackToRegister.bind(this));
 						break;
-					case Protos.LS2GC_RegResult.EResult.PwdIllegal:
+					case Protos.LS2GC_AskRegRet.EResult.PwdIllegal:
 						UIAlert.Show("无效的密码", this.BackToRegister.bind(this));
 						break;
 				}
@@ -128,18 +128,18 @@ export class UILogin implements IUIModule {
 		connector.onopen = () => {
 			connector.Send(Protos.GC2LS_AskLogin, login, message => {
 				fairygui.GRoot.inst.closeModalWait();
-				let resp: Protos.LS2GC_LoginResult = <Protos.LS2GC_LoginResult>message;
+				let resp: Protos.LS2GC_AskLoginRet = <Protos.LS2GC_AskLoginRet>message;
 				switch (resp.result) {
-					case Protos.LS2GC_LoginResult.EResult.Success:
+					case Protos.LS2GC_AskLoginRet.EResult.Success:
 						this.HandleLoginLSSuccess(resp);
 						break;
-					case Protos.LS2GC_LoginResult.EResult.Failed:
+					case Protos.LS2GC_AskLoginRet.EResult.Failed:
 						UIAlert.Show("登陆失败", this.BackToLogin.bind(this));
 						break;
-					case Protos.LS2GC_LoginResult.EResult.InvalidUname:
+					case Protos.LS2GC_AskLoginRet.EResult.InvalidUname:
 						UIAlert.Show("无效的用户名", this.BackToLogin.bind(this));
 						break;
-					case Protos.LS2GC_LoginResult.EResult.InvalidPwd:
+					case Protos.LS2GC_AskLoginRet.EResult.InvalidPwd:
 						UIAlert.Show("请输入正确的密码", this.BackToLogin.bind(this));
 						break;
 				}
@@ -149,7 +149,7 @@ export class UILogin implements IUIModule {
 		connector.Connect("localhost", 49996);
 	}
 
-	private HandleLoginLSSuccess(loginResult: Protos.LS2GC_LoginResult): void {
+	private HandleLoginLSSuccess(loginResult: Protos.LS2GC_AskLoginRet): void {
 		let count = loginResult.gsInfos.length;
 		for (let i = 0; i < count; ++i) {
 			let gsInfo = loginResult.gsInfos[i];
@@ -181,12 +181,12 @@ export class UILogin implements IUIModule {
 			askLogin.sessionID = sessionID;
 			connector.Send(Protos.GC2GS_AskLogin, askLogin, message => {
 				fairygui.GRoot.inst.closeModalWait();
-				let resp: Protos.GS2GC_LoginResult = <Protos.GS2GC_LoginResult>message;
+				let resp: Protos.GS2GC_LoginRet = <Protos.GS2GC_LoginRet>message;
 				switch (resp.result) {
-					case Protos.GS2GC_LoginResult.EResult.Success:
+					case Protos.GS2GC_LoginRet.EResult.Success:
 						this.HandleLoginBSSuccess(connector);
 						break;
-					case Protos.GS2GC_LoginResult.EResult.Failed:
+					case Protos.GS2GC_LoginRet.EResult.Failed:
 						UIAlert.Show("登陆失败", this.BackToLogin.bind(this));
 						break;
 				}

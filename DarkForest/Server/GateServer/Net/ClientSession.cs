@@ -49,15 +49,15 @@ namespace GateServer.Net
 			//向CS请求客户端登陆
 			this.owner.Send( SessionType.ServerG2CS, gcAskLogin, msgRet =>
 			{
-				Protos.GS2GC_LoginResult gsLoginRet = ProtoCreator.R_GC2GS_AskLogin( login.Opts.Pid );
+				Protos.GS2GC_LoginRet gsLoginRet = ProtoCreator.R_GC2GS_AskLogin( login.Opts.Pid );
 				Protos.CS2GS_GCLoginRet csLoginRet = ( Protos.CS2GS_GCLoginRet )msgRet;
 				switch ( csLoginRet.Result )
 				{
 					case Protos.CS2GS_GCLoginRet.Types.EResult.Success:
-						gsLoginRet.Result = Protos.GS2GC_LoginResult.Types.EResult.Success;
+						gsLoginRet.Result = Protos.GS2GC_LoginRet.Types.EResult.Success;
 						break;
 					case Protos.CS2GS_GCLoginRet.Types.EResult.Failed:
-						gsLoginRet.Result = Protos.GS2GC_LoginResult.Types.EResult.Failed;
+						gsLoginRet.Result = Protos.GS2GC_LoginRet.Types.EResult.Failed;
 						this.DelayClose( 500, "client login failed" );
 						break;
 				}

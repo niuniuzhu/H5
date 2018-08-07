@@ -118,6 +118,8 @@ namespace Core.Net
 
 		public bool Send( byte[] data, int offset, int size )
 		{
+			if ( this.socket == null )
+				return false;
 			StreamBuffer buffer = this._bufferPool.Pop();
 			buffer.data = DataTransType.KCP;
 			buffer.Write( ( byte )0 );//非内部协议 0<<7
@@ -288,6 +290,8 @@ namespace Core.Net
 
 		private void SendPing()
 		{
+			if ( this.socket == null )
+				return;
 			StreamBuffer buffer = this._bufferPool.Pop();
 			buffer.data = DataTransType.KCP;
 			buffer.Write( ( byte )0x80 );//是内部协议 1<<7
@@ -297,6 +301,8 @@ namespace Core.Net
 
 		private void SendPong()
 		{
+			if ( this.socket == null )
+				return;
 			StreamBuffer buffer = this._bufferPool.Pop();
 			buffer.data = DataTransType.KCP;
 			buffer.Write( ( byte )0x80 );//是内部协议 1<<7
@@ -309,6 +315,8 @@ namespace Core.Net
 		/// </summary>
 		public void SendHandShake()
 		{
+			if ( this.socket == null )
+				return;
 			StreamBuffer buffer = this._bufferPool.Pop();
 			buffer.data = DataTransType.Direct;
 			buffer.Write( ( uint )0 );//connID
@@ -323,6 +331,8 @@ namespace Core.Net
 		/// </summary>
 		public void SendHandShakeAck()
 		{
+			if ( this.socket == null )
+				return;
 			StreamBuffer buffer = this._bufferPool.Pop();
 			buffer.data = DataTransType.Direct;
 			buffer.Write( ( uint )0 );//connID

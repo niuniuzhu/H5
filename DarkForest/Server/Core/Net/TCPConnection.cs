@@ -87,6 +87,8 @@ namespace Core.Net
 
 		public virtual bool Send( byte[] data, int offset, int size )
 		{
+			if ( this.socket == null || !this.connected )
+				return false;
 			StreamBuffer buffer = this._bufferPool.Pop();
 			//写入数据长度
 			buffer.Write( ( ushort )( size + TCPMsgEncoder.LENGTH_SIZE ) );

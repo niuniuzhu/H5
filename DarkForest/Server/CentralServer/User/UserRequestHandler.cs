@@ -4,7 +4,7 @@ using Shared;
 using Shared.DB;
 using StackExchange.Redis;
 
-namespace LoginServer.User
+namespace CentralServer.User
 {
 	public partial class UserMgr
 	{
@@ -12,9 +12,9 @@ namespace LoginServer.User
 		{
 		}
 
-		public ErrorCode RegisterAccount( Protos.GC2LS_AskRegister msg )
+		public ErrorCode RegisterAccount( Protos.LS2CS_AskRegister msg )
 		{
-			if ( this.userNameToGuidMap.ContainsKey( msg.Name ) ) //如果内存里找到相同用户名
+			if ( this.userNameToGcNID.ContainsKey( msg.Name ) ) //如果内存里找到相同用户名
 				return ErrorCode.UsernameExists;
 
 			if ( string.IsNullOrEmpty( msg.Name ) || msg.Name.Length < Consts.DEFAULT_UNAME_LEN )
@@ -25,7 +25,7 @@ namespace LoginServer.User
 
 			ErrorCode errorCode = ErrorCode.Success;
 			//若Redis缓存可用，则查询；不可用就直接查询数据库
-			RedisWrapper redisWrapper = LS.instance.redisWrapper;
+			RedisWrapper redisWrapper = CS.instance.redisWrapper;
 			if ( redisWrapper.IsConnected )
 			{
 				if ( redisWrapper.HashExists( "unames", msg.Name ) ) //redis存在相同用户名
@@ -54,7 +54,7 @@ namespace LoginServer.User
 			return errorCode;
 		}
 
-		public ErrorCode RequestLogin( Protos.GC2LS_AskLogin msg, ref ulong sessionID )
+		public ErrorCode RequestLogin( Protos.LS2CS_GCAskLogin msg, ref ulong sessionID )
 		{
 			if ( string.IsNullOrEmpty( msg.Name ) || msg.Name.Length < Consts.DEFAULT_UNAME_LEN )
 				return ErrorCode.InvalidUname;
@@ -64,20 +64,18 @@ namespace LoginServer.User
 
 			ErrorCode errorCode = ErrorCode.Success;
 			//若Redis缓存可用，则查询；不可用就直接查询数据库
-			RedisWrapper redisWrapper = LS.instance.redisWrapper;
+			RedisWrapper redisWrapper = CS.instance.redisWrapper;
 			if ( redisWrapper.IsConnected )
 			{
 				RedisValue pwd = redisWrapper.HashGet( "unames", msg.Name );
 				if ( !pwd.HasValue ) //redis找不到用户名
 					return ErrorCode.InvalidUname;
-				if ( pwd != Core.Crypto.MD5Util.GetMd5HexDigest( msg.Passwd ).Replace( "-", string.Empty )
-								.ToLower() )
+				if ( pwd != Core.Crypto.MD5Util.GetMd5HexDigest( msg.Passwd ).Replace( "-", string.Empty ).ToLower() )
 					return ErrorCode.InvalidPwd;
 			}
 			else
 			{
-				string pwd = Core.Crypto.MD5Util.GetMd5HexDigest( msg.Passwd ).Replace( "-", string.Empty )
-								 .ToLower();
+				string pwd = Core.Crypto.MD5Util.GetMd5HexDigest( msg.Passwd ).Replace( "-", string.Empty ).ToLower();
 				errorCode = this._accountDBWrapper.SqlExecQuery(
 					$"select pwd from account_user where uname={msg.Name}",
 					dataReader =>
@@ -93,33 +91,11 @@ namespace LoginServer.User
 			if ( errorCode != ErrorCode.Success )
 				return errorCode;
 
-			//检查内存是否有该玩家,有则踢掉
-			if ( this.userNameToGuidMap.TryGetValue( msg.Name, out sessionID ) && this.guidToUser.TryGetValue( sessionID, out User oldUser ) )
-				this.KickUser( oldUser );
-
 			sessionID = GuidHash.GetUInt64();
-			this.UserOnline( new User( sessionID, msg.Name ) );
+			bool result = CS.instance.gcNIDMgr.Add( sessionID );
+			System.Diagnostics.Debug.Assert( result, $"duplicate GC gcNID:{sessionID}." );
 
 			return ErrorCode.Success;
-		}
-
-		private void UserOnline( User user )
-		{
-			this.userNameToGuidMap[user.name] = user.sessionID;
-			this.guidToUser[user.sessionID] = user;
-
-		}
-
-		private void UserOffline( User user )
-		{
-			this.userNameToGuidMap.Remove( user.name );
-			this.guidToUser.Remove( user.sessionID );
-		}
-
-		private void KickUser( User user )
-		{
-			this.UserOffline( user );
-			//todo send to client and cs
 		}
 	}
 }

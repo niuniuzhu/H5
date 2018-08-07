@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace LoginServer
+namespace CentralServer
 {
 	public class DBConfig
 	{

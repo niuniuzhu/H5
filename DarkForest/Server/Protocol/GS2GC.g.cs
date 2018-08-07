@@ -24,26 +24,25 @@ namespace Protos {
     static GS2GCReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgtHUzJHQy5wcm90bxIGUHJvdG9zGgxHbG9iYWwucHJvdG8iiQEKEUdTMkdD",
-            "X0xvZ2luUmVzdWx0Eh0KBG9wdHMYASABKAsyDy5Qcm90b3MuTXNnT3B0cxIx",
-            "CgZyZXN1bHQYAiABKA4yIS5Qcm90b3MuR1MyR0NfTG9naW5SZXN1bHQuRVJl",
-            "c3VsdCIiCgdFUmVzdWx0EgsKB1N1Y2Nlc3MQABIKCgZGYWlsZWQQAWIGcHJv",
-            "dG8z"));
+            "CgtHUzJHQy5wcm90bxIGUHJvdG9zGgxHbG9iYWwucHJvdG8igwEKDkdTMkdD",
+            "X0xvZ2luUmV0Eh0KBG9wdHMYASABKAsyDy5Qcm90b3MuTXNnT3B0cxIuCgZy",
+            "ZXN1bHQYAiABKA4yHi5Qcm90b3MuR1MyR0NfTG9naW5SZXQuRVJlc3VsdCIi",
+            "CgdFUmVzdWx0EgsKB1N1Y2Nlc3MQABIKCgZGYWlsZWQQAWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Protos.GlobalReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.GS2GC_LoginResult), global::Protos.GS2GC_LoginResult.Parser, new[]{ "Opts", "Result" }, null, new[]{ typeof(global::Protos.GS2GC_LoginResult.Types.EResult) }, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.GS2GC_LoginRet), global::Protos.GS2GC_LoginRet.Parser, new[]{ "Opts", "Result" }, null, new[]{ typeof(global::Protos.GS2GC_LoginRet.Types.EResult) }, null)
           }));
     }
     #endregion
 
   }
   #region Messages
-  public sealed partial class GS2GC_LoginResult : pb::IMessage<GS2GC_LoginResult> {
-    private static readonly pb::MessageParser<GS2GC_LoginResult> _parser = new pb::MessageParser<GS2GC_LoginResult>(() => new GS2GC_LoginResult());
+  public sealed partial class GS2GC_LoginRet : pb::IMessage<GS2GC_LoginRet> {
+    private static readonly pb::MessageParser<GS2GC_LoginRet> _parser = new pb::MessageParser<GS2GC_LoginRet>(() => new GS2GC_LoginRet());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<GS2GC_LoginResult> Parser { get { return _parser; } }
+    public static pb::MessageParser<GS2GC_LoginRet> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
@@ -56,22 +55,22 @@ namespace Protos {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public GS2GC_LoginResult() {
+    public GS2GC_LoginRet() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public GS2GC_LoginResult(GS2GC_LoginResult other) : this() {
+    public GS2GC_LoginRet(GS2GC_LoginRet other) : this() {
       opts_ = other.opts_ != null ? other.opts_.Clone() : null;
       result_ = other.result_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public GS2GC_LoginResult Clone() {
-      return new GS2GC_LoginResult(this);
+    public GS2GC_LoginRet Clone() {
+      return new GS2GC_LoginRet(this);
     }
 
     /// <summary>Field number for the "opts" field.</summary>
@@ -87,9 +86,9 @@ namespace Protos {
 
     /// <summary>Field number for the "result" field.</summary>
     public const int ResultFieldNumber = 2;
-    private global::Protos.GS2GC_LoginResult.Types.EResult result_ = 0;
+    private global::Protos.GS2GC_LoginRet.Types.EResult result_ = 0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Protos.GS2GC_LoginResult.Types.EResult Result {
+    public global::Protos.GS2GC_LoginRet.Types.EResult Result {
       get { return result_; }
       set {
         result_ = value;
@@ -98,11 +97,11 @@ namespace Protos {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
-      return Equals(other as GS2GC_LoginResult);
+      return Equals(other as GS2GC_LoginRet);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(GS2GC_LoginResult other) {
+    public bool Equals(GS2GC_LoginRet other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -161,7 +160,7 @@ namespace Protos {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(GS2GC_LoginResult other) {
+    public void MergeFrom(GS2GC_LoginRet other) {
       if (other == null) {
         return;
       }
@@ -193,7 +192,7 @@ namespace Protos {
             break;
           }
           case 16: {
-            result_ = (global::Protos.GS2GC_LoginResult.Types.EResult) input.ReadEnum();
+            result_ = (global::Protos.GS2GC_LoginRet.Types.EResult) input.ReadEnum();
             break;
           }
         }
@@ -201,7 +200,7 @@ namespace Protos {
     }
 
     #region Nested types
-    /// <summary>Container for nested types declared in the GS2GC_LoginResult message type.</summary>
+    /// <summary>Container for nested types declared in the GS2GC_LoginRet message type.</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static partial class Types {
       public enum EResult {

@@ -29,16 +29,25 @@ namespace Protos {
             "c2dPcHRzEh4KBmdzSW5mbxgCIAMoCzIOLlByb3Rvcy5HU0luZm8iTQoMQ1My",
             "TFNfR1NJbmZvEh0KBG9wdHMYASABKAsyDy5Qcm90b3MuTXNnT3B0cxIeCgZn",
             "c0luZm8YAiABKAsyDi5Qcm90b3MuR1NJbmZvIjsKDENTMkxTX0dTTG9zdBId",
-            "CgRvcHRzGAEgASgLMg8uUHJvdG9zLk1zZ09wdHMSDAoEZ3NpZBgCIAEoDSIx",
-            "ChBDUzJMU19HQ0xvZ2luUmV0Eh0KBG9wdHMYASABKAsyDy5Qcm90b3MuTXNn",
-            "T3B0c2IGcHJvdG8z"));
+            "CgRvcHRzGAEgASgLMg8uUHJvdG9zLk1zZ09wdHMSDAoEZ3NpZBgCIAEoDSK8",
+            "AQoRQ1MyTFNfR0NBc2tSZWdSZXQSHQoEb3B0cxgBIAEoCzIPLlByb3Rvcy5N",
+            "c2dPcHRzEjEKBnJlc3VsdBgCIAEoDjIhLlByb3Rvcy5DUzJMU19HQ0Fza1Jl",
+            "Z1JldC5FUmVzdWx0IlUKB0VSZXN1bHQSCwoHU3VjY2VzcxAAEgoKBkZhaWxl",
+            "ZBABEg8KC1VuYW1lRXhpc3RzEAISEAoMVW5hbWVJbGxlZ2FsEAMSDgoKUHdk",
+            "SWxsZWdhbBAEIuMBChNDUzJMU19HQ0Fza0xvZ2luUmV0Eh0KBG9wdHMYASAB",
+            "KAsyDy5Qcm90b3MuTXNnT3B0cxIzCgZyZXN1bHQYAiABKA4yIy5Qcm90b3Mu",
+            "Q1MyTFNfR0NBc2tMb2dpblJldC5FUmVzdWx0EhEKCXNlc3Npb25JRBgDIAEo",
+            "BBIfCgdnc0luZm9zGAQgAygLMg4uUHJvdG9zLkdTSW5mbyJECgdFUmVzdWx0",
+            "EgsKB1N1Y2Nlc3MQABIKCgZGYWlsZWQQARIQCgxJbnZhbGlkVW5hbWUQAhIO",
+            "CgpJbnZhbGlkUHdkEANiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Protos.GlobalReflection.Descriptor, global::Protos.GS2CSReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Protos.CS2LS_GSInfos), global::Protos.CS2LS_GSInfos.Parser, new[]{ "Opts", "GsInfo" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protos.CS2LS_GSInfo), global::Protos.CS2LS_GSInfo.Parser, new[]{ "Opts", "GsInfo" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protos.CS2LS_GSLost), global::Protos.CS2LS_GSLost.Parser, new[]{ "Opts", "Gsid" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.CS2LS_GCLoginRet), global::Protos.CS2LS_GCLoginRet.Parser, new[]{ "Opts" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.CS2LS_GCAskRegRet), global::Protos.CS2LS_GCAskRegRet.Parser, new[]{ "Opts", "Result" }, null, new[]{ typeof(global::Protos.CS2LS_GCAskRegRet.Types.EResult) }, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protos.CS2LS_GCAskLoginRet), global::Protos.CS2LS_GCAskLoginRet.Parser, new[]{ "Opts", "Result", "SessionID", "GsInfos" }, null, new[]{ typeof(global::Protos.CS2LS_GCAskLoginRet.Types.EResult) }, null)
           }));
     }
     #endregion
@@ -542,13 +551,13 @@ namespace Protos {
   }
 
   /// <summary>
-  ///回应LS通知有客户端登陆
+  ///返回注册结果
   /// </summary>
-  public sealed partial class CS2LS_GCLoginRet : pb::IMessage<CS2LS_GCLoginRet> {
-    private static readonly pb::MessageParser<CS2LS_GCLoginRet> _parser = new pb::MessageParser<CS2LS_GCLoginRet>(() => new CS2LS_GCLoginRet());
+  public sealed partial class CS2LS_GCAskRegRet : pb::IMessage<CS2LS_GCAskRegRet> {
+    private static readonly pb::MessageParser<CS2LS_GCAskRegRet> _parser = new pb::MessageParser<CS2LS_GCAskRegRet>(() => new CS2LS_GCAskRegRet());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<CS2LS_GCLoginRet> Parser { get { return _parser; } }
+    public static pb::MessageParser<CS2LS_GCAskRegRet> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
@@ -561,21 +570,22 @@ namespace Protos {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public CS2LS_GCLoginRet() {
+    public CS2LS_GCAskRegRet() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public CS2LS_GCLoginRet(CS2LS_GCLoginRet other) : this() {
+    public CS2LS_GCAskRegRet(CS2LS_GCAskRegRet other) : this() {
       opts_ = other.opts_ != null ? other.opts_.Clone() : null;
+      result_ = other.result_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public CS2LS_GCLoginRet Clone() {
-      return new CS2LS_GCLoginRet(this);
+    public CS2LS_GCAskRegRet Clone() {
+      return new CS2LS_GCAskRegRet(this);
     }
 
     /// <summary>Field number for the "opts" field.</summary>
@@ -589,13 +599,24 @@ namespace Protos {
       }
     }
 
+    /// <summary>Field number for the "result" field.</summary>
+    public const int ResultFieldNumber = 2;
+    private global::Protos.CS2LS_GCAskRegRet.Types.EResult result_ = 0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override bool Equals(object other) {
-      return Equals(other as CS2LS_GCLoginRet);
+    public global::Protos.CS2LS_GCAskRegRet.Types.EResult Result {
+      get { return result_; }
+      set {
+        result_ = value;
+      }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(CS2LS_GCLoginRet other) {
+    public override bool Equals(object other) {
+      return Equals(other as CS2LS_GCAskRegRet);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(CS2LS_GCAskRegRet other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -603,6 +624,7 @@ namespace Protos {
         return true;
       }
       if (!object.Equals(Opts, other.Opts)) return false;
+      if (Result != other.Result) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -610,6 +632,7 @@ namespace Protos {
     public override int GetHashCode() {
       int hash = 1;
       if (opts_ != null) hash ^= Opts.GetHashCode();
+      if (Result != 0) hash ^= Result.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -627,6 +650,10 @@ namespace Protos {
         output.WriteRawTag(10);
         output.WriteMessage(Opts);
       }
+      if (Result != 0) {
+        output.WriteRawTag(16);
+        output.WriteEnum((int) Result);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -638,6 +665,9 @@ namespace Protos {
       if (opts_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Opts);
       }
+      if (Result != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Result);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -645,7 +675,7 @@ namespace Protos {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(CS2LS_GCLoginRet other) {
+    public void MergeFrom(CS2LS_GCAskRegRet other) {
       if (other == null) {
         return;
       }
@@ -654,6 +684,9 @@ namespace Protos {
           opts_ = new global::Protos.MsgOpts();
         }
         Opts.MergeFrom(other.Opts);
+      }
+      if (other.Result != 0) {
+        Result = other.Result;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -673,9 +706,256 @@ namespace Protos {
             input.ReadMessage(opts_);
             break;
           }
+          case 16: {
+            result_ = (global::Protos.CS2LS_GCAskRegRet.Types.EResult) input.ReadEnum();
+            break;
+          }
         }
       }
     }
+
+    #region Nested types
+    /// <summary>Container for nested types declared in the CS2LS_GCAskRegRet message type.</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static partial class Types {
+      public enum EResult {
+        [pbr::OriginalName("Success")] Success = 0,
+        [pbr::OriginalName("Failed")] Failed = 1,
+        [pbr::OriginalName("UnameExists")] UnameExists = 2,
+        [pbr::OriginalName("UnameIllegal")] UnameIllegal = 3,
+        [pbr::OriginalName("PwdIllegal")] PwdIllegal = 4,
+      }
+
+    }
+    #endregion
+
+  }
+
+  /// <summary>
+  ///返回登陆结果
+  /// </summary>
+  public sealed partial class CS2LS_GCAskLoginRet : pb::IMessage<CS2LS_GCAskLoginRet> {
+    private static readonly pb::MessageParser<CS2LS_GCAskLoginRet> _parser = new pb::MessageParser<CS2LS_GCAskLoginRet>(() => new CS2LS_GCAskLoginRet());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<CS2LS_GCAskLoginRet> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Protos.CS2LSReflection.Descriptor.MessageTypes[4]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public CS2LS_GCAskLoginRet() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public CS2LS_GCAskLoginRet(CS2LS_GCAskLoginRet other) : this() {
+      opts_ = other.opts_ != null ? other.opts_.Clone() : null;
+      result_ = other.result_;
+      sessionID_ = other.sessionID_;
+      gsInfos_ = other.gsInfos_.Clone();
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public CS2LS_GCAskLoginRet Clone() {
+      return new CS2LS_GCAskLoginRet(this);
+    }
+
+    /// <summary>Field number for the "opts" field.</summary>
+    public const int OptsFieldNumber = 1;
+    private global::Protos.MsgOpts opts_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Protos.MsgOpts Opts {
+      get { return opts_; }
+      set {
+        opts_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "result" field.</summary>
+    public const int ResultFieldNumber = 2;
+    private global::Protos.CS2LS_GCAskLoginRet.Types.EResult result_ = 0;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Protos.CS2LS_GCAskLoginRet.Types.EResult Result {
+      get { return result_; }
+      set {
+        result_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "sessionID" field.</summary>
+    public const int SessionIDFieldNumber = 3;
+    private ulong sessionID_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ulong SessionID {
+      get { return sessionID_; }
+      set {
+        sessionID_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "gsInfos" field.</summary>
+    public const int GsInfosFieldNumber = 4;
+    private static readonly pb::FieldCodec<global::Protos.GSInfo> _repeated_gsInfos_codec
+        = pb::FieldCodec.ForMessage(34, global::Protos.GSInfo.Parser);
+    private readonly pbc::RepeatedField<global::Protos.GSInfo> gsInfos_ = new pbc::RepeatedField<global::Protos.GSInfo>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::RepeatedField<global::Protos.GSInfo> GsInfos {
+      get { return gsInfos_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as CS2LS_GCAskLoginRet);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(CS2LS_GCAskLoginRet other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!object.Equals(Opts, other.Opts)) return false;
+      if (Result != other.Result) return false;
+      if (SessionID != other.SessionID) return false;
+      if(!gsInfos_.Equals(other.gsInfos_)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (opts_ != null) hash ^= Opts.GetHashCode();
+      if (Result != 0) hash ^= Result.GetHashCode();
+      if (SessionID != 0UL) hash ^= SessionID.GetHashCode();
+      hash ^= gsInfos_.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (opts_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(Opts);
+      }
+      if (Result != 0) {
+        output.WriteRawTag(16);
+        output.WriteEnum((int) Result);
+      }
+      if (SessionID != 0UL) {
+        output.WriteRawTag(24);
+        output.WriteUInt64(SessionID);
+      }
+      gsInfos_.WriteTo(output, _repeated_gsInfos_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (opts_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Opts);
+      }
+      if (Result != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Result);
+      }
+      if (SessionID != 0UL) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(SessionID);
+      }
+      size += gsInfos_.CalculateSize(_repeated_gsInfos_codec);
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(CS2LS_GCAskLoginRet other) {
+      if (other == null) {
+        return;
+      }
+      if (other.opts_ != null) {
+        if (opts_ == null) {
+          opts_ = new global::Protos.MsgOpts();
+        }
+        Opts.MergeFrom(other.Opts);
+      }
+      if (other.Result != 0) {
+        Result = other.Result;
+      }
+      if (other.SessionID != 0UL) {
+        SessionID = other.SessionID;
+      }
+      gsInfos_.Add(other.gsInfos_);
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            if (opts_ == null) {
+              opts_ = new global::Protos.MsgOpts();
+            }
+            input.ReadMessage(opts_);
+            break;
+          }
+          case 16: {
+            result_ = (global::Protos.CS2LS_GCAskLoginRet.Types.EResult) input.ReadEnum();
+            break;
+          }
+          case 24: {
+            SessionID = input.ReadUInt64();
+            break;
+          }
+          case 34: {
+            gsInfos_.AddEntriesFrom(input, _repeated_gsInfos_codec);
+            break;
+          }
+        }
+      }
+    }
+
+    #region Nested types
+    /// <summary>Container for nested types declared in the CS2LS_GCAskLoginRet message type.</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static partial class Types {
+      public enum EResult {
+        [pbr::OriginalName("Success")] Success = 0,
+        [pbr::OriginalName("Failed")] Failed = 1,
+        [pbr::OriginalName("InvalidUname")] InvalidUname = 2,
+        [pbr::OriginalName("InvalidPwd")] InvalidPwd = 3,
+      }
+
+    }
+    #endregion
 
   }
 

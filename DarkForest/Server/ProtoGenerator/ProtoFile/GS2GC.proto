@@ -3,7 +3,7 @@ package Protos;
 
 import "Global.proto";
 
-message GS2GC_LoginResult {
+message GS2GC_LoginRet {
 	enum EResult{
 		Success = 0;
 		Failed = 1;

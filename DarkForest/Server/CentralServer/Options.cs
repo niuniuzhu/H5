@@ -15,6 +15,11 @@ namespace CentralServer
 			HelpText = "Specify configuration file." )]
 		public string cfg { get; set; }
 
+		[Option( 'd', "dbcfg",
+			Default = "",
+			HelpText = "Specify configuration file for database." )]
+		public string dbCfg { get; set; }
+
 		[Option( "id",
 			Default = ( uint )1,
 			SetName = "bysetting",
@@ -56,5 +61,11 @@ namespace CentralServer
 			SetName = "bysetting",
 			HelpText = "Password for redis server." )]
 		public string redisPwd { get; set; }
+
+		[Option( "session_exp_time",
+			Default = 60000,
+			SetName = "bysetting",
+			HelpText = "Expire time for login session." )]
+		public long sessionExpTime { get; set; }
 	}
 }

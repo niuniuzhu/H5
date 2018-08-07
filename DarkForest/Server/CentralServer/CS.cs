@@ -5,6 +5,8 @@ using Newtonsoft.Json;
 using Shared;
 using System.Collections.Generic;
 using System.IO;
+using CentralServer.User;
+using Shared.DB;
 
 namespace CentralServer
 {
@@ -15,13 +17,15 @@ namespace CentralServer
 
 		public CSNetSessionMgr netSessionMgr { get; } = new CSNetSessionMgr();
 		public CSConfig config { get; private set; }
+		public DBConfig dbConfig { get; private set; }
 
-		//所有已登陆的客户端的sid
-		private readonly HashSet<ulong> _gcSIDForLogin = new HashSet<ulong>();
-		//客户端sid和GS sid的映射
-		private readonly Dictionary<ulong, uint> _gcSIDToGsSID = new Dictionary<ulong, uint>();
+		public readonly RedisWrapper redisWrapper = new RedisWrapper();
+		public readonly UserMgr userMgr = new UserMgr();
+
+		public readonly GCSIDMgr gcNIDMgr = new GCSIDMgr();
 		//GS id和其数据的映射
-		private readonly Dictionary<uint, GSInfo> _gsIDToInfos = new Dictionary<uint, GSInfo>();
+		public readonly Dictionary<uint, GSInfo> gsNIDToGSInfos = new Dictionary<uint, GSInfo>();
+
 		private readonly Scheduler _heartBeater = new Scheduler();
 
 		public ErrorCode Initialize( Options opts )
@@ -41,6 +45,19 @@ namespace CentralServer
 				Logger.Error( e );
 				return ErrorCode.CfgLoadFailed;
 			}
+
+			if ( string.IsNullOrEmpty( opts.dbCfg ) )
+				return ErrorCode.DBCfgLoadFailed;
+			try
+			{
+				this.dbConfig = new DBConfig();
+				this.dbConfig.Load( opts.dbCfg );
+			}
+			catch ( System.Exception e )
+			{
+				Logger.Error( e );
+				return ErrorCode.DBCfgLoadFailed;
+			}
 			return ErrorCode.Success;
 		}
 
@@ -52,6 +69,10 @@ namespace CentralServer
 
 			this.netSessionMgr.CreateListener( 1, 65535, ProtoType.TCP, this.netSessionMgr.CreateGSSession ).Start( this.config.gsPort );
 
+			this.redisWrapper.Connect( this.config.redisIP, this.config.redisPort, this.config.redisPwd );
+
+			this.userMgr.Start();
+
 			return ErrorCode.Success;
 		}
 
@@ -62,6 +83,11 @@ namespace CentralServer
 			this._heartBeater.Update( dt );
 		}
 
-		private void OnHeartBeat( int count ) => NetworkMgr.instance.OnHeartBeat( Consts.HEART_BEAT_INTERVAL );
+		private void OnHeartBeat( int count )
+		{
+			this.gcNIDMgr.Update();
+			NetworkMgr.instance.OnHeartBeat( Consts.HEART_BEAT_INTERVAL );
+			this.redisWrapper.OnHeartBeat( Consts.HEART_BEAT_INTERVAL );
+		}
 	}
 }

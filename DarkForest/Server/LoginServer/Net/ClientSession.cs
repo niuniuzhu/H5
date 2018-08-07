@@ -2,8 +2,6 @@
 using Core.Net;
 using Shared;
 using Shared.Net;
-using System.Collections.Generic;
-using GSInfo = Shared.GSInfo;
 
 namespace LoginServer.Net
 {
@@ -30,76 +28,44 @@ namespace LoginServer.Net
 		private ErrorCode OnGCtoLSAskRegister( Google.Protobuf.IMessage message )
 		{
 			Protos.GC2LS_AskRegister register = ( Protos.GC2LS_AskRegister )message;
-			ErrorCode regError = LS.instance.userMgr.RegisterAccount( register );
+			Logger.Log( $"client:{register.Name} ask for register" );
 
-			Protos.LS2GC_RegResult response = ProtoCreator.R_GC2LS_AskRegister( register.Opts.Pid );
-			switch ( regError )
+			Protos.LS2CS_AskRegister gcAskReg = ProtoCreator.Q_LS2CS_AskRegister();
+			gcAskReg.Name = register.Name;
+			gcAskReg.Passwd = register.Passwd;
+			gcAskReg.Platform = register.Platform;
+			gcAskReg.Sdk = register.Sdk;
+			this.owner.Send( SessionType.ServerL2CS, gcAskReg, m =>
 			{
-				case ErrorCode.Success:
-					response.Result = Protos.LS2GC_RegResult.Types.EResult.Success;
-					break;
-				case ErrorCode.UsernameExists:
-					response.Result = Protos.LS2GC_RegResult.Types.EResult.UnameExists;
-					break;
-				case ErrorCode.InvalidUname:
-					response.Result = Protos.LS2GC_RegResult.Types.EResult.UnameIllegal;
-					break;
-				case ErrorCode.InvalidPwd:
-					response.Result = Protos.LS2GC_RegResult.Types.EResult.PwdIllegal;
-					break;
-				default:
-					response.Result = Protos.LS2GC_RegResult.Types.EResult.Failed;
-					break;
-			}
-			this.Send( response );
+				Protos.CS2LS_GCAskRegRet csRegRet = ( Protos.CS2LS_GCAskRegRet )m;
+				Protos.LS2GC_AskRegRet gcRegRet = ProtoCreator.R_GC2LS_AskRegister( register.Opts.Pid );
+				gcRegRet.Result = ( Protos.LS2GC_AskRegRet.Types.EResult )csRegRet.Result;
+				Logger.Log( $"client:{register.Name} register result:{gcRegRet.Result}" );
+				this.Send( gcRegRet );
+				this.DelayClose( 500, $"client:{register.Name} ask register complete" );
+			} );
 			return ErrorCode.Success;
 		}
 
 		private ErrorCode OnGCtoLSAskLogin( Google.Protobuf.IMessage message )
 		{
 			Protos.GC2LS_AskLogin login = ( Protos.GC2LS_AskLogin )message;
+			Logger.Log( $"client:{login.Name} ask for login" );
 
-			ulong sessionID = 0;
-			ErrorCode loginError = LS.instance.userMgr.RequestLogin( login, ref sessionID );
-
-			Protos.LS2CS_GCLogin gcLogin = ProtoCreator.Q_LS2CS_GCLogin();
-			gcLogin.SessionID = sessionID;
-			this.owner.Send( SessionType.ServerL2CS, gcLogin, _ =>
+			Protos.LS2CS_GCAskLogin gcLogin = ProtoCreator.Q_LS2CS_GCAskLogin();
+			gcLogin.Name = login.Name;
+			gcLogin.Passwd = login.Passwd;
+			this.owner.Send( SessionType.ServerL2CS, gcLogin, m =>
 			{
-				Protos.LS2GC_LoginResult response = ProtoCreator.R_GC2LS_AskLogin( login.Opts.Pid );
-				switch ( loginError )
-				{
-					case ErrorCode.Success:
-						response.Result = Protos.LS2GC_LoginResult.Types.EResult.Success;
-						response.SessionID = sessionID;
-						foreach ( KeyValuePair<uint, GSInfo> kv in LS.instance.gsInfos )
-						{
-							GSInfo info = kv.Value;
-							Protos.GSInfo gsInfo = new Protos.GSInfo
-							{
-								Name = info.name,
-								Ip = info.ip,
-								Port = info.port,
-								Password = info.password,
-								State = ( Protos.GSInfo.Types.State )info.state
-							};
-							response.GsInfos.Add( gsInfo );
-						}
-						Logger.Log( $"client:{login.Name}, sid:{sessionID} login success" );
-						break;
-					case ErrorCode.InvalidUname:
-						response.Result = Protos.LS2GC_LoginResult.Types.EResult.InvalidUname;
-						break;
-					case ErrorCode.InvalidPwd:
-						response.Result = Protos.LS2GC_LoginResult.Types.EResult.InvalidPwd;
-						break;
-					default:
-						response.Result = Protos.LS2GC_LoginResult.Types.EResult.Failed;
-						break;
-				}
-				this.Send( response );
+				Protos.CS2LS_GCAskLoginRet csLoginRet = ( Protos.CS2LS_GCAskLoginRet )m;
+				Protos.LS2GC_AskLoginRet gcLoginRet = ProtoCreator.R_GC2LS_AskLogin( login.Opts.Pid );
+				gcLoginRet.GsInfos.AddRange( csLoginRet.GsInfos );
+				gcLoginRet.Result = ( Protos.LS2GC_AskLoginRet.Types.EResult )csLoginRet.Result;
+				gcLoginRet.SessionID = csLoginRet.SessionID;
+				Logger.Log( $"client:{gcLogin.Name} login result:{gcLoginRet.Result}, sid:{gcLoginRet.SessionID}" );
+				this.Send( gcLoginRet );
+				this.DelayClose( 500, $"client:{login.Name} ask login complete" );
 			} );
-			this.DelayClose( 500, string.Empty );
 			return ErrorCode.Success;
 		}
 	}
