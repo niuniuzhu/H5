@@ -6,6 +6,7 @@ import { UIAlert } from "./UIAlert";
 import { BattleParams, Building } from "../Shared/Model/EntityParam";
 import { UIManager } from "./UIManager";
 import { Network } from "../Net/Network";
+import { BufferWriter } from "../../node_modules/@types/protobufjs/index";
 
 export class UILogin implements IUIModule {
 	private _root: fairygui.GComponent;
@@ -155,7 +156,7 @@ export class UILogin implements IUIModule {
 			let gsInfo = loginResult.gsInfos[i];
 			let item = this._areaList.addItemFromPool().asButton;
 			item.title = gsInfo.name;
-			item.data = { "data": gsInfo, "s": loginResult.sessionID };
+			item.data = { "data": gsInfo, "sid": loginResult.sessionID };
 		}
 		if (count > 0)
 			this._areaList.selectedIndex = 0;
@@ -168,7 +169,7 @@ export class UILogin implements IUIModule {
 	private OnEnterBtnClick(): void {
 		let item = this._areaList.getChildAt(this._areaList.selectedIndex);
 		let data: Protos.GSInfo = <Protos.GSInfo>item.data["data"];
-		this.ConnectToGS(data.ip, data.port, data.password, item.data["s"]);
+		this.ConnectToGS(data.ip, data.port, data.password, item.data["sid"]);
 	}
 
 	private ConnectToGS(ip: string, port: number, pwd: string, sessionID: Long): void {

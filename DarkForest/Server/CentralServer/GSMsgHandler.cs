@@ -55,11 +55,11 @@ namespace CentralServer
 
 		public ErrorCode HandleGCAskLoginFromGS( ulong gcNID, uint gsNID )
 		{
-			if ( !this.gcNIDMgr.Contains( gcNID ) )
+			if ( !this.gcNIDMgr.Check( gcNID ) )
 				return ErrorCode.InvalidGcNID;
+			uint ukey = this.gcNIDMgr.GetUKey( gcNID );
 			this.gcNIDMgr.Remove( gcNID );
-			this.userMgr.UserOnline( gcNID, gsNID );
-			return ErrorCode.Success;
+			return this.userMgr.UserOnline( gcNID, ukey, gsNID, out _ );
 		}
 
 		public ErrorCode HandleGCLost( ulong gcNID )

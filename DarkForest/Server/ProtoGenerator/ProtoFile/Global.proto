@@ -17,8 +17,7 @@ enum MsgID {
 	eLS2GC_AskRegRet = 301;
 	eLS2GC_AskLoginRet = 302;
 
-	eLS2CS_AskRegister = 400;
-	eLS2CS_GCAskLogin = 401;
+	eLS2CS_GCLogin = 400;
 
 	eGS2CS_ReportState = 500;
 	eGS2CS_GCAskLogin = 501;
@@ -29,8 +28,7 @@ enum MsgID {
 	eCS2LS_GSInfos = 700;
 	eCS2LS_GSInfo = 701;
 	eCS2LS_GSLost = 702;
-	eCS2LS_GCAskRegRet = 703;
-	eCS2LS_GCAskLoginRet = 704;
+	eCS2LS_GCLoginRet = 703;
 
 	eCS2GS_GCLoginRet = 800;
 }
@@ -65,12 +63,10 @@ message G_AskPingRet {
 {
 	"RespID": {
 		"G_AskPing": "G_AskPingRet",
+		"LS2CS_GCLogin":"CS2LS_GCLoginRet",
 		"GC2LS_AskRegister": "LS2GC_AskRegRet",
-		"LS2CS_AskRegister": "CS2LS_GCAskRegRet",
 		"GC2LS_AskLogin": "LS2GC_AskLoginRet",
-		"LS2CS_GCAskLogin": "CS2LS_GCAskLoginRet",
 		"GC2GS_AskLogin": "GS2GC_LoginRet",
-		"LS2CS_GCLogin": "CS2LS_GCAskLoginRet",
 		"GS2CS_GCAskLogin": "CS2GS_GCLoginRet"
 	}
 }

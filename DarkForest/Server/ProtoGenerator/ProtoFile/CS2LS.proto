@@ -22,29 +22,12 @@ message CS2LS_GSLost{
 	uint32 gsid = 2;
 }
 
-//返回注册结果
-message CS2LS_GCAskRegRet {
-	enum EResult{
-		Success = 0;
-		Failed = 1;
-		UnameExists = 2;
-		UnameIllegal = 3;
-		PwdIllegal = 4;
-	}
-	MsgOpts opts = 1;
-	EResult result = 2;
-}
-
 //返回登陆结果
-message CS2LS_GCAskLoginRet {
+message CS2LS_GCLoginRet {
 	enum EResult{
 		Success = 0;
 		Failed = 1;
-		InvalidUname = 2;
-		InvalidPwd = 3;
 	}
 	MsgOpts opts = 1;
 	EResult result = 2;
-	uint64 sessionID = 3;
-	repeated Protos.GSInfo gsInfos = 4;
 }

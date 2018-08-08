@@ -1,38 +1,24 @@
-﻿using Shared;
-using Shared.DB;
+﻿using Core.Misc;
+using Shared;
 using System.Collections.Generic;
-using Core.Misc;
 
 namespace CentralServer.User
 {
-	public partial class UserMgr
+	public class UserMgr
 	{
 		public readonly Dictionary<ulong, User> gcNIDToUser = new Dictionary<ulong, User>();
-		public readonly Dictionary<string, ulong> userNameToGcNID = new Dictionary<string, ulong>();
 		public readonly List<User> users = new List<User>();
-
-		private readonly DBWrapper _accountDBWrapper = new DBWrapper();
-
-		public void Start()
-		{
-			DBConfig.DBCfg dbCfg = CS.instance.dbConfig[DBConfig.DBType.Account];
-			this._accountDBWrapper.Start( this.AccountDBAsynHandler, this.DBAsynQueryWhenThreadBegin, dbCfg.ip, dbCfg.port, dbCfg.passwd, dbCfg.username, dbCfg.dbname );
-		}
-
-		private void DBAsynQueryWhenThreadBegin()
-		{
-		}
 
 		/// <summary>
 		/// 玩家上线
 		/// </summary>
-		public User UserOnline( ulong gcNID, uint gsNID )
+		public ErrorCode UserOnline( ulong gcNID, uint ukey, uint gsNID, out User user )
 		{
-			User user = new User( gcNID, gsNID );
+			user = new User( gcNID, ukey, gsNID );
 			this.gcNIDToUser[gcNID] = user;
 			this.users.Add( user );
 			Logger.Log( $"user:{gcNID} online" );
-			return user;
+			return ErrorCode.Success;
 		}
 
 		/// <summary>

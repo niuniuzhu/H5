@@ -29,6 +29,7 @@ namespace Shared
 	public enum ErrorCode
 	{
 		Success,
+		Failed,
 		//config
 		CfgLoadFailed,
 		DBCfgLoadFailed,
@@ -42,7 +43,8 @@ namespace Shared
 		UsernameExists,
 		InvalidUname,
 		InvalidPwd,
-		InvalidGcNID
+		InvalidGcNID,
+		Du
 	}
 
 	public class GSInfo

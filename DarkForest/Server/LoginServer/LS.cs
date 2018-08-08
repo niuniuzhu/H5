@@ -3,6 +3,7 @@ using Core.Net;
 using LoginServer.Net;
 using Newtonsoft.Json;
 using Shared;
+using Shared.DB;
 using Shared.Net;
 using System.Collections.Generic;
 using System.IO;
@@ -16,9 +17,13 @@ namespace LoginServer
 
 		public LSConfig config { get; private set; }
 		public DBConfig dbConfig { get; private set; }
-		public LSNetSessionMgr netSessionMgr { get; } = new LSNetSessionMgr();
-		public Dictionary<uint, GSInfo> gsInfos { get; } = new Dictionary<uint, GSInfo>();
 
+		public readonly RedisWrapper redisWrapper = new RedisWrapper();
+		public readonly LSNetSessionMgr netSessionMgr = new LSNetSessionMgr();
+		public readonly Dictionary<uint, GSInfo> gsInfos = new Dictionary<uint, GSInfo>();
+
+		private readonly Dictionary<string, ulong> _userNameToGcNID = new Dictionary<string, ulong>();
+		private readonly DBWrapper _accountDBWrapper = new DBWrapper();
 		private readonly Scheduler _heartBeater = new Scheduler();
 
 		public ErrorCode Initialize( Options opts )
@@ -54,12 +59,11 @@ namespace LoginServer
 		public ErrorCode Start()
 		{
 			this._heartBeater.Start( Consts.HEART_BEAT_INTERVAL, this.OnHeartBeat );
-
-			( ( WSListener )this.netSessionMgr.CreateListener( 0, 65535, ProtoType.WebSocket, this.netSessionMgr.CreateClientSession ) )
-			 .Start( "ws", this.config.cliPort );
-
-			this.netSessionMgr.CreateConnector<L2CSSession>( SessionType.ServerL2CS, this.config.csIP, this.config.csPort,
-															 ProtoType.TCP, 65535, 0 );
+			( ( WSListener )this.netSessionMgr.CreateListener( 0, 65535, ProtoType.WebSocket, this.netSessionMgr.CreateClientSession ) ).Start( "ws", this.config.cliPort );
+			this.netSessionMgr.CreateConnector<L2CSSession>( SessionType.ServerL2CS, this.config.csIP, this.config.csPort, ProtoType.TCP, 65535, 0 );
+			this.redisWrapper.Connect( this.config.redisIP, this.config.redisPort, this.config.redisPwd );
+			DBConfig.DBCfg dbCfg = this.dbConfig[DBConfig.DBType.Account];
+			this._accountDBWrapper.Start( this.AccountDBAsynHandler, this.DBAsynQueryWhenThreadBegin, dbCfg.ip, dbCfg.port, dbCfg.passwd, dbCfg.username, dbCfg.dbname );
 
 			return ErrorCode.Success;
 		}

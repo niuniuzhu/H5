@@ -2,6 +2,8 @@
 using Core.Net;
 using Shared;
 using Shared.Net;
+using System.Collections.Generic;
+using GSInfo = Shared.GSInfo;
 
 namespace LoginServer.Net
 {
@@ -28,44 +30,84 @@ namespace LoginServer.Net
 		private ErrorCode OnGCtoLSAskRegister( Google.Protobuf.IMessage message )
 		{
 			Protos.GC2LS_AskRegister register = ( Protos.GC2LS_AskRegister )message;
-			Logger.Log( $"client:{register.Name} ask for register" );
+			ErrorCode regError = LS.instance.RegisterAccount( register );
 
-			Protos.LS2CS_AskRegister gcAskReg = ProtoCreator.Q_LS2CS_AskRegister();
-			gcAskReg.Name = register.Name;
-			gcAskReg.Passwd = register.Passwd;
-			gcAskReg.Platform = register.Platform;
-			gcAskReg.Sdk = register.Sdk;
-			this.owner.Send( SessionType.ServerL2CS, gcAskReg, m =>
+			Protos.LS2GC_AskRegRet regRet = ProtoCreator.R_GC2LS_AskRegister( register.Opts.Pid );
+			switch ( regError )
 			{
-				Protos.CS2LS_GCAskRegRet csRegRet = ( Protos.CS2LS_GCAskRegRet )m;
-				Protos.LS2GC_AskRegRet gcRegRet = ProtoCreator.R_GC2LS_AskRegister( register.Opts.Pid );
-				gcRegRet.Result = ( Protos.LS2GC_AskRegRet.Types.EResult )csRegRet.Result;
-				Logger.Log( $"client:{register.Name} register result:{gcRegRet.Result}" );
-				this.Send( gcRegRet );
-				this.DelayClose( 500, $"client:{register.Name} ask register complete" );
-			} );
+				case ErrorCode.Success:
+					regRet.Result = Protos.LS2GC_AskRegRet.Types.EResult.Success;
+					break;
+				case ErrorCode.UsernameExists:
+					regRet.Result = Protos.LS2GC_AskRegRet.Types.EResult.UnameExists;
+					break;
+				case ErrorCode.InvalidUname:
+					regRet.Result = Protos.LS2GC_AskRegRet.Types.EResult.UnameIllegal;
+					break;
+				case ErrorCode.InvalidPwd:
+					regRet.Result = Protos.LS2GC_AskRegRet.Types.EResult.PwdIllegal;
+					break;
+				default:
+					regRet.Result = Protos.LS2GC_AskRegRet.Types.EResult.Failed;
+					break;
+			}
+			this.Send( regRet );
 			return ErrorCode.Success;
 		}
 
 		private ErrorCode OnGCtoLSAskLogin( Google.Protobuf.IMessage message )
 		{
 			Protos.GC2LS_AskLogin login = ( Protos.GC2LS_AskLogin )message;
-			Logger.Log( $"client:{login.Name} ask for login" );
 
-			Protos.LS2CS_GCAskLogin gcLogin = ProtoCreator.Q_LS2CS_GCAskLogin();
-			gcLogin.Name = login.Name;
-			gcLogin.Passwd = login.Passwd;
-			this.owner.Send( SessionType.ServerL2CS, gcLogin, m =>
+			ulong sessionID = 0;
+			uint ukey = 0;
+			ErrorCode loginError = LS.instance.RequestLogin( login, ref sessionID, ref ukey );
+
+			switch ( loginError )
 			{
-				Protos.CS2LS_GCAskLoginRet csLoginRet = ( Protos.CS2LS_GCAskLoginRet )m;
-				Protos.LS2GC_AskLoginRet gcLoginRet = ProtoCreator.R_GC2LS_AskLogin( login.Opts.Pid );
-				gcLoginRet.GsInfos.AddRange( csLoginRet.GsInfos );
-				gcLoginRet.Result = ( Protos.LS2GC_AskLoginRet.Types.EResult )csLoginRet.Result;
-				gcLoginRet.SessionID = csLoginRet.SessionID;
-				Logger.Log( $"client:{gcLogin.Name} login result:{gcLoginRet.Result}, sid:{gcLoginRet.SessionID}" );
-				this.Send( gcLoginRet );
-				this.DelayClose( 500, $"client:{login.Name} ask login complete" );
-			} );
+				case ErrorCode.Success:
+					//通知cs客户端登陆成功
+					Protos.LS2CS_GCLogin gcLogin = ProtoCreator.Q_LS2CS_GCLogin();
+					gcLogin.SessionID = sessionID;
+					gcLogin.Ukey = ukey;
+					this.owner.Send( SessionType.ServerL2CS, gcLogin, m =>
+					{
+						Protos.CS2LS_GCLoginRet gcLoginRet = ( Protos.CS2LS_GCLoginRet )m;
+
+						Protos.LS2GC_AskLoginRet loginRet = ProtoCreator.R_GC2LS_AskLogin( login.Opts.Pid );
+						loginRet.Result = ( Protos.LS2GC_AskLoginRet.Types.EResult )gcLoginRet.Result;
+						if ( loginRet.Result == Protos.LS2GC_AskLoginRet.Types.EResult.Success )
+						{
+							loginRet.SessionID = sessionID;
+							foreach ( KeyValuePair<uint, GSInfo> kv in LS.instance.gsInfos )
+							{
+								GSInfo info = kv.Value;
+								Protos.GSInfo gsInfo = new Protos.GSInfo
+								{
+									Name = info.name,
+									Ip = info.ip,
+									Port = info.port,
+									Password = info.password,
+									State = ( Protos.GSInfo.Types.State )info.state
+								};
+								loginRet.GsInfos.Add( gsInfo );
+							}
+							Logger.Log( $"client:{login.Name}, sid:{sessionID} login success" );
+						}
+						else
+							Logger.Log( $"client:{login.Name} login failed" );
+						this.Send( loginRet );
+					} );
+					break;
+
+				default:
+					{
+						Protos.LS2GC_AskLoginRet loginRet = ProtoCreator.R_GC2LS_AskLogin( login.Opts.Pid );
+						loginRet.Result = ( Protos.LS2GC_AskLoginRet.Types.EResult )loginError;
+						this.Send( loginRet );
+					}
+					break;
+			}
 			return ErrorCode.Success;
 		}
 	}

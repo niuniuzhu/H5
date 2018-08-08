@@ -2,7 +2,7 @@ declare namespace RC {
     class Test {
         constructor();
         private _i;
-        private F(index);
+        private F;
     }
 }
 declare namespace RC.Algorithm.Graph {
@@ -80,24 +80,6 @@ declare namespace RC.Collections {
     }
 }
 declare namespace RC.Collections {
-    class Bag<T> {
-        private toStrF;
-        private dictionary;
-        private nElements;
-        constructor(toStrFunction?: (item: T) => string);
-        add(element: T, nCopies?: number): boolean;
-        count(element: T): number;
-        contains(element: T): boolean;
-        remove(element: T, nCopies?: number): boolean;
-        toArray(): T[];
-        toSet(): Set<T>;
-        forEach(callback: ILoopFunction<T>): void;
-        size(): number;
-        isEmpty(): boolean;
-        clear(): void;
-    }
-}
-declare namespace RC.Collections {
     class BSTreeKV<K, V extends K> {
         private root;
         private compare;
@@ -119,22 +101,38 @@ declare namespace RC.Collections {
         forEach(callback: ILoopFunction<V>): void;
         toArray(): V[];
         height(): number;
-        private searchNode(node, element);
-        private transplant(n1, n2);
-        private removeNode(node);
-        private inorderTraversalAux(node, callback, signal);
-        private levelTraversalAux(node, callback);
-        private preorderTraversalAux(node, callback, signal);
-        private postorderTraversalAux(node, callback, signal);
-        private minimumAux(node);
-        private minimumAux(node);
-        private maximumAux(node);
-        private maximumAux(node);
-        private heightAux(node);
-        private insertNode(node);
-        private createNode(element);
+        private searchNode;
+        private transplant;
+        private removeNode;
+        private inorderTraversalAux;
+        private levelTraversalAux;
+        private preorderTraversalAux;
+        private postorderTraversalAux;
+        private minimumAux;
+        private maximumAux;
+        private heightAux;
+        private insertNode;
+        private createNode;
     }
     class BSTree<T> extends BSTreeKV<T, T> {
+    }
+}
+declare namespace RC.Collections {
+    class Bag<T> {
+        private toStrF;
+        private dictionary;
+        private nElements;
+        constructor(toStrFunction?: (item: T) => string);
+        add(element: T, nCopies?: number): boolean;
+        count(element: T): number;
+        contains(element: T): boolean;
+        remove(element: T, nCopies?: number): boolean;
+        toArray(): T[];
+        toSet(): Set<T>;
+        forEach(callback: ILoopFunction<T>): void;
+        size(): number;
+        isEmpty(): boolean;
+        clear(): void;
     }
 }
 declare namespace RC.Collections {
@@ -175,12 +173,12 @@ declare namespace RC.Collections {
         private data;
         private compare;
         constructor(compareFunction?: ICompareFunction<T>);
-        private leftChildIndex(nodeIndex);
-        private rightChildIndex(nodeIndex);
-        private parentIndex(nodeIndex);
-        private minIndex(leftChild, rightChild);
-        private siftUp(index);
-        private siftDown(nodeIndex);
+        private leftChildIndex;
+        private rightChildIndex;
+        private parentIndex;
+        private minIndex;
+        private siftUp;
+        private siftDown;
         peek(): T | undefined;
         add(element: T): boolean;
         removeRoot(): T | undefined;
@@ -197,12 +195,12 @@ declare namespace RC.Collections {
         private head;
         private tail;
         constructor(toStrFunction?: (key: K) => string);
-        private appendToTail(entry);
-        private getLinkedDictionaryPair(key);
+        private appendToTail;
+        private getLinkedDictionaryPair;
         getValue(key: K): V | undefined;
         remove(key: K): V | undefined;
         clear(): void;
-        private replace(oldPair, newPair);
+        private replace;
         setValue(key: K, value: V): V | undefined;
         keys(): K[];
         values(): V[];
@@ -228,7 +226,7 @@ declare namespace RC.Collections {
         remove(item: T, equalsFunction?: IEqualsFunction<T>): boolean;
         clear(): void;
         equals(other: any, equalsFunction?: IEqualsFunction<T>): boolean;
-        private equalsAux(n1, n2, eqF);
+        private equalsAux;
         removeElementAtIndex(index: number): T | null;
         forEach(callback: ILoopFunction<T>): void;
         reverse(): void;
@@ -236,8 +234,8 @@ declare namespace RC.Collections {
         size(): number;
         isEmpty(): boolean;
         toString(): string;
-        private nodeAtIndex(index);
-        private createNode(item);
+        private nodeAtIndex;
+        private createNode;
     }
 }
 declare namespace RC.Collections {
@@ -303,21 +301,21 @@ declare namespace RC.Collections {
         insertIdIntoId(insideId: string, insertId: string): void;
         insertIdIntoRoot(id: string, position?: number): void;
         insertIdIntoNode(nodeKey: string, id: string, position?: number): void;
-        private moveId(moveId, beforeId, direction);
-        private swapArrayElements(arr, indexA, indexB);
-        private rootDeleteId(id);
-        private nodeAndSubNodesDelete(nodeKey);
-        private nodeRefrencesDelete(id);
-        private nodeDelete(nodeKey);
-        private findRootId(id);
-        private findNodeId(nodeKey, id);
-        private findNode(nodeKey);
-        private nodeInsertAtStart(nodeKey, id);
-        private nodeInsertAtEnd(nodeKey, id);
-        private rootDelete(index);
-        private nodeDeleteAtIndex(nodeKey, index);
-        private rootInsertAtStart(id);
-        private rootInsertAtEnd(id);
+        private moveId;
+        private swapArrayElements;
+        private rootDeleteId;
+        private nodeAndSubNodesDelete;
+        private nodeRefrencesDelete;
+        private nodeDelete;
+        private findRootId;
+        private findNodeId;
+        private findNode;
+        private nodeInsertAtStart;
+        private nodeInsertAtEnd;
+        private rootDelete;
+        private nodeDeleteAtIndex;
+        private rootInsertAtStart;
+        private rootInsertAtEnd;
     }
 }
 declare namespace RC.Collections {
@@ -408,11 +406,43 @@ declare namespace RC.Collections {
         static compareToEquals<T>(compareFunction: ICompareFunction<T>): IEqualsFunction<T>;
     }
 }
+declare namespace RC.Crypto {
+    class Md5 {
+        static hashStr(str: string, raw?: boolean): string | Int32Array;
+        static hashAsciiStr(str: string, raw?: boolean): string | Int32Array;
+        private static stateIdentity;
+        private static buffer32Identity;
+        private static hexChars;
+        private static hexOut;
+        private static onePassHasher;
+        private static _hex;
+        private static _md5cycle;
+        private _dataLength;
+        private _bufferLength;
+        private _state;
+        private _buffer;
+        private _buffer8;
+        private _buffer32;
+        constructor();
+        start(): this;
+        appendStr(str: string): this;
+        appendAsciiStr(str: string): this;
+        appendByteArray(input: Uint8Array): this;
+        getState(): {
+            buffer: any;
+            buflen: number;
+            length: number;
+            state: number[];
+        };
+        setState(state: any): void;
+        end(raw?: boolean): string | Int32Array;
+    }
+}
 declare namespace RC.Numerics {
     enum Axis {
         X = 0,
         Y = 1,
-        Z = 2,
+        Z = 2
     }
     class Bounds {
         private _center;
@@ -722,11 +752,11 @@ declare namespace RC.Numerics {
         ToString(): string;
         static Angle(a: Quat, b: Quat): number;
         static Euler(euler: Vec3): Quat;
-        private static ToEulerRad(rotation);
-        private static NormalizeAngles(angles);
-        private static NormalizeAngle(angle);
-        private static FromEulerRad(euler);
-        private static ToAxisAngleRad(q);
+        private static ToEulerRad;
+        private static NormalizeAngles;
+        private static NormalizeAngle;
+        private static FromEulerRad;
+        private static ToAxisAngleRad;
         static Equals(q1: Quat, q2: Quat): boolean;
         EqualsTo(q: Quat): boolean;
         static Mul(lhs: Quat, rhs: Quat): Quat;
@@ -758,7 +788,7 @@ declare namespace RC.Numerics {
         static MinMaxRect(xmin: number, ymin: number, xmax: number, ymax: number): Rect;
         Set(x: number, y: number, width: number, height: number): void;
         Contains(point: Vec2, allowInverse?: boolean): boolean;
-        private static OrderMinMax(rect);
+        private static OrderMinMax;
         Overlaps(other: Rect, allowInverse?: boolean): boolean;
         static NormalizedToPoint(rectangle: Rect, normalizedRectCoordinates: Vec2): Vec2;
         static PointToNormalized(rectangle: Rect, point: Vec2): Vec2;
@@ -920,7 +950,7 @@ declare namespace RC.Numerics {
         static Lerp(from: Vec3, to: Vec3, t: number): Vec3;
         static SmoothDamp(current: Vec3, target: Vec3, currentVelocity: Vec3[], smoothTime: number, maxSpeed: number, deltaTime: number): Vec3;
         static MoveTowards(current: Vec3, target: Vec3, maxDistanceDelta: number): Vec3;
-        private static ClampedMove(lhs, rhs, clampedDelta);
+        private static ClampedMove;
         static RotateTowards(current: Vec3, target: Vec3, maxRadiansDelta: number, maxMagnitudeDelta: number): Vec3;
         static OrthoNormalize(va: Vec3[], vb: Vec3[], vc: Vec3[]): void;
         static Project(vector: Vec3, onNormal: Vec3): Vec3;
@@ -1015,7 +1045,7 @@ declare namespace RC.Utils {
     class ConsistentRandom {
         private seed;
         constructor(seed: number);
-        private Next(min, max);
+        private Next;
         NextInt(min: number, max: number): number;
         NextDouble(): number;
         Pick(collection: any[]): any;
@@ -1024,7 +1054,7 @@ declare namespace RC.Utils {
 declare namespace RC.Utils {
     enum GuidFormat {
         BRACES = 1,
-        DASHES = 2,
+        DASHES = 2
     }
     class GUID {
         static readonly empty: GUID;
@@ -1036,14 +1066,14 @@ declare namespace RC.Utils {
         constructor(val: string);
         constructor(val: GUID);
         constructor(val1: Uint8Array, val2: Uint8Array, val3: Uint8Array, val4: Uint8Array);
-        private CopyCtor(val);
-        private ParseImpl(val);
+        private CopyCtor;
+        private ParseImpl;
         ToString(format?: GuidFormat): string;
         static Parse(value: string): GUID;
         static Generate(seed?: number): GUID;
-        private static ToStringHexUint8(values, start?, end?);
-        private static StringToUint8(val);
-        private static Convolution(f, g);
+        private static ToStringHexUint8;
+        private static StringToUint8;
+        private static Convolution;
     }
 }
 declare namespace RC.Utils {

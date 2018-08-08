@@ -1,7 +1,9 @@
-﻿using Core.Misc;
+﻿using Core.Crypto;
+using Core.Misc;
 using Core.Net;
 using Shared;
 using Shared.Net;
+using System;
 
 namespace CentralServer.Net
 {
@@ -51,18 +53,13 @@ namespace CentralServer.Net
 		private ErrorCode OnGs2CsGcaskLogin( Google.Protobuf.IMessage message )
 		{
 			Protos.GS2CS_GCAskLogin gcAskLogin = ( Protos.GS2CS_GCAskLogin )message;
-			ErrorCode errorCode = CS.instance.HandleGCAskLoginFromGS( gcAskLogin.SessionID, this.logicID );
 			Protos.CS2GS_GCLoginRet gcAskLoginRet = ProtoCreator.R_GS2CS_GCAskLogin( gcAskLogin.Opts.Pid );
-			switch ( errorCode )
-			{
-				case ErrorCode.Success:
-					gcAskLoginRet.Result = Protos.CS2GS_GCLoginRet.Types.EResult.Success;
-					break;
 
-				default:
-					gcAskLoginRet.Result = Protos.CS2GS_GCLoginRet.Types.EResult.Failed;
-					break;
-			}
+			ErrorCode errorCode = CS.instance.HandleGCAskLoginFromGS( gcAskLogin.SessionID, this.logicID );
+			gcAskLoginRet.Result = errorCode == ErrorCode.Success
+									   ? Protos.CS2GS_GCLoginRet.Types.EResult.Success
+									   : Protos.CS2GS_GCLoginRet.Types.EResult.Failed;
+
 			this.Send( gcAskLoginRet );
 			return ErrorCode.Success;
 		}

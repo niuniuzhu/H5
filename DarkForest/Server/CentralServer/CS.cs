@@ -3,10 +3,10 @@ using Core.Misc;
 using Core.Net;
 using Newtonsoft.Json;
 using Shared;
+using Shared.DB;
 using System.Collections.Generic;
 using System.IO;
 using CentralServer.User;
-using Shared.DB;
 
 namespace CentralServer
 {
@@ -21,9 +21,7 @@ namespace CentralServer
 
 		public readonly RedisWrapper redisWrapper = new RedisWrapper();
 		public readonly UserMgr userMgr = new UserMgr();
-
 		public readonly GCSIDMgr gcNIDMgr = new GCSIDMgr();
-		//GS id和其数据的映射
 		public readonly Dictionary<uint, GSInfo> gsNIDToGSInfos = new Dictionary<uint, GSInfo>();
 
 		private readonly Scheduler _heartBeater = new Scheduler();
@@ -63,14 +61,9 @@ namespace CentralServer
 		public ErrorCode Start()
 		{
 			this._heartBeater.Start( Consts.HEART_BEAT_INTERVAL, this.OnHeartBeat );
-
 			this.netSessionMgr.CreateListener( 0, 65535, ProtoType.TCP, this.netSessionMgr.CreateLSSession ).Start( this.config.lsPort );
-
 			this.netSessionMgr.CreateListener( 1, 65535, ProtoType.TCP, this.netSessionMgr.CreateGSSession ).Start( this.config.gsPort );
-
 			this.redisWrapper.Connect( this.config.redisIP, this.config.redisPort, this.config.redisPwd );
-
-			this.userMgr.Start();
 
 			return ErrorCode.Success;
 		}

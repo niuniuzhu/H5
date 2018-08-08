@@ -129,14 +129,8 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
             msg.opts = new protos_1.Protos.MsgOpts();
             return msg;
         }
-        static Q_LS2CS_AskRegister() {
-            let msg = new protos_1.Protos.LS2CS_AskRegister();
-            msg.opts = new protos_1.Protos.MsgOpts();
-            msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RPC;
-            return msg;
-        }
-        static Q_LS2CS_GCAskLogin() {
-            let msg = new protos_1.Protos.LS2CS_GCAskLogin();
+        static Q_LS2CS_GCLogin() {
+            let msg = new protos_1.Protos.LS2CS_GCLogin();
             msg.opts = new protos_1.Protos.MsgOpts();
             msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RPC;
             return msg;
@@ -177,13 +171,8 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
             msg.opts = new protos_1.Protos.MsgOpts();
             return msg;
         }
-        static Q_CS2LS_GCAskRegRet() {
-            let msg = new protos_1.Protos.CS2LS_GCAskRegRet();
-            msg.opts = new protos_1.Protos.MsgOpts();
-            return msg;
-        }
-        static Q_CS2LS_GCAskLoginRet() {
-            let msg = new protos_1.Protos.CS2LS_GCAskLoginRet();
+        static Q_CS2LS_GCLoginRet() {
+            let msg = new protos_1.Protos.CS2LS_GCLoginRet();
             msg.opts = new protos_1.Protos.MsgOpts();
             return msg;
         }
@@ -199,15 +188,15 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
             msg.opts.rpid = pid;
             return msg;
         }
-        static R_GC2LS_AskRegister(pid) {
-            let msg = new protos_1.Protos.LS2GC_AskRegRet();
+        static R_LS2CS_GCLogin(pid) {
+            let msg = new protos_1.Protos.CS2LS_GCLoginRet();
             msg.opts = new protos_1.Protos.MsgOpts();
             msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RESP;
             msg.opts.rpid = pid;
             return msg;
         }
-        static R_LS2CS_AskRegister(pid) {
-            let msg = new protos_1.Protos.CS2LS_GCAskRegRet();
+        static R_GC2LS_AskRegister(pid) {
+            let msg = new protos_1.Protos.LS2GC_AskRegRet();
             msg.opts = new protos_1.Protos.MsgOpts();
             msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RESP;
             msg.opts.rpid = pid;
@@ -220,22 +209,8 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
             msg.opts.rpid = pid;
             return msg;
         }
-        static R_LS2CS_GCAskLogin(pid) {
-            let msg = new protos_1.Protos.CS2LS_GCAskLoginRet();
-            msg.opts = new protos_1.Protos.MsgOpts();
-            msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RESP;
-            msg.opts.rpid = pid;
-            return msg;
-        }
         static R_GC2GS_AskLogin(pid) {
             let msg = new protos_1.Protos.GS2GC_LoginRet();
-            msg.opts = new protos_1.Protos.MsgOpts();
-            msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RESP;
-            msg.opts.rpid = pid;
-            return msg;
-        }
-        static R_LS2CS_GCLogin(pid) {
-            let msg = new protos_1.Protos.CS2LS_GCAskLoginRet();
             msg.opts = new protos_1.Protos.MsgOpts();
             msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RESP;
             msg.opts.rpid = pid;
@@ -287,11 +262,7 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
                     return msg;
                 }
                 case 400: {
-                    let msg = protos_1.Protos.LS2CS_AskRegister.decode(data, size);
-                    return msg;
-                }
-                case 401: {
-                    let msg = protos_1.Protos.LS2CS_GCAskLogin.decode(data, size);
+                    let msg = protos_1.Protos.LS2CS_GCLogin.decode(data, size);
                     return msg;
                 }
                 case 500: {
@@ -323,11 +294,7 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
                     return msg;
                 }
                 case 703: {
-                    let msg = protos_1.Protos.CS2LS_GCAskRegRet.decode(data, size);
-                    return msg;
-                }
-                case 704: {
-                    let msg = protos_1.Protos.CS2LS_GCAskLoginRet.decode(data, size);
+                    let msg = protos_1.Protos.CS2LS_GCLoginRet.decode(data, size);
                     return msg;
                 }
                 case 800: {
@@ -373,12 +340,8 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
             let msg = protos_1.Protos.LS2GC_AskLoginRet.decode(data, size);
             return msg;
         }
-        static D_LS2CS_AskRegister(data, size) {
-            let msg = protos_1.Protos.LS2CS_AskRegister.decode(data, size);
-            return msg;
-        }
-        static D_LS2CS_GCAskLogin(data, size) {
-            let msg = protos_1.Protos.LS2CS_GCAskLogin.decode(data, size);
+        static D_LS2CS_GCLogin(data, size) {
+            let msg = protos_1.Protos.LS2CS_GCLogin.decode(data, size);
             return msg;
         }
         static D_GS2CS_ReportState(data, size) {
@@ -409,12 +372,8 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
             let msg = protos_1.Protos.CS2LS_GSLost.decode(data, size);
             return msg;
         }
-        static D_CS2LS_GCAskRegRet(data, size) {
-            let msg = protos_1.Protos.CS2LS_GCAskRegRet.decode(data, size);
-            return msg;
-        }
-        static D_CS2LS_GCAskLoginRet(data, size) {
-            let msg = protos_1.Protos.CS2LS_GCAskLoginRet.decode(data, size);
+        static D_CS2LS_GCLoginRet(data, size) {
+            let msg = protos_1.Protos.CS2LS_GCLoginRet.decode(data, size);
             return msg;
         }
         static D_CS2GS_GCLoginRet(data, size) {
@@ -451,10 +410,7 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
                     return new protos_1.Protos.LS2GC_AskLoginRet();
                 }
                 case 400: {
-                    return new protos_1.Protos.LS2CS_AskRegister();
-                }
-                case 401: {
-                    return new protos_1.Protos.LS2CS_GCAskLogin();
+                    return new protos_1.Protos.LS2CS_GCLogin();
                 }
                 case 500: {
                     return new protos_1.Protos.GS2CS_ReportState();
@@ -478,10 +434,7 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
                     return new protos_1.Protos.CS2LS_GSLost();
                 }
                 case 703: {
-                    return new protos_1.Protos.CS2LS_GCAskRegRet();
-                }
-                case 704: {
-                    return new protos_1.Protos.CS2LS_GCAskLoginRet();
+                    return new protos_1.Protos.CS2LS_GCLoginRet();
                 }
                 case 800: {
                     return new protos_1.Protos.CS2GS_GCLoginRet();
@@ -522,9 +475,6 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
                 case 400: {
                     return message.opts;
                 }
-                case 401: {
-                    return message.opts;
-                }
                 case 500: {
                     return message.opts;
                 }
@@ -549,9 +499,6 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
                 case 703: {
                     return message.opts;
                 }
-                case 704: {
-                    return message.opts;
-                }
                 case 800: {
                     return message.opts;
                 }
@@ -571,8 +518,7 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
         [protos_1.Protos.LS2GC_GSInfo, 300],
         [protos_1.Protos.LS2GC_AskRegRet, 301],
         [protos_1.Protos.LS2GC_AskLoginRet, 302],
-        [protos_1.Protos.LS2CS_AskRegister, 400],
-        [protos_1.Protos.LS2CS_GCAskLogin, 401],
+        [protos_1.Protos.LS2CS_GCLogin, 400],
         [protos_1.Protos.GS2CS_ReportState, 500],
         [protos_1.Protos.GS2CS_GCAskLogin, 501],
         [protos_1.Protos.GS2CS_GCLost, 502],
@@ -580,8 +526,7 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
         [protos_1.Protos.CS2LS_GSInfos, 700],
         [protos_1.Protos.CS2LS_GSInfo, 701],
         [protos_1.Protos.CS2LS_GSLost, 702],
-        [protos_1.Protos.CS2LS_GCAskRegRet, 703],
-        [protos_1.Protos.CS2LS_GCAskLoginRet, 704],
+        [protos_1.Protos.CS2LS_GCLoginRet, 703],
         [protos_1.Protos.CS2GS_GCLoginRet, 800],
     ]);
     ProtoCreator._ID2TYPE = new Map([
@@ -594,8 +539,7 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
         [300, protos_1.Protos.LS2GC_GSInfo],
         [301, protos_1.Protos.LS2GC_AskRegRet],
         [302, protos_1.Protos.LS2GC_AskLoginRet],
-        [400, protos_1.Protos.LS2CS_AskRegister],
-        [401, protos_1.Protos.LS2CS_GCAskLogin],
+        [400, protos_1.Protos.LS2CS_GCLogin],
         [500, protos_1.Protos.GS2CS_ReportState],
         [501, protos_1.Protos.GS2CS_GCAskLogin],
         [502, protos_1.Protos.GS2CS_GCLost],
@@ -603,8 +547,7 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
         [700, protos_1.Protos.CS2LS_GSInfos],
         [701, protos_1.Protos.CS2LS_GSInfo],
         [702, protos_1.Protos.CS2LS_GSLost],
-        [703, protos_1.Protos.CS2LS_GCAskRegRet],
-        [704, protos_1.Protos.CS2LS_GCAskLoginRet],
+        [703, protos_1.Protos.CS2LS_GCLoginRet],
         [800, protos_1.Protos.CS2GS_GCLoginRet],
     ]);
     exports.ProtoCreator = ProtoCreator;
@@ -2236,7 +2179,7 @@ define("UI/UILogin", ["require", "exports", "../libs/protos", "Net/WSConnector",
                 let gsInfo = loginResult.gsInfos[i];
                 let item = this._areaList.addItemFromPool().asButton;
                 item.title = gsInfo.name;
-                item.data = { "data": gsInfo, "s": loginResult.sessionID };
+                item.data = { "data": gsInfo, "sid": loginResult.sessionID };
             }
             if (count > 0)
                 this._areaList.selectedIndex = 0;
@@ -2247,7 +2190,7 @@ define("UI/UILogin", ["require", "exports", "../libs/protos", "Net/WSConnector",
         OnEnterBtnClick() {
             let item = this._areaList.getChildAt(this._areaList.selectedIndex);
             let data = item.data["data"];
-            this.ConnectToGS(data.ip, data.port, data.password, item.data["s"]);
+            this.ConnectToGS(data.ip, data.port, data.password, item.data["sid"]);
         }
         ConnectToGS(ip, port, pwd, sessionID) {
             let connector = new WSConnector_1.WSConnector();
