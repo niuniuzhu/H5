@@ -15,11 +15,6 @@ namespace LoginServer
 			HelpText = "Specify configuration file." )]
 		public string cfg { get; set; }
 
-		[Option( 'd', "dbcfg",
-			Default = "",
-			HelpText = "Specify configuration file for database." )]
-		public string dbCfg { get; set; }
-
 		[Option( 'p', "cli_port",
 			Default = 49996,
 			SetName = "bysetting",
