@@ -1,13 +1,5 @@
 ﻿namespace CentralServer
 {
-	public class BSServerInfo
-	{
-		public string name;
-		public string ip;
-		public int port;
-		public int status;
-	}
-
 	public class CSConfig
 	{
 		public uint csID;

@@ -7,7 +7,7 @@
 		<OutputPath>..\Bin\</OutputPath>
 		<Version>1.0.0</Version>
 		<Authors>Ron</Authors>
-		<Company>yytou</Company>
+		<Company>RC</Company>
 	</PropertyGroup>
 
 	<ItemGroup>

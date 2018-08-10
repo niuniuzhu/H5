@@ -19,18 +19,26 @@ enum MsgID {
 
 	eLS2CS_GCLogin = 400;
 
-	eGS2CS_ReportState = 500;
-	eGS2CS_GCAskLogin = 501;
-	eGS2CS_GCLost = 502;
+	eLS2DB_QueryAccount = 500;
+	eLS2DB_QueryLogin = 501;
+	eLS2DB_Exec = 502;
 
-	eGS2GC_LoginRet = 600;
+	eGS2CS_ReportState = 600;
+	eGS2CS_GCAskLogin = 601;
+	eGS2CS_GCLost = 602;
 
-	eCS2LS_GSInfos = 700;
-	eCS2LS_GSInfo = 701;
-	eCS2LS_GSLost = 702;
-	eCS2LS_GCLoginRet = 703;
+	eGS2GC_LoginRet = 700;
 
-	eCS2GS_GCLoginRet = 800;
+	eCS2LS_GSInfos = 800;
+	eCS2LS_GSInfo = 801;
+	eCS2LS_GSLost = 802;
+	eCS2LS_GCLoginRet = 803;
+
+	eCS2GS_GCLoginRet = 900;
+
+	eDB2LS_QueryAccountRet = 20000;
+	eDB2LS_QueryLoginRet = 20001;
+	eDB2LS_ExecRet = 20002;
 }
 
 message MsgOpts {
@@ -67,7 +75,10 @@ message G_AskPingRet {
 		"GC2LS_AskRegister": "LS2GC_AskRegRet",
 		"GC2LS_AskLogin": "LS2GC_AskLoginRet",
 		"GC2GS_AskLogin": "GS2GC_LoginRet",
-		"GS2CS_GCAskLogin": "CS2GS_GCLoginRet"
+		"GS2CS_GCAskLogin": "CS2GS_GCLoginRet",
+		"LS2DB_QueryAccount":"DB2LS_QueryAccountRet",
+		"LS2DB_QueryLogin":"DB2LS_QueryLoginRet",
+		"LS2DB_Exec":"DB2LS_ExecRet"
 	}
 }
 </ext>

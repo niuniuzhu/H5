@@ -1,4 +1,8 @@
 ping -n 1 127.0>nul
+echo "start db"
+start db.bat
+
+ping -n 1 127.0>nul
 echo "start cs"
 start cs.bat
 

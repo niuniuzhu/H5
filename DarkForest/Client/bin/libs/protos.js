@@ -274,15 +274,21 @@ define(["libs/protobufjs"], function($protobuf) {
          * @property {number} eLS2GC_AskRegRet=301 eLS2GC_AskRegRet value
          * @property {number} eLS2GC_AskLoginRet=302 eLS2GC_AskLoginRet value
          * @property {number} eLS2CS_GCLogin=400 eLS2CS_GCLogin value
-         * @property {number} eGS2CS_ReportState=500 eGS2CS_ReportState value
-         * @property {number} eGS2CS_GCAskLogin=501 eGS2CS_GCAskLogin value
-         * @property {number} eGS2CS_GCLost=502 eGS2CS_GCLost value
-         * @property {number} eGS2GC_LoginRet=600 eGS2GC_LoginRet value
-         * @property {number} eCS2LS_GSInfos=700 eCS2LS_GSInfos value
-         * @property {number} eCS2LS_GSInfo=701 eCS2LS_GSInfo value
-         * @property {number} eCS2LS_GSLost=702 eCS2LS_GSLost value
-         * @property {number} eCS2LS_GCLoginRet=703 eCS2LS_GCLoginRet value
-         * @property {number} eCS2GS_GCLoginRet=800 eCS2GS_GCLoginRet value
+         * @property {number} eLS2DB_QueryAccount=500 eLS2DB_QueryAccount value
+         * @property {number} eLS2DB_QueryLogin=501 eLS2DB_QueryLogin value
+         * @property {number} eLS2DB_Exec=502 eLS2DB_Exec value
+         * @property {number} eGS2CS_ReportState=600 eGS2CS_ReportState value
+         * @property {number} eGS2CS_GCAskLogin=601 eGS2CS_GCAskLogin value
+         * @property {number} eGS2CS_GCLost=602 eGS2CS_GCLost value
+         * @property {number} eGS2GC_LoginRet=700 eGS2GC_LoginRet value
+         * @property {number} eCS2LS_GSInfos=800 eCS2LS_GSInfos value
+         * @property {number} eCS2LS_GSInfo=801 eCS2LS_GSInfo value
+         * @property {number} eCS2LS_GSLost=802 eCS2LS_GSLost value
+         * @property {number} eCS2LS_GCLoginRet=803 eCS2LS_GCLoginRet value
+         * @property {number} eCS2GS_GCLoginRet=900 eCS2GS_GCLoginRet value
+         * @property {number} eDB2LS_QueryAccountRet=20000 eDB2LS_QueryAccountRet value
+         * @property {number} eDB2LS_QueryLoginRet=20001 eDB2LS_QueryLoginRet value
+         * @property {number} eDB2LS_ExecRet=20002 eDB2LS_ExecRet value
          */
         Protos.MsgID = (function() {
             var valuesById = {}, values = Object.create(valuesById);
@@ -297,15 +303,21 @@ define(["libs/protobufjs"], function($protobuf) {
             values[valuesById[301] = "eLS2GC_AskRegRet"] = 301;
             values[valuesById[302] = "eLS2GC_AskLoginRet"] = 302;
             values[valuesById[400] = "eLS2CS_GCLogin"] = 400;
-            values[valuesById[500] = "eGS2CS_ReportState"] = 500;
-            values[valuesById[501] = "eGS2CS_GCAskLogin"] = 501;
-            values[valuesById[502] = "eGS2CS_GCLost"] = 502;
-            values[valuesById[600] = "eGS2GC_LoginRet"] = 600;
-            values[valuesById[700] = "eCS2LS_GSInfos"] = 700;
-            values[valuesById[701] = "eCS2LS_GSInfo"] = 701;
-            values[valuesById[702] = "eCS2LS_GSLost"] = 702;
-            values[valuesById[703] = "eCS2LS_GCLoginRet"] = 703;
-            values[valuesById[800] = "eCS2GS_GCLoginRet"] = 800;
+            values[valuesById[500] = "eLS2DB_QueryAccount"] = 500;
+            values[valuesById[501] = "eLS2DB_QueryLogin"] = 501;
+            values[valuesById[502] = "eLS2DB_Exec"] = 502;
+            values[valuesById[600] = "eGS2CS_ReportState"] = 600;
+            values[valuesById[601] = "eGS2CS_GCAskLogin"] = 601;
+            values[valuesById[602] = "eGS2CS_GCLost"] = 602;
+            values[valuesById[700] = "eGS2GC_LoginRet"] = 700;
+            values[valuesById[800] = "eCS2LS_GSInfos"] = 800;
+            values[valuesById[801] = "eCS2LS_GSInfo"] = 801;
+            values[valuesById[802] = "eCS2LS_GSLost"] = 802;
+            values[valuesById[803] = "eCS2LS_GCLoginRet"] = 803;
+            values[valuesById[900] = "eCS2GS_GCLoginRet"] = 900;
+            values[valuesById[20000] = "eDB2LS_QueryAccountRet"] = 20000;
+            values[valuesById[20001] = "eDB2LS_QueryLoginRet"] = 20001;
+            values[valuesById[20002] = "eDB2LS_ExecRet"] = 20002;
             return values;
         })();
     
@@ -3005,6 +3017,835 @@ define(["libs/protobufjs"], function($protobuf) {
             return GS2CS_GCLost;
         })();
     
+        /**
+         * DB2LS_QueryResult enum.
+         * @name Protos.DB2LS_QueryResult
+         * @enum {string}
+         * @property {number} Success=0 Success value
+         * @property {number} Failed=1 Failed value
+         * @property {number} UsernameExist=2 UsernameExist value
+         * @property {number} InvalidUname=3 InvalidUname value
+         * @property {number} InvalidPwd=4 InvalidPwd value
+         */
+        Protos.DB2LS_QueryResult = (function() {
+            var valuesById = {}, values = Object.create(valuesById);
+            values[valuesById[0] = "Success"] = 0;
+            values[valuesById[1] = "Failed"] = 1;
+            values[valuesById[2] = "UsernameExist"] = 2;
+            values[valuesById[3] = "InvalidUname"] = 3;
+            values[valuesById[4] = "InvalidPwd"] = 4;
+            return values;
+        })();
+    
+        Protos.DB2LS_QueryAccountRet = (function() {
+    
+            /**
+             * Properties of a DB2LS_QueryAccountRet.
+             * @memberof Protos
+             * @interface IDB2LS_QueryAccountRet
+             * @property {Protos.IMsgOpts|null} [opts] DB2LS_QueryAccountRet opts
+             * @property {Protos.DB2LS_QueryResult|null} [result] DB2LS_QueryAccountRet result
+             */
+    
+            /**
+             * Constructs a new DB2LS_QueryAccountRet.
+             * @memberof Protos
+             * @classdesc Represents a DB2LS_QueryAccountRet.
+             * @implements IDB2LS_QueryAccountRet
+             * @constructor
+             * @param {Protos.IDB2LS_QueryAccountRet=} [properties] Properties to set
+             */
+            function DB2LS_QueryAccountRet(properties) {
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+    
+            /**
+             * DB2LS_QueryAccountRet opts.
+             * @member {Protos.IMsgOpts|null|undefined} opts
+             * @memberof Protos.DB2LS_QueryAccountRet
+             * @instance
+             */
+            DB2LS_QueryAccountRet.prototype.opts = null;
+    
+            /**
+             * DB2LS_QueryAccountRet result.
+             * @member {Protos.DB2LS_QueryResult} result
+             * @memberof Protos.DB2LS_QueryAccountRet
+             * @instance
+             */
+            DB2LS_QueryAccountRet.prototype.result = 0;
+    
+            /**
+             * Creates a new DB2LS_QueryAccountRet instance using the specified properties.
+             * @function create
+             * @memberof Protos.DB2LS_QueryAccountRet
+             * @static
+             * @param {Protos.IDB2LS_QueryAccountRet=} [properties] Properties to set
+             * @returns {Protos.DB2LS_QueryAccountRet} DB2LS_QueryAccountRet instance
+             */
+            DB2LS_QueryAccountRet.create = function create(properties) {
+                return new DB2LS_QueryAccountRet(properties);
+            };
+    
+            /**
+             * Encodes the specified DB2LS_QueryAccountRet message. Does not implicitly {@link Protos.DB2LS_QueryAccountRet.verify|verify} messages.
+             * @function encode
+             * @memberof Protos.DB2LS_QueryAccountRet
+             * @static
+             * @param {Protos.IDB2LS_QueryAccountRet} message DB2LS_QueryAccountRet message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            DB2LS_QueryAccountRet.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.opts != null && message.hasOwnProperty("opts"))
+                    $root.Protos.MsgOpts.encode(message.opts, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                if (message.result != null && message.hasOwnProperty("result"))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int32(message.result);
+                return writer;
+            };
+    
+            /**
+             * Encodes the specified DB2LS_QueryAccountRet message, length delimited. Does not implicitly {@link Protos.DB2LS_QueryAccountRet.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof Protos.DB2LS_QueryAccountRet
+             * @static
+             * @param {Protos.IDB2LS_QueryAccountRet} message DB2LS_QueryAccountRet message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            DB2LS_QueryAccountRet.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+    
+            /**
+             * Decodes a DB2LS_QueryAccountRet message from the specified reader or buffer.
+             * @function decode
+             * @memberof Protos.DB2LS_QueryAccountRet
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {Protos.DB2LS_QueryAccountRet} DB2LS_QueryAccountRet
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            DB2LS_QueryAccountRet.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.Protos.DB2LS_QueryAccountRet();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1:
+                        message.opts = $root.Protos.MsgOpts.decode(reader, reader.uint32());
+                        break;
+                    case 2:
+                        message.result = reader.int32();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                return message;
+            };
+    
+            /**
+             * Decodes a DB2LS_QueryAccountRet message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof Protos.DB2LS_QueryAccountRet
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {Protos.DB2LS_QueryAccountRet} DB2LS_QueryAccountRet
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            DB2LS_QueryAccountRet.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+    
+            /**
+             * Verifies a DB2LS_QueryAccountRet message.
+             * @function verify
+             * @memberof Protos.DB2LS_QueryAccountRet
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            DB2LS_QueryAccountRet.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.opts != null && message.hasOwnProperty("opts")) {
+                    var error = $root.Protos.MsgOpts.verify(message.opts);
+                    if (error)
+                        return "opts." + error;
+                }
+                if (message.result != null && message.hasOwnProperty("result"))
+                    switch (message.result) {
+                    default:
+                        return "result: enum value expected";
+                    case 0:
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                        break;
+                    }
+                return null;
+            };
+    
+            /**
+             * Creates a DB2LS_QueryAccountRet message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof Protos.DB2LS_QueryAccountRet
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {Protos.DB2LS_QueryAccountRet} DB2LS_QueryAccountRet
+             */
+            DB2LS_QueryAccountRet.fromObject = function fromObject(object) {
+                if (object instanceof $root.Protos.DB2LS_QueryAccountRet)
+                    return object;
+                var message = new $root.Protos.DB2LS_QueryAccountRet();
+                if (object.opts != null) {
+                    if (typeof object.opts !== "object")
+                        throw TypeError(".Protos.DB2LS_QueryAccountRet.opts: object expected");
+                    message.opts = $root.Protos.MsgOpts.fromObject(object.opts);
+                }
+                switch (object.result) {
+                case "Success":
+                case 0:
+                    message.result = 0;
+                    break;
+                case "Failed":
+                case 1:
+                    message.result = 1;
+                    break;
+                case "UsernameExist":
+                case 2:
+                    message.result = 2;
+                    break;
+                case "InvalidUname":
+                case 3:
+                    message.result = 3;
+                    break;
+                case "InvalidPwd":
+                case 4:
+                    message.result = 4;
+                    break;
+                }
+                return message;
+            };
+    
+            /**
+             * Creates a plain object from a DB2LS_QueryAccountRet message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof Protos.DB2LS_QueryAccountRet
+             * @static
+             * @param {Protos.DB2LS_QueryAccountRet} message DB2LS_QueryAccountRet
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            DB2LS_QueryAccountRet.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    object.opts = null;
+                    object.result = options.enums === String ? "Success" : 0;
+                }
+                if (message.opts != null && message.hasOwnProperty("opts"))
+                    object.opts = $root.Protos.MsgOpts.toObject(message.opts, options);
+                if (message.result != null && message.hasOwnProperty("result"))
+                    object.result = options.enums === String ? $root.Protos.DB2LS_QueryResult[message.result] : message.result;
+                return object;
+            };
+    
+            /**
+             * Converts this DB2LS_QueryAccountRet to JSON.
+             * @function toJSON
+             * @memberof Protos.DB2LS_QueryAccountRet
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            DB2LS_QueryAccountRet.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+    
+            return DB2LS_QueryAccountRet;
+        })();
+    
+        Protos.DB2LS_QueryLoginRet = (function() {
+    
+            /**
+             * Properties of a DB2LS_QueryLoginRet.
+             * @memberof Protos
+             * @interface IDB2LS_QueryLoginRet
+             * @property {Protos.IMsgOpts|null} [opts] DB2LS_QueryLoginRet opts
+             * @property {Protos.DB2LS_QueryResult|null} [result] DB2LS_QueryLoginRet result
+             * @property {number|null} [ukey] DB2LS_QueryLoginRet ukey
+             */
+    
+            /**
+             * Constructs a new DB2LS_QueryLoginRet.
+             * @memberof Protos
+             * @classdesc Represents a DB2LS_QueryLoginRet.
+             * @implements IDB2LS_QueryLoginRet
+             * @constructor
+             * @param {Protos.IDB2LS_QueryLoginRet=} [properties] Properties to set
+             */
+            function DB2LS_QueryLoginRet(properties) {
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+    
+            /**
+             * DB2LS_QueryLoginRet opts.
+             * @member {Protos.IMsgOpts|null|undefined} opts
+             * @memberof Protos.DB2LS_QueryLoginRet
+             * @instance
+             */
+            DB2LS_QueryLoginRet.prototype.opts = null;
+    
+            /**
+             * DB2LS_QueryLoginRet result.
+             * @member {Protos.DB2LS_QueryResult} result
+             * @memberof Protos.DB2LS_QueryLoginRet
+             * @instance
+             */
+            DB2LS_QueryLoginRet.prototype.result = 0;
+    
+            /**
+             * DB2LS_QueryLoginRet ukey.
+             * @member {number} ukey
+             * @memberof Protos.DB2LS_QueryLoginRet
+             * @instance
+             */
+            DB2LS_QueryLoginRet.prototype.ukey = 0;
+    
+            /**
+             * Creates a new DB2LS_QueryLoginRet instance using the specified properties.
+             * @function create
+             * @memberof Protos.DB2LS_QueryLoginRet
+             * @static
+             * @param {Protos.IDB2LS_QueryLoginRet=} [properties] Properties to set
+             * @returns {Protos.DB2LS_QueryLoginRet} DB2LS_QueryLoginRet instance
+             */
+            DB2LS_QueryLoginRet.create = function create(properties) {
+                return new DB2LS_QueryLoginRet(properties);
+            };
+    
+            /**
+             * Encodes the specified DB2LS_QueryLoginRet message. Does not implicitly {@link Protos.DB2LS_QueryLoginRet.verify|verify} messages.
+             * @function encode
+             * @memberof Protos.DB2LS_QueryLoginRet
+             * @static
+             * @param {Protos.IDB2LS_QueryLoginRet} message DB2LS_QueryLoginRet message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            DB2LS_QueryLoginRet.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.opts != null && message.hasOwnProperty("opts"))
+                    $root.Protos.MsgOpts.encode(message.opts, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                if (message.result != null && message.hasOwnProperty("result"))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int32(message.result);
+                if (message.ukey != null && message.hasOwnProperty("ukey"))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.ukey);
+                return writer;
+            };
+    
+            /**
+             * Encodes the specified DB2LS_QueryLoginRet message, length delimited. Does not implicitly {@link Protos.DB2LS_QueryLoginRet.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof Protos.DB2LS_QueryLoginRet
+             * @static
+             * @param {Protos.IDB2LS_QueryLoginRet} message DB2LS_QueryLoginRet message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            DB2LS_QueryLoginRet.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+    
+            /**
+             * Decodes a DB2LS_QueryLoginRet message from the specified reader or buffer.
+             * @function decode
+             * @memberof Protos.DB2LS_QueryLoginRet
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {Protos.DB2LS_QueryLoginRet} DB2LS_QueryLoginRet
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            DB2LS_QueryLoginRet.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.Protos.DB2LS_QueryLoginRet();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1:
+                        message.opts = $root.Protos.MsgOpts.decode(reader, reader.uint32());
+                        break;
+                    case 2:
+                        message.result = reader.int32();
+                        break;
+                    case 3:
+                        message.ukey = reader.uint32();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                return message;
+            };
+    
+            /**
+             * Decodes a DB2LS_QueryLoginRet message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof Protos.DB2LS_QueryLoginRet
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {Protos.DB2LS_QueryLoginRet} DB2LS_QueryLoginRet
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            DB2LS_QueryLoginRet.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+    
+            /**
+             * Verifies a DB2LS_QueryLoginRet message.
+             * @function verify
+             * @memberof Protos.DB2LS_QueryLoginRet
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            DB2LS_QueryLoginRet.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.opts != null && message.hasOwnProperty("opts")) {
+                    var error = $root.Protos.MsgOpts.verify(message.opts);
+                    if (error)
+                        return "opts." + error;
+                }
+                if (message.result != null && message.hasOwnProperty("result"))
+                    switch (message.result) {
+                    default:
+                        return "result: enum value expected";
+                    case 0:
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                        break;
+                    }
+                if (message.ukey != null && message.hasOwnProperty("ukey"))
+                    if (!$util.isInteger(message.ukey))
+                        return "ukey: integer expected";
+                return null;
+            };
+    
+            /**
+             * Creates a DB2LS_QueryLoginRet message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof Protos.DB2LS_QueryLoginRet
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {Protos.DB2LS_QueryLoginRet} DB2LS_QueryLoginRet
+             */
+            DB2LS_QueryLoginRet.fromObject = function fromObject(object) {
+                if (object instanceof $root.Protos.DB2LS_QueryLoginRet)
+                    return object;
+                var message = new $root.Protos.DB2LS_QueryLoginRet();
+                if (object.opts != null) {
+                    if (typeof object.opts !== "object")
+                        throw TypeError(".Protos.DB2LS_QueryLoginRet.opts: object expected");
+                    message.opts = $root.Protos.MsgOpts.fromObject(object.opts);
+                }
+                switch (object.result) {
+                case "Success":
+                case 0:
+                    message.result = 0;
+                    break;
+                case "Failed":
+                case 1:
+                    message.result = 1;
+                    break;
+                case "UsernameExist":
+                case 2:
+                    message.result = 2;
+                    break;
+                case "InvalidUname":
+                case 3:
+                    message.result = 3;
+                    break;
+                case "InvalidPwd":
+                case 4:
+                    message.result = 4;
+                    break;
+                }
+                if (object.ukey != null)
+                    message.ukey = object.ukey >>> 0;
+                return message;
+            };
+    
+            /**
+             * Creates a plain object from a DB2LS_QueryLoginRet message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof Protos.DB2LS_QueryLoginRet
+             * @static
+             * @param {Protos.DB2LS_QueryLoginRet} message DB2LS_QueryLoginRet
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            DB2LS_QueryLoginRet.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    object.opts = null;
+                    object.result = options.enums === String ? "Success" : 0;
+                    object.ukey = 0;
+                }
+                if (message.opts != null && message.hasOwnProperty("opts"))
+                    object.opts = $root.Protos.MsgOpts.toObject(message.opts, options);
+                if (message.result != null && message.hasOwnProperty("result"))
+                    object.result = options.enums === String ? $root.Protos.DB2LS_QueryResult[message.result] : message.result;
+                if (message.ukey != null && message.hasOwnProperty("ukey"))
+                    object.ukey = message.ukey;
+                return object;
+            };
+    
+            /**
+             * Converts this DB2LS_QueryLoginRet to JSON.
+             * @function toJSON
+             * @memberof Protos.DB2LS_QueryLoginRet
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            DB2LS_QueryLoginRet.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+    
+            return DB2LS_QueryLoginRet;
+        })();
+    
+        Protos.DB2LS_ExecRet = (function() {
+    
+            /**
+             * Properties of a DB2LS_ExecRet.
+             * @memberof Protos
+             * @interface IDB2LS_ExecRet
+             * @property {Protos.IMsgOpts|null} [opts] DB2LS_ExecRet opts
+             * @property {Protos.DB2LS_QueryResult|null} [result] DB2LS_ExecRet result
+             * @property {number|null} [row] DB2LS_ExecRet row
+             * @property {Long|null} [id] DB2LS_ExecRet id
+             */
+    
+            /**
+             * Constructs a new DB2LS_ExecRet.
+             * @memberof Protos
+             * @classdesc Represents a DB2LS_ExecRet.
+             * @implements IDB2LS_ExecRet
+             * @constructor
+             * @param {Protos.IDB2LS_ExecRet=} [properties] Properties to set
+             */
+            function DB2LS_ExecRet(properties) {
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+    
+            /**
+             * DB2LS_ExecRet opts.
+             * @member {Protos.IMsgOpts|null|undefined} opts
+             * @memberof Protos.DB2LS_ExecRet
+             * @instance
+             */
+            DB2LS_ExecRet.prototype.opts = null;
+    
+            /**
+             * DB2LS_ExecRet result.
+             * @member {Protos.DB2LS_QueryResult} result
+             * @memberof Protos.DB2LS_ExecRet
+             * @instance
+             */
+            DB2LS_ExecRet.prototype.result = 0;
+    
+            /**
+             * DB2LS_ExecRet row.
+             * @member {number} row
+             * @memberof Protos.DB2LS_ExecRet
+             * @instance
+             */
+            DB2LS_ExecRet.prototype.row = 0;
+    
+            /**
+             * DB2LS_ExecRet id.
+             * @member {Long} id
+             * @memberof Protos.DB2LS_ExecRet
+             * @instance
+             */
+            DB2LS_ExecRet.prototype.id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+    
+            /**
+             * Creates a new DB2LS_ExecRet instance using the specified properties.
+             * @function create
+             * @memberof Protos.DB2LS_ExecRet
+             * @static
+             * @param {Protos.IDB2LS_ExecRet=} [properties] Properties to set
+             * @returns {Protos.DB2LS_ExecRet} DB2LS_ExecRet instance
+             */
+            DB2LS_ExecRet.create = function create(properties) {
+                return new DB2LS_ExecRet(properties);
+            };
+    
+            /**
+             * Encodes the specified DB2LS_ExecRet message. Does not implicitly {@link Protos.DB2LS_ExecRet.verify|verify} messages.
+             * @function encode
+             * @memberof Protos.DB2LS_ExecRet
+             * @static
+             * @param {Protos.IDB2LS_ExecRet} message DB2LS_ExecRet message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            DB2LS_ExecRet.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.opts != null && message.hasOwnProperty("opts"))
+                    $root.Protos.MsgOpts.encode(message.opts, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                if (message.result != null && message.hasOwnProperty("result"))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int32(message.result);
+                if (message.row != null && message.hasOwnProperty("row"))
+                    writer.uint32(/* id 3, wireType 0 =*/24).int32(message.row);
+                if (message.id != null && message.hasOwnProperty("id"))
+                    writer.uint32(/* id 4, wireType 0 =*/32).int64(message.id);
+                return writer;
+            };
+    
+            /**
+             * Encodes the specified DB2LS_ExecRet message, length delimited. Does not implicitly {@link Protos.DB2LS_ExecRet.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof Protos.DB2LS_ExecRet
+             * @static
+             * @param {Protos.IDB2LS_ExecRet} message DB2LS_ExecRet message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            DB2LS_ExecRet.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+    
+            /**
+             * Decodes a DB2LS_ExecRet message from the specified reader or buffer.
+             * @function decode
+             * @memberof Protos.DB2LS_ExecRet
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {Protos.DB2LS_ExecRet} DB2LS_ExecRet
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            DB2LS_ExecRet.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.Protos.DB2LS_ExecRet();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1:
+                        message.opts = $root.Protos.MsgOpts.decode(reader, reader.uint32());
+                        break;
+                    case 2:
+                        message.result = reader.int32();
+                        break;
+                    case 3:
+                        message.row = reader.int32();
+                        break;
+                    case 4:
+                        message.id = reader.int64();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                return message;
+            };
+    
+            /**
+             * Decodes a DB2LS_ExecRet message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof Protos.DB2LS_ExecRet
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {Protos.DB2LS_ExecRet} DB2LS_ExecRet
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            DB2LS_ExecRet.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+    
+            /**
+             * Verifies a DB2LS_ExecRet message.
+             * @function verify
+             * @memberof Protos.DB2LS_ExecRet
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            DB2LS_ExecRet.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.opts != null && message.hasOwnProperty("opts")) {
+                    var error = $root.Protos.MsgOpts.verify(message.opts);
+                    if (error)
+                        return "opts." + error;
+                }
+                if (message.result != null && message.hasOwnProperty("result"))
+                    switch (message.result) {
+                    default:
+                        return "result: enum value expected";
+                    case 0:
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                        break;
+                    }
+                if (message.row != null && message.hasOwnProperty("row"))
+                    if (!$util.isInteger(message.row))
+                        return "row: integer expected";
+                if (message.id != null && message.hasOwnProperty("id"))
+                    if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high)))
+                        return "id: integer|Long expected";
+                return null;
+            };
+    
+            /**
+             * Creates a DB2LS_ExecRet message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof Protos.DB2LS_ExecRet
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {Protos.DB2LS_ExecRet} DB2LS_ExecRet
+             */
+            DB2LS_ExecRet.fromObject = function fromObject(object) {
+                if (object instanceof $root.Protos.DB2LS_ExecRet)
+                    return object;
+                var message = new $root.Protos.DB2LS_ExecRet();
+                if (object.opts != null) {
+                    if (typeof object.opts !== "object")
+                        throw TypeError(".Protos.DB2LS_ExecRet.opts: object expected");
+                    message.opts = $root.Protos.MsgOpts.fromObject(object.opts);
+                }
+                switch (object.result) {
+                case "Success":
+                case 0:
+                    message.result = 0;
+                    break;
+                case "Failed":
+                case 1:
+                    message.result = 1;
+                    break;
+                case "UsernameExist":
+                case 2:
+                    message.result = 2;
+                    break;
+                case "InvalidUname":
+                case 3:
+                    message.result = 3;
+                    break;
+                case "InvalidPwd":
+                case 4:
+                    message.result = 4;
+                    break;
+                }
+                if (object.row != null)
+                    message.row = object.row | 0;
+                if (object.id != null)
+                    if ($util.Long)
+                        (message.id = $util.Long.fromValue(object.id)).unsigned = false;
+                    else if (typeof object.id === "string")
+                        message.id = parseInt(object.id, 10);
+                    else if (typeof object.id === "number")
+                        message.id = object.id;
+                    else if (typeof object.id === "object")
+                        message.id = new $util.LongBits(object.id.low >>> 0, object.id.high >>> 0).toNumber();
+                return message;
+            };
+    
+            /**
+             * Creates a plain object from a DB2LS_ExecRet message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof Protos.DB2LS_ExecRet
+             * @static
+             * @param {Protos.DB2LS_ExecRet} message DB2LS_ExecRet
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            DB2LS_ExecRet.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    object.opts = null;
+                    object.result = options.enums === String ? "Success" : 0;
+                    object.row = 0;
+                    if ($util.Long) {
+                        var long = new $util.Long(0, 0, false);
+                        object.id = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                    } else
+                        object.id = options.longs === String ? "0" : 0;
+                }
+                if (message.opts != null && message.hasOwnProperty("opts"))
+                    object.opts = $root.Protos.MsgOpts.toObject(message.opts, options);
+                if (message.result != null && message.hasOwnProperty("result"))
+                    object.result = options.enums === String ? $root.Protos.DB2LS_QueryResult[message.result] : message.result;
+                if (message.row != null && message.hasOwnProperty("row"))
+                    object.row = message.row;
+                if (message.id != null && message.hasOwnProperty("id"))
+                    if (typeof message.id === "number")
+                        object.id = options.longs === String ? String(message.id) : message.id;
+                    else
+                        object.id = options.longs === String ? $util.Long.prototype.toString.call(message.id) : options.longs === Number ? new $util.LongBits(message.id.low >>> 0, message.id.high >>> 0).toNumber() : message.id;
+                return object;
+            };
+    
+            /**
+             * Converts this DB2LS_ExecRet to JSON.
+             * @function toJSON
+             * @memberof Protos.DB2LS_ExecRet
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            DB2LS_ExecRet.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+    
+            return DB2LS_ExecRet;
+        })();
+    
         Protos.GC2GS_AskLogin = (function() {
     
             /**
@@ -4459,6 +5300,673 @@ define(["libs/protobufjs"], function($protobuf) {
             return LS2CS_GCLogin;
         })();
     
+        Protos.LS2DB_QueryAccount = (function() {
+    
+            /**
+             * Properties of a LS2DB_QueryAccount.
+             * @memberof Protos
+             * @interface ILS2DB_QueryAccount
+             * @property {Protos.IMsgOpts|null} [opts] LS2DB_QueryAccount opts
+             * @property {string|null} [name] LS2DB_QueryAccount name
+             */
+    
+            /**
+             * Constructs a new LS2DB_QueryAccount.
+             * @memberof Protos
+             * @classdesc Represents a LS2DB_QueryAccount.
+             * @implements ILS2DB_QueryAccount
+             * @constructor
+             * @param {Protos.ILS2DB_QueryAccount=} [properties] Properties to set
+             */
+            function LS2DB_QueryAccount(properties) {
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+    
+            /**
+             * LS2DB_QueryAccount opts.
+             * @member {Protos.IMsgOpts|null|undefined} opts
+             * @memberof Protos.LS2DB_QueryAccount
+             * @instance
+             */
+            LS2DB_QueryAccount.prototype.opts = null;
+    
+            /**
+             * LS2DB_QueryAccount name.
+             * @member {string} name
+             * @memberof Protos.LS2DB_QueryAccount
+             * @instance
+             */
+            LS2DB_QueryAccount.prototype.name = "";
+    
+            /**
+             * Creates a new LS2DB_QueryAccount instance using the specified properties.
+             * @function create
+             * @memberof Protos.LS2DB_QueryAccount
+             * @static
+             * @param {Protos.ILS2DB_QueryAccount=} [properties] Properties to set
+             * @returns {Protos.LS2DB_QueryAccount} LS2DB_QueryAccount instance
+             */
+            LS2DB_QueryAccount.create = function create(properties) {
+                return new LS2DB_QueryAccount(properties);
+            };
+    
+            /**
+             * Encodes the specified LS2DB_QueryAccount message. Does not implicitly {@link Protos.LS2DB_QueryAccount.verify|verify} messages.
+             * @function encode
+             * @memberof Protos.LS2DB_QueryAccount
+             * @static
+             * @param {Protos.ILS2DB_QueryAccount} message LS2DB_QueryAccount message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            LS2DB_QueryAccount.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.opts != null && message.hasOwnProperty("opts"))
+                    $root.Protos.MsgOpts.encode(message.opts, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                if (message.name != null && message.hasOwnProperty("name"))
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.name);
+                return writer;
+            };
+    
+            /**
+             * Encodes the specified LS2DB_QueryAccount message, length delimited. Does not implicitly {@link Protos.LS2DB_QueryAccount.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof Protos.LS2DB_QueryAccount
+             * @static
+             * @param {Protos.ILS2DB_QueryAccount} message LS2DB_QueryAccount message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            LS2DB_QueryAccount.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+    
+            /**
+             * Decodes a LS2DB_QueryAccount message from the specified reader or buffer.
+             * @function decode
+             * @memberof Protos.LS2DB_QueryAccount
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {Protos.LS2DB_QueryAccount} LS2DB_QueryAccount
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            LS2DB_QueryAccount.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.Protos.LS2DB_QueryAccount();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1:
+                        message.opts = $root.Protos.MsgOpts.decode(reader, reader.uint32());
+                        break;
+                    case 2:
+                        message.name = reader.string();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                return message;
+            };
+    
+            /**
+             * Decodes a LS2DB_QueryAccount message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof Protos.LS2DB_QueryAccount
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {Protos.LS2DB_QueryAccount} LS2DB_QueryAccount
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            LS2DB_QueryAccount.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+    
+            /**
+             * Verifies a LS2DB_QueryAccount message.
+             * @function verify
+             * @memberof Protos.LS2DB_QueryAccount
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            LS2DB_QueryAccount.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.opts != null && message.hasOwnProperty("opts")) {
+                    var error = $root.Protos.MsgOpts.verify(message.opts);
+                    if (error)
+                        return "opts." + error;
+                }
+                if (message.name != null && message.hasOwnProperty("name"))
+                    if (!$util.isString(message.name))
+                        return "name: string expected";
+                return null;
+            };
+    
+            /**
+             * Creates a LS2DB_QueryAccount message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof Protos.LS2DB_QueryAccount
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {Protos.LS2DB_QueryAccount} LS2DB_QueryAccount
+             */
+            LS2DB_QueryAccount.fromObject = function fromObject(object) {
+                if (object instanceof $root.Protos.LS2DB_QueryAccount)
+                    return object;
+                var message = new $root.Protos.LS2DB_QueryAccount();
+                if (object.opts != null) {
+                    if (typeof object.opts !== "object")
+                        throw TypeError(".Protos.LS2DB_QueryAccount.opts: object expected");
+                    message.opts = $root.Protos.MsgOpts.fromObject(object.opts);
+                }
+                if (object.name != null)
+                    message.name = String(object.name);
+                return message;
+            };
+    
+            /**
+             * Creates a plain object from a LS2DB_QueryAccount message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof Protos.LS2DB_QueryAccount
+             * @static
+             * @param {Protos.LS2DB_QueryAccount} message LS2DB_QueryAccount
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            LS2DB_QueryAccount.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    object.opts = null;
+                    object.name = "";
+                }
+                if (message.opts != null && message.hasOwnProperty("opts"))
+                    object.opts = $root.Protos.MsgOpts.toObject(message.opts, options);
+                if (message.name != null && message.hasOwnProperty("name"))
+                    object.name = message.name;
+                return object;
+            };
+    
+            /**
+             * Converts this LS2DB_QueryAccount to JSON.
+             * @function toJSON
+             * @memberof Protos.LS2DB_QueryAccount
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            LS2DB_QueryAccount.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+    
+            return LS2DB_QueryAccount;
+        })();
+    
+        Protos.LS2DB_QueryLogin = (function() {
+    
+            /**
+             * Properties of a LS2DB_QueryLogin.
+             * @memberof Protos
+             * @interface ILS2DB_QueryLogin
+             * @property {Protos.IMsgOpts|null} [opts] LS2DB_QueryLogin opts
+             * @property {string|null} [name] LS2DB_QueryLogin name
+             * @property {string|null} [pwd] LS2DB_QueryLogin pwd
+             */
+    
+            /**
+             * Constructs a new LS2DB_QueryLogin.
+             * @memberof Protos
+             * @classdesc Represents a LS2DB_QueryLogin.
+             * @implements ILS2DB_QueryLogin
+             * @constructor
+             * @param {Protos.ILS2DB_QueryLogin=} [properties] Properties to set
+             */
+            function LS2DB_QueryLogin(properties) {
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+    
+            /**
+             * LS2DB_QueryLogin opts.
+             * @member {Protos.IMsgOpts|null|undefined} opts
+             * @memberof Protos.LS2DB_QueryLogin
+             * @instance
+             */
+            LS2DB_QueryLogin.prototype.opts = null;
+    
+            /**
+             * LS2DB_QueryLogin name.
+             * @member {string} name
+             * @memberof Protos.LS2DB_QueryLogin
+             * @instance
+             */
+            LS2DB_QueryLogin.prototype.name = "";
+    
+            /**
+             * LS2DB_QueryLogin pwd.
+             * @member {string} pwd
+             * @memberof Protos.LS2DB_QueryLogin
+             * @instance
+             */
+            LS2DB_QueryLogin.prototype.pwd = "";
+    
+            /**
+             * Creates a new LS2DB_QueryLogin instance using the specified properties.
+             * @function create
+             * @memberof Protos.LS2DB_QueryLogin
+             * @static
+             * @param {Protos.ILS2DB_QueryLogin=} [properties] Properties to set
+             * @returns {Protos.LS2DB_QueryLogin} LS2DB_QueryLogin instance
+             */
+            LS2DB_QueryLogin.create = function create(properties) {
+                return new LS2DB_QueryLogin(properties);
+            };
+    
+            /**
+             * Encodes the specified LS2DB_QueryLogin message. Does not implicitly {@link Protos.LS2DB_QueryLogin.verify|verify} messages.
+             * @function encode
+             * @memberof Protos.LS2DB_QueryLogin
+             * @static
+             * @param {Protos.ILS2DB_QueryLogin} message LS2DB_QueryLogin message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            LS2DB_QueryLogin.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.opts != null && message.hasOwnProperty("opts"))
+                    $root.Protos.MsgOpts.encode(message.opts, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                if (message.name != null && message.hasOwnProperty("name"))
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.name);
+                if (message.pwd != null && message.hasOwnProperty("pwd"))
+                    writer.uint32(/* id 3, wireType 2 =*/26).string(message.pwd);
+                return writer;
+            };
+    
+            /**
+             * Encodes the specified LS2DB_QueryLogin message, length delimited. Does not implicitly {@link Protos.LS2DB_QueryLogin.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof Protos.LS2DB_QueryLogin
+             * @static
+             * @param {Protos.ILS2DB_QueryLogin} message LS2DB_QueryLogin message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            LS2DB_QueryLogin.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+    
+            /**
+             * Decodes a LS2DB_QueryLogin message from the specified reader or buffer.
+             * @function decode
+             * @memberof Protos.LS2DB_QueryLogin
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {Protos.LS2DB_QueryLogin} LS2DB_QueryLogin
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            LS2DB_QueryLogin.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.Protos.LS2DB_QueryLogin();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1:
+                        message.opts = $root.Protos.MsgOpts.decode(reader, reader.uint32());
+                        break;
+                    case 2:
+                        message.name = reader.string();
+                        break;
+                    case 3:
+                        message.pwd = reader.string();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                return message;
+            };
+    
+            /**
+             * Decodes a LS2DB_QueryLogin message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof Protos.LS2DB_QueryLogin
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {Protos.LS2DB_QueryLogin} LS2DB_QueryLogin
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            LS2DB_QueryLogin.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+    
+            /**
+             * Verifies a LS2DB_QueryLogin message.
+             * @function verify
+             * @memberof Protos.LS2DB_QueryLogin
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            LS2DB_QueryLogin.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.opts != null && message.hasOwnProperty("opts")) {
+                    var error = $root.Protos.MsgOpts.verify(message.opts);
+                    if (error)
+                        return "opts." + error;
+                }
+                if (message.name != null && message.hasOwnProperty("name"))
+                    if (!$util.isString(message.name))
+                        return "name: string expected";
+                if (message.pwd != null && message.hasOwnProperty("pwd"))
+                    if (!$util.isString(message.pwd))
+                        return "pwd: string expected";
+                return null;
+            };
+    
+            /**
+             * Creates a LS2DB_QueryLogin message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof Protos.LS2DB_QueryLogin
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {Protos.LS2DB_QueryLogin} LS2DB_QueryLogin
+             */
+            LS2DB_QueryLogin.fromObject = function fromObject(object) {
+                if (object instanceof $root.Protos.LS2DB_QueryLogin)
+                    return object;
+                var message = new $root.Protos.LS2DB_QueryLogin();
+                if (object.opts != null) {
+                    if (typeof object.opts !== "object")
+                        throw TypeError(".Protos.LS2DB_QueryLogin.opts: object expected");
+                    message.opts = $root.Protos.MsgOpts.fromObject(object.opts);
+                }
+                if (object.name != null)
+                    message.name = String(object.name);
+                if (object.pwd != null)
+                    message.pwd = String(object.pwd);
+                return message;
+            };
+    
+            /**
+             * Creates a plain object from a LS2DB_QueryLogin message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof Protos.LS2DB_QueryLogin
+             * @static
+             * @param {Protos.LS2DB_QueryLogin} message LS2DB_QueryLogin
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            LS2DB_QueryLogin.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    object.opts = null;
+                    object.name = "";
+                    object.pwd = "";
+                }
+                if (message.opts != null && message.hasOwnProperty("opts"))
+                    object.opts = $root.Protos.MsgOpts.toObject(message.opts, options);
+                if (message.name != null && message.hasOwnProperty("name"))
+                    object.name = message.name;
+                if (message.pwd != null && message.hasOwnProperty("pwd"))
+                    object.pwd = message.pwd;
+                return object;
+            };
+    
+            /**
+             * Converts this LS2DB_QueryLogin to JSON.
+             * @function toJSON
+             * @memberof Protos.LS2DB_QueryLogin
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            LS2DB_QueryLogin.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+    
+            return LS2DB_QueryLogin;
+        })();
+    
+        Protos.LS2DB_Exec = (function() {
+    
+            /**
+             * Properties of a LS2DB_Exec.
+             * @memberof Protos
+             * @interface ILS2DB_Exec
+             * @property {Protos.IMsgOpts|null} [opts] LS2DB_Exec opts
+             * @property {string|null} [cmd] LS2DB_Exec cmd
+             */
+    
+            /**
+             * Constructs a new LS2DB_Exec.
+             * @memberof Protos
+             * @classdesc Represents a LS2DB_Exec.
+             * @implements ILS2DB_Exec
+             * @constructor
+             * @param {Protos.ILS2DB_Exec=} [properties] Properties to set
+             */
+            function LS2DB_Exec(properties) {
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+    
+            /**
+             * LS2DB_Exec opts.
+             * @member {Protos.IMsgOpts|null|undefined} opts
+             * @memberof Protos.LS2DB_Exec
+             * @instance
+             */
+            LS2DB_Exec.prototype.opts = null;
+    
+            /**
+             * LS2DB_Exec cmd.
+             * @member {string} cmd
+             * @memberof Protos.LS2DB_Exec
+             * @instance
+             */
+            LS2DB_Exec.prototype.cmd = "";
+    
+            /**
+             * Creates a new LS2DB_Exec instance using the specified properties.
+             * @function create
+             * @memberof Protos.LS2DB_Exec
+             * @static
+             * @param {Protos.ILS2DB_Exec=} [properties] Properties to set
+             * @returns {Protos.LS2DB_Exec} LS2DB_Exec instance
+             */
+            LS2DB_Exec.create = function create(properties) {
+                return new LS2DB_Exec(properties);
+            };
+    
+            /**
+             * Encodes the specified LS2DB_Exec message. Does not implicitly {@link Protos.LS2DB_Exec.verify|verify} messages.
+             * @function encode
+             * @memberof Protos.LS2DB_Exec
+             * @static
+             * @param {Protos.ILS2DB_Exec} message LS2DB_Exec message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            LS2DB_Exec.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.opts != null && message.hasOwnProperty("opts"))
+                    $root.Protos.MsgOpts.encode(message.opts, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                if (message.cmd != null && message.hasOwnProperty("cmd"))
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.cmd);
+                return writer;
+            };
+    
+            /**
+             * Encodes the specified LS2DB_Exec message, length delimited. Does not implicitly {@link Protos.LS2DB_Exec.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof Protos.LS2DB_Exec
+             * @static
+             * @param {Protos.ILS2DB_Exec} message LS2DB_Exec message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            LS2DB_Exec.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+    
+            /**
+             * Decodes a LS2DB_Exec message from the specified reader or buffer.
+             * @function decode
+             * @memberof Protos.LS2DB_Exec
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {Protos.LS2DB_Exec} LS2DB_Exec
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            LS2DB_Exec.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.Protos.LS2DB_Exec();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1:
+                        message.opts = $root.Protos.MsgOpts.decode(reader, reader.uint32());
+                        break;
+                    case 2:
+                        message.cmd = reader.string();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                return message;
+            };
+    
+            /**
+             * Decodes a LS2DB_Exec message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof Protos.LS2DB_Exec
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {Protos.LS2DB_Exec} LS2DB_Exec
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            LS2DB_Exec.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+    
+            /**
+             * Verifies a LS2DB_Exec message.
+             * @function verify
+             * @memberof Protos.LS2DB_Exec
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            LS2DB_Exec.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.opts != null && message.hasOwnProperty("opts")) {
+                    var error = $root.Protos.MsgOpts.verify(message.opts);
+                    if (error)
+                        return "opts." + error;
+                }
+                if (message.cmd != null && message.hasOwnProperty("cmd"))
+                    if (!$util.isString(message.cmd))
+                        return "cmd: string expected";
+                return null;
+            };
+    
+            /**
+             * Creates a LS2DB_Exec message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof Protos.LS2DB_Exec
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {Protos.LS2DB_Exec} LS2DB_Exec
+             */
+            LS2DB_Exec.fromObject = function fromObject(object) {
+                if (object instanceof $root.Protos.LS2DB_Exec)
+                    return object;
+                var message = new $root.Protos.LS2DB_Exec();
+                if (object.opts != null) {
+                    if (typeof object.opts !== "object")
+                        throw TypeError(".Protos.LS2DB_Exec.opts: object expected");
+                    message.opts = $root.Protos.MsgOpts.fromObject(object.opts);
+                }
+                if (object.cmd != null)
+                    message.cmd = String(object.cmd);
+                return message;
+            };
+    
+            /**
+             * Creates a plain object from a LS2DB_Exec message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof Protos.LS2DB_Exec
+             * @static
+             * @param {Protos.LS2DB_Exec} message LS2DB_Exec
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            LS2DB_Exec.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    object.opts = null;
+                    object.cmd = "";
+                }
+                if (message.opts != null && message.hasOwnProperty("opts"))
+                    object.opts = $root.Protos.MsgOpts.toObject(message.opts, options);
+                if (message.cmd != null && message.hasOwnProperty("cmd"))
+                    object.cmd = message.cmd;
+                return object;
+            };
+    
+            /**
+             * Converts this LS2DB_Exec to JSON.
+             * @function toJSON
+             * @memberof Protos.LS2DB_Exec
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            LS2DB_Exec.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+    
+            return LS2DB_Exec;
+        })();
+    
         Protos.LS2GC_GSInfo = (function() {
     
             /**
@@ -5145,8 +6653,8 @@ define(["libs/protobufjs"], function($protobuf) {
                         return "result: enum value expected";
                     case 0:
                     case 1:
-                    case 2:
                     case 3:
+                    case 4:
                         break;
                     }
                 if (message.sessionID != null && message.hasOwnProperty("sessionID"))
@@ -5191,12 +6699,12 @@ define(["libs/protobufjs"], function($protobuf) {
                     message.result = 1;
                     break;
                 case "InvalidUname":
-                case 2:
-                    message.result = 2;
-                    break;
-                case "InvalidPwd":
                 case 3:
                     message.result = 3;
+                    break;
+                case "InvalidPwd":
+                case 4:
+                    message.result = 4;
                     break;
                 }
                 if (object.sessionID != null)
@@ -5279,15 +6787,15 @@ define(["libs/protobufjs"], function($protobuf) {
              * @enum {string}
              * @property {number} Success=0 Success value
              * @property {number} Failed=1 Failed value
-             * @property {number} InvalidUname=2 InvalidUname value
-             * @property {number} InvalidPwd=3 InvalidPwd value
+             * @property {number} InvalidUname=3 InvalidUname value
+             * @property {number} InvalidPwd=4 InvalidPwd value
              */
             LS2GC_AskLoginRet.EResult = (function() {
                 var valuesById = {}, values = Object.create(valuesById);
                 values[valuesById[0] = "Success"] = 0;
                 values[valuesById[1] = "Failed"] = 1;
-                values[valuesById[2] = "InvalidUname"] = 2;
-                values[valuesById[3] = "InvalidPwd"] = 3;
+                values[valuesById[3] = "InvalidUname"] = 3;
+                values[valuesById[4] = "InvalidPwd"] = 4;
                 return values;
             })();
     

@@ -41,15 +41,21 @@ export namespace Protos {
         eLS2GC_AskRegRet = 301,
         eLS2GC_AskLoginRet = 302,
         eLS2CS_GCLogin = 400,
-        eGS2CS_ReportState = 500,
-        eGS2CS_GCAskLogin = 501,
-        eGS2CS_GCLost = 502,
-        eGS2GC_LoginRet = 600,
-        eCS2LS_GSInfos = 700,
-        eCS2LS_GSInfo = 701,
-        eCS2LS_GSLost = 702,
-        eCS2LS_GCLoginRet = 703,
-        eCS2GS_GCLoginRet = 800
+        eLS2DB_QueryAccount = 500,
+        eLS2DB_QueryLogin = 501,
+        eLS2DB_Exec = 502,
+        eGS2CS_ReportState = 600,
+        eGS2CS_GCAskLogin = 601,
+        eGS2CS_GCLost = 602,
+        eGS2GC_LoginRet = 700,
+        eCS2LS_GSInfos = 800,
+        eCS2LS_GSInfo = 801,
+        eCS2LS_GSLost = 802,
+        eCS2LS_GCLoginRet = 803,
+        eCS2GS_GCLoginRet = 900,
+        eDB2LS_QueryAccountRet = 20000,
+        eDB2LS_QueryLoginRet = 20001,
+        eDB2LS_ExecRet = 20002
     }
 
     interface IMsgOpts {
@@ -314,6 +320,80 @@ export namespace Protos {
         public toJSON(): { [k: string]: any };
     }
 
+    enum DB2LS_QueryResult {
+        Success = 0,
+        Failed = 1,
+        UsernameExist = 2,
+        InvalidUname = 3,
+        InvalidPwd = 4
+    }
+
+    interface IDB2LS_QueryAccountRet {
+        opts?: (Protos.IMsgOpts|null);
+        result?: (Protos.DB2LS_QueryResult|null);
+    }
+
+    class DB2LS_QueryAccountRet implements IDB2LS_QueryAccountRet {
+        constructor(properties?: Protos.IDB2LS_QueryAccountRet);
+        public opts?: (Protos.IMsgOpts|null);
+        public result: Protos.DB2LS_QueryResult;
+        public static create(properties?: Protos.IDB2LS_QueryAccountRet): Protos.DB2LS_QueryAccountRet;
+        public static encode(message: Protos.IDB2LS_QueryAccountRet, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: Protos.IDB2LS_QueryAccountRet, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Protos.DB2LS_QueryAccountRet;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Protos.DB2LS_QueryAccountRet;
+        public static verify(message: { [k: string]: any }): (string|null);
+        public static fromObject(object: { [k: string]: any }): Protos.DB2LS_QueryAccountRet;
+        public static toObject(message: Protos.DB2LS_QueryAccountRet, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public toJSON(): { [k: string]: any };
+    }
+
+    interface IDB2LS_QueryLoginRet {
+        opts?: (Protos.IMsgOpts|null);
+        result?: (Protos.DB2LS_QueryResult|null);
+        ukey?: (number|null);
+    }
+
+    class DB2LS_QueryLoginRet implements IDB2LS_QueryLoginRet {
+        constructor(properties?: Protos.IDB2LS_QueryLoginRet);
+        public opts?: (Protos.IMsgOpts|null);
+        public result: Protos.DB2LS_QueryResult;
+        public ukey: number;
+        public static create(properties?: Protos.IDB2LS_QueryLoginRet): Protos.DB2LS_QueryLoginRet;
+        public static encode(message: Protos.IDB2LS_QueryLoginRet, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: Protos.IDB2LS_QueryLoginRet, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Protos.DB2LS_QueryLoginRet;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Protos.DB2LS_QueryLoginRet;
+        public static verify(message: { [k: string]: any }): (string|null);
+        public static fromObject(object: { [k: string]: any }): Protos.DB2LS_QueryLoginRet;
+        public static toObject(message: Protos.DB2LS_QueryLoginRet, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public toJSON(): { [k: string]: any };
+    }
+
+    interface IDB2LS_ExecRet {
+        opts?: (Protos.IMsgOpts|null);
+        result?: (Protos.DB2LS_QueryResult|null);
+        row?: (number|null);
+        id?: (Long|null);
+    }
+
+    class DB2LS_ExecRet implements IDB2LS_ExecRet {
+        constructor(properties?: Protos.IDB2LS_ExecRet);
+        public opts?: (Protos.IMsgOpts|null);
+        public result: Protos.DB2LS_QueryResult;
+        public row: number;
+        public id: Long;
+        public static create(properties?: Protos.IDB2LS_ExecRet): Protos.DB2LS_ExecRet;
+        public static encode(message: Protos.IDB2LS_ExecRet, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: Protos.IDB2LS_ExecRet, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Protos.DB2LS_ExecRet;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Protos.DB2LS_ExecRet;
+        public static verify(message: { [k: string]: any }): (string|null);
+        public static fromObject(object: { [k: string]: any }): Protos.DB2LS_ExecRet;
+        public static toObject(message: Protos.DB2LS_ExecRet, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public toJSON(): { [k: string]: any };
+    }
+
     interface IGC2GS_AskLogin {
         opts?: (Protos.IMsgOpts|null);
         pwd?: (string|null);
@@ -452,6 +532,68 @@ export namespace Protos {
         public toJSON(): { [k: string]: any };
     }
 
+    interface ILS2DB_QueryAccount {
+        opts?: (Protos.IMsgOpts|null);
+        name?: (string|null);
+    }
+
+    class LS2DB_QueryAccount implements ILS2DB_QueryAccount {
+        constructor(properties?: Protos.ILS2DB_QueryAccount);
+        public opts?: (Protos.IMsgOpts|null);
+        public name: string;
+        public static create(properties?: Protos.ILS2DB_QueryAccount): Protos.LS2DB_QueryAccount;
+        public static encode(message: Protos.ILS2DB_QueryAccount, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: Protos.ILS2DB_QueryAccount, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Protos.LS2DB_QueryAccount;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Protos.LS2DB_QueryAccount;
+        public static verify(message: { [k: string]: any }): (string|null);
+        public static fromObject(object: { [k: string]: any }): Protos.LS2DB_QueryAccount;
+        public static toObject(message: Protos.LS2DB_QueryAccount, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public toJSON(): { [k: string]: any };
+    }
+
+    interface ILS2DB_QueryLogin {
+        opts?: (Protos.IMsgOpts|null);
+        name?: (string|null);
+        pwd?: (string|null);
+    }
+
+    class LS2DB_QueryLogin implements ILS2DB_QueryLogin {
+        constructor(properties?: Protos.ILS2DB_QueryLogin);
+        public opts?: (Protos.IMsgOpts|null);
+        public name: string;
+        public pwd: string;
+        public static create(properties?: Protos.ILS2DB_QueryLogin): Protos.LS2DB_QueryLogin;
+        public static encode(message: Protos.ILS2DB_QueryLogin, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: Protos.ILS2DB_QueryLogin, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Protos.LS2DB_QueryLogin;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Protos.LS2DB_QueryLogin;
+        public static verify(message: { [k: string]: any }): (string|null);
+        public static fromObject(object: { [k: string]: any }): Protos.LS2DB_QueryLogin;
+        public static toObject(message: Protos.LS2DB_QueryLogin, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public toJSON(): { [k: string]: any };
+    }
+
+    interface ILS2DB_Exec {
+        opts?: (Protos.IMsgOpts|null);
+        cmd?: (string|null);
+    }
+
+    class LS2DB_Exec implements ILS2DB_Exec {
+        constructor(properties?: Protos.ILS2DB_Exec);
+        public opts?: (Protos.IMsgOpts|null);
+        public cmd: string;
+        public static create(properties?: Protos.ILS2DB_Exec): Protos.LS2DB_Exec;
+        public static encode(message: Protos.ILS2DB_Exec, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: Protos.ILS2DB_Exec, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Protos.LS2DB_Exec;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Protos.LS2DB_Exec;
+        public static verify(message: { [k: string]: any }): (string|null);
+        public static fromObject(object: { [k: string]: any }): Protos.LS2DB_Exec;
+        public static toObject(message: Protos.LS2DB_Exec, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public toJSON(): { [k: string]: any };
+    }
+
     interface ILS2GC_GSInfo {
         opts?: (Protos.IMsgOpts|null);
         gsInfos?: (Protos.IGSInfo[]|null);
@@ -532,8 +674,8 @@ export namespace Protos {
         enum EResult {
             Success = 0,
             Failed = 1,
-            InvalidUname = 2,
-            InvalidPwd = 3
+            InvalidUname = 3,
+            InvalidPwd = 4
         }
     }
 }

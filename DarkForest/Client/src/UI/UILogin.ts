@@ -138,7 +138,7 @@ export class UILogin implements IUIModule {
 						UIAlert.Show("登陆失败", this.BackToLogin.bind(this));
 						break;
 					case Protos.LS2GC_AskLoginRet.EResult.InvalidUname:
-						UIAlert.Show("无效的用户名", this.BackToLogin.bind(this));
+						UIAlert.Show("请输入正确的用户名", this.BackToLogin.bind(this));
 						break;
 					case Protos.LS2GC_AskLoginRet.EResult.InvalidPwd:
 						UIAlert.Show("请输入正确的密码", this.BackToLogin.bind(this));

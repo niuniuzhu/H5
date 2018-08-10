@@ -21,9 +21,8 @@ namespace LoginServer
 		public readonly RedisWrapper redisWrapper = new RedisWrapper();
 		public readonly LSNetSessionMgr netSessionMgr = new LSNetSessionMgr();
 		public readonly Dictionary<uint, GSInfo> gsInfos = new Dictionary<uint, GSInfo>();
+		public readonly Dictionary<string, ulong> userNameToGcNID = new Dictionary<string, ulong>();
 
-		private readonly Dictionary<string, ulong> _userNameToGcNID = new Dictionary<string, ulong>();
-		private readonly DBWrapper _accountDBWrapper = new DBWrapper();
 		private readonly Scheduler _heartBeater = new Scheduler();
 
 		public ErrorCode Initialize( Options opts )
@@ -61,9 +60,8 @@ namespace LoginServer
 			this._heartBeater.Start( Consts.HEART_BEAT_INTERVAL, this.OnHeartBeat );
 			( ( WSListener )this.netSessionMgr.CreateListener( 0, 65535, ProtoType.WebSocket, this.netSessionMgr.CreateClientSession ) ).Start( "ws", this.config.cliPort );
 			this.netSessionMgr.CreateConnector<L2CSSession>( SessionType.ServerL2CS, this.config.csIP, this.config.csPort, ProtoType.TCP, 65535, 0 );
+			this.netSessionMgr.CreateConnector<L2DBSession>( SessionType.ServerL2DB, this.config.dbIP, this.config.dbPort, ProtoType.TCP, 65535, 0 );
 			this.redisWrapper.Connect( this.config.redisIP, this.config.redisPort, this.config.redisPwd );
-			DBConfig.DBCfg dbCfg = this.dbConfig[DBConfig.DBType.Account];
-			this._accountDBWrapper.Start( this.AccountDBAsynHandler, this.DBAsynQueryWhenThreadBegin, dbCfg.ip, dbCfg.port, dbCfg.passwd, dbCfg.username, dbCfg.dbname );
 
 			return ErrorCode.Success;
 		}

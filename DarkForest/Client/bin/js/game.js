@@ -135,6 +135,24 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
             msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RPC;
             return msg;
         }
+        static Q_LS2DB_QueryAccount() {
+            let msg = new protos_1.Protos.LS2DB_QueryAccount();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RPC;
+            return msg;
+        }
+        static Q_LS2DB_QueryLogin() {
+            let msg = new protos_1.Protos.LS2DB_QueryLogin();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RPC;
+            return msg;
+        }
+        static Q_LS2DB_Exec() {
+            let msg = new protos_1.Protos.LS2DB_Exec();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RPC;
+            return msg;
+        }
         static Q_GS2CS_ReportState() {
             let msg = new protos_1.Protos.GS2CS_ReportState();
             msg.opts = new protos_1.Protos.MsgOpts();
@@ -181,6 +199,21 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
             msg.opts = new protos_1.Protos.MsgOpts();
             return msg;
         }
+        static Q_DB2LS_QueryAccountRet() {
+            let msg = new protos_1.Protos.DB2LS_QueryAccountRet();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            return msg;
+        }
+        static Q_DB2LS_QueryLoginRet() {
+            let msg = new protos_1.Protos.DB2LS_QueryLoginRet();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            return msg;
+        }
+        static Q_DB2LS_ExecRet() {
+            let msg = new protos_1.Protos.DB2LS_ExecRet();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            return msg;
+        }
         static R_G_AskPing(pid) {
             let msg = new protos_1.Protos.G_AskPingRet();
             msg.opts = new protos_1.Protos.MsgOpts();
@@ -218,6 +251,27 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
         }
         static R_GS2CS_GCAskLogin(pid) {
             let msg = new protos_1.Protos.CS2GS_GCLoginRet();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RESP;
+            msg.opts.rpid = pid;
+            return msg;
+        }
+        static R_LS2DB_QueryAccount(pid) {
+            let msg = new protos_1.Protos.DB2LS_QueryAccountRet();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RESP;
+            msg.opts.rpid = pid;
+            return msg;
+        }
+        static R_LS2DB_QueryLogin(pid) {
+            let msg = new protos_1.Protos.DB2LS_QueryLoginRet();
+            msg.opts = new protos_1.Protos.MsgOpts();
+            msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RESP;
+            msg.opts.rpid = pid;
+            return msg;
+        }
+        static R_LS2DB_Exec(pid) {
+            let msg = new protos_1.Protos.DB2LS_ExecRet();
             msg.opts = new protos_1.Protos.MsgOpts();
             msg.opts.flag |= protos_1.Protos.MsgOpts.Flag.RESP;
             msg.opts.rpid = pid;
@@ -266,39 +320,63 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
                     return msg;
                 }
                 case 500: {
-                    let msg = protos_1.Protos.GS2CS_ReportState.decode(data, size);
+                    let msg = protos_1.Protos.LS2DB_QueryAccount.decode(data, size);
                     return msg;
                 }
                 case 501: {
-                    let msg = protos_1.Protos.GS2CS_GCAskLogin.decode(data, size);
+                    let msg = protos_1.Protos.LS2DB_QueryLogin.decode(data, size);
                     return msg;
                 }
                 case 502: {
-                    let msg = protos_1.Protos.GS2CS_GCLost.decode(data, size);
+                    let msg = protos_1.Protos.LS2DB_Exec.decode(data, size);
                     return msg;
                 }
                 case 600: {
-                    let msg = protos_1.Protos.GS2GC_LoginRet.decode(data, size);
+                    let msg = protos_1.Protos.GS2CS_ReportState.decode(data, size);
+                    return msg;
+                }
+                case 601: {
+                    let msg = protos_1.Protos.GS2CS_GCAskLogin.decode(data, size);
+                    return msg;
+                }
+                case 602: {
+                    let msg = protos_1.Protos.GS2CS_GCLost.decode(data, size);
                     return msg;
                 }
                 case 700: {
-                    let msg = protos_1.Protos.CS2LS_GSInfos.decode(data, size);
-                    return msg;
-                }
-                case 701: {
-                    let msg = protos_1.Protos.CS2LS_GSInfo.decode(data, size);
-                    return msg;
-                }
-                case 702: {
-                    let msg = protos_1.Protos.CS2LS_GSLost.decode(data, size);
-                    return msg;
-                }
-                case 703: {
-                    let msg = protos_1.Protos.CS2LS_GCLoginRet.decode(data, size);
+                    let msg = protos_1.Protos.GS2GC_LoginRet.decode(data, size);
                     return msg;
                 }
                 case 800: {
+                    let msg = protos_1.Protos.CS2LS_GSInfos.decode(data, size);
+                    return msg;
+                }
+                case 801: {
+                    let msg = protos_1.Protos.CS2LS_GSInfo.decode(data, size);
+                    return msg;
+                }
+                case 802: {
+                    let msg = protos_1.Protos.CS2LS_GSLost.decode(data, size);
+                    return msg;
+                }
+                case 803: {
+                    let msg = protos_1.Protos.CS2LS_GCLoginRet.decode(data, size);
+                    return msg;
+                }
+                case 900: {
                     let msg = protos_1.Protos.CS2GS_GCLoginRet.decode(data, size);
+                    return msg;
+                }
+                case 20000: {
+                    let msg = protos_1.Protos.DB2LS_QueryAccountRet.decode(data, size);
+                    return msg;
+                }
+                case 20001: {
+                    let msg = protos_1.Protos.DB2LS_QueryLoginRet.decode(data, size);
+                    return msg;
+                }
+                case 20002: {
+                    let msg = protos_1.Protos.DB2LS_ExecRet.decode(data, size);
                     return msg;
                 }
             }
@@ -344,6 +422,18 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
             let msg = protos_1.Protos.LS2CS_GCLogin.decode(data, size);
             return msg;
         }
+        static D_LS2DB_QueryAccount(data, size) {
+            let msg = protos_1.Protos.LS2DB_QueryAccount.decode(data, size);
+            return msg;
+        }
+        static D_LS2DB_QueryLogin(data, size) {
+            let msg = protos_1.Protos.LS2DB_QueryLogin.decode(data, size);
+            return msg;
+        }
+        static D_LS2DB_Exec(data, size) {
+            let msg = protos_1.Protos.LS2DB_Exec.decode(data, size);
+            return msg;
+        }
         static D_GS2CS_ReportState(data, size) {
             let msg = protos_1.Protos.GS2CS_ReportState.decode(data, size);
             return msg;
@@ -380,6 +470,18 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
             let msg = protos_1.Protos.CS2GS_GCLoginRet.decode(data, size);
             return msg;
         }
+        static D_DB2LS_QueryAccountRet(data, size) {
+            let msg = protos_1.Protos.DB2LS_QueryAccountRet.decode(data, size);
+            return msg;
+        }
+        static D_DB2LS_QueryLoginRet(data, size) {
+            let msg = protos_1.Protos.DB2LS_QueryLoginRet.decode(data, size);
+            return msg;
+        }
+        static D_DB2LS_ExecRet(data, size) {
+            let msg = protos_1.Protos.DB2LS_ExecRet.decode(data, size);
+            return msg;
+        }
         static CreateMsgByID(msgID) {
             switch (msgID) {
                 case 10: {
@@ -413,31 +515,49 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
                     return new protos_1.Protos.LS2CS_GCLogin();
                 }
                 case 500: {
-                    return new protos_1.Protos.GS2CS_ReportState();
+                    return new protos_1.Protos.LS2DB_QueryAccount();
                 }
                 case 501: {
-                    return new protos_1.Protos.GS2CS_GCAskLogin();
+                    return new protos_1.Protos.LS2DB_QueryLogin();
                 }
                 case 502: {
-                    return new protos_1.Protos.GS2CS_GCLost();
+                    return new protos_1.Protos.LS2DB_Exec();
                 }
                 case 600: {
-                    return new protos_1.Protos.GS2GC_LoginRet();
+                    return new protos_1.Protos.GS2CS_ReportState();
+                }
+                case 601: {
+                    return new protos_1.Protos.GS2CS_GCAskLogin();
+                }
+                case 602: {
+                    return new protos_1.Protos.GS2CS_GCLost();
                 }
                 case 700: {
-                    return new protos_1.Protos.CS2LS_GSInfos();
-                }
-                case 701: {
-                    return new protos_1.Protos.CS2LS_GSInfo();
-                }
-                case 702: {
-                    return new protos_1.Protos.CS2LS_GSLost();
-                }
-                case 703: {
-                    return new protos_1.Protos.CS2LS_GCLoginRet();
+                    return new protos_1.Protos.GS2GC_LoginRet();
                 }
                 case 800: {
+                    return new protos_1.Protos.CS2LS_GSInfos();
+                }
+                case 801: {
+                    return new protos_1.Protos.CS2LS_GSInfo();
+                }
+                case 802: {
+                    return new protos_1.Protos.CS2LS_GSLost();
+                }
+                case 803: {
+                    return new protos_1.Protos.CS2LS_GCLoginRet();
+                }
+                case 900: {
                     return new protos_1.Protos.CS2GS_GCLoginRet();
+                }
+                case 20000: {
+                    return new protos_1.Protos.DB2LS_QueryAccountRet();
+                }
+                case 20001: {
+                    return new protos_1.Protos.DB2LS_QueryLoginRet();
+                }
+                case 20002: {
+                    return new protos_1.Protos.DB2LS_ExecRet();
                 }
             }
             return null;
@@ -487,19 +607,37 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
                 case 600: {
                     return message.opts;
                 }
+                case 601: {
+                    return message.opts;
+                }
+                case 602: {
+                    return message.opts;
+                }
                 case 700: {
                     return message.opts;
                 }
-                case 701: {
-                    return message.opts;
-                }
-                case 702: {
-                    return message.opts;
-                }
-                case 703: {
-                    return message.opts;
-                }
                 case 800: {
+                    return message.opts;
+                }
+                case 801: {
+                    return message.opts;
+                }
+                case 802: {
+                    return message.opts;
+                }
+                case 803: {
+                    return message.opts;
+                }
+                case 900: {
+                    return message.opts;
+                }
+                case 20000: {
+                    return message.opts;
+                }
+                case 20001: {
+                    return message.opts;
+                }
+                case 20002: {
                     return message.opts;
                 }
             }
@@ -519,15 +657,21 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
         [protos_1.Protos.LS2GC_AskRegRet, 301],
         [protos_1.Protos.LS2GC_AskLoginRet, 302],
         [protos_1.Protos.LS2CS_GCLogin, 400],
-        [protos_1.Protos.GS2CS_ReportState, 500],
-        [protos_1.Protos.GS2CS_GCAskLogin, 501],
-        [protos_1.Protos.GS2CS_GCLost, 502],
-        [protos_1.Protos.GS2GC_LoginRet, 600],
-        [protos_1.Protos.CS2LS_GSInfos, 700],
-        [protos_1.Protos.CS2LS_GSInfo, 701],
-        [protos_1.Protos.CS2LS_GSLost, 702],
-        [protos_1.Protos.CS2LS_GCLoginRet, 703],
-        [protos_1.Protos.CS2GS_GCLoginRet, 800],
+        [protos_1.Protos.LS2DB_QueryAccount, 500],
+        [protos_1.Protos.LS2DB_QueryLogin, 501],
+        [protos_1.Protos.LS2DB_Exec, 502],
+        [protos_1.Protos.GS2CS_ReportState, 600],
+        [protos_1.Protos.GS2CS_GCAskLogin, 601],
+        [protos_1.Protos.GS2CS_GCLost, 602],
+        [protos_1.Protos.GS2GC_LoginRet, 700],
+        [protos_1.Protos.CS2LS_GSInfos, 800],
+        [protos_1.Protos.CS2LS_GSInfo, 801],
+        [protos_1.Protos.CS2LS_GSLost, 802],
+        [protos_1.Protos.CS2LS_GCLoginRet, 803],
+        [protos_1.Protos.CS2GS_GCLoginRet, 900],
+        [protos_1.Protos.DB2LS_QueryAccountRet, 20000],
+        [protos_1.Protos.DB2LS_QueryLoginRet, 20001],
+        [protos_1.Protos.DB2LS_ExecRet, 20002],
     ]);
     ProtoCreator._ID2TYPE = new Map([
         [10, protos_1.Protos.G_AskPing],
@@ -540,15 +684,21 @@ define("Net/ProtoHelper", ["require", "exports", "../libs/protos"], function (re
         [301, protos_1.Protos.LS2GC_AskRegRet],
         [302, protos_1.Protos.LS2GC_AskLoginRet],
         [400, protos_1.Protos.LS2CS_GCLogin],
-        [500, protos_1.Protos.GS2CS_ReportState],
-        [501, protos_1.Protos.GS2CS_GCAskLogin],
-        [502, protos_1.Protos.GS2CS_GCLost],
-        [600, protos_1.Protos.GS2GC_LoginRet],
-        [700, protos_1.Protos.CS2LS_GSInfos],
-        [701, protos_1.Protos.CS2LS_GSInfo],
-        [702, protos_1.Protos.CS2LS_GSLost],
-        [703, protos_1.Protos.CS2LS_GCLoginRet],
-        [800, protos_1.Protos.CS2GS_GCLoginRet],
+        [500, protos_1.Protos.LS2DB_QueryAccount],
+        [501, protos_1.Protos.LS2DB_QueryLogin],
+        [502, protos_1.Protos.LS2DB_Exec],
+        [600, protos_1.Protos.GS2CS_ReportState],
+        [601, protos_1.Protos.GS2CS_GCAskLogin],
+        [602, protos_1.Protos.GS2CS_GCLost],
+        [700, protos_1.Protos.GS2GC_LoginRet],
+        [800, protos_1.Protos.CS2LS_GSInfos],
+        [801, protos_1.Protos.CS2LS_GSInfo],
+        [802, protos_1.Protos.CS2LS_GSLost],
+        [803, protos_1.Protos.CS2LS_GCLoginRet],
+        [900, protos_1.Protos.CS2GS_GCLoginRet],
+        [20000, protos_1.Protos.DB2LS_QueryAccountRet],
+        [20001, protos_1.Protos.DB2LS_QueryLoginRet],
+        [20002, protos_1.Protos.DB2LS_ExecRet],
     ]);
     exports.ProtoCreator = ProtoCreator;
 });

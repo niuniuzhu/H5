@@ -4,6 +4,7 @@
 	{
 		Undefine,
 		ServerL2CS,
+		ServerL2DB,
 		ServerG2CS,
 		ServerGC,
 		ServerLS,

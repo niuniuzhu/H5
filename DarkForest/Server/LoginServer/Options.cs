@@ -38,6 +38,18 @@ namespace LoginServer
 			HelpText = "Port of central server." )]
 		public int csPort { get; set; }
 
+		[Option( "db_ip",
+			Default = "127.0.0.1",
+			SetName = "bysetting",
+			HelpText = "IPAddress of db server to connect." )]
+		public string dbIP { get; set; }
+
+		[Option( "db_port",
+			Default = 20001,
+			SetName = "bysetting",
+			HelpText = "Port of db server." )]
+		public int dbPort { get; set; }
+
 		[Option( "redis_ip",
 			Default = "juntai.yytou.com",
 			SetName = "bysetting",
